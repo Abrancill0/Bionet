@@ -11,7 +11,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="100dp"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical"
         android:padding="10dp">
@@ -43,7 +42,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/password"
+                android:id="@+id/clave1"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -65,7 +64,7 @@
                 android:textSize="36sp" />
 
             <EditText
-                android:id="@+id/password4"
+                android:id="@+id/clave2"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -88,7 +87,7 @@
                 android:textSize="36sp"/>
 
             <EditText
-                android:id="@+id/password5"
+                android:id="@+id/clave3"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -111,7 +110,7 @@
                 android:textSize="36sp" />
 
             <EditText
-                android:id="@+id/password6"
+                android:id="@+id/clave4"
                 android:layout_width="52dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -135,7 +134,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/crear_btn"
+                android:id="@+id/btn_regresar"
                 style="@android:style/Widget.Holo.Light.Button"
                 android:layout_width="158dp"
                 android:layout_height="27dp"
@@ -147,7 +146,7 @@
                 android:textSize="14sp" />
 
             <Button
-                android:id="@+id/iniciar_btn"
+                android:id="@+id/btn_aceptar"
                 style="@android:style/Widget.Holo.Light.Button"
                 android:layout_width="158dp"
                 android:layout_height="27dp"

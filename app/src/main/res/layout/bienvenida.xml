@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/fondo"
-    android:gravity="center_vertical|center_horizontal"
-    android:orientation="vertical"
-    android:visibility="visible">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
     <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/app_name"
-        app:srcCompat="@drawable/bienvenida"></ImageView>
+        android:layout_gravity="top"
+        android:src="@drawable/bienvenida" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,38 +19,32 @@
 
         <ImageView
             android:id="@+id/imageView5"
-            android:layout_width="322dp"
-            android:layout_height="128dp"
-            android:layout_weight=".001"
-            app:srcCompat="@drawable/logo3" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/logo2" />
 
         <TextView
             android:id="@+id/textView8"
             android:layout_width="wrap_content"
-            android:layout_height="13dp"
-            android:layout_weight=".003"
+            android:layout_height="wrap_content"
             android:text="¡Bienvenido!"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="86sp" />
+            android:textSize="86sp"
+            app:fontFamily="@font/muli_extrabold" />
 
         <Button
-            android:id="@+id/crear_btn2"
+            android:id="@+id/btn_empecemos"
             style="@android:style/Widget.Holo.Light.Button"
-            android:layout_width="437dp"
-            android:layout_height="24dp"
-            android:layout_margin="10dp"
-            android:layout_weight=".001"
+            android:layout_width="193dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/btn_rounded_nobackground"
-            android:padding="0dp"
+            android:gravity="center"
+            android:padding="5dp"
             android:text="Empecemos"
             android:textColor="#194052"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight=".001" />
-
+            android:textSize="18sp"
+            app:fontFamily="@font/muli_semibold"/>
     </LinearLayout>
-</RelativeLayout>
+
+</FrameLayout>

@@ -4,19 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="horizontal"
-    android:background="@color/fondo">
+    android:background="@color/fondo"
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight=".5"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight=".5"
             android:scaleType="centerCrop"
             android:src="@drawable/iniciar" />
     </LinearLayout>
@@ -24,10 +25,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginHorizontal="100dp"
+        android:layout_weight=".5"
         android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:layout_margin="100dp">
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/imageView2"
