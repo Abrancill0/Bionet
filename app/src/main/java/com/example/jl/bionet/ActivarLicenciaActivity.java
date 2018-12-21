@@ -14,6 +14,7 @@ public class ActivarLicenciaActivity extends Activity {
     public void Regresar(View view) {
         Intent intent = new Intent(ActivarLicenciaActivity.this, CrearCuentaActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     public void Bienvenida(View view) {

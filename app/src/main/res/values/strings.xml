@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">bio-Net</string>
+    <string-array name="Giros">
+        <item>Turismo</item>
+        <item>Energías Renovables</item>
+        <item>Tecnologías de la información</item>
+        <item>Industria Alimentaria</item>
+    </string-array>
 </resources>
