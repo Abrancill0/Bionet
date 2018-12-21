@@ -16,6 +16,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".CrearCuentaActivity"
+            android:label="@string/app_name">
+        </activity>
+        <activity
+            android:name=".ActivarLicenciaActivity"
+            android:label="@string/app_name">
+        </activity>
+        <activity
+            android:name=".BienvenidaActivity"
+            android:label="@string/app_name">
+        </activity>
+        <activity
+            android:name=".RegistroDatosActivity"
+            android:label="@string/app_name">
+        </activity>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

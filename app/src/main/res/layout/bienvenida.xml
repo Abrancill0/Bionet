@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    >
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:src="@drawable/bienvenida" />
+        android:src="@drawable/bienvenida"
+        android:gravity="center_vertical"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,7 +48,8 @@
             android:text="Empecemos"
             android:textColor="#194052"
             android:textSize="18sp"
-            app:fontFamily="@font/muli_semibold"/>
+            app:fontFamily="@font/muli_semibold"
+            android:onClick="Datos"/>
     </LinearLayout>
 
 </FrameLayout>

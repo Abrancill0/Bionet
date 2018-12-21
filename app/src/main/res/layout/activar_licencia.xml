@@ -143,7 +143,9 @@
                 android:padding="0dp"
                 android:text="Regresar"
                 android:textColor="#000"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:onClick="Regresar"
+                />
 
             <Button
                 android:id="@+id/btn_aceptar"
@@ -155,7 +157,8 @@
                 android:padding="0dp"
                 android:text="Aceptar"
                 android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:onClick="Bienvenida"/>
 
         </LinearLayout>
 

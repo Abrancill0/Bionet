@@ -97,7 +97,8 @@
                 android:padding="0dp"
                 android:text="Activar licencia"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:onClick="ActivarLicencia"/>
 
             <Button
                 android:id="@+id/btn_aceptar"
@@ -110,7 +111,8 @@
                 android:padding="0dp"
                 android:text="Aceptar"
                 android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:onClick="Bienvenido"/>
 
         </LinearLayout>
 
