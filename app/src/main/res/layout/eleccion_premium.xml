@@ -85,14 +85,13 @@
             android:paddingTop="15dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="50dp"
-                android:layout_weight=".5"
                 android:background="@drawable/entry_text_rounded"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/textView21"
@@ -105,17 +104,17 @@
 
                 <TextView
                     android:id="@+id/textView20"
-                    android:layout_width="match_parent"
+                    android:layout_width="260dp"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="Lorem ipsumu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="50dp"
-                android:layout_weight=".5"
                 android:background="@drawable/entry_text_rounded"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
@@ -132,8 +131,9 @@
 
                 <TextView
                     android:id="@+id/textView18"
-                    android:layout_width="wrap_content"
+                    android:layout_width="273dp"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="Lorem ipsum re euint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum" />
 
                 <Button
@@ -141,7 +141,7 @@
                     style="@android:style/Widget.Holo.Light.Button"
                     android:layout_width="134dp"
                     android:layout_height="24dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/btn_rounded"
                     android:onClick="Bienvenido"
@@ -158,7 +158,7 @@
             android:layout_width="148dp"
             android:layout_height="34dp"
             android:layout_marginVertical="20dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/btn_rounded"
             android:onClick="Bienvenido"
