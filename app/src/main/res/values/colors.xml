@@ -3,5 +3,6 @@
     <color name="colorPrimary">#194052</color>
     <color name="colorPrimaryDark">#194052</color>
     <color name="colorAccent">#194052</color>
-    <color name="fondo">#f1f1f1</color>
+    <color name="fondo">#fff</color>
+    <color name="fondo_azul">#CAD8DD</color>
 </resources>

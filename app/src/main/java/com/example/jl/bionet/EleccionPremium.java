@@ -11,4 +11,9 @@ public class EleccionPremium extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eleccion_premium);
     }
+
+    public void Home(View view) {
+        Intent intent = new Intent(EleccionPremium.this, Home.class);
+        startActivity(intent);
+    }
 }
