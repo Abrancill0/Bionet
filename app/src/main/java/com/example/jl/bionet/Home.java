@@ -1,6 +1,8 @@
 package com.example.jl.bionet;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DrawerLayout drawer;
@@ -72,6 +75,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
                 .commit();
     }
+
+    public void ShowDireccionFiscal(View view) {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.pop_up_direccion_fiscal);
+        dialog.setTitle("Dirección fiscal");
+        dialog.show();
+    }
+
 
 
 }

@@ -17,8 +17,8 @@ public class ActivarLicenciaActivity extends Activity {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
-    public void Bienvenida(View view) {
-        Intent intent = new Intent(ActivarLicenciaActivity.this, BienvenidaActivity.class);
+    public void Aceptar(View view) {
+        Intent intent = new Intent(ActivarLicenciaActivity.this, CrearCuentaActivity.class);
         startActivity(intent);
     }
 

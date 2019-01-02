@@ -1,19 +1,19 @@
 package com.example.jl.bionet;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class Fragment_crear_cliente extends Fragment {
 
-
+    Dialog DireccionFiscal;
     public Fragment_crear_cliente() {
         // Required empty public constructor
     }
@@ -24,5 +24,6 @@ public class Fragment_crear_cliente extends Fragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_crear_cliente,container, false);
     }
+
 
 }
