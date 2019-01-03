@@ -31,8 +31,8 @@
                 android:id="@+id/imageView6"
                 android:layout_width="107dp"
                 android:layout_height="57dp"
-                android:padding="20dp"
-                android:src="@drawable/logo_business" />
+                android:padding="10dp"
+                android:src="@drawable/logo_superior" />
         </LinearLayout>
 
         <LinearLayout

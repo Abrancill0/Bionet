@@ -83,10 +83,11 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
-            android:paddingTop="15dp">
+            android:paddingTop="15dp"
+            android:paddingHorizontal="15dp">
 
             <LinearLayout
-                android:layout_width="223dp"
+                android:layout_width="273dp"
                 android:layout_height="239dp"
                 android:layout_marginHorizontal="50dp"
                 android:background="@drawable/shape_gray"
@@ -113,7 +114,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="223dp"
+                android:layout_width="273dp"
                 android:layout_height="239dp"
                 android:layout_marginHorizontal="50dp"
                 android:background="@drawable/shape_gray"
@@ -129,7 +130,8 @@
                     android:text="Versión Premium"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="30sp"
-                    app:fontFamily="@font/muli_semibold" />
+                    app:fontFamily="@font/muli_semibold"
+                    />
 
                 <TextView
                     android:id="@+id/textView18"
@@ -146,7 +148,6 @@
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/btn"
-                    android:onClick="Bienvenido"
                     android:padding="0dp"
                     android:text="Ir a Sitio Web"
                     android:textColor="#ffffff"
