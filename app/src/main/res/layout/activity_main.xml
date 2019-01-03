@@ -90,6 +90,7 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/btn"
                 android:padding="0dp"
+                android:onClick="IniciarSesion"
                 android:text="Iniciar Sesión"
                 android:textColor="#ffffff"
                 android:textSize="14sp" />
