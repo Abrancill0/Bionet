@@ -80,15 +80,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:paddingTop="15dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="223dp"
+                android:layout_height="239dp"
                 android:layout_marginHorizontal="50dp"
-                android:layout_weight=".5"
                 android:background="@drawable/shape_gray"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
@@ -105,7 +105,7 @@
 
                 <TextView
                     android:id="@+id/textView20"
-                    android:layout_width="260dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Lorem ipsumu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum" />
@@ -113,10 +113,9 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="223dp"
+                android:layout_height="239dp"
                 android:layout_marginHorizontal="50dp"
-                android:layout_weight=".5"
                 android:background="@drawable/shape_gray"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
@@ -126,6 +125,7 @@
                     android:id="@+id/textView19"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="Versión Premium"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="30sp"
@@ -133,7 +133,7 @@
 
                 <TextView
                     android:id="@+id/textView18"
-                    android:layout_width="273dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Lorem ipsum re euint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum" />
