@@ -444,7 +444,7 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/btn_aceptar3"
+                    android:id="@+id/verificar_fiscal"
                     style="@android:style/Widget.Holo.Light.Button"
                     android:layout_width="150dp"
                     android:layout_height="27dp"
@@ -454,8 +454,7 @@
                     android:padding="0dp"
                     android:text="Guardar"
                     android:textColor="#ffffff"
-                    android:textSize="14sp"
-                    android:onClick="ShowDireccionFiscal"/>
+                    android:textSize="14sp"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

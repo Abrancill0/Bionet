@@ -2,6 +2,7 @@ package com.example.jl.bionet;
 
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,7 +15,7 @@ import android.widget.TextView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Fragment_direccion_fiscal extends Fragment {
+public class Fragment_direccion_fiscal extends DialogFragment {
 
 
     public Fragment_direccion_fiscal() {
@@ -26,15 +27,17 @@ public class Fragment_direccion_fiscal extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.pop_up_direccion_fiscal,container, false);
-        Button btn_guardar_cliente = (Button) v.findViewById(R.id.btn_guardar_cliente);
-        btn_guardar_cliente.setOnClickListener(new View.OnClickListener() {
+        Button guardar = (Button) v.findViewById(R.id.btn_guardar_cliente);
+        guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_clientes()).commit();
+                dismiss();
             }
         });
         return v;
+
     }
 
 }
