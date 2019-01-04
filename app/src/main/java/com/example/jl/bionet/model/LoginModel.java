@@ -2,7 +2,7 @@ package com.example.jl.bionet.model;
 
 public class LoginModel {
 
-        private Integer usuId;
+        private String usuId;
         private String usuUsuario;
         private String usuContrasena;
         private String usuTipoContrasena;
@@ -25,11 +25,11 @@ public class LoginModel {
         private String createdAt;
         private String updatedAt;
 
-        public Integer getUsuId(String usu_id) {
+        public String getUsuId() {
             return usuId;
         }
 
-        public void setUsuId(Integer usuId) {
+        public void setUsuId(String usuId) {
             this.usuId = usuId;
         }
 
@@ -201,4 +201,5 @@ public class LoginModel {
             this.updatedAt = updatedAt;
         }
 
-    }
+
+}

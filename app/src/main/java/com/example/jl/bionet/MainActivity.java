@@ -1,8 +1,11 @@
 package com.example.jl.bionet;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.SharedMemory;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +26,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.jl.bionet.model.LoginModel;
+import com.example.jl.bionet.model.VolleySingleton;
 
 
 import org.json.JSONArray;
@@ -37,23 +41,34 @@ import static com.android.volley.Request.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mTextViewResult;
 
-    ProgressDialog progreso;
+     EditText TextUsuario,TextPassword;
 
-    RequestQueue request;
-
-
+     ProgressDialog progreso;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Context context = this;
+        SharedPreferences sharprefs = getSharedPreferences("DatosPersistentes", context.MODE_PRIVATE);
+
+        TextUsuario = (EditText)findViewById(R.id.TextUsuario);
+        TextPassword = (EditText)findViewById(R.id.TextPassword);
+
+        SharedPreferences sharedPref = getPreferences(context.MODE_PRIVATE);
+
+        String Valor = sharedPref.getString("usu_id","0");
+
+        if (Valor != "0")
+        {
+            Intent intent = new Intent(MainActivity.this, Home.class);
+            startActivity(intent);
+        }
+
+
     }
-
-
-
 
     private void Login(){
 
@@ -66,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
         JSONObject request = new JSONObject();
         try
         {
-            request.put("usu_usuario", "abrx23@gmail.com");
-            request.put("usu_contrasena", "123");
+            request.put("usu_usuario", TextUsuario.getText());
+            request.put("usu_contrasena", TextPassword.getText());
 
         }
         catch(Exception e)
@@ -81,6 +96,10 @@ public class MainActivity extends AppCompatActivity {
         {
             @Override
             public void onResponse(JSONObject response) {
+
+                Intent intent = new Intent(MainActivity.this, Home.class);
+                startActivity(intent);
+
                 progreso.hide();
 
                 LoginModel Resultado = new LoginModel();
@@ -91,19 +110,27 @@ public class MainActivity extends AppCompatActivity {
                     Respuesta = response.getJSONObject("resultado");
                     
                     Resultado.setUsuNombre(Respuesta.getString("usu_nombre"));
-                    Resultado.getUsuId(Respuesta.getString("usu_id"));
+                    Resultado.setUsuId(Respuesta.getString("usu_id"));
+
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(),
+                                    "Bienvenido " + Resultado.getUsuNombre(), Toast.LENGTH_SHORT);
+
+                    toast1.show();
+
+                    SharedPreferences sharepref = getPreferences(getBaseContext().MODE_PRIVATE);
+                    SharedPreferences.Editor editor =  sharepref.edit();
+                    editor.putString("usu_nombre", Resultado.getUsuNombre());
+                    editor.putString("usu_id", Resultado.getUsuId());
+
+                    editor.commit();
+
 
                 } catch (JSONException e) {
-                    e.printStackTrace();
-
                     progreso.hide();
                 }
 
-                     Toast toast1 =
-                             Toast.makeText(getApplicationContext(),
-                                    "Bienvenido " + Resultado.getUsuNombre(), Toast.LENGTH_SHORT);
 
-                     toast1.show();
             }
 
         },
@@ -125,8 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        queue.add(postRequest);
-
+        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
 
     }
 
@@ -136,6 +162,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void IniciarSesion(View view){
+
+        if(TextUsuario.getText().length()==0) {
+            Toast toast1 = Toast.makeText(getApplicationContext(),
+                    "Campo usuario obligatorio ", Toast.LENGTH_SHORT);
+
+            toast1.show();
+
+            return;
+        }
+
+
+        if(TextPassword.getText().length()==0) {
+            Toast toast1 = Toast.makeText(getApplicationContext(),
+                    "Campo password obligatorio ", Toast.LENGTH_SHORT);
+
+            toast1.show();
+
+            return;
+        }
+
         Login();
     }
 
