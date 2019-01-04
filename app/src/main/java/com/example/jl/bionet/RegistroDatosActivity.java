@@ -29,8 +29,8 @@ public class RegistroDatosActivity extends Activity {
         np.setValue(1);
     }
 
-    public void eleccion_premium(View view) {
-        Intent intent = new Intent(RegistroDatosActivity.this, EleccionPremium.class);
+    public void avanzar(View view) {
+        Intent intent = new Intent(RegistroDatosActivity.this, Numero_sucursal.class);
         startActivity(intent);
     }
 

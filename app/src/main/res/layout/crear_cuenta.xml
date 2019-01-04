@@ -17,11 +17,28 @@
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageView4"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/logo2" />
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:src="@drawable/logo1" />
+
+            <TextView
+                android:id="@+id/textView458"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_margin="3dp"
+                android:text="Punto de venta"
+                android:textAllCaps="true"
+                android:textColor="#544D47" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -418,21 +418,21 @@
                 android:layout_marginHorizontal="20dp"
                 android:orientation="vertical">
 
-                <RadioButton
+                <CheckBox
                     android:id="@+id/radioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:checked="true"
+                    android:checked="false"
                     android:text="Mismo que e-mail personal"
                     android:textSize="18sp" />
 
-                <RadioButton
+                <CheckBox
                     android:id="@+id/radioButton2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:checked="true"
+                    android:checked="false"
                     android:text="Misma que dirección personal"
                     android:textSize="18sp" />
             </LinearLayout>

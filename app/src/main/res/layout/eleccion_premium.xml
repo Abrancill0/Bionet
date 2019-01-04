@@ -101,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:text="Versión Pro"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="30sp"
+                    android:textSize="28sp"
                     app:fontFamily="@font/muli_semibold" />
 
                 <TextView
@@ -129,7 +129,7 @@
                     android:gravity="center"
                     android:text="Versión Premium"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="30sp"
+                    android:textSize="28sp"
                     app:fontFamily="@font/muli_semibold"
                     />
 
