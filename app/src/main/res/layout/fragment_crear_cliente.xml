@@ -67,7 +67,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/nombre_cliente1"
+                        android:id="@+id/Text_cliente_Nombre"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -93,7 +93,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/estado_cliente"
+                        android:id="@+id/Text_cliente_estado"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -118,7 +118,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/colonia_cliente"
+                        android:id="@+id/Text_cliente_colonia"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -143,7 +143,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/num_int_cliente"
+                        android:id="@+id/Text_cliente_num_int"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -168,7 +168,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/ciudad_cliente"
+                        android:id="@+id/Text_cliente_ciudad"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -201,7 +201,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/email_cliente"
+                        android:id="@+id/Text_cliente_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -226,7 +226,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/calle_cliente"
+                        android:id="@+id/Text_cliente_calle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -250,7 +250,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/num_ext_cliente"
+                        android:id="@+id/Text_cliente_num_ext"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -274,7 +274,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/cp_cliente"
+                        android:id="@+id/Text_cliente_cp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -298,7 +298,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/municipio_cliente"
+                        android:id="@+id/Text_cliente_municipio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -345,7 +345,7 @@
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/rfc_cliente"
+                    android:id="@+id/Text_cliente_rfc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_gray"
@@ -369,7 +369,7 @@
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/razon_social_cliente2"
+                    android:id="@+id/Text_cliente_razon_social"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_gray"

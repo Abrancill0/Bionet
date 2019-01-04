@@ -76,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
         progreso.setMessage("Iniciando sesion...");
         progreso.show();
 
-        RequestQueue queue = Volley.newRequestQueue(this);  // this = context
-
         JSONObject request = new JSONObject();
         try
         {
@@ -107,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject Respuesta = null;
 
                 try {
+
                     Respuesta = response.getJSONObject("resultado");
                     
                     Resultado.setUsuNombre(Respuesta.getString("usu_nombre"));
