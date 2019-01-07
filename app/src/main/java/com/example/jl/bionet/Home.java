@@ -65,7 +65,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     break;
 
                 case R.id.nav_cerrar_sesion:
-                    
+                    Dialog cerrar;
+                    cerrar = new Dialog(this);
+                    cerrar.setContentView(R.layout.pop_up_cerrarsesion);
+                    cerrar.show();
                     break;
             }
 

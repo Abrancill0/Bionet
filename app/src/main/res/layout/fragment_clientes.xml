@@ -54,7 +54,8 @@
             android:id="@+id/tabla_clientes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            table:tableView_columnCount="7" />
+            table:tableView_columnCount="7"
+                app:tableView_headerColor="@color/white"/>
 
         </LinearLayout>
 

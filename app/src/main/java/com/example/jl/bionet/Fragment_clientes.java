@@ -3,16 +3,15 @@ package com.example.jl.bionet;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import de.codecrafters.tableview.TableView;
-import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
+import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 /**
@@ -32,14 +31,24 @@ public class Fragment_clientes extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_clientes,container, false);
-        String[] tabla_clientes_HEADERS = { "ID", "Nombre", "Correo Eléctronico", "Teléfono", "Últ. Visita", "Consumo Promedio","ID Referencia"};
 
         String[][] DATA_TO_SHOW = { { "1", "Juan Pérez", "a@gdg.mx", "4443264536","25/06/18","100.00","14557" }, };
 
-        TableView tabla_clientes = (TableView) v.findViewById(R.id.tabla_clientes);
-        tabla_clientes.setHeaderAdapter(new SimpleTableHeaderAdapter(v.getContext(),tabla_clientes_HEADERS));
-        tabla_clientes.setHeaderBackgroundColor(getResources().getColor(R.color.white));
-        tabla_clientes.setDataAdapter(new SimpleTableDataAdapter(v.getContext(), DATA_TO_SHOW));
+        final TableView tabla_clientes = (TableView) v.findViewById(R.id.tabla_clientes);
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "ID", "Nombre", "Correo Eléctronico", "Teléfono", "Últ. Visita", "Consumo Promedio","ID Referencia");
+        simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(7);
+        tableColumnWeightModel.setColumnWeight(0, 1);
+        tableColumnWeightModel.setColumnWeight(1, 3);
+        tableColumnWeightModel.setColumnWeight(2, 3);
+        tableColumnWeightModel.setColumnWeight(3, 3);
+        tableColumnWeightModel.setColumnWeight(4, 3);
+        tableColumnWeightModel.setColumnWeight(5, 3);
+        tableColumnWeightModel.setColumnWeight(6, 3);
+
+        tabla_clientes.setHeaderAdapter(simpleHeader);
+        tabla_clientes.setColumnModel(tableColumnWeightModel);
 
         Button btn_crear_cliente = (Button) v.findViewById(R.id.btn_crear_cliente);
         btn_crear_cliente.setOnClickListener(new View.OnClickListener() {
