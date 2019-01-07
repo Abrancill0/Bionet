@@ -65,7 +65,7 @@
 
                 <NumberPicker
                     android:id="@+id/NumeroSucursales"
-                    android:layout_width="47dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginLeft="10dp"
                     app:layout_constraintEnd_toEndOf="parent"

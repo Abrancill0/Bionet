@@ -6,5 +6,8 @@
         <item android:id="@+id/nav_clientes"
             android:icon="@drawable/clientes_azul"
             android:title="Clientes"/>
+        <item android:id="@+id/nav_cerrar_sesion"
+            android:icon="@drawable/cerrar_sesion_azul"
+            android:title="Cerrar sesión"/>
     </group>
 </menu>

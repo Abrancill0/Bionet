@@ -44,11 +44,6 @@ public class Fragment_crear_cliente extends Fragment {
         View v = inflater.inflate(R.layout.fragment_crear_cliente,container, false);
         Button guardar = (Button) v.findViewById(R.id.verificar_fiscal);
 
-
-
-
-
-
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

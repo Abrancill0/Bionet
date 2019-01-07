@@ -27,6 +27,7 @@ public class Numero_sucursal extends Activity {
         TableView tableView2 = (TableView) findViewById(R.id.tabla2);
         tableView1.setHeaderBackgroundColor(getResources().getColor(R.color.white));
         tableView1.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TABLA1_HEADERS));
+
         tableView2.setHeaderBackgroundColor(getResources().getColor(R.color.white));
         tableView2.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TABLA2_HEADERS));
 

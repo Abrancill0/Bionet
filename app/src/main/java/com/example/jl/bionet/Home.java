@@ -18,8 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import de.codecrafters.tableview.TableView;
+import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
+
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DrawerLayout drawer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+
+
 
     }
 
@@ -55,6 +62,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 case R.id.nav_clientes:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                                 new Fragment_clientes()).commit();
+                    break;
+
+                case R.id.nav_cerrar_sesion:
+                    
                     break;
             }
 
