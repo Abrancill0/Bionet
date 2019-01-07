@@ -1,8 +1,6 @@
 package com.example.jl.bionet;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,19 +14,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-
-import de.codecrafters.tableview.TableView;
-import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DrawerLayout drawer;
 
+    Dialog cerrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
+        cerrar = new Dialog(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 
@@ -40,6 +36,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+
 
 
 
@@ -65,10 +63,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     break;
 
                 case R.id.nav_cerrar_sesion:
-                    Dialog cerrar;
-                    cerrar = new Dialog(this);
-                    cerrar.setContentView(R.layout.pop_up_cerrarsesion);
-                    cerrar.show();
+                        cerrar.setContentView(R.layout.pop_up_cerrarsesion);
+                        cerrar.show();
                     break;
             }
 
@@ -97,6 +93,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         dialog.show();
     }
 
+    public void Aceptar(View view){
+        Intent intent = new Intent(Home.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void Cancelar(View view){
+        cerrar.dismiss();
+    }
 
 
 
