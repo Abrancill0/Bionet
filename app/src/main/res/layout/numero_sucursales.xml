@@ -64,7 +64,7 @@
                     app:fontFamily="@font/muli" />
 
                 <NumberPicker
-                    android:id="@+id/numeroSucursales"
+                    android:id="@+id/NumeroSucursales"
                     android:layout_width="47dp"
                     android:layout_height="50dp"
                     android:layout_marginLeft="10dp"
@@ -77,14 +77,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".6"
+                android:layout_weight=".4"
                 android:orientation="vertical">
 
                 <de.codecrafters.tableview.TableView
                     android:id="@+id/tabla1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:dividerHeight="2dp"/>
+                    table:tableView_columnCount="4"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -110,7 +110,7 @@
                 android:id="@+id/tabla2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight=".9" />
+                table:tableView_columnCount="4"/>
         </LinearLayout>
 
         <LinearLayout
@@ -126,10 +126,10 @@
                 android:layout_width="177dp"
                 android:layout_height="34dp"
                 android:background="@drawable/btn"
-                android:text="Button"
+                android:text="Aceptar"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                tools:text="Aceptar" />
+                android:onClick="eleccion_premium"/>
         </LinearLayout>
 
     </LinearLayout>
