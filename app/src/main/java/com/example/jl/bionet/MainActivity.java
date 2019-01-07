@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
      ProgressDialog progreso;
 
+    LoginModel Resultado = new LoginModel();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
                 progreso.hide();
 
-                LoginModel Resultado = new LoginModel();
+                Resultado = new LoginModel();
 
                 JSONObject Respuesta = null;
 
@@ -111,19 +113,13 @@ public class MainActivity extends AppCompatActivity {
                     Resultado.setUsuNombre(Respuesta.getString("usu_nombre"));
                     Resultado.setUsuId(Respuesta.getString("usu_id"));
 
+                    new GuardaPreferencia().execute();
+
                     Toast toast1 =
                             Toast.makeText(getApplicationContext(),
-                                    "Bienvenido " + Resultado.getUsuNombre(), Toast.LENGTH_SHORT);
+                                    "Bienvenido " + Resultado.getUsuNombre(), Toast.LENGTH_LONG);
 
                     toast1.show();
-
-                    SharedPreferences sharepref = getPreferences(getBaseContext().MODE_PRIVATE);
-                    SharedPreferences.Editor editor =  sharepref.edit();
-                    editor.putString("usu_nombre", Resultado.getUsuNombre());
-                    editor.putString("usu_id", Resultado.getUsuId());
-
-                    editor.commit();
-
 
                 } catch (JSONException e) {
                     progreso.hide();
@@ -183,5 +179,23 @@ public class MainActivity extends AppCompatActivity {
 
         Login();
     }
+
+    private class GuardaPreferencia extends AsyncTask<Void,String,Void>
+    {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+                SharedPreferences sharepref = getPreferences(getBaseContext().MODE_PRIVATE);
+                SharedPreferences.Editor editor =  sharepref.edit();
+                editor.putString("usu_nombre", Resultado.getUsuNombre());
+                editor.putString("usu_id", Resultado.getUsuId());
+
+                editor.commit();
+
+            return null;
+        }
+    }
+
 
 }
