@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:table="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:background="@color/white"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:orientation="vertical"
+
+            >
+
+            <Button
+                android:id="@+id/fragment_inventarios"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:background="@drawable/pestanas_desplegables"
+                android:text="Listado de inventario"
+                android:textAllCaps="false"
+                android:fontFamily="@font/muli" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:background="@drawable/pestanas_desplegables"
+                android:text="Traslados"
+                android:textAllCaps="false"
+                android:fontFamily="@font/muli"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:background="@drawable/pestanas_desplegables"
+                android:text="Créditos Proveedores"
+                android:textAllCaps="false"
+                android:fontFamily="@font/muli"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".8"
+            android:background="@drawable/pestanas_desplegables"
+            android:orientation="vertical"
+            android:paddingHorizontal="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingVertical="20dp">
+
+                <Spinner
+                    android:id="@+id/categoria_sku"
+                    android:layout_width="match_parent"
+                    android:layout_height="34dp"
+                    android:layout_marginVertical="20dp"
+                    android:background="@drawable/spinner_giro"/>
+
+                <Spinner
+                    android:id="@+id/categoria_categoria"
+                    android:layout_width="match_parent"
+                    android:layout_height="34dp"
+                    android:layout_marginVertical="20dp"
+                    android:background="@drawable/spinner_giro"/>
+
+                <Spinner
+                    android:id="@+id/categoria_producto"
+                    android:layout_width="match_parent"
+                    android:layout_height="34dp"
+                    android:layout_marginVertical="20dp"
+                    android:background="@drawable/spinner_giro"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <Button
+                    android:id="@+id/button6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:background="@drawable/shape_gray"
+                    android:fontFamily="@font/muli"
+                    android:text="Agregar Productos"
+                    android:textAllCaps="false"
+                    android:textColor="@color/gray" />
+
+                <Button
+                    android:id="@+id/pop_up_traslados"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_gray"
+                    android:fontFamily="@font/muli"
+                    android:text="Solicitar Traslado"
+                    android:textAllCaps="false"
+                    android:textColor="@color/gray" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:orientation="vertical"
+            android:background="@drawable/pestanas_desplegables"
+            android:padding="20dp">
+
+            <de.codecrafters.tableview.TableView
+                android:id="@+id/tabla_inventario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tableView_headerColor="@color/white"
+                table:tableView_columnCount="5" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

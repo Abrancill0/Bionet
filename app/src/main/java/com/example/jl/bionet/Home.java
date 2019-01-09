@@ -38,10 +38,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         toggle.syncState();
 
 
-
-
-
-
     }
 
 
@@ -60,6 +56,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 case R.id.nav_clientes:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                                 new Fragment_clientes()).commit();
+                    break;
+
+                case R.id.nav_inventario:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new Fragment_inventarios()).commit();
                     break;
 
                 case R.id.nav_cerrar_sesion:

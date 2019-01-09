@@ -6,6 +6,18 @@
         <item>Tecnologías de la información</item>
         <item>Industria Alimentaria</item>
     </string-array>
+
+    <string-array name="SKU">
+        <item>SKU</item>
+    </string-array>
+
+    <string-array name="Producto">
+        <item>Producto</item>
+    </string-array>
+
+    <string-array name="Categoría">
+        <item>Categoría</item>
+    </string-array>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="activar_licencia"><u>Activar Licencia</u></string>
