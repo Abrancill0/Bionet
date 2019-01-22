@@ -4,10 +4,8 @@ package com.example.jl.bionet;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +13,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.jl.bionet.model.LoginModel;
 import com.example.jl.bionet.model.VolleySingleton;
 
 import org.json.JSONException;
@@ -47,7 +42,7 @@ public class Fragment_crear_cliente extends Fragment {
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment_direccion_fiscal dialog = new Fragment_direccion_fiscal();
+                Fragment_pop_up_direccion_fiscal dialog = new Fragment_pop_up_direccion_fiscal();
                 dialog.setTargetFragment(Fragment_crear_cliente.this, 1);
                 dialog.show(getFragmentManager(), "MyCustomDialog");
             }

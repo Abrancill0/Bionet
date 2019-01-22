@@ -21,6 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -65,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (Valor != "0")
         {
-            Intent intent = new Intent(MainActivity.this, Home.class);
-            startActivity(intent);
+            //Intent intent = new Intent(MainActivity.this, Home.class);
+            //startActivity(intent);
         }
 
 

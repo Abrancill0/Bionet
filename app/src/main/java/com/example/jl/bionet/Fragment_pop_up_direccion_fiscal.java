@@ -15,10 +15,10 @@ import android.widget.TextView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Fragment_direccion_fiscal extends DialogFragment {
+public class Fragment_pop_up_direccion_fiscal extends DialogFragment {
 
 
-    public Fragment_direccion_fiscal() {
+    public Fragment_pop_up_direccion_fiscal() {
         // Required empty public constructor
     }
 
