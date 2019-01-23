@@ -1,12 +1,16 @@
 package com.example.jl.bionet;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -21,9 +25,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Fragment_pop_up_ProfilePhoto.OnPhotoSelectedListener {
     private DrawerLayout drawer;
@@ -51,6 +58,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         mSelectedUri = imagePath;
     }
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +69,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         drawer = findViewById(R.id.drawer_layout);
 
+        Context context = this;
+        SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", context.MODE_PRIVATE);
+
+        String Nombre = sharedPref.getString("usu_nombre","");
+        String Apellido = sharedPref.getString("usu_apellidos","");
+        String ImagenPerfil = sharedPref.getString("usu_imagen_perfil","");
+
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -70,6 +85,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         View headView = navigationView.getHeaderView(0);
         ImageView imgProfile = headView.findViewById(R.id.foto_perfil);
+
+        String url = getString(R.string.Url) + ImagenPerfil;
+
+        Picasso.with(context).load(url).into(imgProfile);
+
+        TextView NombreUsuario = (TextView) headView.findViewById(R.id.TextNombrePerfil);
+
+        NombreUsuario.setText(Nombre + " " + Apellido);
+
         imgProfile.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){

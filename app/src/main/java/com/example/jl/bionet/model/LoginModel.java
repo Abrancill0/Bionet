@@ -22,8 +22,12 @@ public class LoginModel {
         private String usuImagen;
         private Integer usuIdRol;
         private Integer usuEstatus;
+        private String Estatus;
+        private String Mensaje;
         private String createdAt;
         private String updatedAt;
+        private String usu_activo;
+        private String usu_administrador;
 
         public String getUsuId() {
             return usuId;
@@ -202,4 +206,35 @@ public class LoginModel {
         }
 
 
+    public String getUsu_activo() {
+        return usu_activo;
+    }
+
+    public void setUsu_activo(String usu_activo) {
+        this.usu_activo = usu_activo;
+    }
+
+    public String getUsu_administrador() {
+        return usu_administrador;
+    }
+
+    public void setUsu_administrador(String usu_administrador) {
+        this.usu_administrador = usu_administrador;
+    }
+
+    public String getEstatus() {
+        return Estatus;
+    }
+
+    public void setEstatus(String estatus) {
+        Estatus = estatus;
+    }
+
+    public String getMensaje() {
+        return Mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        Mensaje = mensaje;
+    }
 }
