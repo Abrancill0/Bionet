@@ -42,7 +42,6 @@ import static com.android.volley.Request.*;
 
 public class MainActivity extends AppCompatActivity {
 
-
      EditText TextUsuario,TextPassword;
 
      ProgressDialog progreso;
@@ -82,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
         JSONObject request = new JSONObject();
         try
         {
-            request.put("usu_usuario", TextUsuario.getText());
-            request.put("usu_contrasena", TextPassword.getText());
+            request.put("usu_correo_electronico", TextUsuario.getText());
+            request.put("usu_contrasenia", TextPassword.getText());
 
         }
         catch(Exception e)
@@ -91,15 +90,17 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        String url = "https://citycenter-rosario.com.ar/usuarios/loginApp";
+        String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Method.POST, url,request, new Response.Listener<JSONObject>()
+        String ApiPath = url + "/api/login/login";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
         {
             @Override
             public void onResponse(JSONObject response) {
 
-                Intent intent = new Intent(MainActivity.this, Home.class);
-                startActivity(intent);
+               // Intent intent = new Intent(MainActivity.this, Home.class);
+               // startActivity(intent);
 
                 progreso.hide();
 
