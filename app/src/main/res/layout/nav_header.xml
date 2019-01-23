@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="176dp"
+    android:layout_height="150dp"
     android:background="@color/fondo"
     android:gravity="center_vertical|center_horizontal"
     android:orientation="horizontal"
     android:padding="15dp">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="106dp"
-        android:layout_height="101dp"
-        android:background="@drawable/circle_background"
-        android:padding="25dp"
-        android:src="@drawable/camara" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/foto_perfil"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:onClick="tomarFoto"
+        android:src="@drawable/imagen_profile"
+        app:civ_border_color="@color/colorPrimary"
+        app:civ_border_width="1dp" />
 
     <TextView
         android:id="@+id/NombrePerfil"

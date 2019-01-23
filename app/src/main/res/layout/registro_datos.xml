@@ -49,21 +49,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="10dp"
                 android:gravity="center_horizontal"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingBottom="30dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profileImagen"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:onClick="tomarFoto"
-                    android:src="@drawable/camara"
-                    app:civ_border_width="1dp"
-                    app:civ_border_color="@color/colorPrimary"
-                    android:layout_marginTop="51dp"
                     android:layout_centerHorizontal="true"
-                    />
+                    android:onClick="tomarFoto"
+                    android:src="@drawable/imagen_profile"
+                    app:civ_border_color="@color/colorPrimary"
+                    app:civ_border_width="1dp" />
 
             </LinearLayout>
 
