@@ -22,6 +22,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="activar_licencia"><u>Activar Licencia</u></string>
     <string name="dialog_select_photo">Select Photo</string>
+    <string name="contrasenia_olvidada"><u>¿Olvidaste tu contraseña?</u></string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -19,7 +19,7 @@ import org.json.JSONObject;
 
 import static com.android.volley.Request.*;
 
-public class MainActivity extends AppCompatActivity {
+public class Login extends AppCompatActivity {
 
      EditText TextUsuario,TextPassword;
 
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.login);
 
         SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (Valor != "0")
         {
-            Intent intent = new Intent(MainActivity.this, Home.class);
+            Intent intent = new Intent(Login.this, Home.class);
             startActivity(intent);
         }
 
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
                     new GuardaPreferencia().execute();
 
-                    Intent intent = new Intent(MainActivity.this, Home.class);
+                    Intent intent = new Intent(Login.this, Home.class);
                     startActivity(intent);
 
 
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void CrearCuenta(View view) {
-        Intent intent = new Intent(MainActivity.this, CrearCuentaActivity.class);
+        Intent intent = new Intent(Login.this, CrearCuentaActivity.class);
         startActivity(intent);
     }
 
