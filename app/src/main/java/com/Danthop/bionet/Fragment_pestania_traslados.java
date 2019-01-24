@@ -1,4 +1,4 @@
-package com.aplication.bionet;
+package com.Danthop.bionet;
 
 
 import android.os.Bundle;
@@ -12,7 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import com.aplication.bionet.R;
+import com.Danthop.bionet.R;
+
 
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;

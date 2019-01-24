@@ -1,11 +1,12 @@
-package com.aplication.bionet;
+package com.Danthop.bionet;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.aplication.bionet.R;
+import com.Danthop.bionet.R;
+
 
 public class BienvenidaActivity extends Activity {
     @Override

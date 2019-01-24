@@ -1,4 +1,4 @@
-package com.aplication.bionet.Class;
+package com.Danthop.bionet.Class;
 
 public class HttpRequest<T> {
 

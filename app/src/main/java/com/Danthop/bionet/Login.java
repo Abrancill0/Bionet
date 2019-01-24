@@ -1,4 +1,4 @@
-package com.aplication.bionet;
+package com.Danthop.bionet;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,12 +11,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.Danthop.bionet.model.LoginModel;
+import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.aplication.bionet.model.LoginModel;
-import com.aplication.bionet.model.VolleySingleton;
-import com.aplication.bionet.R;
+import com.Danthop.bionet.R;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;

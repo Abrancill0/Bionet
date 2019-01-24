@@ -1,4 +1,4 @@
-package com.aplication.bionet;
+package com.Danthop.bionet;
 
 import android.Manifest;
 import android.content.Intent;
@@ -17,7 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
-import com.aplication.bionet.R;
+import com.Danthop.bionet.R;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class RegistroDatosActivity extends FragmentActivity implements Fragment_pop_up_ProfilePhoto.OnPhotoSelectedListener {

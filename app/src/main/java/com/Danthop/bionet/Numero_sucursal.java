@@ -1,4 +1,4 @@
-package com.aplication.bionet;
+package com.Danthop.bionet;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.NumberPicker;
 
-import com.aplication.bionet.R;
+import com.Danthop.bionet.R;
+
 
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;

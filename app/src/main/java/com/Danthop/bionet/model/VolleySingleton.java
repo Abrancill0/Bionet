@@ -1,4 +1,4 @@
-package com.aplication.bionet.model;
+package com.Danthop.bionet.model;
 
 import android.content.Context;
 
