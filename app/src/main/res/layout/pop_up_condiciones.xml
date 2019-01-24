@@ -50,7 +50,7 @@
         </LinearLayout>
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/check_condiciones"
             android:layout_width="318dp"
             android:layout_height="53dp"
             android:text="Acepto las políticas de privacidad, términos y condiciones"

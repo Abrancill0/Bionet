@@ -54,7 +54,7 @@
                 android:textColor="#023950" />
 
             <EditText
-                android:id="@+id/new_usuario"
+                android:id="@+id/text_new_usuario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -74,7 +74,7 @@
                 android:textColor="#023950" />
 
             <EditText
-                android:id="@+id/password"
+                android:id="@+id/text_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -94,7 +94,7 @@
                 android:textColor="#023950" />
 
             <EditText
-                android:id="@+id/repassword"
+                android:id="@+id/text_repassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
