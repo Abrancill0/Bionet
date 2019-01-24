@@ -1,4 +1,4 @@
-package com.example.jl.bionet;
+package com.aplication.bionet;
 
 
 import android.app.Dialog;
@@ -16,7 +16,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.jl.bionet.model.VolleySingleton;
+import com.aplication.bionet.model.VolleySingleton;
+import com.aplication.bionet.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

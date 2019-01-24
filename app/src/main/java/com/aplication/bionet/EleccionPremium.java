@@ -1,9 +1,11 @@
-package com.example.jl.bionet;
+package com.aplication.bionet;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.aplication.bionet.R;
 
 public class EleccionPremium extends Activity {
     @Override

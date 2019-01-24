@@ -1,6 +1,4 @@
-package com.example.jl.bionet.Class;
-
-import java.security.PublicKey;
+package com.aplication.bionet.Class;
 
 public class HttpRequest<T> {
 

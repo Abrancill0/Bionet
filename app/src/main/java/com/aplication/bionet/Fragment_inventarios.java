@@ -1,4 +1,4 @@
-package com.example.jl.bionet;
+package com.aplication.bionet;
 
 
 import android.os.Bundle;
@@ -12,11 +12,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Spinner;
-import android.widget.TextView;
+
+import com.aplication.bionet.R;
 
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
-import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 /**

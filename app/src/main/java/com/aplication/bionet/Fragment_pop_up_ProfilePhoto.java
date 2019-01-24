@@ -1,4 +1,4 @@
-package com.example.jl.bionet;
+package com.aplication.bionet;
 
 
 import android.app.Activity;
@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.aplication.bionet.R;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -24,7 +26,7 @@ public class Fragment_pop_up_ProfilePhoto extends DialogFragment {
     private static final int CAMERA_REQUEST_CODE = 12345;
 
     public interface  OnPhotoSelectedListener{
-        void getImagePath (Uri imagePath);
+        void getImagePath(Uri imagePath);
         void getImageBitmap(Bitmap bitmap);
     }
     OnPhotoSelectedListener mOnPhotoSelectedListener;

@@ -1,15 +1,14 @@
-package com.example.jl.bionet;
+package com.aplication.bionet;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.NumberPicker;
-import android.widget.Spinner;
+
+import com.aplication.bionet.R;
 
 import de.codecrafters.tableview.TableView;
-import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 public class Numero_sucursal extends Activity {

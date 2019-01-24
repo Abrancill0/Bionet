@@ -1,4 +1,4 @@
-package com.example.jl.bionet.model;
+package com.aplication.bionet.model;
 
 public class LoginModel {
 

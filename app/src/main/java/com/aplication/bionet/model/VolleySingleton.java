@@ -1,12 +1,10 @@
-package com.example.jl.bionet.model;
+package com.aplication.bionet.model;
 
 import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-
-import java.security.PublicKey;
 
 public class VolleySingleton {
 
