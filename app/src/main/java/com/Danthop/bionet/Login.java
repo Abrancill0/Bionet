@@ -1,5 +1,6 @@
 package com.Danthop.bionet;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -27,20 +28,31 @@ import static com.android.volley.Request.Method;
 public class Login extends AppCompatActivity {
 
      EditText TextUsuario,TextPassword;
+     EditText correo_contrasena_olvidada;
 
      ProgressDialog progreso;
 
     LoginModel Resultado = new LoginModel();
+
+
+    Dialog reestablecer;
+    Dialog correo_enviado;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
+        reestablecer = new Dialog(this);
+        correo_enviado = new Dialog(this);
+
         SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
         TextUsuario = (EditText)findViewById(R.id.TextUsuario);
         TextPassword = (EditText)findViewById(R.id.TextPassword);
+        correo_contrasena_olvidada = (EditText)findViewById(R.id.correo_contrasena_olvidada);
 
         String Valor = sharedPref.getString("usu_id","0");
 
@@ -220,6 +232,111 @@ public class Login extends AppCompatActivity {
             return null;
         }
     }
+
+
+    public void reestablecerContra(View v){
+
+        reestablecer.setContentView(R.layout.pop_up_olvide_contrasenia);
+        reestablecer.show();
+    }
+
+    public void forgotPassword(View v){
+
+        progreso = new ProgressDialog(this);
+        progreso.setMessage("Enviando correo...");
+        progreso.show();
+
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_correo_electronico", correo_contrasena_olvidada.getText());
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
+
+        String ApiPath = url + "/api/login/recuperar-contrasena";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONObject RespuestaNodoUsuID = null;
+
+                try {
+
+                    String status = response.getString("estatus");
+                    String mensaje = response.getString("mensaje");
+
+                    int estatus = Integer.parseInt(status);
+
+                    if (estatus == 1)
+                    {
+                        correo_enviado.setContentView(R.layout.pop_up_olvide_contrasenia);
+                        correo_enviado.show();
+
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                        progreso.hide();
+
+                    }
+                    else
+                    {
+                        progreso.hide();
+
+                        Toast toast2 = Toast.makeText(getApplicationContext(),
+                                Resultado.getMensaje(), Toast.LENGTH_LONG);
+
+                        toast2.show();
+
+                    }
+
+                } catch (JSONException e) {
+                    progreso.hide();
+
+                    Toast toast1 = Toast.makeText(getApplicationContext(),
+                            "Error al conectarse al servidor", Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+                }
+
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+
+                        progreso.hide();
+
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(),
+                                        "Error de conexion", Toast.LENGTH_SHORT);
+
+                        toast1.show();
+
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
+
+    }
+
+
 
 
 }
