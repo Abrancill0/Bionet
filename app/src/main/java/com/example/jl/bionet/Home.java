@@ -207,6 +207,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public void Aceptar(View view){
         Intent intent = new Intent(Home.this, MainActivity.class);
         startActivity(intent);
+
+        SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+
+        sharedPref.edit().clear().commit();
+
     }
 
     public void Cancelar(View view){

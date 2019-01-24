@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (Valor != "0")
         {
-           // Intent intent = new Intent(MainActivity.this, Home.class);
-           // startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, Home.class);
+            startActivity(intent);
         }
 
 
