@@ -26,6 +26,9 @@ public class CrearCuentaActivity extends Activity {
         Usuario =(EditText) findViewById(R.id.text_new_usuario);
         Password1 =(EditText) findViewById(R.id.text_password);
         Password2 =(EditText) findViewById(R.id.text_repassword);
+
+       //View condiciones = R.layout.pop_up_condiciones;
+
         AceptaTerminos =(CheckBox) findViewById(R.id.check_condiciones);
 
     }
@@ -55,7 +58,13 @@ public class CrearCuentaActivity extends Activity {
             return;
         }
 
-        if(Password1.getText() != Password2.getText()) {
+        String pass1= String.valueOf(Password1.getText());
+        String pass2= String.valueOf(Password2.getText());
+
+
+
+        if(!pass1.equals(pass2)) {
+
             Toast toast1 = Toast.makeText(getApplicationContext(),
                     "Las contrasenas debe de coincidir ", Toast.LENGTH_SHORT);
 
@@ -72,20 +81,24 @@ public class CrearCuentaActivity extends Activity {
 
     public void Bienvenido(View view) {
 
-        if (AceptaTerminos.isChecked())
-        {
+
+
+       // if (AceptaTerminos.isChecked())
+      //  {
             Intent intent = new Intent(CrearCuentaActivity.this, BienvenidaActivity.class);
+            intent.putExtra("ParametroUsuario", Usuario.getText());
+            intent.putExtra("ParametroPass", Password1.getText());
             startActivity(intent);
-        }
-        else
-        {
-            Toast toast1 = Toast.makeText(getApplicationContext(),
-                    "Debe aceptar los terminos y condiciones ", Toast.LENGTH_SHORT);
+     //   }
+     //   else
+     //   {
+     //       Toast toast1 = Toast.makeText(getApplicationContext(),
+      //              "Debe aceptar los terminos y condiciones ", Toast.LENGTH_SHORT);
 
-            toast1.show();
+    //        toast1.show();
 
-            return;
-        }
+    //        return;
+    //    }
 
 
     }

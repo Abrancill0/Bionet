@@ -34,11 +34,8 @@ public class Login extends AppCompatActivity {
 
     LoginModel Resultado = new LoginModel();
 
-
     Dialog reestablecer;
     Dialog correo_enviado;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
