@@ -109,7 +109,7 @@ public class Login extends AppCompatActivity {
 
                         if(recuperar_contrasena=="false"){
                             Intent intent = new Intent(Login.this, Reestablecer_contrasena.class);
-
+                            intent.putExtra("ParametroCorreo", TextUsuario.getText());
                             startActivity(intent);
                         }
                         else

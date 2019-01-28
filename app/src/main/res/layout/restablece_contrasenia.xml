@@ -72,7 +72,8 @@
                 android:padding="0dp"
                 android:text="Confirmar"
                 android:textColor="#ffffff"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:onClick="Reestablecer_contrasenia"/>
         </LinearLayout>
 
 
