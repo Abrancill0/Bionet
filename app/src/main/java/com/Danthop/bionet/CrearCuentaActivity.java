@@ -9,6 +9,19 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.Danthop.bionet.model.VolleySingleton;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.android.volley.Request.Method;
+
 public class CrearCuentaActivity extends Activity {
 
     private EditText Usuario;
@@ -49,6 +62,23 @@ public class CrearCuentaActivity extends Activity {
             return;
         }
 
+        Pattern pattern = Pattern
+                .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+
+        String email = String.valueOf(Usuario.getText());
+
+        Matcher mather = pattern.matcher(email);
+
+        if (mather.find() == false) {
+            Toast toast1 = Toast.makeText(getApplicationContext(),
+                    "El email ingresado es inválido.", Toast.LENGTH_SHORT);
+
+            toast1.show();
+
+            return;
+        }
+
         if(Password1.getText().length()==0) {
             Toast toast1 = Toast.makeText(getApplicationContext(),
                     "Campo contrasena obligatorio ", Toast.LENGTH_SHORT);
@@ -60,8 +90,6 @@ public class CrearCuentaActivity extends Activity {
 
         String pass1= String.valueOf(Password1.getText());
         String pass2= String.valueOf(Password2.getText());
-
-
 
         if(!pass1.equals(pass2)) {
 
@@ -81,14 +109,10 @@ public class CrearCuentaActivity extends Activity {
 
     public void Bienvenido(View view) {
 
-
-
        // if (AceptaTerminos.isChecked())
       //  {
-            Intent intent = new Intent(CrearCuentaActivity.this, BienvenidaActivity.class);
-            intent.putExtra("ParametroUsuario", Usuario.getText());
-            intent.putExtra("ParametroPass", Password1.getText());
-            startActivity(intent);
+        GuardarDatos();
+
      //   }
      //   else
      //   {
@@ -101,8 +125,94 @@ public class CrearCuentaActivity extends Activity {
     //    }
 
 
+
+
+
     }
 
+    private void GuardarDatos(){
+
+        //progreso = new ProgressDialog(this);
+        // progreso.setMessage("Iniciando sesion...");
+        // progreso.show();
+
+
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_correo_electronico", Usuario.getText());
+            request.put("usu_contrasenia", Password1.getText());
+            request.put("cbn_politica_privacidad", "true");
+            request.put("cbn_terminos_condiciones", "true");
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/cuentas/store";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1)
+                    {
+
+                        Respuesta = response.getJSONObject("resultado");
+
+                        Intent intent = new Intent(CrearCuentaActivity.this, BienvenidaActivity.class);
+
+                        startActivity(intent);
+
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+                    }
+
+                } catch (JSONException e) {
+
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG);
+
+                    toast1.show();
+                }
+
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
+
+    }
 
 
 }

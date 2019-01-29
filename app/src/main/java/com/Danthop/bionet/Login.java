@@ -23,6 +23,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static com.android.volley.Request.Method;
 
 public class Login extends AppCompatActivity {
@@ -206,6 +209,24 @@ public class Login extends AppCompatActivity {
 
             return;
         }
+
+        Pattern pattern = Pattern
+                .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+
+        String email = String.valueOf(TextUsuario.getText());
+
+        Matcher mather = pattern.matcher(email);
+
+        if (mather.find() == false) {
+            Toast toast1 = Toast.makeText(getApplicationContext(),
+                    "El email ingresado es inválido.", Toast.LENGTH_SHORT);
+
+            toast1.show();
+
+            return;
+        }
+
 
 
         if(TextPassword.getText().length()==0) {

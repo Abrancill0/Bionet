@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fondo"
@@ -74,13 +75,13 @@
                 android:textColor="#023950" />
 
             <EditText
-                android:id="@+id/new_usuario"
+                android:id="@+id/Text_Nombre_Negocio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/shape_gray"
                 android:ems="10"
-                android:inputType="textPersonName"
+                android:inputType="text"
                 android:padding="1dp"
                 android:textSize="14sp" />
 
@@ -93,10 +94,10 @@
                 android:textColor="#023950" />
 
             <Spinner
-                android:id="@+id/Giro"
+                android:id="@+id/Combo_Giro_Negocio"
                 style="@style/SpinnerTheme"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
@@ -123,13 +124,13 @@
                     android:textColor="#023950" />
 
                 <EditText
-                    android:id="@+id/password3"
+                    android:id="@+id/Text_Nombre_Persona"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:background="@drawable/shape_gray"
                     android:ems="10"
-                    android:inputType="textPassword"
+                    android:inputType="textPersonName"
                     android:padding="1dp"
                     android:textSize="14sp" />
 
@@ -142,13 +143,13 @@
                     android:textColor="#023950" />
 
                 <EditText
-                    android:id="@+id/repassword5"
+                    android:id="@+id/Text_Apellido_Paterno"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:background="@drawable/shape_gray"
                     android:ems="10"
-                    android:inputType="phone"
+                    android:inputType="textPersonName"
                     android:maxLength="10"
                     android:padding="1dp"
                     android:textSize="14sp" />
@@ -162,7 +163,7 @@
                     android:textColor="#023950" />
 
                 <EditText
-                    android:id="@+id/new_usuario3"
+                    android:id="@+id/Text_Apellido_Materno"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -181,13 +182,13 @@
                     android:textColor="#023950" />
 
                 <EditText
-                    android:id="@+id/repassword3"
+                    android:id="@+id/Text_Celuar_Administrador"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:background="@drawable/shape_gray"
                     android:ems="10"
-                    android:inputType="text"
+                    android:inputType="phone"
                     android:padding="1dp"
                     android:textSize="14sp" />
 
