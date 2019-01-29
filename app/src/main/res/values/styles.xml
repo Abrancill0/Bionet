@@ -39,5 +39,9 @@
         <item name="android:textColorHint">@color/colorPrimaryDark</item>
     </style>
 
+    <style name="SplashScreenTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name ="android:windowBackground"> @drawable/fondo_splash</item>
+    </style>
+
 
 </resources>

@@ -1,5 +1,6 @@
 package com.Danthop.bionet;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -28,7 +29,7 @@ import java.util.regex.Pattern;
 
 import static com.android.volley.Request.Method;
 
-public class Login extends AppCompatActivity {
+public class Login extends Activity {
 
     EditText TextUsuario,TextPassword;
 

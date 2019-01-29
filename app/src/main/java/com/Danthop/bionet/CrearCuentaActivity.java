@@ -42,7 +42,7 @@ public class CrearCuentaActivity extends Activity {
 
        //View condiciones = R.layout.pop_up_condiciones;
 
-        AceptaTerminos =(CheckBox) findViewById(R.id.check_condiciones);
+        AceptaTerminos =(CheckBox) terminos.findViewById(R.id.check_condiciones);
 
     }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fondo"
@@ -36,35 +37,44 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight=".6"
             android:gravity="center_horizontal"
-            android:orientation="horizontal"
             android:padding="30dp">
 
             <ImageView
                 android:id="@+id/imageView7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:src="@drawable/logo_business" />
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/bionet_business"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageView8"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/imageView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:src="@drawable/logo_commerce" />
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/bionet_commerce"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView7"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight=".8"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
@@ -78,12 +88,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
-            android:paddingTop="15dp"
-            android:paddingHorizontal="15dp">
+            android:paddingHorizontal="15dp"
+            android:paddingTop="15dp">
 
             <LinearLayout
                 android:layout_width="273dp"
@@ -129,8 +139,7 @@
                     android:text="Versión Premium"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="28sp"
-                    app:fontFamily="@font/muli_semibold"
-                    />
+                    app:fontFamily="@font/muli_semibold" />
 
                 <TextView
                     android:id="@+id/textView18"
