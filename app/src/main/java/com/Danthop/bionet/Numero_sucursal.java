@@ -1,9 +1,11 @@
 package com.Danthop.bionet;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
@@ -34,11 +36,7 @@ public class Numero_sucursal extends Activity {
         setContentView(R.layout.numero_sucursales);
 
        // NombreSucursales = (EditText) findViewById(R.id.Text_Nombre_Sucursal);
-
-        TableView tableView1 = (TableView) findViewById(R.id.tabla1);
         TableView tableView2 = (TableView) findViewById(R.id.tabla2);
-        tableView1.setHeaderBackgroundColor(getResources().getColor(R.color.white));
-        tableView1.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TABLA1_HEADERS));
 
         tableView2.setHeaderBackgroundColor(getResources().getColor(R.color.white));
         tableView2.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TABLA2_HEADERS));
@@ -128,6 +126,23 @@ public class Numero_sucursal extends Activity {
 
         VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
 
+    }
+
+    public void crear_sucursal (View v){
+        final Dialog crear_sucursal_dialog=new Dialog(Numero_sucursal.this);
+        crear_sucursal_dialog.setContentView(R.layout.pop_up_crear_sucursal);
+        crear_sucursal_dialog.show();
+
+        Button crear = (Button) crear_sucursal_dialog.findViewById(R.id.btn_crear_sucursal);
+
+        crear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                crear_sucursal_dialog.dismiss();
+            }
+        });
     }
 
 
