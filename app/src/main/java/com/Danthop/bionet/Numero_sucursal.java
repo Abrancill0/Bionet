@@ -43,18 +43,6 @@ public class Numero_sucursal extends Activity {
         tableView2.setHeaderBackgroundColor(getResources().getColor(R.color.white));
         tableView2.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TABLA2_HEADERS));
 
-        NumberPicker np = (NumberPicker) findViewById(R.id.NumeroSucursales);
-        String[] nums = new String[20];
-        for(int i=0; i<nums.length; i++)
-            nums[i] = Integer.toString(i);
-
-        np.setMinValue(1);
-        np.setMaxValue(20);
-        np.setWrapSelectorWheel(false);
-        np.setDisplayedValues(nums);
-        np.setValue(1);
-
-
     }
 
     public void eleccion_premium(View view) {
