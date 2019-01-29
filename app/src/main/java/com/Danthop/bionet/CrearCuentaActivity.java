@@ -2,6 +2,7 @@ package com.Danthop.bionet;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -29,6 +30,8 @@ public class CrearCuentaActivity extends Activity {
     private EditText Password2;
     private CheckBox AceptaTerminos;
 
+    ProgressDialog progreso;
+
     Dialog terminos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,6 @@ public class CrearCuentaActivity extends Activity {
 
        //View condiciones = R.layout.pop_up_condiciones;
 
-        AceptaTerminos =(CheckBox) terminos.findViewById(R.id.check_condiciones);
 
     }
 
@@ -109,32 +111,32 @@ public class CrearCuentaActivity extends Activity {
 
     public void Bienvenido(View view) {
 
-       // if (AceptaTerminos.isChecked())
-      //  {
+        AceptaTerminos =(CheckBox) terminos.findViewById(R.id.check_condiciones);
+
+
+        if (AceptaTerminos.isChecked())
+        {
         GuardarDatos();
 
-     //   }
-     //   else
-     //   {
-     //       Toast toast1 = Toast.makeText(getApplicationContext(),
-      //              "Debe aceptar los terminos y condiciones ", Toast.LENGTH_SHORT);
+        }
+        else
+        {
+            Toast toast1 = Toast.makeText(getApplicationContext(),
+                    "Debe aceptar los terminos y condiciones ", Toast.LENGTH_SHORT);
 
-    //        toast1.show();
+            toast1.show();
 
-    //        return;
-    //    }
-
-
-
+            return;
+        }
 
 
     }
 
     private void GuardarDatos(){
 
-        //progreso = new ProgressDialog(this);
-        // progreso.setMessage("Iniciando sesion...");
-        // progreso.show();
+        progreso = new ProgressDialog(this);
+        progreso.setMessage("procesando...");
+        progreso.show();
 
 
         JSONObject request = new JSONObject();
@@ -171,11 +173,13 @@ public class CrearCuentaActivity extends Activity {
                     {
 
                         Respuesta = response.getJSONObject("resultado");
+                        String IDUsuario =Respuesta.getString("usu_id");
 
                         Intent intent = new Intent(CrearCuentaActivity.this, BienvenidaActivity.class);
-
+                        intent.putExtra("IDUsuario", IDUsuario);
                         startActivity(intent);
 
+                        progreso.hide();
                     }
                     else
                     {
@@ -183,6 +187,8 @@ public class CrearCuentaActivity extends Activity {
                                 Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
 
                         toast1.show();
+
+                        progreso.hide();
 
                     }
 
@@ -192,6 +198,8 @@ public class CrearCuentaActivity extends Activity {
                             Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG);
 
                     toast1.show();
+
+                    progreso.hide();
                 }
 
             }
@@ -206,6 +214,7 @@ public class CrearCuentaActivity extends Activity {
 
                         toast1.show();
 
+                        progreso.hide();
                     }
                 }
         );

@@ -39,6 +39,8 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
     private EditText ApellidoMaterno;
     private EditText CelularAdministrador;
     private Spinner GiroNegocio;
+    ProgressDialog progreso;
+    private String IDUsuario;
 
     ImageLoader imageLoader = ImageLoader.getInstance();
 
@@ -75,6 +77,9 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
         ApellidoMaterno = (EditText) findViewById(R.id.Text_Apellido_Materno);
         CelularAdministrador = (EditText) findViewById(R.id.Text_Celuar_Administrador);
 
+        Bundle datos = this.getIntent().getExtras();
+        IDUsuario =  "" + datos.get("IDUsuario");
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Giros, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         spinner.setAdapter(adapter);
@@ -86,9 +91,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
 
     public void avanzar(View view) {
 
-        Intent intent = new Intent(RegistroDatosActivity.this, Numero_sucursal.class);
-        startActivity(intent);
-        //GuardarDatos();
+        GuardarDatos();
 
     }
 
@@ -128,9 +131,9 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
 
     private void GuardarDatos(){
 
-        //progreso = new ProgressDialog(this);
-       // progreso.setMessage("Iniciando sesion...");
-       // progreso.show();
+        progreso = new ProgressDialog(this);
+        progreso.setMessage("procesando...");
+        progreso.show();
 
 
         JSONObject request = new JSONObject();
@@ -144,6 +147,8 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
             request.put("usu_numero_telefono", CelularAdministrador.getText());
             request.put("cbn_numero_sucursales", 0);
             request.put("con_logo_negocio", "");
+            request.put("esApp", "1");
+            request.put("usu_id", IDUsuario);
 
         }
         catch(Exception e)
@@ -170,12 +175,15 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
                     if (status == 1)
                     {
 
-                        Respuesta = response.getJSONObject("resultado");
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
 
                         Intent intent = new Intent(RegistroDatosActivity.this, Numero_sucursal.class);
                         startActivity(intent);
 
-
+                        progreso.hide();
                     }
                     else
                     {
@@ -183,6 +191,8 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
                                 Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
 
                         toast1.show();
+
+                        progreso.hide();
 
                     }
 
@@ -192,6 +202,8 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
                             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
 
                     toast1.show();
+
+                    progreso.hide();
                 }
 
             }
@@ -206,6 +218,8 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
                                         "Error de conexion", Toast.LENGTH_SHORT);
 
                         toast1.show();
+
+                        progreso.hide();
 
                     }
                 }

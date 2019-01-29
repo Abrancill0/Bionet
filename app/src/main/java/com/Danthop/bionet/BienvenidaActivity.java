@@ -20,11 +20,13 @@ import org.json.JSONObject;
 
 public class BienvenidaActivity extends Activity {
 
-    private String UsuarioIntent;
-    private String PassIntent;
+    private String IDUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Bundle datos = this.getIntent().getExtras();
+        IDUsuario =  "" + datos.get("IDUsuario");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bienvenida);
@@ -33,6 +35,7 @@ public class BienvenidaActivity extends Activity {
     }
     public void Datos(View view) {
         Intent intent = new Intent(BienvenidaActivity.this, RegistroDatosActivity.class);
+        intent.putExtra("IDUsuario", IDUsuario);
         startActivity(intent);
 
     }

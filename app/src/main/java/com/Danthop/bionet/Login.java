@@ -33,7 +33,6 @@ public class Login extends Activity {
 
     EditText TextUsuario,TextPassword;
 
-
     ProgressDialog progreso;
 
     LoginModel Resultado = new LoginModel();
