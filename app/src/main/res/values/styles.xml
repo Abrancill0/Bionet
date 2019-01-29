@@ -40,7 +40,7 @@
     </style>
 
     <style name="SplashScreenTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name ="android:windowBackground"> @drawable/fondo_splash</item>
+        <item name ="android:windowBackground"> @drawable/splash</item>
     </style>
 
 
