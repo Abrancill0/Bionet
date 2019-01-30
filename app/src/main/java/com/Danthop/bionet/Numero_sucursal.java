@@ -26,14 +26,20 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 public class Numero_sucursal extends Activity {
 
-    private  EditText NombreSucursales;
+    private EditText nombre_sucursal;
+    private EditText telefono_sucursal;
+    private EditText correo_sucursal;
+    private EditText direccion_sucursal;
     private static final String[] TABLA1_HEADERS = { "Nombre de la sucursal", "Teléfono", "Correo", "Dirección" };
     private static final String[] TABLA2_HEADERS = { "No.","Nombre de la sucursal", "Teléfono", "Correo", "Dirección" };
-
+    private String IDUsuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.numero_sucursales);
+
+        Bundle datos = this.getIntent().getExtras();
+        IDUsuario =  "" + datos.get("IDUsuario");
 
        // NombreSucursales = (EditText) findViewById(R.id.Text_Nombre_Sucursal);
         TableView tableView2 = (TableView) findViewById(R.id.tabla2);
@@ -61,7 +67,25 @@ public class Numero_sucursal extends Activity {
         JSONObject request = new JSONObject();
         try
         {
-            request.put("usu_correo_electronico", NombreSucursales);
+            request.put("suc_nombre", nombre_sucursal.getText());
+            request.put("suc_id_emisor", "0");
+            request.put("suc_telefono", telefono_sucursal.getText());
+            request.put("suc_correo_electronico", correo_sucursal.getText());
+            request.put("con_propinas", "false");
+            request.put("suc_calle", direccion_sucursal.getText());
+            request.put("suc_numero_interior", "0");
+            request.put("suc_numero_exterior", "0");
+            request.put("suc_colonia", "");
+            request.put("suc_ciudad", "");
+            request.put("suc_codigo_postal", "");
+            request.put("suc_id_pais", "117");
+            request.put("suc_estado", "");
+            request.put("suc_id_estado", "0");
+            request.put("suc_pais", "Mexico");
+            request.put("usu_id", IDUsuario);
+            request.put("esApp", "1");
+
+
         }
         catch(Exception e)
         {
@@ -70,7 +94,7 @@ public class Numero_sucursal extends Activity {
 
         String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
 
-        String ApiPath = url + "/api/cuentas/store-sucursal";
+        String ApiPath = url + "/api/configuracion/sucursales/store";
 
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
         {
@@ -87,10 +111,12 @@ public class Numero_sucursal extends Activity {
                     if (status == 1)
                     {
 
-                        Respuesta = response.getJSONObject("resultado");
+                      //  Respuesta = response.getJSONObject("resultado");
 
-                        Intent intent = new Intent(Numero_sucursal.this, EleccionPremium.class);
-                        startActivity(intent);
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
 
                     }
                     else
@@ -130,6 +156,7 @@ public class Numero_sucursal extends Activity {
 
     public void crear_sucursal (View v){
         final Dialog crear_sucursal_dialog=new Dialog(Numero_sucursal.this);
+
         crear_sucursal_dialog.setContentView(R.layout.pop_up_crear_sucursal);
         crear_sucursal_dialog.show();
 
@@ -139,15 +166,18 @@ public class Numero_sucursal extends Activity {
             @Override
             public void onClick(View v) {
 
+                nombre_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_nombre_sucursal);
+                telefono_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_telefono_sucursal);
+                correo_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_correo_sucursal);
+                direccion_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_direccion_sucursal);
+
+                GuardarDatos();
+
 
                 crear_sucursal_dialog.dismiss();
             }
         });
     }
-
-
-
-
 
 
 }

@@ -2,6 +2,7 @@ package com.Danthop.bionet;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -29,6 +30,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+
 import static com.android.volley.Request.Method;
 
 public class RegistroDatosActivity extends FragmentActivity implements Fragment_pop_up_ProfilePhoto.OnPhotoSelectedListener {
@@ -41,6 +44,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
     private Spinner GiroNegocio;
     ProgressDialog progreso;
     private String IDUsuario;
+    private  Uri Rutaimagen;
 
     ImageLoader imageLoader = ImageLoader.getInstance();
 
@@ -56,6 +60,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
     @Override
     public void getImagePath(Uri imagePath) {
         ImageView SelectPhoto = (ImageView) findViewById(R.id.profileImagen);
+        Rutaimagen = Uri.parse(imagePath.toString());
         imageLoader.displayImage(imagePath.toString(),SelectPhoto);
         mSelectedBitmap = null;
         mSelectedUri = imagePath;
@@ -136,16 +141,18 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
         progreso.show();
 
 
+       // File file = new File(this,Rutaimagen);
+
         JSONObject request = new JSONObject();
         try
         {
             request.put("cbn_nombre_negocio", NombreNegocio.getText());
-            request.put("cbn_id_giro_negocio", 5);
+            request.put("cbn_id_giro_negocio", "5");
             request.put("usu_nombre", NombrePersona.getText());
             request.put("usu_apellido_paterno", ApellidoPaterno.getText());
             request.put("usu_apellido_materno", ApellidoMaterno.getText());
-            request.put("usu_numero_telefono", CelularAdministrador.getText());
-            request.put("cbn_numero_sucursales", 0);
+            request.put("usu_numero_celular", CelularAdministrador.getText());
+            request.put("cbn_numero_sucursales", "0");
             request.put("con_logo_negocio", "");
             request.put("esApp", "1");
             request.put("usu_id", IDUsuario);
@@ -181,6 +188,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
                         toast1.show();
 
                         Intent intent = new Intent(RegistroDatosActivity.this, Numero_sucursal.class);
+                        intent.putExtra("IDUsuario", IDUsuario);
                         startActivity(intent);
 
                         progreso.hide();
