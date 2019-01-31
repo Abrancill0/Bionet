@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="480dp"
-    android:layout_height="370dp"
+    android:layout_height="360dp"
     android:layout_gravity="center"
     android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical">
@@ -14,7 +14,7 @@
         android:layout_weight=".9"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,15 +33,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="10dp">
 
                 <TextView
                     android:id="@+id/textView29"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:padding="10dp"
                     android:text="Nombre de la Sucursal: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp" />
@@ -63,15 +63,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp">
 
                 <TextView
                     android:id="@+id/textView29w"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="1dp"
                     android:text="Telefono: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp" />
@@ -83,7 +83,7 @@
                     android:layout_margin="5dp"
                     android:background="@drawable/shape_gray"
                     android:ems="10"
-                    android:inputType="text"
+                    android:inputType="phone"
                     android:padding="1dp"
                     android:textSize="14sp" />
 
@@ -93,15 +93,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp">
 
                 <TextView
                     android:id="@+id/textViews29"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="1dp"
                     android:text="Correo: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp" />
@@ -113,7 +113,7 @@
                     android:layout_margin="5dp"
                     android:background="@drawable/shape_gray"
                     android:ems="10"
-                    android:inputType="text"
+                    android:inputType="textEmailAddress"
                     android:padding="1dp"
                     android:textSize="14sp" />
 
@@ -123,15 +123,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp">
 
                 <TextView
                     android:id="@+id/tesxtView29"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="1dp"
                     android:text="Dirección: "
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp" />

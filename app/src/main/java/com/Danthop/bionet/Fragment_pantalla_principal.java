@@ -1,20 +1,31 @@
 package com.Danthop.bionet;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageListener;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimerTask;
 
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
+import lecho.lib.hellocharts.model.PieChartData;
+import lecho.lib.hellocharts.model.SliceValue;
+import lecho.lib.hellocharts.view.PieChartView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,7 +76,35 @@ public class Fragment_pantalla_principal extends Fragment {
         tabla_Notificaciones.setHeaderAdapter(simpleHeader2);
         tabla_Notificaciones.setDataAdapter(simpleTableDataAdapter2);
 
+
         //=====Programación de la gráfica=====
+        PieChartView pieChartView = v.findViewById(R.id.chart);
+        List< SliceValue > pieData = new ArrayList<>();
+        pieData.add(new SliceValue(60, Color.parseColor("#194052")));
+        pieData.add(new SliceValue(40, Color.parseColor("#DFDFDF")));
+        PieChartData pieChartData = new PieChartData(pieData);
+        pieChartView.setPieChartData(pieChartData);
+
+
+
+
+
+        //=====Programación del carrousel=====
+        final int[] sampleImages = {R.drawable.milk, R.drawable.bread, R.drawable.strawberrie, R.drawable.lake};
+        CarouselView carouselView;
+        carouselView = (CarouselView) v.findViewById(R.id.carouselView);
+        carouselView.setPageCount(sampleImages.length);
+        carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+
+        ImageListener imageListener = new ImageListener() {
+            @Override
+            public void setImageForPosition(int position, ImageView imageView) {
+                imageView.setImageResource(sampleImages[position]);
+            }
+        };
+
+        carouselView.setImageListener(imageListener);
+
 
         return v;
     }

@@ -70,8 +70,15 @@
                 android:layout_height="wrap_content"
                 android:text="Top 5 artículos más vendidos"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:paddingBottom="10dp"/>
+                android:textSize="18sp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/gray2"
+                android:orientation="horizontal"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="10dp"></LinearLayout>
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/linearLayout3"
@@ -104,8 +111,15 @@
                 android:layout_height="wrap_content"
                 android:text="Centro de Mensajes"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:paddingBottom="10dp"/>
+                android:textSize="18sp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/gray2"
+                android:orientation="horizontal"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="10dp"></LinearLayout>
 
             <de.codecrafters.tableview.TableView
                 android:id="@+id/tablaNotificaciones"
@@ -127,7 +141,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".6"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:layout_marginBottom="10dp">
+            <com.synnapps.carouselview.CarouselView
+                android:id="@+id/carouselView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:fillColor="@color/colorPrimaryDark"
+                app:pageColor="@color/white"
+                app:radius="6dp"
+                app:slideInterval="3000"
+                app:strokeColor="#FF777777"
+                app:strokeWidth="1dp"
+                app:indicatorMarginVertical="0dp"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -143,6 +171,13 @@
                 android:text="Tiempo y Asistencia"
                 android:textSize="18sp"
                 android:textColor="@color/colorPrimaryDark"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/gray2"
+                android:orientation="horizontal"
+                android:layout_marginRight="5dp"></LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

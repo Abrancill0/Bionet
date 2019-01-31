@@ -21,6 +21,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
@@ -171,12 +174,39 @@ public class Numero_sucursal extends Activity {
                 correo_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_correo_sucursal);
                 direccion_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_direccion_sucursal);
 
-                GuardarDatos();
-
-
-                crear_sucursal_dialog.dismiss();
+                valida_datos(crear_sucursal_dialog);
             }
         });
+    }
+
+    public void valida_datos(Dialog dialog){
+        if(nombre_sucursal.getText().length()==0||telefono_sucursal.getText().length()==0||correo_sucursal.getText().length()==0||direccion_sucursal.getText().length()==0) {
+            Toast toast1 = Toast.makeText(getApplicationContext(),
+                    "Campos obligatorios ", Toast.LENGTH_SHORT);
+
+            toast1.show();
+
+            return;
+        }
+
+        Pattern pattern = Pattern
+                .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+
+        String email = String.valueOf(correo_sucursal.getText());
+
+        Matcher mather = pattern.matcher(email);
+
+        if (mather.find() == false) {
+            Toast toast1 = Toast.makeText(getApplicationContext(),
+                    "El email ingresado es inválido.", Toast.LENGTH_SHORT);
+
+            toast1.show();
+            return;
+        }
+
+        GuardarDatos();
+        dialog.dismiss();
     }
 
 
