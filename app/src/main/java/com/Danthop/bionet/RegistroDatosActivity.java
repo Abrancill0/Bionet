@@ -67,7 +67,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
     }
 
     private static final String TAG = "RegistroDatos";
-    private static final int REQUEST_CODE = 2312424;
+    private static final int REQUEST_CODE = 23;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
