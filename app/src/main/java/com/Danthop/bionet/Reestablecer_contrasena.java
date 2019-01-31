@@ -1,10 +1,12 @@
 package com.Danthop.bionet;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -37,18 +39,29 @@ public class Reestablecer_contrasena extends Activity {
         correo =  "" + datos.get("ParametroCorreo");
     }
 
+    public void Aceptar_cerrar_ventana(Dialog dialog){
+        dialog.dismiss();
+    }
+
 
     public void Reestablecer_contrasenia(View v) {
 
         String newPassword = String.valueOf(NewPassword.getText());
         String newRePassword = String.valueOf(NewRePassword.getText());
 
-        progreso = new ProgressDialog(this);
-        progreso.setMessage("Iniciando sesion...");
-        progreso.show();
+        if(NewPassword.getText().length()==0 || NewRePassword.getText().length()==0 ) {
+            Toast toast1 = Toast.makeText(getApplicationContext(),
+                    "Campo contrasena obligatorio ", Toast.LENGTH_SHORT);
 
+            toast1.show();
+
+            return;
+        }
         if (newPassword.equals(newRePassword))
         {
+            progreso = new ProgressDialog(this);
+            progreso.setMessage("Procesando...");
+            progreso.show();
                 JSONObject request = new JSONObject();
                 try {
                     request.put("usu_correo_electronico", correo);
@@ -66,24 +79,37 @@ public class Reestablecer_contrasena extends Activity {
                     @Override
                     public void onResponse(JSONObject response) {
 
-                        Resultado = new LoginModel();
-
                         JSONObject Respuesta = null;
                         JSONObject RespuestaNodoUsuID = null;
 
                         try {
 
-                            Resultado.setEstatus(response.getString("estatus"));
-                            Resultado.setMensaje(response.getString("mensaje"));
+                            String status=(response.getString("estatus"));
+                            String mensaje=(response.getString("mensaje"));
 
-                            int status = Integer.parseInt(Resultado.getEstatus());
+                            int estatus = Integer.parseInt(status);
 
-                            if (status == 1) {
+                            if (estatus == 1) {
 
                                 Respuesta = response.getJSONObject("resultado");
-                                Intent intent = new Intent(Reestablecer_contrasena.this, Home.class);
-                                startActivity(intent);
+                                Toast toast1 =
+                                        Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_LONG);
+
+                                toast1.show();
+
                                 progreso.hide();
+                                final Dialog dialog=new Dialog(Reestablecer_contrasena.this);
+                                dialog.setContentView(R.layout.pop_up_confirmacion_contrasena);
+                                dialog.show();
+                                Button cerrar_ventana = (Button) dialog.findViewById(R.id.aceptar_cerrar_ventana1);
+                                cerrar_ventana.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Aceptar_cerrar_ventana(dialog);
+                                        Intent intent = new Intent(Reestablecer_contrasena.this, Login.class);
+                                        startActivity(intent);
+                                    }
+                                });
 
 
                             } else {
@@ -118,7 +144,7 @@ public class Reestablecer_contrasena extends Activity {
 
                                 Toast toast1 =
                                         Toast.makeText(getApplicationContext(),
-                                                "Error de conexion", Toast.LENGTH_SHORT);
+                                                error.toString(), Toast.LENGTH_SHORT);
 
                                 toast1.show();
 
@@ -128,7 +154,11 @@ public class Reestablecer_contrasena extends Activity {
 
                 VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
         }else{
-            progreso.hide();
+            Toast toast5 =
+                    Toast.makeText(getApplicationContext(),
+                            "Las contraseñas no coinciden", Toast.LENGTH_SHORT);
+
+            toast5.show();
         }
 
     }

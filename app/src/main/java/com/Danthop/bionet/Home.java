@@ -15,6 +15,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -36,7 +37,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private DrawerLayout drawer;
 
     Dialog cerrar;
-    private static final int REQUEST_CODE = 2312424;
+    private static final int REQUEST_CODE = 23;
     private Bitmap mSelectedBitmap;
     private Uri mSelectedUri;
     ImageLoader imageLoader = ImageLoader.getInstance();
@@ -63,6 +64,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
+        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+        tx.replace(R.id.fragment_container, new Fragment_pantalla_principal());
+        tx.commit();
         cerrar = new Dialog(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -145,6 +149,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             switch (menuItem.getItemId()) {
+                case R.id.nav_home:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new Fragment_pantalla_principal()).commit();
+                    break;
                 case R.id.nav_clientes:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             new Fragment_clientes()).commit();
@@ -172,6 +180,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public void clientes(View view){
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new Fragment_clientes()).commit();
+    }
+    public void home(View view){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new Fragment_pantalla_principal()).commit();
     }
 
     public void inventario(View view){

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -276,111 +277,126 @@ public class Login extends Activity {
             @Override
             public void onClick(View v) {
 
-                progreso = new ProgressDialog(dialog.getContext());
-                progreso.setMessage("Enviando correo...");
-                progreso.show();
                 EditText correo_contrasena_olvidada = (EditText)dialog.findViewById(R.id.correo_contrasena_olvidada);
+                if(correo_contrasena_olvidada.getText().length()==0) {
+                    Toast toast1 = Toast.makeText(getApplicationContext(),
+                            "Campo usuario obligatorio ", Toast.LENGTH_SHORT);
 
+                    toast1.show();
 
-                String cs = String.valueOf(correo_contrasena_olvidada.getText());
-
-                JSONObject request = new JSONObject();
-                try
-                {
-                    request.put("usu_correo_electronico", correo_contrasena_olvidada.getText());
-
-                }
-                catch(Exception e)
-                {
-                    e.printStackTrace();
+                    return;
                 }
 
-                String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
+                Pattern pattern = Pattern
+                        .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
-                String ApiPath = url + "/api/login/recuperar-contrasena";
+                String email = String.valueOf(correo_contrasena_olvidada.getText());
 
-                JsonObjectRequest postRequest = new JsonObjectRequest(Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-                {
-                    @Override
-                    public void onResponse(JSONObject response) {
+                Matcher mather = pattern.matcher(email);
 
-                        JSONObject Respuesta = null;
-                        JSONObject RespuestaNodoUsuID = null;
+                if (mather.find() == false) {
+                    Toast toast1 = Toast.makeText(getApplicationContext(),
+                            "El email ingresado es inválido.", Toast.LENGTH_SHORT);
 
-                        try {
+                    toast1.show();
 
-                            String status = response.getString("estatus");
-                            String mensaje = response.getString("mensaje");
+                    return;
+                }else {
 
-                            int estatus = Integer.parseInt(status);
+                    progreso = new ProgressDialog(dialog.getContext());
+                    progreso.setMessage("Enviando correo...");
+                    progreso.show();
+                    JSONObject request = new JSONObject();
+                    try {
+                        request.put("usu_correo_electronico", correo_contrasena_olvidada.getText());
 
-                            if (estatus == 1)
-                            {
-                                dialog.dismiss();
-                                dialog.setContentView(R.layout.pop_up_confirmacion_correo_contrasenia);
-                                dialog.show();
-                                Button cerrar_ventana = (Button) dialog.findViewById(R.id.aceptar_cerrar_ventana);
-
-                                Toast toast1 =
-                                        Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_LONG);
-
-                                toast1.show();
-
-                                progreso.hide();
-
-                                cerrar_ventana.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Aceptar_cerrar_ventana(dialog);
-                                    }
-                                });
-
-
-
-                            }
-                            else
-                            {
-                                progreso.hide();
-
-                                Toast toast2 = Toast.makeText(getApplicationContext(),
-                                        Resultado.getMensaje(), Toast.LENGTH_LONG);
-
-                                toast2.show();
-
-                            }
-
-                        } catch (JSONException e) {
-                            progreso.hide();
-
-                            Toast toast1 = Toast.makeText(getApplicationContext(),
-                                    "Error al conectarse al servidor", Toast.LENGTH_LONG);
-
-                            toast1.show();
-
-                        }
-
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
-                },
-                        new Response.ErrorListener()
-                        {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // error
+                    String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
 
+                    String ApiPath = url + "/api/login/recuperar-contrasena";
+
+                    JsonObjectRequest postRequest = new JsonObjectRequest(Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            JSONObject Respuesta = null;
+                            JSONObject RespuestaNodoUsuID = null;
+
+                            try {
+
+                                String status = response.getString("estatus");
+                                String mensaje = response.getString("mensaje");
+
+                                int estatus = Integer.parseInt(status);
+
+                                if (estatus == 1) {
+                                    dialog.dismiss();
+                                    dialog.setContentView(R.layout.pop_up_confirmacion_correo_contrasenia);
+                                    dialog.show();
+                                    Button cerrar_ventana = (Button) dialog.findViewById(R.id.aceptar_cerrar_ventana);
+
+                                    Toast toast1 =
+                                            Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_LONG);
+
+                                    toast1.show();
+
+                                    progreso.hide();
+
+                                    cerrar_ventana.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Aceptar_cerrar_ventana(dialog);
+                                        }
+                                    });
+
+
+                                } else {
+                                    progreso.hide();
+
+                                    Toast toast2 = Toast.makeText(getApplicationContext(),
+                                            Resultado.getMensaje(), Toast.LENGTH_LONG);
+
+                                    toast2.show();
+
+                                }
+
+                            } catch (JSONException e) {
                                 progreso.hide();
 
-                                Toast toast1 =
-                                        Toast.makeText(getApplicationContext(),
-                                                error.toString(), Toast.LENGTH_SHORT);
+                                Toast toast1 = Toast.makeText(getApplicationContext(),
+                                        "Error al conectarse al servidor", Toast.LENGTH_LONG);
 
                                 toast1.show();
 
                             }
-                        }
-                );
 
-                VolleySingleton.getInstanciaVolley(getApplicationContext()).addToRequestQueue(postRequest);
+                        }
+
+                    },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
+
+                                    progreso.hide();
+
+                                    Toast toast1 =
+                                            Toast.makeText(getApplicationContext(),
+                                                    error.toString(), Toast.LENGTH_SHORT);
+
+                                    toast1.show();
+
+                                }
+                            }
+                    );
+
+
+                    VolleySingleton.getInstanciaVolley(getApplicationContext()).addToRequestQueue(postRequest);
+                }
 
             }
         });
@@ -390,3 +406,4 @@ public class Login extends Activity {
 
 
 }
+
