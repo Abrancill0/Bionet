@@ -149,6 +149,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             switch (menuItem.getItemId()) {
+                case R.id.nav_notificaciones:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new Fragment_notificaciones()).commit();
+                    break;
                 case R.id.nav_home:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             new Fragment_pantalla_principal()).commit();
@@ -176,7 +180,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
 
 
-
+    public void notificaciones(View view){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new Fragment_notificaciones()).commit();
+    }
     public void clientes(View view){
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new Fragment_clientes()).commit();

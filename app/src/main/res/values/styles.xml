@@ -43,5 +43,14 @@
         <item name ="android:windowBackground"> @drawable/splash</item>
     </style>
 
+    <style name="MyCheckBoxStyle" parent="Base.Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:theme">@style/MyCheckboxTheme</item>
+    </style>
+
+    <style name="MyCheckboxTheme">
+        <item name="colorControlNormal">#8AFFFFFF</item>
+        <item name="colorControlActivated">@android:color/white</item>
+    </style>
+
 
 </resources>
