@@ -4,9 +4,11 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -191,6 +193,8 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
                         intent.putExtra("IDUsuario", IDUsuario);
                         startActivity(intent);
 
+                        new GuardaPreferencia().execute();
+
                         progreso.hide();
                     }
                     else
@@ -235,6 +239,29 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
 
         VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
 
+    }
+
+
+    private class GuardaPreferencia extends AsyncTask<Void,String,Void>
+    {
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+
+            SharedPreferences.Editor editor =  sharedPref.edit();
+            editor.putString("usu_nombre", String.valueOf(NombrePersona.getText()));
+            editor.putString("usu_id", IDUsuario);
+            editor.putString("usu_apellidos", ApellidoPaterno.getText() + " " + ApellidoMaterno.getText());
+            editor.putString("usu_correo_electronico", "");
+            editor.putString("usu_imagen_perfil", "");
+            editor.putString("usu_activo", "1");
+            editor.putString("usu_administrador", "0");
+
+            editor.commit();
+
+            return null;
+        }
     }
 
 
