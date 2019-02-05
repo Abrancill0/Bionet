@@ -27,8 +27,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.Danthop.bionet.R;
-
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
@@ -41,6 +39,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private Bitmap mSelectedBitmap;
     private Uri mSelectedUri;
     ImageLoader imageLoader = ImageLoader.getInstance();
+    private String usu_id;
 
     @Override
     public void getImageBitmap(Bitmap bitmap) {
@@ -79,6 +78,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         String Nombre = sharedPref.getString("usu_nombre","");
         String Apellido = sharedPref.getString("usu_apellidos","");
         String ImagenPerfil = sharedPref.getString("usu_imagen_perfil","");
+        usu_id = sharedPref.getString("usu_id","");
+
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -218,7 +219,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     public void ShowDireccionFiscal(View view) {
         Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.pop_up_direccion_fiscal);
+        dialog.setContentView(R.layout.pop_up_crear_cliente_diferentes_datos);
         dialog.setTitle("Dirección fiscal");
         dialog.show();
     }

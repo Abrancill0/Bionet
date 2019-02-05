@@ -45,7 +45,7 @@
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/nombre_cliente1"
+                    android:id="@+id/Text_cliente_correo_facturacion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -109,7 +109,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/nombre_client"
+                        android:id="@+id/Text_cliente_estado_facturacion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -135,7 +135,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/estado_cliente"
+                        android:id="@+id/Text_cliente_colonia_facturacion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -160,7 +160,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/colonia_cliente"
+                        android:id="@+id/Text_cliente_num_ext_facturacion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -185,7 +185,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/num_int_cliente"
+                        android:id="@+id/Text_cliente_ciudad_facturacion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -234,7 +234,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/email_cliente"
+                        android:id="@+id/Text_cliente_calle_facturacion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -260,7 +260,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/calle_cliente"
+                        android:id="@+id/Text_cliente_cp_facturacion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -285,7 +285,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/num_ext_cliente"
+                        android:id="@+id/Text_cliente_num_ext_facturacion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -310,7 +310,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/cp_cliente"
+                        android:id="@+id/Text_cliente_municipio_facturacion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"

@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.Danthop.bionet.R;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +25,7 @@ public class Fragment_pop_up_direccion_fiscal extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.pop_up_direccion_fiscal,container, false);
+        View v = inflater.inflate(R.layout.pop_up_crear_cliente_diferentes_datos,container, false);
         Button guardar = (Button) v.findViewById(R.id.btn_guardar_cliente);
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
