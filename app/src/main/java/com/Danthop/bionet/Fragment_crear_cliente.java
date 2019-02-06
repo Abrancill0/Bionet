@@ -168,7 +168,7 @@ public class Fragment_crear_cliente extends DialogFragment {
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
-            request.put("cli_sucursales","0a0ce072-6bec-5272-9c2c-6fdbf51d1235");
+            request.put("cli_sucursales","320cdd52-3864-55b8-b4fe-5e4ad974eec5");
             request.put("cli_nombre",TextNombre.getText());
             request.put("cli_correo_electronico",TextEmail.getText());
             request.put("cli_telefono",TextTelefono.getText());
@@ -218,22 +218,29 @@ public class Fragment_crear_cliente extends DialogFragment {
 
                 progreso.hide();
 
-                JSONObject Respuesta = null;
 
+                String estatus = "0";
+                String mensaje = "";
                 try {
+                     estatus = response.getString("estatus");
+                     mensaje = response.getString("mensaje");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                    Respuesta = response.getJSONObject("resultado");
+                int status = Integer.parseInt(estatus);
 
+                if (status == 1)
+                {
                     Toast toast1 =
                             Toast.makeText(getContext(),
-                                    "Cliente guardado correctamente", Toast.LENGTH_SHORT);
+                                    mensaje, Toast.LENGTH_SHORT);
 
                     toast1.show();
 
-                } catch (JSONException e) {
-                    progreso.hide();
                 }
 
+                //  Respuesta = response.getJSONObject("resultado");
 
             }
 

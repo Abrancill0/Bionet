@@ -41,7 +41,6 @@ public class Fragment_clientes extends Fragment {
     private ProgressDialog progreso;
 
 
-
     public Fragment_clientes() {
         // Required empty public constructor
 
@@ -54,7 +53,7 @@ public class Fragment_clientes extends Fragment {
         View v = inflater.inflate(R.layout.fragment_clientes,container, false);
 
         tabla_clientes = (TableView) v.findViewById(R.id.tabla_clientes);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "ID", "Nombre", "Correo Eléctronico", "Teléfono", "Últ. Visita", "Consumo Promedio","ID Referencia");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nombre", "Correo Eléctronico", "Teléfono", "Direccion", "Consumo Promedio","ID Referencia");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
@@ -63,7 +62,7 @@ public class Fragment_clientes extends Fragment {
 
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(7);
-        tableColumnWeightModel.setColumnWeight(0, 1);
+        tableColumnWeightModel.setColumnWeight(0, 4);
         tableColumnWeightModel.setColumnWeight(1, 3);
         tableColumnWeightModel.setColumnWeight(2, 3);
         tableColumnWeightModel.setColumnWeight(3, 3);
@@ -71,13 +70,10 @@ public class Fragment_clientes extends Fragment {
         tableColumnWeightModel.setColumnWeight(5, 3);
         tableColumnWeightModel.setColumnWeight(6, 3);
 
-
-
-
-
         tabla_clientes.setHeaderAdapter(simpleHeader);
         tabla_clientes.setColumnModel(tableColumnWeightModel);
-      //  Muestra_sucursales();
+
+        Muestra_sucursales();
 
         Button btn_crear_cliente = (Button) v.findViewById(R.id.btn_crear_cliente);
         btn_crear_cliente.setOnClickListener(new View.OnClickListener() {
@@ -120,13 +116,13 @@ public class Fragment_clientes extends Fragment {
                 JSONObject RespuestaNodoDireccion= null;
                 JSONObject ElementoTelefono=null;
                 JSONObject ElementoCorreo=null;
-                JSONArray RespuestaNodoSucursal= null;
+                JSONArray RespuestaNodoClientes= null;
 
                 try {
 
                     int status = Integer.parseInt(response.getString("estatus"));
                     String Mensaje = response.getString("mensaje");
-
+               //     Respuesta = response.getJSONObject("resultado");
                     if (status == 1)
                     {
                         String nombre;
@@ -136,36 +132,28 @@ public class Fragment_clientes extends Fragment {
 
                         Respuesta = response.getJSONObject("resultado");
 
-                        RespuestaNodoSucursal = Respuesta.getJSONArray("aClientes");
+                        RespuestaNodoClientes = Respuesta.getJSONArray("aClientes");
 
-                        clienteModel = new String[RespuestaNodoSucursal.length()][6];
+                        clienteModel = new String[RespuestaNodoClientes.length()][5];
 
-                        for(int x = 0; x < RespuestaNodoSucursal.length(); x++){
-                            JSONObject elemento = RespuestaNodoSucursal.getJSONObject(x);
+                        for(int x = 0; x < RespuestaNodoClientes.length(); x++){
+                            JSONObject elemento = RespuestaNodoClientes.getJSONObject(x);
 
                             nombre = elemento.getString("cli_nombre");
-                            ElementoCorreo = elemento.getJSONObject("cli_correo_electronico");
-                            correo_electronico = ElementoCorreo.getJSONArray("values").getString( 0);
-
-                            ElementoTelefono = elemento.getJSONObject("cli_telefono");
-                            telefono = ElementoTelefono.getString("value");
-
-
-
-
-                            RespuestaNodoDireccion = elemento.getJSONObject("suc_direccion");
-                            calle = RespuestaNodoDireccion.getString("suc_calle");
+                            correo_electronico = elemento.getString("cli_correo_electronico");
+                            telefono = elemento.getString("cli_telefono");
+                            RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion");
+                            calle = RespuestaNodoDireccion.getString("cli_calle");
 
                             //sucursalModel[x][0] = String.valueOf(x);
                             clienteModel[x][0] =nombre;
-                            clienteModel[x][1] =telefono;
-                            clienteModel[x][2] =correo_electronico;
+                            clienteModel[x][1] =correo_electronico;
+                            clienteModel[x][2] =telefono;
                             clienteModel[x][3] =calle;
 
                         }
 
                         tabla_clientes.setDataAdapter(new SimpleTableDataAdapter(getContext(), clienteModel));
-
 
                     }
                     else

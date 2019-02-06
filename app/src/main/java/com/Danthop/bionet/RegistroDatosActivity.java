@@ -1,6 +1,7 @@
 package com.Danthop.bionet;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +34,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.android.volley.Request.Method;
 
@@ -47,6 +50,12 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
     ProgressDialog progreso;
     private String IDUsuario;
     private  Uri Rutaimagen;
+    private Bitmap mSelectedBitmap;
+    private Uri mSelectedUri;
+    private static final String TAG = "RegistroDatos";
+    private static final int REQUEST_CODE = 23;
+
+    private List<String> myArraySpinner = new ArrayList<String>();
 
     ImageLoader imageLoader = ImageLoader.getInstance();
 
@@ -68,9 +77,8 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
         mSelectedUri = imagePath;
     }
 
-    private static final String TAG = "RegistroDatos";
-    private static final int REQUEST_CODE = 23;
 
+    @SuppressLint("ResourceType")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -87,14 +95,112 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
         Bundle datos = this.getIntent().getExtras();
         IDUsuario =  "" + datos.get("IDUsuario");
 
+      //  llenarspinner();
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Giros, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         spinner.setAdapter(adapter);
 
     }
 
-    private Bitmap mSelectedBitmap;
-    private Uri mSelectedUri;
+    public void llenarspinner(){
+
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("cbn_nombre_negocio", NombreNegocio.getText());
+            request.put("cbn_id_giro_negocio", "5");
+            request.put("esApp", "1");
+            request.put("usu_id", IDUsuario);
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
+
+        String ApiPath = url + "/api/cuentas/store-config";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1)
+                    {
+
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+                        Intent intent = new Intent(RegistroDatosActivity.this, Numero_sucursal.class);
+                        intent.putExtra("IDUsuario", IDUsuario);
+                        startActivity(intent);
+
+                        new GuardaPreferencia().execute();
+
+                        progreso.hide();
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+                        progreso.hide();
+
+                    }
+
+                } catch (JSONException e) {
+
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+                    progreso.hide();
+                }
+
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(),
+                                        "Error de conexion", Toast.LENGTH_SHORT);
+
+                        toast1.show();
+
+                        progreso.hide();
+
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
+
+
+
+
+        myArraySpinner.add("red");
+        myArraySpinner.add("green");
+        myArraySpinner.add("blue");
+
+    }
 
     public void avanzar(View view) {
 
@@ -142,8 +248,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
         progreso.setMessage("procesando...");
         progreso.show();
 
-
-       // File file = new File(this,Rutaimagen);
+        File file = new File( String.valueOf( Rutaimagen ) );
 
         JSONObject request = new JSONObject();
         try
@@ -155,7 +260,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
             request.put("usu_apellido_materno", ApellidoMaterno.getText());
             request.put("usu_numero_celular", CelularAdministrador.getText());
             request.put("cbn_numero_sucursales", "0");
-            request.put("con_logo_negocio", "");
+            request.put("con_logo_negocio", file);
             request.put("esApp", "1");
             request.put("usu_id", IDUsuario);
 
@@ -241,7 +346,6 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
 
     }
 
-
     private class GuardaPreferencia extends AsyncTask<Void,String,Void>
     {
         @Override
@@ -263,6 +367,5 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
             return null;
         }
     }
-
 
 }

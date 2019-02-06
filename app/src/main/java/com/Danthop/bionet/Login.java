@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Class.MyFirebaseInstanceService;
 import com.Danthop.bionet.model.LoginModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Response;
@@ -55,10 +56,14 @@ public class Login extends Activity {
 
         String Valor = sharedPref.getString("usu_id","0");
 
+        Intent intent = new Intent(this, MyFirebaseInstanceService.class);
+        this.startService(intent);
+
+
         if (Valor != "0")
         {
-            Intent intent = new Intent(Login.this, Home.class);
-            startActivity(intent);
+            Intent intent2 = new Intent(Login.this, Home.class);
+            startActivity(intent2);
         }
 
 

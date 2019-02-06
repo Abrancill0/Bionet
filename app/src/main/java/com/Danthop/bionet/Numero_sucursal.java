@@ -60,8 +60,6 @@ public class Numero_sucursal extends Activity {
         tb.setHeaderBackgroundColor(getResources().getColor(R.color.white));
 
         tb.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TABLA1_HEADERS));
-
-      //  tb.setDataAdapter(new SimpleTableDataAdapter(this, sucursalModel));
     }
 
     public void eleccion_premium(View view) {
