@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.Danthop.bionet.model.VolleySingleton;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -54,8 +55,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
     private Uri mSelectedUri;
     private static final String TAG = "RegistroDatos";
     private static final int REQUEST_CODE = 23;
-
-    private List<String> myArraySpinner = new ArrayList<String>();
+    private ArrayList<String> GiroName;
 
     ImageLoader imageLoader = ImageLoader.getInstance();
 
@@ -84,7 +84,9 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
 
         setContentView(R.layout.registro_datos);
 
-        Spinner spinner = (Spinner) findViewById(R.id.Combo_Giro_Negocio);
+        GiroName=new ArrayList<>();
+
+        GiroNegocio = (Spinner) findViewById(R.id.Combo_Giro_Negocio);
 
         NombreNegocio = (EditText) findViewById(R.id.Text_Nombre_Negocio);
         NombrePersona = (EditText) findViewById(R.id.Text_Nombre_Persona);
@@ -94,12 +96,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
 
         Bundle datos = this.getIntent().getExtras();
         IDUsuario =  "" + datos.get("IDUsuario");
-
-      //  llenarspinner();
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Giros, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        spinner.setAdapter(adapter);
+        llenarspinner();
 
     }
 
@@ -108,10 +105,8 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
         JSONObject request = new JSONObject();
         try
         {
-            request.put("cbn_nombre_negocio", NombreNegocio.getText());
-            request.put("cbn_id_giro_negocio", "5");
-            request.put("esApp", "1");
             request.put("usu_id", IDUsuario);
+            request.put("esApp", "1");
 
         }
         catch(Exception e)
@@ -119,11 +114,11 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
             e.printStackTrace();
         }
 
-        String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
+        String url = getString(R.string.Url);
 
-        String ApiPath = url + "/api/cuentas/store-config";
+        String ApiPath = url + "/api/cuentas/select_giros_negocio";
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
         {
             @Override
             public void onResponse(JSONObject response) {
@@ -138,38 +133,34 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
                     if (status == 1)
                     {
 
-                        Toast toast1 =
-                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+                        Respuesta = response.getJSONObject("resultado");
 
-                        toast1.show();
+                        for(int x = 0; x < Respuesta.length(); x++){
+                            JSONObject jsonObject1=Respuesta.getJSONObject(String.valueOf(x));
+                            String giro=jsonObject1.getString("gne_nombre");
+                            GiroName.add(giro);
+                        }
+                        GiroNegocio.setAdapter(new ArrayAdapter<String>(RegistroDatosActivity.this,android.R.layout.simple_spinner_item,GiroName));
 
-                        Intent intent = new Intent(RegistroDatosActivity.this, Numero_sucursal.class);
-                        intent.putExtra("IDUsuario", IDUsuario);
-                        startActivity(intent);
-
-                        new GuardaPreferencia().execute();
-
-                        progreso.hide();
                     }
                     else
                     {
                         Toast toast1 =
-                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+                                Toast.makeText(RegistroDatosActivity.this, Mensaje, Toast.LENGTH_LONG);
 
                         toast1.show();
 
-                        progreso.hide();
 
                     }
 
                 } catch (JSONException e) {
 
                     Toast toast1 =
-                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
+                            Toast.makeText(RegistroDatosActivity.this, e.getMessage(), Toast.LENGTH_LONG);
 
                     toast1.show();
 
-                    progreso.hide();
+
                 }
 
             }
@@ -180,25 +171,16 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast toast1 =
-                                Toast.makeText(getApplicationContext(),
-                                        "Error de conexion", Toast.LENGTH_SHORT);
+                                Toast.makeText(RegistroDatosActivity.this, error.toString(), Toast.LENGTH_LONG);
 
                         toast1.show();
 
-                        progreso.hide();
 
                     }
                 }
         );
 
-        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
-
-
-
-
-        myArraySpinner.add("red");
-        myArraySpinner.add("green");
-        myArraySpinner.add("blue");
+        VolleySingleton.getInstanciaVolley(RegistroDatosActivity.this).addToRequestQueue(postRequest);
 
     }
 

@@ -40,6 +40,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -71,14 +73,21 @@ public class Fragment_crear_cliente extends DialogFragment {
     private EditText TextFacturacionCp;
     private EditText TextFacturacionNumInt;
     private EditText TextFacturacionMunicipio;
-    private EditText TextEstado;
+    private Spinner SpinnerEstado;
+    private Spinner SpinnerSucursal;
     private String usu_id;
+    private int Estado_id;
+    private String Sucursal_id;
 
     String URLGetEstados="http://192.168.100.192:8010/api/configuracion/sucursales/select_estados?usu_id=18807ae8-0a10-540c-91cf-aa7eaccf3cbf&esApp=1";
 
 
     //private Spinner SpinnerEstado;
-    ArrayList<String> EstadoName;
+    private ArrayList<String> EstadoName;
+    private ArrayList<Integer> EstadoID;
+    private ArrayList<String> SucursalName;
+    private ArrayList<String> SucursalID;
+
 
 
     public Fragment_crear_cliente() {
@@ -91,6 +100,11 @@ public class Fragment_crear_cliente extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crear_cliente,container, false);
+        EstadoName=new ArrayList<>();
+        EstadoID = new ArrayList<>();
+        SucursalName=new ArrayList<>();
+        SucursalID = new ArrayList<>();
+
         Mismo_email_personal =(CheckBox) v.findViewById(R.id.Mismo_email);
         Mismo_direccion_personal =(CheckBox) v.findViewById(R.id.Misma_direccion);
         TextNombre=(EditText)v.findViewById(R.id.Text_cliente_Nombre);
@@ -105,10 +119,15 @@ public class Fragment_crear_cliente extends DialogFragment {
         TextTelefono=(EditText)v.findViewById(R.id.Text_cliente_telefono);
         TextRfc=(EditText)v.findViewById(R.id.Text_cliente_rfc);
         TextRazonSocial=(EditText)v.findViewById(R.id.Text_cliente_razon_social);
-        TextEstado=(EditText)v.findViewById(R.id.Text_cliente_estado);
+        SpinnerEstado=(Spinner)v.findViewById(R.id.Text_cliente_estado);
+        SpinnerSucursal=(Spinner)v.findViewById(R.id.Text_cliente_sucursal);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
+
+        LoadSpinnerEstado();
+        LoadSpinnerSucursal();
+
 
         //====Para saber si son los mismos datos de facturación=====
         if(Mismo_email_personal.isChecked()){
@@ -123,26 +142,6 @@ public class Fragment_crear_cliente extends DialogFragment {
         else{
             DireccionIgual = "False";
         }
-
-
-
-        //====ComboBOx====
-        /*EstadoName=new ArrayList<>();
-        SpinnerEstado=(Spinner)v.findViewById(R.id.Text_cliente_estado);
-        loadSpinnerData(URLGetEstados);
-        SpinnerEstado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String country=   SpinnerEstado.getItemAtPosition(SpinnerEstado.getSelectedItemPosition()).toString();
-                Toast.makeText(getContext(),country,Toast.LENGTH_LONG).show();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });*/
-
-
 
         Button guardar = (Button) v.findViewById(R.id.verificar_fiscal);
         guardar.setOnClickListener(new View.OnClickListener() {
@@ -162,13 +161,15 @@ public class Fragment_crear_cliente extends DialogFragment {
         progreso = new ProgressDialog(getContext());
         progreso.setMessage("Procesando...");
         progreso.show();
+        Estado_id = EstadoID.get(SpinnerEstado.getSelectedItemPosition());
+        Sucursal_id = SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
 
         JSONObject request = new JSONObject();
         try
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
-            request.put("cli_sucursales","320cdd52-3864-55b8-b4fe-5e4ad974eec5");
+            request.put("cli_sucursales",Sucursal_id);
             request.put("cli_nombre",TextNombre.getText());
             request.put("cli_correo_electronico",TextEmail.getText());
             request.put("cli_telefono",TextTelefono.getText());
@@ -182,9 +183,9 @@ public class Fragment_crear_cliente extends DialogFragment {
             request.put("cli_colonia",TextColonia.getText());
             request.put("cli_ciudad",TextCiudad.getText());
             request.put("cli_codigo_postal",TextCp.getText());
-            request.put("cli_id_pais","MX");
-            request.put("cli_id_estado",TextEstado.getText());
-            request.put("cli_estado","");
+            request.put("cli_id_pais",117);
+            request.put("cli_id_estado",Estado_id);
+            request.put("cli_estado",SpinnerEstado.getSelectedItem().toString());
             request.put("cli_pais","México");
             request.put("cli_correo_electronico_facturacion","");
             request.put("cli_calle_facturacion","");
@@ -213,8 +214,8 @@ public class Fragment_crear_cliente extends DialogFragment {
             @Override
             public void onResponse(JSONObject response) {
 
-                Intent intent = new Intent(getContext(), Home.class);
-                startActivity(intent);
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_clientes()).commit();
 
                 progreso.hide();
 
@@ -351,6 +352,187 @@ public class Fragment_crear_cliente extends DialogFragment {
         }
     }
 
+    private void LoadSpinnerEstado(){
+
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/configuracion/sucursales/select_estados";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONObject RespuestaNodoEstados = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1)
+                    {
+
+                        Respuesta = response.getJSONObject("resultado");
+
+                        RespuestaNodoEstados = Respuesta.getJSONObject("aEstados");
+
+                        for(int x = 0; x < RespuestaNodoEstados.length(); x++){
+                            JSONObject jsonObject1=RespuestaNodoEstados.getJSONObject(String.valueOf(x));
+                            String estado=jsonObject1.getString("edo_nombre");
+                            int id=jsonObject1.getInt("edo_id");
+                            EstadoName.add(estado);
+                            EstadoID.add(id);
+                        }
+                        SpinnerEstado.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,EstadoName));
+
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+
+                } catch (JSONException e) {
+
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+
+                }
+
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+
+    }
+
+    private void LoadSpinnerSucursal(){
+
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/configuracion/sucursales/index_app";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONArray  RespuestaNodoSucursales= null;
+                JSONObject RespuestaNodoID = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+                    if (status == 1)
+                    {
+
+                        Respuesta = response.getJSONObject("resultado");
+
+                        RespuestaNodoSucursales = Respuesta.getJSONArray("aSucursales");
+
+                        for(int x = 0; x < RespuestaNodoSucursales.length(); x++){
+                            JSONObject jsonObject1=RespuestaNodoSucursales.getJSONObject(x);
+                            String sucursal=jsonObject1.getString("suc_nombre");
+                            SucursalName.add(sucursal);
+                            RespuestaNodoID = jsonObject1.getJSONObject("suc_id");
+                            String id=RespuestaNodoID.getString("uuid");
+                            SucursalID.add(id);
+                        }
+                        SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,SucursalName));
+
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+
+                } catch (JSONException e) {
+
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+
+                }
+
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+
+    }
+
     /*private void loadSpinnerData(String url) {
         RequestQueue requestQueue=Volley.newRequestQueue(getContext());
         StringRequest stringRequest=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -380,7 +562,7 @@ public class Fragment_crear_cliente extends DialogFragment {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }*/
-    
+
 
 
 

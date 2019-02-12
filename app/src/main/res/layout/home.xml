@@ -44,7 +44,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="#f6f6f6"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:nestedScrollingEnabled="true">
 
 
                 <android.support.v7.widget.Toolbar
@@ -60,7 +61,7 @@
                     android:layout_height="41dp"
                     android:layout_marginTop="10dp"
                     android:padding="5dp"
-                    android:src="@drawable/traslado_articulos"
+                    android:src="@drawable/home_azul"
                     android:onClick="home"/>
                 <ImageView
                     android:layout_width="41dp"

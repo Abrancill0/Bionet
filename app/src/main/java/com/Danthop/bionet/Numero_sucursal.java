@@ -43,6 +43,8 @@ public class Numero_sucursal extends Activity {
     private String IDUsuario;
     private ProgressDialog progreso;
 
+    private int NumeroSucursales;
+
     String[][] sucursalModel;
 
     TableView tb;
@@ -64,10 +66,17 @@ public class Numero_sucursal extends Activity {
 
     public void eleccion_premium(View view) {
 
-       // GuardarDatos();
-        Intent intent = new Intent(Numero_sucursal.this, EleccionPremium.class);
-        startActivity(intent);
+        if(NumeroSucursales!=0){
+            Intent intent = new Intent(Numero_sucursal.this, EleccionPremium.class);
+            startActivity(intent);
         }
+       else {
+            Toast toast1 =
+                    Toast.makeText(getApplicationContext(), "Debe crear por lo menos una sucursal", Toast.LENGTH_LONG);
+
+            toast1.show();
+        }
+    }
 
 
     private void GuardarDatos(){
@@ -97,6 +106,11 @@ public class Numero_sucursal extends Activity {
             request.put("suc_pais", "Mexico");
             request.put("usu_id", IDUsuario);
             request.put("esApp", "1");
+            request.put("con_propinas", "false");
+            request.put("suc_principal", "false");
+            request.put("suc_razon_social", "");
+            request.put("suc_rfc", "");
+
 
         }
         catch(Exception e)
@@ -266,6 +280,7 @@ public class Numero_sucursal extends Activity {
                         sucursalModel = new String[RespuestaNodoSucursal.length()][4];
 
                         for(int x = 0; x < RespuestaNodoSucursal.length(); x++){
+                            NumeroSucursales=x+1;
                             JSONObject elemento = RespuestaNodoSucursal.getJSONObject(x);
 
                             nombre = elemento.getString("suc_nombre");
