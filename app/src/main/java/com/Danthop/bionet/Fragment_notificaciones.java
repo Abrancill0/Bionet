@@ -76,8 +76,8 @@ public class Fragment_notificaciones extends Fragment {
     }
 
     public void removeItem(int position) {
-        mNotificacionList.remove(position);
-        mAdapter.notifyItemRemoved(position);
+            mNotificacionList.remove(position);
+            mAdapter.notifyItemRemoved(position);
     }
 
     public void createExampleList() {
@@ -108,8 +108,31 @@ public class Fragment_notificaciones extends Fragment {
 
             @Override
             public void onDeleteClick(int position) {
+                int x;
+                int y=0;
+                if(posicionesDelete.size()>0)
+                {
+                    for(x=1;x<=posicionesDelete.size();x++)
+                    {
+                        if(position==posicionesDelete.get(x-1)){
+                            posicionesDelete.remove(x-1);
+                            y=1;
+                            break;
+                        }
+                    }
+                    x--;
+                    if(y==0)
+                    {
+                        posicionesDelete.add(position);
+                        System.out.println(posicionesDelete);
+                    }
+                }
+                else
+                {
+                    posicionesDelete.add(position);
+                }
+                System.out.println(posicionesDelete);
 
-                posicionesDelete.add(position);
 
             }
         });

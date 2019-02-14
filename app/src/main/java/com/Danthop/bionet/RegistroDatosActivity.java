@@ -30,11 +30,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +59,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
     private static final int REQUEST_CODE = 23;
     private ArrayList<String> GiroName;
 
-    ImageLoader imageLoader = ImageLoader.getInstance();
+    private ImageLoader imageLoader;
 
     @Override
     public void getImageBitmap(Bitmap bitmap) {
@@ -83,6 +85,8 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.registro_datos);
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(RegistroDatosActivity.this));
 
         GiroName=new ArrayList<>();
 
@@ -230,7 +234,10 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
         progreso.setMessage("procesando...");
         progreso.show();
 
-        File file = new File( String.valueOf( Rutaimagen ) );
+
+
+        File file = new File(mSelectedUri.getPath());
+        
 
         JSONObject request = new JSONObject();
         try

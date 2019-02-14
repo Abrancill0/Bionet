@@ -57,8 +57,6 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
             Box.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(Box.isChecked())
-
                         if (listener != null){
                             int position = getAdapterPosition();
                             if (position != RecyclerView.NO_POSITION){
