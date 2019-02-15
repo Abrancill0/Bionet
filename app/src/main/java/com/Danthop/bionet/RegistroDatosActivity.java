@@ -7,10 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -35,6 +37,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -58,6 +61,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
     private static final String TAG = "RegistroDatos";
     private static final int REQUEST_CODE = 23;
     private ArrayList<String> GiroName;
+    private String RealPath;
 
     private ImageLoader imageLoader;
 
@@ -77,6 +81,31 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
         imageLoader.displayImage(imagePath.toString(),SelectPhoto);
         mSelectedBitmap = null;
         mSelectedUri = imagePath;
+    }
+
+    private Uri getImageUri(Context context, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    private String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } catch (Exception e) {
+            Log.e(TAG, "getRealPathFromURI Exception : " + e.toString());
+            return "";
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 
 
@@ -234,9 +263,13 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
         progreso.setMessage("procesando...");
         progreso.show();
 
+        /*if(mSelectedUri == null )
+        {
+            mSelectedUri= getImageUri(getBaseContext(),mSelectedBitmap);
+            RealPath=getRealPathFromURI(getBaseContext(),mSelectedUri);
+        }*/
 
 
-        File file = new File(mSelectedUri.getPath());
         
 
         JSONObject request = new JSONObject();
@@ -249,7 +282,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
             request.put("usu_apellido_materno", ApellidoMaterno.getText());
             request.put("usu_numero_celular", CelularAdministrador.getText());
             request.put("cbn_numero_sucursales", "0");
-            request.put("con_logo_negocio", file);
+            request.put("con_logo_negocio", "");
             request.put("esApp", "1");
             request.put("usu_id", IDUsuario);
 

@@ -150,7 +150,7 @@
                 android:layout_height="match_parent"
                 app:fillColor="@color/colorPrimaryDark"
                 app:pageColor="@color/white"
-                app:radius="6dp"
+                app:radius="4dp"
                 app:slideInterval="3000"
                 app:strokeColor="#FF777777"
                 app:strokeWidth="1dp"

@@ -39,6 +39,8 @@ public class Numero_sucursal extends Activity {
     private EditText telefono_sucursal;
     private EditText correo_sucursal;
     private EditText direccion_sucursal;
+    private EditText rfc;
+    private EditText razon_social;
     private static final String[] TABLA1_HEADERS = { "Nombre de la sucursal", "Teléfono", "Correo", "Dirección" };
     private String IDUsuario;
     private ProgressDialog progreso;
@@ -108,8 +110,8 @@ public class Numero_sucursal extends Activity {
             request.put("esApp", "1");
             request.put("con_propinas", "false");
             request.put("suc_principal", "false");
-            request.put("suc_razon_social", "");
-            request.put("suc_rfc", "");
+            request.put("suc_razon_social", razon_social);
+            request.put("suc_rfc", rfc);
 
 
         }
@@ -196,14 +198,15 @@ public class Numero_sucursal extends Activity {
                 telefono_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_telefono_sucursal);
                 correo_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_correo_sucursal);
                 direccion_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_direccion_sucursal);
-
+                rfc = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_rfc);
+                razon_social = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_razon_social);
                 valida_datos(crear_sucursal_dialog);
             }
         });
     }
 
     public void valida_datos(Dialog dialog){
-        if(nombre_sucursal.getText().length()==0||telefono_sucursal.getText().length()==0||correo_sucursal.getText().length()==0||direccion_sucursal.getText().length()==0) {
+        if(nombre_sucursal.getText().length()==0||telefono_sucursal.getText().length()==0||correo_sucursal.getText().length()==0||direccion_sucursal.getText().length()==0||razon_social.getText().length()==0||rfc.getText().length()==0) {
             Toast toast1 = Toast.makeText(getApplicationContext(),
                     "Campos obligatorios ", Toast.LENGTH_SHORT);
 

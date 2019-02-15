@@ -73,7 +73,7 @@ public class Fragment_clientes extends Fragment {
         tabla_clientes.setHeaderAdapter(simpleHeader);
         tabla_clientes.setColumnModel(tableColumnWeightModel);
 
-        Muestra_sucursales();
+        Muestra_clientes();
 
         Button btn_crear_cliente = (Button) v.findViewById(R.id.btn_crear_cliente);
         btn_crear_cliente.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +89,7 @@ public class Fragment_clientes extends Fragment {
 
     }
 
-    private void Muestra_sucursales()
+    private void Muestra_clientes()
     {
         JSONObject request = new JSONObject();
         try
