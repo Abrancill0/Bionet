@@ -383,12 +383,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
-                android:layout_weight=".5"
-                android:orientation="horizontal">
+                android:layout_weight=".5">
 
                 <TextView
                     android:id="@+id/textView153"
-                    android:layout_width="119dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="RFC"
                     android:textSize="18sp" />

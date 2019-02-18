@@ -185,30 +185,35 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.nav_notificaciones:
-                getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
-                        new Fragment_notificaciones() ).commit();
-                break;
-            case R.id.nav_home:
-                getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
-                        new Fragment_pantalla_principal() ).commit();
-                break;
-            case R.id.nav_clientes:
-                getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
-                        new Fragment_clientes() ).commit();
-                break;
 
-            case R.id.nav_inventario:
-                getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
-                        new Fragment_inventarios() ).commit();
-                break;
+            switch (menuItem.getItemId()) {
+                case R.id.nav_notificaciones:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new Fragment_notificaciones()).commit();
+                    break;
+                case R.id.nav_Ventas:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new Fragment_Ventas()).commit();
+                    break;
+                case R.id.nav_home:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new Fragment_pantalla_principal()).commit();
+                    break;
+                case R.id.nav_clientes:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new Fragment_clientes()).commit();
+                    break;
 
-            case R.id.nav_cerrar_sesion:
-                cerrar.setContentView( R.layout.pop_up_cerrarsesion );
-                cerrar.show();
-                break;
-        }
+                case R.id.nav_inventario:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new Fragment_inventarios()).commit();
+                    break;
+
+                case R.id.nav_cerrar_sesion:
+                    cerrar.setContentView(R.layout.pop_up_cerrarsesion);
+                    cerrar.show();
+                    break;
+            }
 
         drawer.closeDrawer( GravityCompat.START );
         return true;
@@ -220,9 +225,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 new Fragment_notificaciones() ).commit();
     }
 
-    public void clientes(View view) {
-        getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
-                new Fragment_clientes() ).commit();
+    public void ventas(View view){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new Fragment_Ventas()).commit();
+    }
+    public void clientes(View view){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new Fragment_clientes()).commit();
     }
 
     public void home(View view) {
