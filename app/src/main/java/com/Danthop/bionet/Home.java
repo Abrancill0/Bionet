@@ -154,6 +154,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             new Fragment_notificaciones()).commit();
                     break;
+                case R.id.nav_Ventas:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new Fragment_Ventas()).commit();
+                    break;
                 case R.id.nav_home:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             new Fragment_pantalla_principal()).commit();
@@ -184,6 +188,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public void notificaciones(View view){
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new Fragment_notificaciones()).commit();
+    }
+    public void ventas(View view){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new Fragment_Ventas()).commit();
     }
     public void clientes(View view){
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
