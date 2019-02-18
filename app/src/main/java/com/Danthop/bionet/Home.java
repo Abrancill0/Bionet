@@ -26,10 +26,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.Danthop.bionet.model.VolleySingleton;
+
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.SimpleMultiPartRequest;
+import com.android.volley.toolbox.Volley;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Fragment_pop_up_ProfilePhoto.OnPhotoSelectedListener {
     private DrawerLayout drawer;
@@ -38,100 +60,114 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private static final int REQUEST_CODE = 23;
     private Bitmap mSelectedBitmap;
     private Uri mSelectedUri;
-    ImageLoader imageLoader = ImageLoader.getInstance();
+    private ImageLoader imageLoader = ImageLoader.getInstance();
     private String usu_id;
 
     @Override
     public void getImageBitmap(Bitmap bitmap) {
-        ImageView SelectPhoto = (ImageView) findViewById(R.id.foto_perfil);
-        SelectPhoto.setImageBitmap(bitmap);
+        ImageView SelectPhoto = (ImageView) findViewById( R.id.foto_perfil );
+        SelectPhoto.setImageBitmap( bitmap );
         mSelectedUri = null;
         mSelectedBitmap = bitmap;
 
+
+        //GuardarImagen
     }
 
     @Override
     public void getImagePath(Uri imagePath) {
-        ImageView SelectPhoto = (ImageView) findViewById(R.id.foto_perfil);
-        imageLoader.displayImage(imagePath.toString(),SelectPhoto);
+        ImageView SelectPhoto = (ImageView) findViewById( R.id.foto_perfil );
+        imageLoader.displayImage( imagePath.toString(), SelectPhoto );
+
+
+        File mFile = new File(imagePath.toString());
+
         mSelectedBitmap = null;
         mSelectedUri = imagePath;
+
+        GuardarImagen(  mFile.getAbsolutePath() );
     }
 
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.home);
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.home );
+
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(Home.this));
+
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.fragment_container, new Fragment_pantalla_principal());
+        tx.replace( R.id.fragment_container, new Fragment_pantalla_principal() );
         tx.commit();
-        cerrar = new Dialog(this);
+        cerrar = new Dialog( this );
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById( R.id.toolbar );
 
-        drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById( R.id.drawer_layout );
 
         Context context = this;
-        SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences( "DatosPersistentes", context.MODE_PRIVATE );
 
-        String Nombre = sharedPref.getString("usu_nombre","");
-        String Apellido = sharedPref.getString("usu_apellidos","");
-        String ImagenPerfil = sharedPref.getString("usu_imagen_perfil","");
-        usu_id = sharedPref.getString("usu_id","");
+        String Nombre = sharedPref.getString( "usu_nombre", "" );
+        String Apellido = sharedPref.getString( "usu_apellidos", "" );
+        String ImagenPerfil = sharedPref.getString( "usu_imagen_perfil", "" );
+        usu_id = sharedPref.getString( "usu_id", "" );
 
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = findViewById( R.id.nav_view );
+        navigationView.setNavigationItemSelectedListener( this );
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle( this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close );
+        drawer.addDrawerListener( toggle );
         toggle.syncState();
 
-        View headView = navigationView.getHeaderView(0);
-        ImageView imgProfile = headView.findViewById(R.id.foto_perfil);
+        View headView = navigationView.getHeaderView( 0 );
+        ImageView imgProfile = headView.findViewById( R.id.foto_perfil );
 
-        String url = getString(R.string.Url) + ImagenPerfil;
+        String url = getString( R.string.Url ) + ImagenPerfil;
 
-        Picasso.with(context).load(url).into(imgProfile);
+        Picasso.with( context ).load( url ).into( imgProfile );
 
-        TextView NombreUsuario = (TextView) headView.findViewById(R.id.TextNombrePerfil);
+        TextView NombreUsuario = (TextView) headView.findViewById( R.id.TextNombrePerfil );
 
-        NombreUsuario.setText(Nombre + " " + Apellido);
+        NombreUsuario.setText( Nombre + " " + Apellido );
 
-        imgProfile.setOnClickListener(new View.OnClickListener(){
+        imgProfile.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 verifyPermissions();
                 FragmentManager fm = getSupportFragmentManager();
                 Fragment_pop_up_ProfilePhoto myDialogFragment = new Fragment_pop_up_ProfilePhoto();
-                myDialogFragment.show(fm, "photo_dialog_fragment");
+                myDialogFragment.show( fm, "photo_dialog_fragment" );
             }
-        });
+        } );
 
 
     }
-    private void verifyPermissions(){
+
+    private void verifyPermissions() {
 
         String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA};
 
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                permissions[0])== PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                permissions[1])== PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                permissions[2])== PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission( this.getApplicationContext(),
+                permissions[0] ) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission( this.getApplicationContext(),
+                permissions[1] ) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission( this.getApplicationContext(),
+                permissions[2] ) == PackageManager.PERMISSION_GRANTED) {
 
-        }else{
-            ActivityCompat.requestPermissions(Home.this,
+        } else {
+            ActivityCompat.requestPermissions( Home.this,
                     permissions,
-                    REQUEST_CODE);
+                    REQUEST_CODE );
 
         }
 
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         verifyPermissions();
@@ -140,8 +176,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)){
-            drawer.closeDrawer(GravityCompat.START);
+        if (drawer.isDrawerOpen( GravityCompat.START )) {
+            drawer.closeDrawer( GravityCompat.START );
         } else {
             super.onBackPressed();
         }
@@ -149,58 +185,58 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.nav_notificaciones:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new Fragment_notificaciones()).commit();
-                    break;
-                case R.id.nav_home:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new Fragment_pantalla_principal()).commit();
-                    break;
-                case R.id.nav_clientes:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new Fragment_clientes()).commit();
-                    break;
+        switch (menuItem.getItemId()) {
+            case R.id.nav_notificaciones:
+                getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
+                        new Fragment_notificaciones() ).commit();
+                break;
+            case R.id.nav_home:
+                getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
+                        new Fragment_pantalla_principal() ).commit();
+                break;
+            case R.id.nav_clientes:
+                getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
+                        new Fragment_clientes() ).commit();
+                break;
 
-                case R.id.nav_inventario:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new Fragment_inventarios()).commit();
-                    break;
+            case R.id.nav_inventario:
+                getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
+                        new Fragment_inventarios() ).commit();
+                break;
 
-                case R.id.nav_cerrar_sesion:
-                    cerrar.setContentView(R.layout.pop_up_cerrarsesion);
-                    cerrar.show();
-                    break;
-            }
+            case R.id.nav_cerrar_sesion:
+                cerrar.setContentView( R.layout.pop_up_cerrarsesion );
+                cerrar.show();
+                break;
+        }
 
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
+        drawer.closeDrawer( GravityCompat.START );
+        return true;
 
     }
 
-
-
-    public void notificaciones(View view){
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new Fragment_notificaciones()).commit();
-    }
-    public void clientes(View view){
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new Fragment_clientes()).commit();
-    }
-    public void home(View view){
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new Fragment_pantalla_principal()).commit();
+    public void notificaciones(View view) {
+        getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
+                new Fragment_notificaciones() ).commit();
     }
 
-    public void inventario(View view){
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new Fragment_inventarios()).commit();
+    public void clientes(View view) {
+        getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
+                new Fragment_clientes() ).commit();
     }
 
-    public void cerrar_sesion(View view){
-        cerrar.setContentView(R.layout.pop_up_cerrarsesion);
+    public void home(View view) {
+        getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
+                new Fragment_pantalla_principal() ).commit();
+    }
+
+    public void inventario(View view) {
+        getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
+                new Fragment_inventarios() ).commit();
+    }
+
+    public void cerrar_sesion(View view) {
+        cerrar.setContentView( R.layout.pop_up_cerrarsesion );
         cerrar.show();
     }
 
@@ -213,32 +249,57 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
+        fragmentManager.beginTransaction().replace( R.id.fragment_container, fragment )
                 .commit();
     }
 
     public void ShowDireccionFiscal(View view) {
-        Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.pop_up_crear_cliente_diferentes_datos);
-        dialog.setTitle("Dirección fiscal");
+        Dialog dialog = new Dialog( this );
+        dialog.setContentView( R.layout.pop_up_crear_cliente_diferentes_datos );
+        dialog.setTitle( "Dirección fiscal" );
         dialog.show();
     }
 
-    public void Aceptar(View view){
-        Intent intent = new Intent(Home.this, Login.class);
-        startActivity(intent);
+    public void Aceptar(View view) {
+        Intent intent = new Intent( Home.this, Login.class );
+        startActivity( intent );
 
-        SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences( "DatosPersistentes", Context.MODE_PRIVATE );
 
         sharedPref.edit().clear().commit();
 
     }
 
-    public void Cancelar(View view){
+    public void Cancelar(View view) {
         cerrar.dismiss();
     }
 
+    private void GuardarImagen(final String imagePath) {
 
+        String url = getString(R.string.Url);
 
+        String ApiPath = url + "/api/usuarios/cambiar-imagen";
 
+        SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, ApiPath,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                       // Log.d("Response", response);
+                        Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        smr.addStringParam("usu_id", usu_id);
+        smr.addStringParam("usu_imagen_perfil_old", "");
+        smr.addStringParam("esApp", "1");
+
+        smr.addFile("usu_imagen_perfil", imagePath);
+
+        RequestQueue mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+        mRequestQueue.add(smr);
+    }
 }
