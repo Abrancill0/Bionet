@@ -116,14 +116,11 @@
                         android:text="Colonia"
                         android:textSize="18sp" />
 
-                    <EditText
+                    <Spinner
                         android:id="@+id/Text_cliente_colonia"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:background="@drawable/shape_gray"
-                        android:ems="10"
-                        android:inputType="text"
                         android:padding="1dp"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -309,7 +306,7 @@
                         android:ems="10"
                         android:inputType="number"
                         android:padding="1dp"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"/>
                 </LinearLayout>
 
                 <LinearLayout

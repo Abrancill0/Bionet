@@ -318,7 +318,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
 
                         toast1.show();
 
-                        Intent intent = new Intent(RegistroDatosActivity.this, Numero_sucursal.class);
+                        Intent intent=new Intent(RegistroDatosActivity.this,EleccionPremium.class);
                         intent.putExtra("IDUsuario", IDUsuario);
                         startActivity(intent);
 

@@ -9,14 +9,21 @@ import com.Danthop.bionet.R;
 
 
 public class EleccionPremium extends Activity {
+
+    private String IDUsuario;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eleccion_premium);
+        Bundle datos = this.getIntent().getExtras();
+        IDUsuario =  "" + datos.get("IDUsuario");
     }
 
-    public void Home(View view) {
-        Intent intent = new Intent(EleccionPremium.this, Home.class);
+    public void Numero_sucursal(View view) {
+        Intent intent = new Intent(EleccionPremium.this, Numero_sucursal.class);
+        intent.putExtra("IDUsuario", IDUsuario);
         startActivity(intent);
     }
 }

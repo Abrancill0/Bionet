@@ -65,15 +65,15 @@ public class Numero_sucursal extends Activity {
         tb.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TABLA1_HEADERS));
     }
 
-    public void eleccion_premium(View view) {
+    public void Home(View view){
 
         if(NumeroSucursales!=0){
-            Intent intent = new Intent(Numero_sucursal.this, EleccionPremium.class);
+            Intent intent=new Intent(Numero_sucursal.this,Home.class);
             startActivity(intent);
         }
-       else {
-            Toast toast1 =
-                    Toast.makeText(getApplicationContext(), "Debe crear por lo menos una sucursal", Toast.LENGTH_LONG);
+        else{
+            Toast toast1=
+                    Toast.makeText(getApplicationContext(),"Debecrearporlomenosunasucursal",Toast.LENGTH_LONG);
 
             toast1.show();
         }

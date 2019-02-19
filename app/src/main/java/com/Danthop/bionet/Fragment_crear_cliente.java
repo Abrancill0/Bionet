@@ -10,15 +10,21 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.model.VolleySingleton;
@@ -32,6 +38,7 @@ import com.Danthop.bionet.R;
 
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
 
 
@@ -52,7 +59,7 @@ public class Fragment_crear_cliente extends DialogFragment {
     private CheckBox Mismo_email_personal;
     private CheckBox Mismo_direccion_personal;
     private EditText TextNombre;
-    private EditText TextColonia;
+    private Spinner TextColonia;
     private EditText TextNumInterior;
     private EditText TextCiudad;
     private EditText TextEmail;
@@ -109,7 +116,7 @@ public class Fragment_crear_cliente extends DialogFragment {
         Mismo_email_personal =(CheckBox) v.findViewById(R.id.Mismo_email);
         Mismo_direccion_personal =(CheckBox) v.findViewById(R.id.Misma_direccion);
         TextNombre=(EditText)v.findViewById(R.id.Text_cliente_Nombre);
-        TextColonia=(EditText)v.findViewById(R.id.Text_cliente_colonia);
+        TextColonia=(Spinner)v.findViewById(R.id.Text_cliente_colonia);
         TextNumInterior=(EditText)v.findViewById(R.id.Text_cliente_num_int);
         TextCiudad=(EditText)v.findViewById(R.id.Text_cliente_ciudad);
         TextEmail=(EditText)v.findViewById(R.id.Text_cliente_email);
@@ -153,6 +160,18 @@ public class Fragment_crear_cliente extends DialogFragment {
 
             }
         });
+
+        TextCp = v.findViewById(R.id.Text_cliente_cp);
+        TextCp.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                LoadSpinnerColonias();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
         return v;
     }
 
@@ -181,7 +200,7 @@ public class Fragment_crear_cliente extends DialogFragment {
             request.put("cli_calle",TextCalle.getText());
             request.put("cli_numero_interior",TextNumInterior.getText());
             request.put("cli_numero_exterior",TextNumExt.getText());
-            request.put("cli_colonia",TextColonia.getText());
+            request.put("cli_colonia",TextColonia.getSelectedItem());
             request.put("cli_ciudad",TextCiudad.getText());
             request.put("cli_codigo_postal",TextCp.getText());
             request.put("cli_id_pais",117);
@@ -534,36 +553,48 @@ public class Fragment_crear_cliente extends DialogFragment {
 
     }
 
-    /*private void loadSpinnerData(String url) {
-        RequestQueue requestQueue=Volley.newRequestQueue(getContext());
-        StringRequest stringRequest=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try{
-                    JSONObject jsonObject=new JSONObject(response);
-                    if(jsonObject.getInt("estatus")==1){
-                        JSONArray jsonArray=jsonObject.getJSONArray("Name");
-                        for(int i=0;i<jsonArray.length();i++){
-                            JSONObject jsonObject1=jsonArray.getJSONObject(i);
-                            String country=jsonObject1.getString("Country");
-                            EstadoName.add(country);
+    public void LoadSpinnerColonias(){
+
+        final JSONArray[] RespuestaNodoColonias = {null};
+
+        if(TextCp.length()==5){
+
+
+            final String url = "https://api-codigos-postales.herokuapp.com/v2/codigo_postal/"+TextCp.getText().toString();
+
+                // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>()
+                    {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // display response
+                            Log.d("Response", response.toString());
+
+                            try {
+                                RespuestaNodoColonias[0] = response.getJSONArray("colonias");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("Error.Response", String.valueOf(error));
                         }
                     }
-                    SpinnerEstado.setAdapter(new ArrayAdapter<String>(getContext(),R.layout.fragment_crear_cliente,EstadoName));
-                }catch (JSONException e){e.printStackTrace();}
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-        int socketTimeout = 30000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
-    }*/
+            );
 
+                    // add it to the RequestQueue
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+
+        }
+        else{
+            return;
+        }
+    }
 
 
 
