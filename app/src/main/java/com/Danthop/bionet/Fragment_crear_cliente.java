@@ -59,7 +59,6 @@ public class Fragment_crear_cliente extends DialogFragment {
     private CheckBox Mismo_email_personal;
     private CheckBox Mismo_direccion_personal;
     private EditText TextNombre;
-    private Spinner TextColonia;
     private EditText TextNumInterior;
     private EditText TextCiudad;
     private EditText TextEmail;
@@ -83,6 +82,7 @@ public class Fragment_crear_cliente extends DialogFragment {
     private EditText TextFacturacionMunicipio;
     private Spinner SpinnerEstado;
     private Spinner SpinnerSucursal;
+    private Spinner SpinnerColonia;
     private String usu_id;
     private int Estado_id;
     private String Sucursal_id;
@@ -95,6 +95,7 @@ public class Fragment_crear_cliente extends DialogFragment {
     private ArrayList<Integer> EstadoID;
     private ArrayList<String> SucursalName;
     private ArrayList<String> SucursalID;
+    private ArrayList<String> ColoniaName;
 
 
 
@@ -112,11 +113,12 @@ public class Fragment_crear_cliente extends DialogFragment {
         EstadoID = new ArrayList<>();
         SucursalName=new ArrayList<>();
         SucursalID = new ArrayList<>();
+        ColoniaName = new ArrayList<>();
 
         Mismo_email_personal =(CheckBox) v.findViewById(R.id.Mismo_email);
         Mismo_direccion_personal =(CheckBox) v.findViewById(R.id.Misma_direccion);
         TextNombre=(EditText)v.findViewById(R.id.Text_cliente_Nombre);
-        TextColonia=(Spinner)v.findViewById(R.id.Text_cliente_colonia);
+        SpinnerColonia=(Spinner)v.findViewById(R.id.Text_cliente_colonia);
         TextNumInterior=(EditText)v.findViewById(R.id.Text_cliente_num_int);
         TextCiudad=(EditText)v.findViewById(R.id.Text_cliente_ciudad);
         TextEmail=(EditText)v.findViewById(R.id.Text_cliente_email);
@@ -165,6 +167,7 @@ public class Fragment_crear_cliente extends DialogFragment {
         TextCp.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
+                ColoniaName.clear();
                 LoadSpinnerColonias();
             }
 
@@ -200,7 +203,7 @@ public class Fragment_crear_cliente extends DialogFragment {
             request.put("cli_calle",TextCalle.getText());
             request.put("cli_numero_interior",TextNumInterior.getText());
             request.put("cli_numero_exterior",TextNumExt.getText());
-            request.put("cli_colonia",TextColonia.getSelectedItem());
+            request.put("cli_colonia",SpinnerColonia.getSelectedItem());
             request.put("cli_ciudad",TextCiudad.getText());
             request.put("cli_codigo_postal",TextCp.getText());
             request.put("cli_id_pais",117);
@@ -576,8 +579,10 @@ public class Fragment_crear_cliente extends DialogFragment {
                                 //Aqui llenar el spiner con el respuesta nodo
                                 for(int x = 0; x < RespuestaNodoColonias.length(); x++){
                                     //Aqui llenas un arreglo para el adapter del spiner
-
+                                    String colonia=RespuestaNodoColonias.getString(x);
+                                    ColoniaName.add(colonia);
                                 }
+                                SpinnerColonia.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,ColoniaName));
 
 
                             } catch (JSONException e) {
