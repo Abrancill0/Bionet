@@ -9,11 +9,10 @@
     android:padding="15dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/foto_perfil"
+        android:id="@+id/foto_perfil_hamburguesa"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:onClick="tomarFoto"
         android:src="@drawable/imagen_profile"
         app:civ_border_color="@color/colorPrimary"
         app:civ_border_width="1dp" />

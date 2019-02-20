@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Danthop.bionet.model.LoginModel;
 import com.Danthop.bionet.model.VolleySingleton;
 
 import com.android.volley.NetworkResponse;
@@ -37,8 +38,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -65,11 +69,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private Uri mSelectedUri;
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private String usu_id;
+    private String url;
+    private String img_ruta_servidor;
+    private ImageView imgProfile;
+    private ImageView img_pantalla_principal;
+    LoginModel Resultado = new LoginModel();
+
 
     @Override
     public void getImageBitmap(Bitmap bitmap) {
-        ImageView SelectPhoto = (ImageView) findViewById( R.id.foto_perfil );
-        SelectPhoto.setImageBitmap( bitmap );
         mSelectedUri = null;
         mSelectedBitmap = bitmap;
 
@@ -79,7 +87,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         // CALL THIS METHOD TO GET THE ACTUAL PATH
         File finalFile = new File(getRealPathFromURI(tempUri));
 
-        GuardarImagen(finalFile);
+        GuardarImagen(finalFile.getAbsolutePath());
+
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -98,16 +107,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     @Override
     public void getImagePath(Uri imagePath) {
-        ImageView SelectPhoto = (ImageView) findViewById( R.id.foto_perfil );
-        imageLoader.displayImage( imagePath.toString(), SelectPhoto );
 
-
+        //File finalFile = new File(getRealPathFromURI(Uri.parse(imagePath.toString())));
         File mFile = new File(imagePath.toString());
 
         mSelectedBitmap = null;
         mSelectedUri = imagePath;
 
-        GuardarImagen(  mFile );
+        GuardarImagen(  mFile.getAbsolutePath() );
+
     }
 
     @SuppressLint("WrongViewCast")
@@ -118,6 +126,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(Home.this));
+
+
 
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace( R.id.fragment_container, new Fragment_pantalla_principal() );
@@ -135,21 +145,26 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         String Apellido = sharedPref.getString( "usu_apellidos", "" );
         String ImagenPerfil = sharedPref.getString( "usu_imagen_perfil", "" );
         usu_id = sharedPref.getString( "usu_id", "" );
-
+        img_ruta_servidor = sharedPref.getString("usu_imagen","");
 
         NavigationView navigationView = findViewById( R.id.nav_view );
         navigationView.setNavigationItemSelectedListener( this );
+        View headView = navigationView.getHeaderView( 0 );
+
+        img_pantalla_principal = findViewById( R.id.foto_perfil );
+        imgProfile = headView.findViewById( R.id.foto_perfil_hamburguesa );
+
+        //Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( imgProfile );
+
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle( this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close );
         drawer.addDrawerListener( toggle );
         toggle.syncState();
 
-        View headView = navigationView.getHeaderView( 0 );
-        ImageView imgProfile = headView.findViewById( R.id.foto_perfil );
+
 
         String url = getString( R.string.Url ) + ImagenPerfil;
 
-        Picasso.with( context ).load( url ).into( imgProfile );
 
         TextView NombreUsuario = (TextView) headView.findViewById( R.id.TextNombrePerfil );
 
@@ -305,7 +320,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         cerrar.dismiss();
     }
 
-    private void GuardarImagen( File FileReal) {
+    private void GuardarImagen( String RutaReal) {
 
         String url = getString(R.string.Url);
 
@@ -317,7 +332,26 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                       // Log.d("Response", response);
+
+
+                        JSONObject jObj = null;
+                        try {
+                            jObj = new JSONObject(response);
+                            img_ruta_servidor = jObj.getString("resultado");
+                            System.out.println(img_ruta_servidor);
+                            Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( imgProfile );
+                            //Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( img_pantalla_principal);
+
+                            SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor =  sharedPref.edit();
+                            editor.putString("usu_imagen",img_ruta_servidor);
+                            editor.commit();
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                         Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
                     }
                 }, new Response.ErrorListener() {
@@ -330,7 +364,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         smr.addStringParam("usu_id", usu_id);
         smr.addStringParam("usu_imagen_perfil_old", "lo que sea");
         smr.addStringParam("esApp", "1");
-        smr.addFile("usu_imagen_perfil",  FileReal.getAbsolutePath());
+        smr.addFile("usu_imagen_perfil",  RutaReal);
 
 
         RequestQueue mRequestQueue = Volley.newRequestQueue(getApplicationContext());
