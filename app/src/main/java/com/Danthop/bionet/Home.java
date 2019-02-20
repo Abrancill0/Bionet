@@ -7,9 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -52,6 +54,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Base64;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Fragment_pop_up_ProfilePhoto.OnPhotoSelectedListener {
     private DrawerLayout drawer;
@@ -70,8 +73,30 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         mSelectedUri = null;
         mSelectedBitmap = bitmap;
 
+        //String tempUri = String.valueOf( getImageUri(getApplicationContext(), bitmap) );
 
-        //GuardarImagen
+        // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+        Uri tempUri = getImageUri(getApplicationContext(), bitmap);
+
+        // CALL THIS METHOD TO GET THE ACTUAL PATH
+        File finalFile = new File(getRealPathFromURI(tempUri));
+
+        GuardarImagen(finalFile);
+                //GuardarImagen
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
     }
 
     @Override
@@ -85,7 +110,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         mSelectedBitmap = null;
         mSelectedUri = imagePath;
 
-        GuardarImagen(  mFile.getAbsolutePath() );
+        GuardarImagen(  mFile );
     }
 
     @SuppressLint("WrongViewCast")
@@ -283,11 +308,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         cerrar.dismiss();
     }
 
-    private void GuardarImagen(final String imagePath) {
+    private void GuardarImagen( File FileReal) {
 
         String url = getString(R.string.Url);
 
         String ApiPath = url + "/api/usuarios/cambiar-imagen";
+
+        //String image = getStringImage( imagePath );
 
         SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, ApiPath,
                 new Response.Listener<String>() {
@@ -302,13 +329,26 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-        smr.addStringParam("usu_id", usu_id);
-        smr.addStringParam("usu_imagen_perfil_old", "");
-        smr.addStringParam("esApp", "1");
 
-        smr.addFile("usu_imagen_perfil", imagePath);
+        smr.addStringParam("usu_id", usu_id);
+        smr.addStringParam("usu_imagen_perfil_old", "lo que sea");
+        smr.addStringParam("esApp", "1");
+        smr.addFile("usu_imagen_perfil_app",  FileReal.getAbsolutePath());
+        //smr.
+        //smr.addMultipartParam("usu_imagen_perfil_app","File", String.valueOf( FileReal ) );
+        //smr.addStringParam("ext", "jpeg");
+
+        //smr.addFile("usu_imagen_perfil", imagePath);
 
         RequestQueue mRequestQueue = Volley.newRequestQueue(getApplicationContext());
         mRequestQueue.add(smr);
+    }
+
+    public String getStringImage (Bitmap bn) {
+        ByteArrayOutputStream ba = new ByteArrayOutputStream();
+        bn.compress( Bitmap.CompressFormat.PNG,100,ba );
+        byte[] imagebyte = ba.toByteArray();
+        String encode = android.util.Base64.encodeToString(imagebyte, android.util.Base64.DEFAULT );
+        return  encode;
     }
 }

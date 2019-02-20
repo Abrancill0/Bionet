@@ -555,7 +555,6 @@ public class Fragment_crear_cliente extends DialogFragment {
 
     public void LoadSpinnerColonias(){
 
-        final JSONArray[] RespuestaNodoColonias = {null};
 
         if(TextCp.length()==5){
 
@@ -569,13 +568,26 @@ public class Fragment_crear_cliente extends DialogFragment {
                         @Override
                         public void onResponse(JSONObject response) {
                             // display response
-                            Log.d("Response", response.toString());
+                            JSONArray RespuestaNodoColonias = null;
 
                             try {
-                                RespuestaNodoColonias[0] = response.getJSONArray("colonias");
+                                RespuestaNodoColonias = response.getJSONArray("colonias");
+
+                                //Aqui llenar el spiner con el respuesta nodo
+                                for(int x = 0; x < RespuestaNodoColonias.length(); x++){
+                                    //Aqui llenas un arreglo para el adapter del spiner
+
+                                }
+
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+
+
+
+
+
                         }
                     },
                     new Response.ErrorListener()

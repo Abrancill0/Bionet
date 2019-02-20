@@ -27,4 +27,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Url">http://187.189.192.150:8010</string>
+
+    <string name="meli_app_id">[Application identifier]</string>
+    <string name="meli_redirect_uri">[Redirect URI]</string>
 </resources>

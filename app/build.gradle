@@ -42,6 +42,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:17.3.0'
 
     implementation 'dev.dworks.libs:volleyplus:+'
+    implementation 'com.mercadolibre.android.sdk:mercadolibre_android_sdk:1.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
