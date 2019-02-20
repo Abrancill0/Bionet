@@ -73,8 +73,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         mSelectedUri = null;
         mSelectedBitmap = bitmap;
 
-        //String tempUri = String.valueOf( getImageUri(getApplicationContext(), bitmap) );
-
         // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
         Uri tempUri = getImageUri(getApplicationContext(), bitmap);
 
@@ -82,7 +80,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         File finalFile = new File(getRealPathFromURI(tempUri));
 
         GuardarImagen(finalFile);
-                //GuardarImagen
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -333,12 +330,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         smr.addStringParam("usu_id", usu_id);
         smr.addStringParam("usu_imagen_perfil_old", "lo que sea");
         smr.addStringParam("esApp", "1");
-        smr.addFile("usu_imagen_perfil_app",  FileReal.getAbsolutePath());
-        //smr.
-        //smr.addMultipartParam("usu_imagen_perfil_app","File", String.valueOf( FileReal ) );
-        //smr.addStringParam("ext", "jpeg");
+        smr.addFile("usu_imagen_perfil",  FileReal.getAbsolutePath());
 
-        //smr.addFile("usu_imagen_perfil", imagePath);
 
         RequestQueue mRequestQueue = Volley.newRequestQueue(getApplicationContext());
         mRequestQueue.add(smr);
