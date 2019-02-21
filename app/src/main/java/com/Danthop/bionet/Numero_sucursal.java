@@ -73,7 +73,7 @@ public class Numero_sucursal extends Activity {
         }
         else{
             Toast toast1=
-                    Toast.makeText(getApplicationContext(),"Debecrearporlomenosunasucursal",Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(),"Debe crear por lo menos una sucursal",Toast.LENGTH_LONG);
 
             toast1.show();
         }

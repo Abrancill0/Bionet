@@ -86,6 +86,7 @@ public class Fragment_crear_cliente extends DialogFragment {
     private String usu_id;
     private int Estado_id;
     private String Sucursal_id;
+    private String estado;
 
     String URLGetEstados="http://192.168.100.192:8010/api/configuracion/sucursales/select_estados?usu_id=18807ae8-0a10-540c-91cf-aa7eaccf3cbf&esApp=1";
 
@@ -583,7 +584,17 @@ public class Fragment_crear_cliente extends DialogFragment {
                                     ColoniaName.add(colonia);
                                 }
                                 SpinnerColonia.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,ColoniaName));
+                                estado = response.getString("estado");
 
+                                for (int x=0;x<=EstadoName.size();x++)
+                                {
+                                    if(estado!=null && estado.equals(EstadoName.get(x)))
+                                    {
+                                        SpinnerEstado.setSelection(x);
+                                        SpinnerEstado.setEnabled(false);
+                                        break;
+                                    }
+                                }
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -609,6 +620,7 @@ public class Fragment_crear_cliente extends DialogFragment {
 
         }
         else{
+            SpinnerEstado.setEnabled(true);
             return;
         }
     }

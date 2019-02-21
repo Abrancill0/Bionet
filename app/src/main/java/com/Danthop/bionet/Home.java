@@ -241,6 +241,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                             new Fragment_clientes()).commit();
                     break;
 
+                case R.id.nav_ecommerce:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new Fragment_ecomerce()).commit();
+                    break;
+
+
                 case R.id.nav_inventario:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             new Fragment_inventarios()).commit();
@@ -269,6 +275,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public void clientes(View view){
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new Fragment_clientes()).commit();
+    }
+
+    public void ecomerce(View view){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new Fragment_ecomerce()).commit();
     }
 
     public void home(View view) {

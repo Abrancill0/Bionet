@@ -93,7 +93,8 @@
                     android:layout_width="41dp"
                     android:layout_height="41dp"
                     android:padding="5dp"
-                    android:src="@drawable/ecommerce_azul"/>
+                    android:src="@drawable/ecommerce_azul"
+                    android:onClick="ecomerce"/>
                 <ImageView
                     android:layout_width="41dp"
                     android:layout_height="41dp"
