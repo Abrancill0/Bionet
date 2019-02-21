@@ -9,8 +9,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -19,6 +21,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -57,8 +60,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Date;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Fragment_pop_up_ProfilePhoto.OnPhotoSelectedListener {
     private DrawerLayout drawer;
@@ -67,6 +74,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private static final int REQUEST_CODE = 23;
     private Bitmap mSelectedBitmap;
     private Uri mSelectedUri;
+
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private String usu_id;
     private String url;
@@ -105,20 +113,28 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         return cursor.getString(idx);
     }
 
+
     @Override
     public void getImagePath(Uri imagePath) {
 
-        //File finalFile = new File(getRealPathFromURI(Uri.parse(imagePath.toString())));
-        File mFile = new File(imagePath.toString());
-
+        ImageView SelectPhoto = (ImageView) findViewById(R.id.foto_perfil_hamburguesa);
+        imageLoader.displayImage(imagePath.toString(),SelectPhoto);
         mSelectedBitmap = null;
         mSelectedUri = imagePath;
 
-        GuardarImagen(  mFile.getAbsolutePath() );
 
+        GuardarImagen( imagePath.getPath());
     }
 
-    @SuppressLint("WrongViewCast")
+    public static Uri writeToTempImageAndGetPathUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );

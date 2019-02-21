@@ -20,6 +20,7 @@ import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.mercadolibre.android.sdk.Meli;
 
 
 import org.json.JSONException;
@@ -38,6 +39,8 @@ public class Login extends Activity {
 
     LoginModel Resultado = new LoginModel();
 
+    private static final int REQUEST_CODE = 999;
+
 
     Dialog reestablecer;
     Dialog correo_enviado;
@@ -53,6 +56,13 @@ public class Login extends Activity {
 
         TextUsuario = (EditText)findViewById(R.id.TextUsuario);
         TextPassword = (EditText)findViewById(R.id.TextPassword);
+
+        // Set SDK to log events
+        Meli.setLoggingEnabled(true);
+
+        // Initialize the MercadoLibre SDK
+        Meli.initializeSDK(getApplicationContext());
+
 
         String Valor = sharedPref.getString("usu_id","0");
 
@@ -408,7 +418,13 @@ public class Login extends Activity {
 
     }
 
+    public  void PruebaMercadoLibre(View view)
+    {
 
+        Intent intent = new Intent(this, LoginScreenML.class);
+        startActivity(intent);
+
+    }
 
 }
 
