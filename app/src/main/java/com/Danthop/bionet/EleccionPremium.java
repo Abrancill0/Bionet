@@ -2,6 +2,7 @@ package com.Danthop.bionet;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -25,5 +26,10 @@ public class EleccionPremium extends Activity {
         Intent intent = new Intent(EleccionPremium.this, Numero_sucursal.class);
         intent.putExtra("IDUsuario", IDUsuario);
         startActivity(intent);
+    }
+
+    public void mas_informacion(View view){
+        Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( "www.bionetpos.com" ) );
+        startActivity( browse );
     }
 }

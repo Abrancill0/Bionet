@@ -28,13 +28,17 @@ import android.widget.Toast;
 
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 //import com.android.volley.VolleyError;
 //import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.android.volley.request.SimpleMultiPartRequest;
+import com.android.volley.toolbox.Volley;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,55 +64,52 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
     private  Uri Rutaimagen;
     private Bitmap mSelectedBitmap;
     private Uri mSelectedUri;
+    private String img_ruta_servidor;
     private static final String TAG = "RegistroDatos";
     private static final int REQUEST_CODE = 23;
     private ArrayList<String> GiroName;
     private String RealPath;
+    private ImageView Image;
 
     private ImageLoader imageLoader;
 
-    @Override
-    public void getImageBitmap(Bitmap bitmap) {
-        ImageView SelectPhoto = (ImageView) findViewById(R.id.profileImagen);
-        SelectPhoto.setImageBitmap(bitmap);
-        mSelectedUri = null;
-        mSelectedBitmap = bitmap;
-
-    }
+    private String RutaReal;
 
     @Override
     public void getImagePath(Uri imagePath) {
-        ImageView SelectPhoto = (ImageView) findViewById(R.id.profileImagen);
-        Rutaimagen = Uri.parse(imagePath.toString());
-        imageLoader.displayImage(imagePath.toString(),SelectPhoto);
-        mSelectedBitmap = null;
-        mSelectedUri = imagePath;
+
     }
 
-    private Uri getImageUri(Context context, Bitmap inImage) {
+    @Override
+    public void getImageBitmap(Bitmap bitmap) {
+        mSelectedUri = null;
+        mSelectedBitmap = bitmap;
+
+        // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+        Uri tempUri = getImageUri(getApplicationContext(), bitmap);
+
+        // CALL THIS METHOD TO GET THE ACTUAL PATH
+        File finalFile = new File(getRealPathFromURI(tempUri));
+
+        RutaReal=finalFile.getAbsolutePath();
+        imageLoader.displayImage(RutaReal,Image);
+
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
+        inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
 
-    private String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } catch (Exception e) {
-            Log.e(TAG, "getRealPathFromURI Exception : " + e.toString());
-            return "";
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
     }
+
 
 
     @SuppressLint("ResourceType")
@@ -118,6 +119,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
         setContentView(R.layout.registro_datos);
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(RegistroDatosActivity.this));
+        Image = findViewById( R.id.LogoImagen );
 
         GiroName=new ArrayList<>();
 
@@ -131,7 +133,9 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
 
         Bundle datos = this.getIntent().getExtras();
         IDUsuario =  "" + datos.get("IDUsuario");
+
         llenarspinner();
+
 
     }
 
@@ -221,7 +225,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
 
     public void avanzar(View view) {
 
-        GuardarDatos();
+        GuardarDatos(RutaReal);
 
     }
 
@@ -259,116 +263,6 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
         verifyPermissions();
     }
 
-    private void GuardarDatos(){
-
-        progreso = new ProgressDialog(this);
-        progreso.setMessage("procesando...");
-        progreso.show();
-
-        /*if(mSelectedUri == null )
-        {
-            mSelectedUri= getImageUri(getBaseContext(),mSelectedBitmap);
-            RealPath=getRealPathFromURI(getBaseContext(),mSelectedUri);
-        }*/
-
-
-        
-
-        JSONObject request = new JSONObject();
-        try
-        {
-            request.put("cbn_nombre_negocio", NombreNegocio.getText());
-            request.put("cbn_id_giro_negocio", "5");
-            request.put("usu_nombre", NombrePersona.getText());
-            request.put("usu_apellido_paterno", ApellidoPaterno.getText());
-            request.put("usu_apellido_materno", ApellidoMaterno.getText());
-            request.put("usu_numero_celular", CelularAdministrador.getText());
-            request.put("cbn_numero_sucursales", "0");
-            request.put("con_logo_negocio", "");
-            request.put("esApp", "1");
-            request.put("usu_id", IDUsuario);
-
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
-
-        String ApiPath = url + "/api/cuentas/store-config";
-
-        JsonObjectRequest postRequest = new JsonObjectRequest(Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-        {
-            @Override
-            public void onResponse(JSONObject response) {
-
-                JSONObject Respuesta = null;
-
-                try {
-
-                    int status = Integer.parseInt(response.getString("estatus"));
-                    String Mensaje = response.getString("mensaje");
-
-                    if (status == 1)
-                    {
-
-                        Toast toast1 =
-                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
-
-                        toast1.show();
-
-                        Intent intent=new Intent(RegistroDatosActivity.this,EleccionPremium.class);
-                        intent.putExtra("IDUsuario", IDUsuario);
-                        startActivity(intent);
-
-                        new GuardaPreferencia().execute();
-
-                        progreso.hide();
-                    }
-                    else
-                    {
-                        Toast toast1 =
-                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
-
-                        toast1.show();
-
-                        progreso.hide();
-
-                    }
-
-                } catch (JSONException e) {
-
-                    Toast toast1 =
-                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
-
-                    toast1.show();
-
-                    progreso.hide();
-                }
-
-            }
-
-        },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast toast1 =
-                                Toast.makeText(getApplicationContext(),
-                                        "Error de conexion", Toast.LENGTH_SHORT);
-
-                        toast1.show();
-
-                        progreso.hide();
-
-                    }
-                }
-        );
-
-        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
-
-    }
 
     private class GuardaPreferencia extends AsyncTask<Void,String,Void>
     {
@@ -391,5 +285,81 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
             return null;
         }
     }
+
+    private void GuardarDatos( String RutaReal) {
+        progreso = new ProgressDialog(this);
+        progreso.setMessage("procesando...");
+        progreso.show();
+
+        String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
+
+        String ApiPath = url + "/api/cuentas/store-config";
+
+        //String image = getStringImage( imagePath );
+
+        SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, ApiPath,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+
+                        JSONObject jObj = null;
+                        JSONObject NodoResultado=null;
+                        try {
+                            jObj = new JSONObject(response);
+                            NodoResultado = jObj.getJSONObject("resultado");
+
+                            img_ruta_servidor = NodoResultado.getString("url_logo");
+
+                            System.out.println(img_ruta_servidor);
+
+
+
+                            Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( Image );
+                            //Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( img_pantalla_principal);
+
+                            SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor =  sharedPref.edit();
+                            editor.putString("usu_imagen",img_ruta_servidor);
+                            editor.commit();
+
+                            Intent intent=new Intent(RegistroDatosActivity.this,EleccionPremium.class);
+                            intent.putExtra("IDUsuario", IDUsuario);
+                            startActivity(intent);
+
+                            new GuardaPreferencia().execute();
+
+                            progreso.hide();
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        smr.addStringParam("cbn_nombre_negocio", String.valueOf(NombreNegocio.getText()));
+        smr.addStringParam("cbn_id_giro_negocio", "5");
+        smr.addStringParam("usu_nombre", String.valueOf(NombrePersona.getText()));
+        smr.addStringParam("usu_apellido_paterno", String.valueOf(ApellidoPaterno.getText()));
+        smr.addStringParam("usu_apellido_materno", String.valueOf(ApellidoMaterno.getText()));
+        smr.addStringParam("usu_numero_celular", String.valueOf(CelularAdministrador.getText()));
+        smr.addStringParam("cbn_numero_sucursales", "0");
+        smr.addStringParam("esApp", "1");
+        smr.addStringParam("usu_id", IDUsuario);
+        smr.addFile("con_logo_negocio",  RutaReal);
+
+
+        RequestQueue mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+        mRequestQueue.add(smr);
+    }
+
 
 }

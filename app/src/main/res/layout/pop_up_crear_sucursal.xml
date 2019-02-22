@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="480dp"
+    android:layout_width="720dp"
     android:layout_height="475dp"
     android:layout_gravity="center"
     android:gravity="center_vertical|center_horizontal"
@@ -18,7 +18,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
             android:orientation="vertical">
 
             <TextView
@@ -28,184 +29,360 @@
                 android:padding="10dp"
                 android:text="Introduce los datos correspondientes"
                 android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_weight=".2"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
+                android:layout_weight=".5"
                 android:orientation="vertical"
-                android:paddingHorizontal="10dp">
+                android:paddingHorizontal="5dp">
 
-                <TextView
-                    android:id="@+id/textView29"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Nombre de la Sucursal: "
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/Text_nombre_sucursal"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/shape_gray"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:padding="1dp"
-                    android:textSize="14sp" />
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView29"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Nombre de la Sucursal: "
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/Text_nombre_sucursal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/shape_gray"
+                        android:ems="10"
+                        android:inputType="text"
+                        android:padding="1dp"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView29w"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="1dp"
+                        android:text="Telefono: "
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/Text_telefono_sucursal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/shape_gray"
+                        android:ems="10"
+                        android:inputType="phone"
+                        android:padding="1dp"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViews29"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="1dp"
+                        android:text="Correo: "
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/Text_correo_sucursal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/shape_gray"
+                        android:ems="10"
+                        android:inputType="textEmailAddress"
+                        android:padding="1dp"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tesxtView29g"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="1dp"
+                        android:text="RFC:"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/Text_rfc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/shape_gray"
+                        android:ems="10"
+                        android:inputType="text"
+                        android:padding="1dp"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tesxtView29s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="1dp"
+                        android:text="Razón Social:"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/Text_razon_social"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/shape_gray"
+                        android:ems="10"
+                        android:inputType="text"
+                        android:padding="1dp"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView242"
+                        android:layout_width="119dp"
+                        android:layout_height="wrap_content"
+                        android:text="C.P."
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/Text_sucursal_cp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/shape_gray"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:padding="1dp"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingHorizontal="10dp">
+                android:layout_weight=".5"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textView29w"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="1dp"
-                    android:text="Telefono: "
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/Text_telefono_sucursal"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/shape_gray"
-                    android:ems="10"
-                    android:inputType="phone"
-                    android:padding="1dp"
-                    android:textSize="14sp" />
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/textView23"
+                        android:layout_width="119dp"
+                        android:layout_height="wrap_content"
+                        android:text="Colonia"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingHorizontal="10dp">
+                    <Spinner
+                        android:id="@+id/Text_sucursal_colonia"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:padding="1dp"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textViews29"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="1dp"
-                    android:text="Correo: "
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/Text_correo_sucursal"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/shape_gray"
-                    android:ems="10"
-                    android:inputType="textEmailAddress"
-                    android:padding="1dp"
-                    android:textSize="14sp" />
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/textView22"
+                        android:layout_width="119dp"
+                        android:layout_height="wrap_content"
+                        android:text="Estado"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingHorizontal="10dp">
+                    <Spinner
+                        android:id="@+id/Text_sucursal_estado"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"></Spinner>
 
-                <TextView
-                    android:id="@+id/tesxtView29"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="1dp"
-                    android:text="Dirección: "
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp" />
+                </LinearLayout>
 
-                <EditText
-                    android:id="@+id/Text_direccion_sucursal"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/shape_gray"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:padding="1dp"
-                    android:textSize="14sp" />
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/textView252"
+                        android:layout_width="119dp"
+                        android:layout_height="wrap_content"
+                        android:text="Municipio"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingHorizontal="10dp">
+                    <EditText
+                        android:id="@+id/Text_sucursal_municipio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/shape_gray"
+                        android:ems="10"
+                        android:inputType="text"
+                        android:padding="1dp"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tesxtView29g"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="1dp"
-                    android:text="RFC:"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/Text_rfc"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/shape_gray"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:padding="1dp"
-                    android:textSize="14sp" />
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/textViewss"
+                        android:layout_width="119dp"
+                        android:layout_height="wrap_content"
+                        android:text="Calle"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingHorizontal="10dp">
+                    <EditText
+                        android:id="@+id/Text_sucursal_calle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/shape_gray"
+                        android:ems="10"
+                        android:inputType="text"
+                        android:padding="1dp"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tesxtView29s"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="1dp"
-                    android:text="Razón Social:"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/Text_razon_social"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/shape_gray"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:padding="1dp"
-                    android:textSize="14sp" />
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView24"
+                        android:layout_width="119dp"
+                        android:layout_height="wrap_content"
+                        android:text="Núm. int."
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/Text_sucursal_num_int"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/shape_gray"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:padding="1dp"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView124"
+                        android:layout_width="119dp"
+                        android:layout_height="wrap_content"
+                        android:text="Núm. Ext."
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/Text_sucursal_num_ext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/shape_gray"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:padding="1dp"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
             </LinearLayout>
 

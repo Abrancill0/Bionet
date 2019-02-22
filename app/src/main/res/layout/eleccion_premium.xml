@@ -74,7 +74,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".8"
+            android:layout_weight=".75"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
@@ -93,12 +93,75 @@
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:paddingHorizontal="15dp"
+            android:layout_marginHorizontal="10dp"
+
             android:paddingTop="15dp">
 
             <LinearLayout
-                android:layout_width="273dp"
-                android:layout_height="239dp"
-                android:layout_marginHorizontal="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".25"
+                android:layout_marginHorizontal="20dp"
+                android:background="@drawable/shape_gray"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/textView21s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Business Pro"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16sp"
+                    app:fontFamily="@font/muli_semibold" />
+
+                <TextView
+                    android:id="@+id/textView20s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Vende, factura y  administra usuarios, tiempo y asistencia, clientes, proveedores, productos, inventarios, compras y reportes de venta"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="20dp"
+                android:layout_weight=".25"
+                android:background="@drawable/shape_gray"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/textViefw21"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Business Premium"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16sp"
+                    app:fontFamily="@font/muli_semibold" />
+
+                <TextView
+                    android:id="@+id/textVifew20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Vendedores, comisiones y Reportes de utilidades, de  comisiones, de impuestos, de ventas por categoría y de tendencias+ Business Pro"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="20dp"
+                android:layout_weight=".25"
                 android:background="@drawable/shape_gray"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
@@ -108,9 +171,10 @@
                     android:id="@+id/textView21"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Versión Pro"
+                    android:gravity="center"
+                    android:text="Commerce Pro"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="28sp"
+                    android:textSize="16sp"
                     app:fontFamily="@font/muli_semibold" />
 
                 <TextView
@@ -118,14 +182,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Lorem ipsumu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum" />
+                    android:nestedScrollingEnabled="true"
+                    android:text="Promociones, encuesta de satisfacción, sistema de apartados, manejo de plataforma e-commerce, ordenes especiales,  Registro de tiempo y Asistencia con lectura facial reemplazos, propinas  y reportes de formas de pago, de descuentos, de reemplazos, de transacciones, de apartados y de ordenes especiales + Business Premium."
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="273dp"
-                android:layout_height="239dp"
-                android:layout_marginHorizontal="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="20dp"
+                android:layout_weight=".25"
                 android:background="@drawable/shape_gray"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
@@ -136,9 +203,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Versión Premium"
+                    android:text="Commerce Premium"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="28sp"
+                    android:textSize="16sp"
                     app:fontFamily="@font/muli_semibold" />
 
                 <TextView
@@ -146,14 +213,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Lorem ipsum re euint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum" />
+                    android:text="Administración de sucursales ilimitadas, Programas de lealtad, pago con puntos,  Traslados entre sucursales, ubicación de tu sucursal en ticket digital,+ Commerce Pro "
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/btn_aceptar2"
                     style="@android:style/Widget.Holo.Light.Button"
                     android:layout_width="134dp"
                     android:layout_height="24dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/btn"
                     android:padding="0dp"
@@ -163,20 +231,45 @@
             </LinearLayout>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_aceptar5"
-            style="@android:style/Widget.Holo.Light.Button"
-            android:layout_width="148dp"
-            android:layout_height="34dp"
-            android:layout_marginVertical="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/btn"
-            android:onClick="Numero_sucursal"
-            android:padding="0dp"
-            android:text="Empecemos"
-            android:textColor="#ffffff"
-            android:textSize="14sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".6"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_eliminar2"
+                style="@android:style/Widget.Holo.Light.Button"
+                android:layout_width="146dp"
+                android:layout_height="34dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/shape_gray"
+                android:onClick="mas_informacion"
+                android:padding="0dp"
+                android:text="Más Información"
+                android:textColor="@color/gray"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btn_aceptar5"
+                style="@android:style/Widget.Holo.Light.Button"
+                android:layout_width="148dp"
+                android:layout_height="34dp"
+                android:layout_marginVertical="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/btn"
+                android:onClick="Numero_sucursal"
+                android:paddingHorizontal="15dp"
+                android:text="Empecemos"
+                android:textColor="#ffffff"
+                android:textSize="14sp"
+                android:layout_marginHorizontal="20dp"/>
+        </LinearLayout>
     </LinearLayout>
 
 

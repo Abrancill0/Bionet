@@ -45,6 +45,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -60,7 +61,6 @@ public class Fragment_crear_cliente extends DialogFragment {
     private CheckBox Mismo_direccion_personal;
     private EditText TextNombre;
     private EditText TextNumInterior;
-    private EditText TextCiudad;
     private EditText TextEmail;
     private EditText TextCalle;
     private EditText TextNumExt;
@@ -87,6 +87,7 @@ public class Fragment_crear_cliente extends DialogFragment {
     private int Estado_id;
     private String Sucursal_id;
     private String estado;
+    private Toast toast2;
 
     String URLGetEstados="http://192.168.100.192:8010/api/configuracion/sucursales/select_estados?usu_id=18807ae8-0a10-540c-91cf-aa7eaccf3cbf&esApp=1";
 
@@ -121,7 +122,6 @@ public class Fragment_crear_cliente extends DialogFragment {
         TextNombre=(EditText)v.findViewById(R.id.Text_cliente_Nombre);
         SpinnerColonia=(Spinner)v.findViewById(R.id.Text_cliente_colonia);
         TextNumInterior=(EditText)v.findViewById(R.id.Text_cliente_num_int);
-        TextCiudad=(EditText)v.findViewById(R.id.Text_cliente_ciudad);
         TextEmail=(EditText)v.findViewById(R.id.Text_cliente_email);
         TextCalle=(EditText)v.findViewById(R.id.Text_cliente_calle);
         TextNumExt=(EditText)v.findViewById(R.id.Text_cliente_num_ext);
@@ -205,7 +205,7 @@ public class Fragment_crear_cliente extends DialogFragment {
             request.put("cli_numero_interior",TextNumInterior.getText());
             request.put("cli_numero_exterior",TextNumExt.getText());
             request.put("cli_colonia",SpinnerColonia.getSelectedItem());
-            request.put("cli_ciudad",TextCiudad.getText());
+            request.put("cli_ciudad",TextMunicipio.getText());
             request.put("cli_codigo_postal",TextCp.getText());
             request.put("cli_id_pais",117);
             request.put("cli_id_estado",Estado_id);
@@ -586,23 +586,30 @@ public class Fragment_crear_cliente extends DialogFragment {
                                 SpinnerColonia.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,ColoniaName));
                                 estado = response.getString("estado");
 
-                                for (int x=0;x<=EstadoName.size();x++)
-                                {
-                                    if(estado!=null && estado.equals(EstadoName.get(x)))
+                                if(estado.equals("")){
+                                    toast2 =
+                                            Toast.makeText(getContext(), "Introduce un código postal válido", Toast.LENGTH_LONG);
+                                    toast2.show();
+                                    return;
+                                }
+                                else{
+                                    for (int x=0;x<=EstadoName.size();x++)
                                     {
-                                        SpinnerEstado.setSelection(x);
-                                        SpinnerEstado.setEnabled(false);
-                                        break;
+                                        if(estado!=null && estado.equals(EstadoName.get(x)))
+                                        {
+                                            SpinnerEstado.setSelection(x);
+                                            SpinnerEstado.setEnabled(false);
+                                            TextMunicipio.setText(response.getString("municipio"));
+                                            TextMunicipio.setEnabled(false);
+                                            return;
+                                        }
                                     }
                                 }
+
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
-
-
-
 
                         }
                     },
@@ -620,6 +627,7 @@ public class Fragment_crear_cliente extends DialogFragment {
 
         }
         else{
+            TextMunicipio.setEnabled(true);
             SpinnerEstado.setEnabled(true);
             return;
         }

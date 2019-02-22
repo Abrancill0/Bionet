@@ -5,10 +5,15 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.Danthop.bionet.R;
@@ -44,6 +49,28 @@ public class Numero_sucursal extends Activity {
     private String IDUsuario;
     private ProgressDialog progreso;
 
+    private EditText TextCp;
+    private EditText TextMunicipio;
+    private EditText TextCalle;
+    private EditText TextNumExt;
+    private EditText TextNumInterior;
+
+    private Spinner SpinnerEstado;
+    private Spinner SpinnerColonia;
+
+    private int Estado_id;
+    private String Sucursal_id;
+
+    private String estado;
+    private Toast toast2;
+
+    private ArrayList<String> EstadoName;
+    private ArrayList<Integer> EstadoID;
+    private ArrayList<String> ColoniaName;
+
+    private Dialog crear_sucursal_dialog;
+
+
     private int NumeroSucursales;
 
     String[][] sucursalModel;
@@ -55,14 +82,26 @@ public class Numero_sucursal extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.numero_sucursales);
 
+        EstadoName=new ArrayList<>();
+        EstadoID = new ArrayList<>();
+        ColoniaName = new ArrayList<>();
+
+        crear_sucursal_dialog=new Dialog(Numero_sucursal.this);
+        crear_sucursal_dialog.setContentView(R.layout.pop_up_crear_sucursal);
+
+
         Bundle datos = this.getIntent().getExtras();
         IDUsuario =  "" + datos.get("IDUsuario");
 
-         tb = (TableView) findViewById(R.id.tabla2);
+        tb = (TableView) findViewById(R.id.tabla2);
 
         tb.setHeaderBackgroundColor(getResources().getColor(R.color.white));
 
         tb.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TABLA1_HEADERS));
+
+
+
+
     }
 
     public void Home(View view){
@@ -95,14 +134,14 @@ public class Numero_sucursal extends Activity {
             request.put("suc_telefono", telefono_sucursal.getText());
             request.put("suc_correo_electronico", correo_sucursal.getText());
             request.put("con_propinas", "false");
-            request.put("suc_calle", direccion_sucursal.getText());
-            request.put("suc_numero_interior", "");
-            request.put("suc_numero_exterior", "");
-            request.put("suc_colonia", "");
-            request.put("suc_ciudad", "");
-            request.put("suc_codigo_postal", "");
+            request.put("suc_calle", TextCalle.getText());
+            request.put("suc_numero_interior", TextNumInterior);
+            request.put("suc_numero_exterior", TextNumExt);
+            request.put("suc_colonia", SpinnerColonia.getSelectedItem());
+            request.put("suc_ciudad", TextMunicipio.getText());
+            request.put("suc_codigo_postal", TextCp);
             request.put("suc_id_pais", "117");
-            request.put("suc_estado", "");
+            request.put("suc_estado", SpinnerEstado.getSelectedItem());
             request.put("suc_id_estado", "0");
             request.put("suc_pais", "Mexico");
             request.put("usu_id", IDUsuario);
@@ -182,30 +221,48 @@ public class Numero_sucursal extends Activity {
     }
 
     public void crear_sucursal (View v){
-        final Dialog crear_sucursal_dialog=new Dialog(Numero_sucursal.this);
-
-        crear_sucursal_dialog.setContentView(R.layout.pop_up_crear_sucursal);
         crear_sucursal_dialog.show();
 
         Button crear = (Button) crear_sucursal_dialog.findViewById(R.id.btn_crear_sucursal);
 
+        nombre_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_nombre_sucursal);
+        telefono_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_telefono_sucursal);
+        correo_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_correo_sucursal);
+        rfc = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_rfc);
+        razon_social = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_razon_social);
+        TextCp = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_sucursal_cp);
+        TextMunicipio = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_sucursal_municipio);
+        TextCalle = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_sucursal_calle);
+        TextNumExt = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_sucursal_num_ext);
+        TextNumInterior= (EditText) crear_sucursal_dialog.findViewById(R.id.Text_sucursal_num_int);
+        SpinnerColonia= (Spinner) crear_sucursal_dialog.findViewById(R.id.Text_sucursal_colonia);
+        SpinnerEstado= (Spinner) crear_sucursal_dialog.findViewById(R.id.Text_sucursal_estado);
+        TextCp = crear_sucursal_dialog.findViewById(R.id.Text_sucursal_cp);
+        LoadSpinnerEstado();
+        TextCp.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                ColoniaName.clear();
+                LoadSpinnerColonias();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
         crear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                nombre_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_nombre_sucursal);
-                telefono_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_telefono_sucursal);
-                correo_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_correo_sucursal);
-                direccion_sucursal = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_direccion_sucursal);
-                rfc = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_rfc);
-                razon_social = (EditText) crear_sucursal_dialog.findViewById(R.id.Text_razon_social);
                 valida_datos(crear_sucursal_dialog);
             }
         });
     }
 
     public void valida_datos(Dialog dialog){
-        if(nombre_sucursal.getText().length()==0||telefono_sucursal.getText().length()==0||correo_sucursal.getText().length()==0||direccion_sucursal.getText().length()==0||razon_social.getText().length()==0||rfc.getText().length()==0) {
+        if(nombre_sucursal.getText().length()==0||telefono_sucursal.getText().length()==0||correo_sucursal.getText().length()==0||razon_social.getText().length()==0||rfc.getText().length()==0
+                ||TextCp.getText().length()==0||TextMunicipio.getText().length()==0||TextCalle.getText().length()==0||TextNumExt.getText().length()==0||TextNumInterior.getText().length()==0)
+        {
             Toast toast1 = Toast.makeText(getApplicationContext(),
                     "Campos obligatorios ", Toast.LENGTH_SHORT);
 
@@ -352,5 +409,164 @@ public class Numero_sucursal extends Activity {
         VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
 
 
+    }
+    private void LoadSpinnerEstado(){
+
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", IDUsuario);
+            request.put("esApp", "1");
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/configuracion/sucursales/select_estados";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONObject RespuestaNodoEstados = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1)
+                    {
+
+                        Respuesta = response.getJSONObject("resultado");
+
+                        RespuestaNodoEstados = Respuesta.getJSONObject("aEstados");
+
+                        for(int x = 0; x < RespuestaNodoEstados.length(); x++){
+                            JSONObject jsonObject1=RespuestaNodoEstados.getJSONObject(String.valueOf(x));
+                            String estado=jsonObject1.getString("edo_nombre");
+                            int id=jsonObject1.getInt("edo_id");
+                            EstadoName.add(estado);
+                            EstadoID.add(id);
+                        }
+                        SpinnerEstado.setAdapter(new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item,EstadoName));
+
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+
+                } catch (JSONException e) {
+
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+
+                }
+
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getApplicationContext()).addToRequestQueue(postRequest);
+
+
+    }
+
+    public void LoadSpinnerColonias() {
+
+
+        if (TextCp.length() == 5) {
+
+
+            final String url = "https://api-codigos-postales.herokuapp.com/v2/codigo_postal/" + TextCp.getText().toString();
+
+            // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // display response
+                            JSONArray RespuestaNodoColonias = null;
+
+                            try {
+                                RespuestaNodoColonias = response.getJSONArray("colonias");
+
+                                //Aqui llenar el spiner con el respuesta nodo
+                                for (int x = 0; x < RespuestaNodoColonias.length(); x++) {
+                                    //Aqui llenas un arreglo para el adapter del spiner
+                                    String colonia = RespuestaNodoColonias.getString(x);
+                                    ColoniaName.add(colonia);
+                                }
+                                SpinnerColonia.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, ColoniaName));
+                                estado = response.getString("estado");
+
+                                if (estado.equals("")) {
+                                    toast2 =
+                                            Toast.makeText(getApplicationContext(), "Introduce un código postal válido", Toast.LENGTH_LONG);
+                                    toast2.show();
+                                    return;
+                                } else {
+                                    for (int x = 0; x <= EstadoName.size(); x++) {
+                                        if (estado != null && estado.equals(EstadoName.get(x))) {
+                                            SpinnerEstado.setSelection(x);
+                                            SpinnerEstado.setEnabled(false);
+                                            TextMunicipio.setText(response.getString("municipio"));
+                                            TextMunicipio.setEnabled(false);
+                                            return;
+                                        }
+                                    }
+                                }
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("Error.Response", String.valueOf(error));
+                        }
+                    }
+            );
+
+            // add it to the RequestQueue
+            VolleySingleton.getInstanciaVolley(getApplicationContext()).addToRequestQueue(getRequest);
+
+        } else {
+            TextMunicipio.setEnabled(true);
+            SpinnerEstado.setEnabled(true);
+            return;
+        }
     }
 }
