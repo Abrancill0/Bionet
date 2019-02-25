@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,25 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.Danthop.bionet.model.VolleySingleton;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonObjectRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
+import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 /**
@@ -36,6 +51,10 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
     private Spinner SpinnerCategoria;
     private Spinner SpinnerArticulo;
     private Spinner SpinnerVariante;
+    private String UserML;
+    private String AccesToken;
+    private String TokenLife;
+    private String[][] SincornizarModel;
 
 
     public Fragment_ecommerce_Sincronizar() {
@@ -47,6 +66,14 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_ecommerce_sincronizar,container, false);
+
+        SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getActivity().MODE_PRIVATE );
+
+        UserML = sharedPref.getString( "UserIdML", "" );
+        AccesToken = sharedPref.getString( "AccessToken", "" );
+        TokenLife = sharedPref.getString( "TokenLifetime", "" );
+        usu_id = sharedPref.getString("usu_id","");
+
         LoadTable();
         LoadButtons();
         LoadSpinners();
@@ -56,26 +83,116 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
     public void LoadTable(){
         tabla_sincronizar = (TableView) v.findViewById(R.id.tabla_sincronizar);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Artículo", "SKU", "Modificadores", "Categoría", "Cant. en almacén","Cantidad Disponible","Canal","Envío Gratis","Status");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Artículo", "Disponible", "Envio Gratis", "Precio");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
-        SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
-
-        usu_id = sharedPref.getString("usu_id","");
-
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(9);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
         tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 2);
         tableColumnWeightModel.setColumnWeight(2, 2);
         tableColumnWeightModel.setColumnWeight(3, 2);
-        tableColumnWeightModel.setColumnWeight(4, 2);
-        tableColumnWeightModel.setColumnWeight(5, 2);
-        tableColumnWeightModel.setColumnWeight(6, 2);
-        tableColumnWeightModel.setColumnWeight(6, 2);
-        tableColumnWeightModel.setColumnWeight(6, 2);
+
 
         tabla_sincronizar.setHeaderAdapter(simpleHeader);
         tabla_sincronizar.setColumnModel(tableColumnWeightModel);
+
+        final String url = "http://187.189.192.150:8010/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML;
+
+        // prepare the Request
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // display response
+                        JSONObject RespuestaDatos = null;
+                        JSONObject RespuestaObjeto = null;
+                        JSONObject Respuestaespecificaciones = null;
+                        JSONObject Respuestapicture = null;
+                        JSONObject Respuestashipping = null;
+
+
+                        String Titulo;
+                        String Disponibilidad;
+                        String Precio;
+                        String Imagen;
+                        String Envio;
+
+                        int x =0;
+
+                        try
+                        {
+
+
+
+                            int EstatusApi = Integer.parseInt( response.getString("estatus") );
+
+                            if (EstatusApi == 1) {
+
+                                 RespuestaDatos= response.getJSONObject("aDatos");
+
+
+                                SincornizarModel = new String[RespuestaDatos.length()][4];
+
+                                Iterator<String> keys = RespuestaDatos.keys();
+                                while( keys.hasNext() )
+                                {
+                                    String key = keys.next();
+
+                                    JSONObject innerJObject = RespuestaDatos.getJSONObject(key);
+                                    Iterator<String> innerKeys = innerJObject.keys();
+                                    while( innerKeys.hasNext() )
+                                    {
+                                        String innerKkey = keys.next();
+                                        //String value = innerJObject.getString(innerKkey);
+                                        //hasta aqui va lectura directa como se hacia normamente
+
+                                        RespuestaObjeto = RespuestaDatos.getJSONObject(innerKkey);
+
+                                        Respuestaespecificaciones = RespuestaObjeto.getJSONObject("especificaciones");
+
+                                         Titulo = Respuestaespecificaciones.getString( "title" );
+                                         Disponibilidad = Respuestaespecificaciones.getString( "available_quantity" );
+                                         Precio = Respuestaespecificaciones.getString( "price" );
+
+                                      //  Respuestapicture = Respuestaespecificaciones.getJSONObject("pictures");
+                                      //  Imagen = Respuestapicture.getString( "url" );
+
+                                        Respuestashipping = Respuestaespecificaciones.getJSONObject( "shipping" );
+                                        Envio = Respuestashipping.getString( "free_shipping" );
+
+                                          SincornizarModel[x][0] = Titulo;
+                                          SincornizarModel[x][1] = Disponibilidad;
+                                          SincornizarModel[x][2] = Precio;
+                                          SincornizarModel[x][3] = Envio;
+
+                                    }
+                                    x += 1 ;
+                                }
+
+                                tabla_sincronizar.setDataAdapter(new SimpleTableDataAdapter(getContext(), SincornizarModel));
+
+
+                            }
+
+                        }
+                        catch (JSONException e)
+                        {   e.printStackTrace();    }
+
+
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Error.Response", String.valueOf(error));
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+
 
     }
 

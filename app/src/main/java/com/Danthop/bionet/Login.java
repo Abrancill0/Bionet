@@ -41,10 +41,8 @@ public class Login extends Activity {
 
     private static final int REQUEST_CODE = 999;
 
-
     Dialog reestablecer;
     Dialog correo_enviado;
-
 
 
     @Override

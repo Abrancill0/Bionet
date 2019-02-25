@@ -123,18 +123,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btn_sincronizar"
-                    style="@android:style/Widget.Holo.Light.Button"
-                    android:layout_width="156dp"
-                    android:layout_height="38dp"
-                    android:layout_marginBottom="1dp"
-                    android:background="@drawable/shape_gray"
-                    android:drawableLeft="@drawable/ic_sincronizar"
-                    android:padding="5dp"
-                    android:text="Sincronizar"
-                    android:textSize="14sp"
-                    />
+
             </LinearLayout>
 
         </LinearLayout>

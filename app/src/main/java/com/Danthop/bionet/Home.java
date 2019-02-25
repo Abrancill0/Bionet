@@ -49,6 +49,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.mercadolibre.android.sdk.Identity;
+import com.mercadolibre.android.sdk.Meli;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.picasso.Picasso;
@@ -63,8 +65,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Fragment_pop_up_ProfilePhoto.OnPhotoSelectedListener {
@@ -144,7 +149,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         imageLoader.init(ImageLoaderConfiguration.createDefault(Home.this));
 
 
-
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace( R.id.fragment_container, new Fragment_pantalla_principal() );
         tx.commit();
@@ -160,6 +164,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         String Nombre = sharedPref.getString( "usu_nombre", "" );
         String Apellido = sharedPref.getString( "usu_apellidos", "" );
         String ImagenPerfil = sharedPref.getString( "usu_imagen_perfil", "" );
+
         usu_id = sharedPref.getString( "usu_id", "" );
         img_ruta_servidor = sharedPref.getString("usu_imagen","");
 
@@ -258,8 +263,56 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     break;
 
                 case R.id.nav_ecommerce:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new Fragment_ecomerce()).commit();
+
+                    Context context = this;
+                    SharedPreferences sharedPref = getSharedPreferences( "DatosPersistentes", context.MODE_PRIVATE );
+
+                    String UserML = sharedPref.getString( "UserIdML", "" );
+                    String AccesToken = sharedPref.getString( "AccessToken", "" );
+                    String TokenLife = sharedPref.getString( "TokenLifetime", "" );
+                    String FechaCreacion = sharedPref.getString( "FechaCreacionToken", "" );
+
+
+                    if (AccesToken.length()==0) {
+
+                        Meli.startLogin( this, REQUEST_CODE );
+                    }
+                    else
+                    {
+
+                        Date date1 =null;
+                        Date date2 =null;
+
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                        try {
+                            date1 = simpleDateFormat.parse( String.valueOf(Calendar.getInstance().getTime()));
+                            date2 = simpleDateFormat.parse( String.valueOf(FechaCreacion));
+
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        long different = date1.getTime()- date2.getTime();
+
+                        long secondsInMilli = 1000;
+
+                        long elapsedSeconds = different / secondsInMilli;
+
+                        Long TokenLifeLong = Long.valueOf( TokenLife );
+
+                        if (elapsedSeconds >TokenLifeLong)
+                        {
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                    new Fragment_ecomerce()).commit();
+                        }
+                        else
+                        {
+                            Meli.startLogin( this, REQUEST_CODE );
+                        }
+
+                    }
+
+
                     break;
 
 
@@ -294,8 +347,61 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     public void ecomerce(View view){
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new Fragment_ecomerce()).commit();
+
+
+        Context context = this;
+        SharedPreferences sharedPref = getSharedPreferences( "DatosPersistentes", context.MODE_PRIVATE );
+
+        String UserML = sharedPref.getString( "UserIdML", "" );
+        String AccesToken = sharedPref.getString( "AccessToken", "" );
+        String TokenLife = sharedPref.getString( "TokenLifetime", "" );
+        String FechaCreacion = sharedPref.getString( "FechaCreacionToken", "" );
+
+
+        if (AccesToken.length()==0) {
+
+            Meli.startLogin( this, REQUEST_CODE );
+        }
+        else
+        {
+
+            Date date1 =null;
+            Date date2 =null;
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+
+
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+            String date = df.format(Calendar.getInstance().getTime());
+
+            try {
+                 date1 = simpleDateFormat.parse( String.valueOf(date));
+                 date2 = simpleDateFormat.parse( FechaCreacion);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            long different = date1.getTime()- date2.getTime();
+
+            long secondsInMilli = 1000;
+
+            long elapsedSeconds = different / secondsInMilli;
+
+            Long TokenLifeLong = Long.valueOf( TokenLife );
+
+            if (TokenLifeLong > elapsedSeconds )
+            {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new Fragment_ecomerce()).commit();
+            }
+            else
+            {
+                Meli.startLogin( this, REQUEST_CODE );
+            }
+
+        }
+
     }
 
     public void home(View view) {
@@ -405,4 +511,48 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         String encode = android.util.Base64.encodeToString(imagebyte, android.util.Base64.DEFAULT );
         return  encode;
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                processLoginProcessCompleted();
+            } else {
+                processLoginProcessWithError();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+
+    private void processLoginProcessCompleted() {
+        Identity identity = Meli.getCurrentIdentity(getApplicationContext());
+
+        if (identity != null) {
+
+            SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+
+            SharedPreferences.Editor editor =  sharedPref.edit();
+            editor.putString("UserIdML", identity.getUserId());
+            editor.putString("AccessToken", identity.getAccessToken().getAccessTokenValue());
+            editor.putString("TokenLifetime", String.valueOf( identity.getAccessToken().getAccessTokenLifetime()));
+
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+            String date = df.format(Calendar.getInstance().getTime());
+
+            editor.putString("FechaCreacionToken",date );
+
+            editor.commit();
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new Fragment_ecomerce()).commit();
+
+        }
+    }
+
+    private void processLoginProcessWithError() {
+        Toast.makeText(this, "Oooops, something went wrong with the login process", Toast.LENGTH_SHORT).show();
+    }
+
 }
