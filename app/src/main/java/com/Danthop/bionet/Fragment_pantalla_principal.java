@@ -1,6 +1,8 @@
 package com.Danthop.bionet;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
 
@@ -32,6 +35,8 @@ import lecho.lib.hellocharts.view.PieChartView;
  */
 public class Fragment_pantalla_principal extends Fragment {
 
+    private ImageView Foto_perfil;
+
 
     public Fragment_pantalla_principal() {
         // Required empty public constructor
@@ -42,6 +47,19 @@ public class Fragment_pantalla_principal extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pantalla_principal,container, false);
+
+        SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getContext().MODE_PRIVATE );
+        String ImagenPerfil = sharedPref.getString( "usu_imagen_perfil", "" );
+
+        Foto_perfil = v.findViewById(R.id.foto_perfil);
+
+        if(ImagenPerfil.equals(""))
+        {
+
+        }
+        else{
+            Picasso.with( getContext() ).load( ImagenPerfil ).into( Foto_perfil );
+        }
 
         //=====Programación de las tablas=====
         String[][] DATA_TO_SHOW = { { "Producto1", "Sucursal1"},

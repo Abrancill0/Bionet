@@ -1,38 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+    tools:showIn="navigation_view"
+    >
     <group android:checkableBehavior="single">
         <item android:id="@+id/nav_home"
-            android:icon="@drawable/home_azul"
+            android:icon="@drawable/ic_home_menu"
             android:title="Home"
-            android:iconTint="@color/colorPrimaryDark"/>
+            android:iconTint="@color/colorPrimaryDark"
+            />
         <item android:id="@+id/nav_notificaciones"
-            android:icon="@drawable/mail"
+            android:icon="@drawable/ic_notificacion_menu"
             android:title="Notificaciones"
             android:iconTint="@color/colorPrimaryDark" />
         <item android:id="@+id/nav_Ventas"
-            android:icon="@drawable/venta_azul"
+            android:icon="@drawable/ic_ventas_menu"
             android:title="Venta"/>
         <item android:id="@+id/nav_clientes"
-            android:icon="@drawable/clientes_azul"
+            android:icon="@drawable/ic_clientes_menu"
             android:title="Clientes"/>
         <item android:id="@+id/nav_lealtad"
-            android:icon="@drawable/lealtad_azul"
+            android:icon="@drawable/ic_programa_menu"
             android:title="Programa de Lealtad"/>
         <item android:id="@+id/nav_ecommerce"
-            android:icon="@drawable/ecommerce_azul"
+            android:icon="@drawable/ic_ecommerce_menu"
             android:title="E-commerce"/>
         <item android:id="@+id/nav_inventario"
-            android:icon="@drawable/inventario_azul"
+            android:icon="@drawable/ic_inventario_menu"
             android:title="Inventario"/>
         <item android:id="@+id/nav_asistencia"
-            android:icon="@drawable/asistencia_azul"
+            android:icon="@drawable/ic_asistencia_menu"
             android:title="Asistencia"/>
     </group>
     <group android:checkableBehavior="none">
         <item android:id="@+id/nav_cerrar_sesion"
-            android:icon="@drawable/cerrar_sesion_azul"
+            android:icon="@drawable/ic_cerrar_menu"
             android:title="Cerrar sesión"/>
     </group>
 </menu>

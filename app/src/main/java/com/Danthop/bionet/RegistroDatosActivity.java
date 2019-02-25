@@ -92,7 +92,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
         File finalFile = new File(getRealPathFromURI(tempUri));
 
         RutaReal=finalFile.getAbsolutePath();
-        imageLoader.displayImage(RutaReal,Image);
+        imageLoader.displayImage(tempUri.toString(),Image);
 
     }
 
@@ -335,8 +335,8 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        Toast.makeText(getApplicationContext(), "Datos Guardados", Toast.LENGTH_LONG).show();
 
-                        Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
                     }
                 }, new Response.ErrorListener() {
             @Override

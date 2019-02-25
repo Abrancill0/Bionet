@@ -148,10 +148,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(Home.this));
 
-
-        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace( R.id.fragment_container, new Fragment_pantalla_principal() );
-        tx.commit();
         cerrar = new Dialog( this );
 
         Toolbar toolbar = findViewById( R.id.toolbar );
@@ -165,9 +161,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         String Apellido = sharedPref.getString( "usu_apellidos", "" );
         String ImagenPerfil = sharedPref.getString( "usu_imagen_perfil", "" );
 
-        usu_id = sharedPref.getString( "usu_id", "" );
-        img_ruta_servidor = sharedPref.getString("usu_imagen","");
+        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+        tx.replace( R.id.fragment_container, new Fragment_pantalla_principal() );
+        tx.commit();
 
+        usu_id = sharedPref.getString( "usu_id", "" );
+        img_ruta_servidor = ImagenPerfil;
         NavigationView navigationView = findViewById( R.id.nav_view );
         navigationView.setNavigationItemSelectedListener( this );
         View headView = navigationView.getHeaderView( 0 );
@@ -175,7 +174,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         img_pantalla_principal = findViewById( R.id.foto_perfil );
         imgProfile = headView.findViewById( R.id.foto_perfil_hamburguesa );
 
-        //Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( imgProfile );
+        if(img_ruta_servidor.equals(""))
+        {
+
+        }
+        else{
+            Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( imgProfile );
+        }
 
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle( this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close );
@@ -477,7 +482,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
                             SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor =  sharedPref.edit();
-                            editor.putString("usu_imagen",img_ruta_servidor);
+                            editor.putString("usu_imagen_perfil",img_ruta_servidor);
                             editor.commit();
 
 
@@ -485,7 +490,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                             e.printStackTrace();
                         }
 
-                        Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Se cambió correctamente su imagen de perfil", Toast.LENGTH_LONG).show();
                     }
                 }, new Response.ErrorListener() {
             @Override

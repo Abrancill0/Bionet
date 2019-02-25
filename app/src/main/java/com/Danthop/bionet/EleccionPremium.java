@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.widget.TextView;
 
 import com.Danthop.bionet.R;
 
@@ -12,6 +14,7 @@ import com.Danthop.bionet.R;
 public class EleccionPremium extends Activity {
 
     private String IDUsuario;
+    private TextView scrollText;
 
 
     @Override
@@ -20,6 +23,9 @@ public class EleccionPremium extends Activity {
         setContentView(R.layout.eleccion_premium);
         Bundle datos = this.getIntent().getExtras();
         IDUsuario =  "" + datos.get("IDUsuario");
+        scrollText = findViewById(R.id.Text_scroll);
+        scrollText.setMovementMethod(new ScrollingMovementMethod());
+
     }
 
     public void Numero_sucursal(View view) {
@@ -29,7 +35,9 @@ public class EleccionPremium extends Activity {
     }
 
     public void mas_informacion(View view){
-        Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( "www.bionetpos.com" ) );
-        startActivity( browse );
+        String url = "http://www.bionetpos.com";
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
     }
 }

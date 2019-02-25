@@ -184,7 +184,8 @@
                     android:gravity="center"
                     android:nestedScrollingEnabled="true"
                     android:text="Promociones, encuesta de satisfacción, sistema de apartados, manejo de plataforma e-commerce, ordenes especiales,  Registro de tiempo y Asistencia con lectura facial reemplazos, propinas  y reportes de formas de pago, de descuentos, de reemplazos, de transacciones, de apartados y de ordenes especiales + Business Premium."
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    />
 
             </LinearLayout>
 
@@ -209,12 +210,14 @@
                     app:fontFamily="@font/muli_semibold" />
 
                 <TextView
-                    android:id="@+id/textView18"
+                    android:id="@+id/Text_scroll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Administración de sucursales ilimitadas, Programas de lealtad, pago con puntos,  Traslados entre sucursales, ubicación de tu sucursal en ticket digital,+ Commerce Pro "
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:scrollbars="vertical"
+                    />
 
                 <Button
                     android:id="@+id/btn_aceptar2"
