@@ -320,7 +320,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
 
                             SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor =  sharedPref.edit();
-                            editor.putString("usu_imagen",img_ruta_servidor);
+                            editor.putString("logo_imagen",img_ruta_servidor);
                             editor.commit();
 
                             Intent intent=new Intent(RegistroDatosActivity.this,EleccionPremium.class);

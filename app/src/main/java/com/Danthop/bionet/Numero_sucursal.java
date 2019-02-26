@@ -344,8 +344,7 @@ public class Numero_sucursal extends Activity {
 
                             nombre = elemento.getString("suc_nombre");
 
-                            ElementoTelefono = elemento.getJSONObject("suc_telefono");
-                            telefono = ElementoTelefono.getString("value");
+                            telefono = elemento.getString("suc_telefono");
 
                             ElementoCorreo = elemento.getJSONObject("suc_correo_electronico");
                             correo_electronico = ElementoCorreo.getJSONArray("values").getString( 0);

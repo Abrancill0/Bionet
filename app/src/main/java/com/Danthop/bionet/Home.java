@@ -86,6 +86,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private String img_ruta_servidor;
     private ImageView imgProfile;
     private ImageView img_pantalla_principal;
+    private ImageView Logo_empresa;
     LoginModel Resultado = new LoginModel();
 
 
@@ -160,6 +161,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         String Nombre = sharedPref.getString( "usu_nombre", "" );
         String Apellido = sharedPref.getString( "usu_apellidos", "" );
         String ImagenPerfil = sharedPref.getString( "usu_imagen_perfil", "" );
+        String LogoEmpresa = sharedPref.getString("logo_imagen","");
 
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace( R.id.fragment_container, new Fragment_pantalla_principal() );
@@ -173,6 +175,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         img_pantalla_principal = findViewById( R.id.foto_perfil );
         imgProfile = headView.findViewById( R.id.foto_perfil_hamburguesa );
+        Logo_empresa = findViewById(R.id.logo_empresa);
 
         if(img_ruta_servidor.equals(""))
         {
@@ -180,6 +183,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
         else{
             Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( imgProfile );
+        }
+
+        if(LogoEmpresa.equals(""))
+        {
+
+        }
+        else{
+            Picasso.with( getApplicationContext() ).load( LogoEmpresa ).into( Logo_empresa );
         }
 
 
