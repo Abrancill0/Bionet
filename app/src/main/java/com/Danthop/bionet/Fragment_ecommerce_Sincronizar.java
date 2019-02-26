@@ -111,7 +111,6 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                         JSONObject Respuestapicture = null;
                         JSONObject Respuestashipping = null;
 
-
                         String Titulo;
                         String Disponibilidad;
                         String Precio;
@@ -123,31 +122,22 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                         try
                         {
 
-
-
                             int EstatusApi = Integer.parseInt( response.getString("estatus") );
 
                             if (EstatusApi == 1) {
 
                                  RespuestaDatos= response.getJSONObject("aDatos");
 
+                                 int numeroregistro =RespuestaDatos.length();
 
-                                SincornizarModel = new String[RespuestaDatos.length()][4];
+                                SincornizarModel = new String[numeroregistro][4];
 
                                 Iterator<String> keys = RespuestaDatos.keys();
                                 while( keys.hasNext() )
                                 {
                                     String key = keys.next();
 
-                                    JSONObject innerJObject = RespuestaDatos.getJSONObject(key);
-                                    Iterator<String> innerKeys = innerJObject.keys();
-                                    while( innerKeys.hasNext() )
-                                    {
-                                        String innerKkey = keys.next();
-                                        //String value = innerJObject.getString(innerKkey);
-                                        //hasta aqui va lectura directa como se hacia normamente
-
-                                        RespuestaObjeto = RespuestaDatos.getJSONObject(innerKkey);
+                                        RespuestaObjeto = RespuestaDatos.getJSONObject(key);
 
                                         Respuestaespecificaciones = RespuestaObjeto.getJSONObject("especificaciones");
 
@@ -161,19 +151,28 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                                         Respuestashipping = Respuestaespecificaciones.getJSONObject( "shipping" );
                                         Envio = Respuestashipping.getString( "free_shipping" );
 
+                                        if (Envio == "true"){
+                                            Envio="Si";
+                                        }
+                                        else
+                                        {
+                                            Envio="No";
+                                        }
+
+
                                           SincornizarModel[x][0] = Titulo;
                                           SincornizarModel[x][1] = Disponibilidad;
-                                          SincornizarModel[x][2] = Precio;
-                                          SincornizarModel[x][3] = Envio;
+                                          SincornizarModel[x][2] = Envio;
+                                          SincornizarModel[x][3] = Precio;
+
+                                        x += 1 ;
 
                                     }
-                                    x += 1 ;
+
                                 }
 
                                 tabla_sincronizar.setDataAdapter(new SimpleTableDataAdapter(getContext(), SincornizarModel));
 
-
-                            }
 
                         }
                         catch (JSONException e)

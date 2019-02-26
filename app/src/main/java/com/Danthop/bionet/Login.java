@@ -83,6 +83,12 @@ public class Login extends Activity {
         progreso.setMessage("Iniciando sesion...");
         progreso.show();
 
+
+        try{
+
+
+
+
         JSONObject request = new JSONObject();
         try
         {
@@ -204,6 +210,12 @@ public class Login extends Activity {
         );
 
         VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
 
     }
 
@@ -416,13 +428,6 @@ public class Login extends Activity {
 
     }
 
-    public  void PruebaMercadoLibre(View view)
-    {
-
-        Intent intent = new Intent(this, LoginScreenML.class);
-        startActivity(intent);
-
-    }
 
 }
 
