@@ -2,7 +2,6 @@ package com.Danthop.bionet;
 
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.model.VolleySingleton;
@@ -28,7 +26,6 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,7 +84,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
         v = inflater.inflate(R.layout.fragment_ecommerce_sincronizar,container, false);
 
         crear_Producto_dialog=new Dialog(getContext());
-        crear_Producto_dialog.setContentView(R.layout.fragment_popup_ecommerce_nuevo_producto );
+        crear_Producto_dialog.setContentView(R.layout.pop_up_ecommerce_nuevo_producto);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getActivity().MODE_PRIVATE );
 

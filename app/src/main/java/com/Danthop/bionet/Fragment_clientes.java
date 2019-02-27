@@ -52,7 +52,7 @@ public class Fragment_clientes extends Fragment {
         View v = inflater.inflate(R.layout.fragment_clientes,container, false);
 
         tabla_clientes = (TableView) v.findViewById(R.id.tabla_clientes);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nombre", "Correo Eléctronico", "Teléfono", "Direccion", "Consumo Promedio","ID Referencia");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nombre", "Correo Eléctronico", "Teléfono", "Direccion", "Consumo Promedio","ID Referencia","Editar","Eliminar");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
@@ -60,14 +60,15 @@ public class Fragment_clientes extends Fragment {
         usu_id = sharedPref.getString("usu_id","");
 
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(7);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(8);
         tableColumnWeightModel.setColumnWeight(0, 4);
         tableColumnWeightModel.setColumnWeight(1, 3);
         tableColumnWeightModel.setColumnWeight(2, 3);
         tableColumnWeightModel.setColumnWeight(3, 3);
         tableColumnWeightModel.setColumnWeight(4, 3);
         tableColumnWeightModel.setColumnWeight(5, 3);
-        tableColumnWeightModel.setColumnWeight(6, 3);
+        tableColumnWeightModel.setColumnWeight(6, 2);
+        tableColumnWeightModel.setColumnWeight(7, 2);
 
         tabla_clientes.setHeaderAdapter(simpleHeader);
         tabla_clientes.setColumnModel(tableColumnWeightModel);
