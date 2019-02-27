@@ -482,7 +482,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     @Override
                     public void onResponse(String response) {
 
-
                         JSONObject jObj = null;
                         try {
                             jObj = new JSONObject(response);

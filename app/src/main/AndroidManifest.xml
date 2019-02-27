@@ -31,6 +31,7 @@ package="com.Danthop.bionet">
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
     </activity>
+
     <activity
         android:name=".CrearCuentaActivity" android:screenOrientation="landscape"
         android:label="@string/app_name"></activity>
@@ -55,8 +56,6 @@ package="com.Danthop.bionet">
     <activity
         android:name=".Numero_sucursal" android:screenOrientation="landscape"
         android:label="bio-Net"></activity>
-
-    <activity android:name=".LoginScreenML" />
 
     <activity
         android:name="com.mercadolibre.android.sdk.MercadoLibreActivity"

@@ -165,7 +165,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/precio_articulo"
+                        android:id="@+id/text_precio_articulo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -222,7 +222,7 @@
                         android:textSize="18sp" />
 
                     <Spinner
-                        android:id="@+id/categoria_articulo"
+                        android:id="@+id/Spinner_categoria_articulo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="5dp"></Spinner>
@@ -237,10 +237,36 @@
                         android:textSize="18sp" />
 
                     <Spinner
-                        android:id="@+id/tipo_publicacion_articulo"
+                        android:id="@+id/Spinner_tipo_publicacion_articulo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="5dp"></Spinner>
+
+
+                    <TextView
+                        android:id="@+id/textVi22221212"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="1dp"
+                        android:text="Garantia"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp" />
+
+
+                    <EditText
+                        android:id="@+id/text_garantia"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/shape_gray"
+                        android:ems="10"
+                        android:gravity="top|left"
+                        android:inputType="textMultiLine"
+                        android:lines="8"
+                        android:maxLines="10"
+                        android:minLines="6"
+                        android:textSize="14sp" />
+
 
                 </LinearLayout>
 
@@ -264,7 +290,7 @@
                     android:textSize="18sp" />
 
                 <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-                    android:id="@+id/cantidad"
+                    android:id="@+id/text_cantidad"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:backGroundColor="@color/fondo_azul"

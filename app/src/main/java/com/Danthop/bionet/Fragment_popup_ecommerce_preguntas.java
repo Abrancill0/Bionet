@@ -38,7 +38,7 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Fragment_ecommerce_preguntas extends Fragment {
+public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
 
     private TableView tabla_preguntas;
@@ -56,7 +56,7 @@ public class Fragment_ecommerce_preguntas extends Fragment {
     private String[][] PreguntasModel;
 
 
-    public Fragment_ecommerce_preguntas() {
+    public Fragment_popup_ecommerce_preguntas() {
         // Required empty public constructor
     }
 

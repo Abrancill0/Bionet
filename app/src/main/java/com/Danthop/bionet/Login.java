@@ -61,19 +61,16 @@ public class Login extends Activity {
         // Initialize the MercadoLibre SDK
         Meli.initializeSDK(getApplicationContext());
 
-
         String Valor = sharedPref.getString("usu_id","0");
 
         Intent intent = new Intent(this, MyFirebaseInstanceService.class);
         this.startService(intent);
-
 
         if (Valor != "0")
         {
             Intent intent2 = new Intent(Login.this, Home.class);
             startActivity(intent2);
         }
-
 
     }
 
@@ -85,9 +82,6 @@ public class Login extends Activity {
 
 
         try{
-
-
-
 
         JSONObject request = new JSONObject();
         try
