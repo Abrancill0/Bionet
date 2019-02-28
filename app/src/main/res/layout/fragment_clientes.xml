@@ -53,7 +53,7 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <de.codecrafters.tableview.TableView
+            <com.Danthop.bionet.Tables.SortableClientesTable
             android:id="@+id/tabla_clientes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

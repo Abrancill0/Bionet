@@ -1,4 +1,4 @@
-package com.Danthop.bionet.model;
+package com.Danthop.bionet.Adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.Danthop.bionet.R;
+import com.Danthop.bionet.model.Caja_notificacion;
 
 import java.util.ArrayList;
 

@@ -51,7 +51,7 @@
                         android:textSize="10sp" />
 
                     <TextView
-                        android:id="@+id/nombre_client"
+                        android:id="@+id/cliente_nombre"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -121,7 +121,7 @@
                         android:textSize="10sp" />
 
                     <TextView
-                        android:id="@+id/estado_clientef"
+                        android:id="@+id/estado_cliente"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"

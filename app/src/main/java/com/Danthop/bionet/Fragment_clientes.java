@@ -1,20 +1,23 @@
 package com.Danthop.bionet;
 
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.Danthop.bionet.R;
+import com.Danthop.bionet.Adapters.ClienteAdapter;
+import com.Danthop.bionet.Tables.SortableClientesTable;
+import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -25,10 +28,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.codecrafters.tableview.TableView;
-import de.codecrafters.tableview.model.TableColumnWeightModel;
-import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
-import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
+import java.util.ArrayList;
+import java.util.List;
+
+import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
+import de.codecrafters.tableview.listeners.TableDataClickListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,8 +40,18 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 public class Fragment_clientes extends Fragment {
     private String usu_id;
     private String[][] clienteModel;
-    private TableView tabla_clientes;
+    private SortableClientesTable tabla_clientes;
     private ProgressDialog progreso;
+
+    private String nombre;
+    private String telefono;
+    private String correo_electronico;
+    private String calle;
+
+    private Dialog ver_cliente_dialog;
+
+    private List<ClienteModel> clientes;
+
 
 
     public Fragment_clientes() {
@@ -51,27 +65,16 @@ public class Fragment_clientes extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_clientes,container, false);
 
-        tabla_clientes = (TableView) v.findViewById(R.id.tabla_clientes);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nombre", "Correo Eléctronico", "Teléfono", "Direccion", "Consumo Promedio","ID Referencia","Editar","Eliminar");
-        simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        tabla_clientes = (SortableClientesTable) v.findViewById(R.id.tabla_clientes);
+        ver_cliente_dialog=new Dialog(getContext());
+        ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
         usu_id = sharedPref.getString("usu_id","");
 
+        clientes = new ArrayList<>();
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(8);
-        tableColumnWeightModel.setColumnWeight(0, 4);
-        tableColumnWeightModel.setColumnWeight(1, 3);
-        tableColumnWeightModel.setColumnWeight(2, 3);
-        tableColumnWeightModel.setColumnWeight(3, 3);
-        tableColumnWeightModel.setColumnWeight(4, 3);
-        tableColumnWeightModel.setColumnWeight(5, 3);
-        tableColumnWeightModel.setColumnWeight(6, 2);
-        tableColumnWeightModel.setColumnWeight(7, 2);
-
-        tabla_clientes.setHeaderAdapter(simpleHeader);
-        tabla_clientes.setColumnModel(tableColumnWeightModel);
 
         Muestra_clientes();
 
@@ -83,6 +86,42 @@ public class Fragment_clientes extends Fragment {
                 fr.replace(R.id.fragment_container,new Fragment_crear_cliente()).commit();
             }
         });
+
+
+        tabla_clientes.setSwipeToRefreshEnabled(true);
+        tabla_clientes.setSwipeToRefreshListener(new SwipeToRefreshListener() {
+            @Override
+            public void onRefresh(final RefreshIndicator refreshIndicator) {
+                tabla_clientes.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        clientes.clear();
+                        Muestra_clientes();
+                        refreshIndicator.hide();
+                    }
+                }, 2000);
+            }
+        });
+
+        final TableDataClickListener<ClienteModel> ClienteListener = new TableDataClickListener<ClienteModel>() {
+            @Override
+            public void onDataClicked(int rowIndex, ClienteModel clickedData) {
+
+                ver_cliente_dialog.show();
+                TextView NameCliente = ver_cliente_dialog.findViewById(R.id.cliente_nombre);
+                TextView CorreoCliente = ver_cliente_dialog.findViewById(R.id.email_cliente);
+                TextView TelefonoCliente = ver_cliente_dialog.findViewById(R.id.telefono_cliente);
+                TextView DireccionCliente = ver_cliente_dialog.findViewById(R.id.calle_cliente);
+
+                NameCliente.setText(clickedData.getCliente_Nombre());
+                CorreoCliente.setText(clickedData.getCliente_Correo());
+                TelefonoCliente.setText(clickedData.getCliente_Telefono());
+                DireccionCliente.setText(clickedData.getCliente_direccion());
+
+            }
+        };
+
+        tabla_clientes.addDataClickListener(ClienteListener);
 
         return v;
 
@@ -125,10 +164,6 @@ public class Fragment_clientes extends Fragment {
                //     Respuesta = response.getJSONObject("resultado");
                     if (status == 1)
                     {
-                        String nombre;
-                        String telefono;
-                        String correo_electronico;
-                        String calle;
 
                         Respuesta = response.getJSONObject("resultado");
 
@@ -144,16 +179,11 @@ public class Fragment_clientes extends Fragment {
                             telefono = elemento.getString("cli_telefono");
                             RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion");
                             calle = RespuestaNodoDireccion.getString("cli_calle");
-
-                            //sucursalModel[x][0] = String.valueOf(x);
-                            clienteModel[x][0] =nombre;
-                            clienteModel[x][1] =correo_electronico;
-                            clienteModel[x][2] =telefono;
-                            clienteModel[x][3] =calle;
-
+                            final ClienteModel cliente = new ClienteModel(nombre, correo_electronico, telefono, calle,"","");
+                            clientes.add(cliente);
                         }
-
-                        tabla_clientes.setDataAdapter(new SimpleTableDataAdapter(getContext(), clienteModel));
+                        final ClienteAdapter clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes);
+                        tabla_clientes.setDataAdapter(clienteAdapter);
 
                     }
                     else
