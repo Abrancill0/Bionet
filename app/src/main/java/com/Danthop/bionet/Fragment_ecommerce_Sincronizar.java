@@ -26,7 +26,9 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,6 +55,8 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
     private Spinner SpinnerCategoria;
     private Spinner SpinnerArticulo;
     private Spinner SpinnerVariante;
+    private ArrayList<String> GiroName1;
+    private ArrayList<String> GiroName2;
     private String UserML;
     private String AccesToken;
     private String TokenLife;
@@ -63,7 +67,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
     private EditText TextNombreArticulo;
     private EditText TextDescripcionArticulo;
     private EditText TextprecioArticulo;
-    private EditText TextCantidad;
+    private ElegantNumberButton TextCantidad;
     private EditText TextGarantia;
 
     private Spinner SpinnerCategoriaArticulo;
@@ -100,10 +104,13 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
             public void onClick(View v) {
                 crear_Producto_dialog.show();
 
+                //Cargar Tipo de publicacion
+                //Cargar Categorias
+
                 TextNombreArticulo = (EditText) crear_Producto_dialog.findViewById(R.id.text_nombre_articulo);
                 TextDescripcionArticulo= (EditText) crear_Producto_dialog.findViewById(R.id.text_descripcion_articulo);
                 TextprecioArticulo= (EditText) crear_Producto_dialog.findViewById(R.id.text_precio_articulo);
-                TextCantidad = (EditText) crear_Producto_dialog.findViewById(R.id.text_cantidad);
+                TextCantidad = (ElegantNumberButton) crear_Producto_dialog.findViewById(R.id.text_cantidad);
                 TextGarantia = (EditText) crear_Producto_dialog.findViewById(R.id.text_garantia);
 
                 SpinnerCategoriaArticulo = (Spinner) crear_Producto_dialog.findViewById(R.id.Spinner_categoria_articulo);
@@ -113,6 +120,8 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                 RadioNuevo = (RadioButton) crear_Producto_dialog.findViewById(R.id.radioButton_Nuevo);
 
                 BtnGuardaArticulo = (Button) crear_Producto_dialog.findViewById(R.id.Guardar_articulo);
+
+                CargaPublicaciones();
 
                 BtnGuardaArticulo.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -155,23 +164,12 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                             Condiciones = "used";
                         }
 
-                        // category_id:SubCategoriaArticulo
-                        // price:
-                        // currency_id: "MXN",
-                        // available_quantity: CantidadArticulo,
-                        // condition: condition{new,used},
-                        // buying_mode: "buy_it_now",
-                        // warranty: DescripcionGarantia
-                        // listing_type_id: selectTipoPulicacion
-                        // description: tDescripcionArticulo
-                        // pictures: ImagenArticulo
-
                         smr.addStringParam("access_token", AccesToken);
                         smr.addStringParam("title", String.valueOf(TextNombreArticulo.getText()));
                         smr.addStringParam("category_id", "");
                         smr.addStringParam("price", String.valueOf(TextprecioArticulo.getText()));
                         smr.addStringParam("currency_id", "MXN");
-                        smr.addStringParam("available_quantity", String.valueOf(TextCantidad.getText()));
+                        smr.addStringParam("available_quantity", String.valueOf(TextCantidad.getNumber()));
                         smr.addStringParam("condition", Condiciones);
                         smr.addStringParam("buying_mode", "buy_it_now");
                         smr.addStringParam("warranty", String.valueOf(TextGarantia.getText()));
@@ -193,6 +191,78 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
         LoadSpinners();
 
         return v;
+    }
+
+    public void CargaPublicaciones(){
+
+
+        final String url = "http://187.189.192.150:8010/api/ecomerce/create_app/access_token=" + AccesToken  + "&expires_in=21600&user_id=" + UserML + "&domains=localhost";
+
+        // prepare the Request
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // display response
+                        JSONObject RespuestaTiposPublicacion = null;
+                        JSONObject RespuestaCategoria = null;
+
+                        try
+                        {
+
+                            int EstatusApi = Integer.parseInt( response.getString("estatus") );
+
+                            if (EstatusApi == 0) {
+
+                                RespuestaTiposPublicacion = response.getJSONObject("aListaTiposPublicacion");
+
+                                RespuestaCategoria = response.getJSONObject("aCategorias");
+
+                                for(int x = 0; x < RespuestaTiposPublicacion.length(); x++){
+                                    JSONObject jsonObject1 = RespuestaTiposPublicacion.getJSONObject(String.valueOf(x));
+                                    String giro = jsonObject1.getString("name");
+
+                                    GiroName1.add(giro);
+                                }
+
+                                SpinnerTipoPublicacion.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,GiroName1));
+
+
+                                for(int x = 0; x < RespuestaCategoria.length(); x++){
+                                    JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(String.valueOf(x));
+                                    String giro = jsonObject1.getString("name");
+
+                                    GiroName2.add(giro);
+                                }
+
+                                SpinnerCategoriaArticulo.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,GiroName2));
+
+
+
+
+                            }
+
+
+
+                        }
+                        catch (JSONException e)
+                        {   e.printStackTrace();    }
+
+
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Error.Response", String.valueOf(error));
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+
     }
 
     public void LoadTable(){

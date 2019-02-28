@@ -23,8 +23,8 @@ public class EleccionPremium extends Activity {
         setContentView(R.layout.eleccion_premium);
         Bundle datos = this.getIntent().getExtras();
         IDUsuario =  "" + datos.get("IDUsuario");
-        scrollText = findViewById(R.id.Text_scroll);
-        scrollText.setMovementMethod(new ScrollingMovementMethod());
+        //scrollText = findViewById(R.id.Text_scroll);
+       // scrollText.setMovementMethod(new ScrollingMovementMethod());
 
     }
 
