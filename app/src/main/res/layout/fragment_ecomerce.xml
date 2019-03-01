@@ -107,12 +107,12 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <de.codecrafters.tableview.TableView
+                <com.Danthop.bionet.Tables.SortableOrdenEcommerceTable
                     android:id="@+id/tabla_ecommerce"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:tableView_headerColor="@color/white"
-                    table:tableView_columnCount="7" />
+                    table:tableView_columnCount="5"
+                    app:tableView_headerColor="@color/white"/>
 
             </LinearLayout>
 

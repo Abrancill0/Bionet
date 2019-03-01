@@ -116,7 +116,7 @@ public class Fragment_clientes extends Fragment {
                 NameCliente.setText(clickedData.getCliente_Nombre());
                 CorreoCliente.setText(clickedData.getCliente_Correo());
                 TelefonoCliente.setText(clickedData.getCliente_Telefono());
-                DireccionCliente.setText(clickedData.getCliente_direccion());
+                DireccionCliente.setText(clickedData.getCliente_Ultima_Visita());
 
             }
         };
@@ -179,7 +179,7 @@ public class Fragment_clientes extends Fragment {
                             telefono = elemento.getString("cli_telefono");
                             RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion");
                             calle = RespuestaNodoDireccion.getString("cli_calle");
-                            final ClienteModel cliente = new ClienteModel(nombre, correo_electronico, telefono, calle,"","");
+                            final ClienteModel cliente = new ClienteModel(nombre, correo_electronico, telefono,"");
                             clientes.add(cliente);
                         }
                         final ClienteAdapter clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes);

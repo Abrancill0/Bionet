@@ -12,8 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.ClienteAdapter;
+import com.Danthop.bionet.Adapters.OrdenEcommerceAdapter;
+import com.Danthop.bionet.Tables.SortableOrdenEcommerceTable;
+import com.Danthop.bionet.model.ClienteModel;
+import com.Danthop.bionet.model.Ecommerce_orden_Model;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -24,7 +30,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.codecrafters.tableview.TableView;
+import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
+import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
@@ -33,7 +44,7 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
  * A simple {@link Fragment} subclass.
  */
 public class Fragment_ecomerce extends Fragment {
-    private TableView tabla_ecomerce;
+    private SortableOrdenEcommerceTable tabla_ecomerce;
     private View v;
     private String usu_id;
     private Button btn_pestania_sincronizar;
@@ -47,6 +58,8 @@ public class Fragment_ecomerce extends Fragment {
     private String UserML;
     private String AccesToken;
     private String TokenLife;
+
+    private List<Ecommerce_orden_Model> Ordenes;
 
     private String[][] OrdenesModel;
 
@@ -62,6 +75,7 @@ public class Fragment_ecomerce extends Fragment {
         v = inflater.inflate(R.layout.fragment_ecomerce,container, false);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getActivity().MODE_PRIVATE );
+        Ordenes = new ArrayList<>();
 
          UserML = sharedPref.getString( "UserIdML", "" );
          AccesToken = sharedPref.getString( "AccessToken", "" );
@@ -71,26 +85,27 @@ public class Fragment_ecomerce extends Fragment {
         LoadTable();
         LoadButtons();
 
+        tabla_ecomerce.setSwipeToRefreshEnabled(true);
+        tabla_ecomerce.setSwipeToRefreshListener(new SwipeToRefreshListener() {
+            @Override
+            public void onRefresh(final RefreshIndicator refreshIndicator) {
+                tabla_ecomerce.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Ordenes.clear();
+                        LoadTable();
+                        refreshIndicator.hide();
+                    }
+                }, 2000);
+            }
+        });
+
         return v;
     }
 
 
     public void LoadTable(){
-        tabla_ecomerce = (TableView) v.findViewById(R.id.tabla_ecommerce);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Cliente", "Articulo", "Cantidad", "Envio", "Importe","Estatus");
-        simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-
-
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
-        tableColumnWeightModel.setColumnWeight(0, 5);
-        tableColumnWeightModel.setColumnWeight(1, 3);
-        tableColumnWeightModel.setColumnWeight(2, 2);
-        tableColumnWeightModel.setColumnWeight(3, 2);
-        tableColumnWeightModel.setColumnWeight(4, 2);
-        tableColumnWeightModel.setColumnWeight(5, 2);
-
-        tabla_ecomerce.setHeaderAdapter(simpleHeader);
-        tabla_ecomerce.setColumnModel(tableColumnWeightModel);
+        tabla_ecomerce = (SortableOrdenEcommerceTable) v.findViewById(R.id.tabla_ecommerce);
 
 
             final String url = "http://187.189.192.150:8010/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML;
@@ -156,15 +171,11 @@ public class Fragment_ecomerce extends Fragment {
                                             Envio = elementoP.getString( "shipping_cost" );
                                         }
 
-                                        OrdenesModel[x][0] = Comprador;
-                                        OrdenesModel[x][1] = Descripcion;
-                                        OrdenesModel[x][2] = Cantidad;
-                                        OrdenesModel[x][3] = Envio;
-                                        OrdenesModel[x][4] = Importe;
-                                        OrdenesModel[x][5] = Estatus;
+                                        final Ecommerce_orden_Model orden = new Ecommerce_orden_Model(Comprador, Descripcion, Cantidad,Envio,Importe,Estatus);
+                                        Ordenes.add(orden);
                                     }
-
-                                    tabla_ecomerce.setDataAdapter(new SimpleTableDataAdapter(getContext(), OrdenesModel));
+                                    final OrdenEcommerceAdapter ordenAdapter = new OrdenEcommerceAdapter(getContext(), Ordenes, tabla_ecomerce);
+                                    tabla_ecomerce.setDataAdapter(ordenAdapter);
 
 
                                 }

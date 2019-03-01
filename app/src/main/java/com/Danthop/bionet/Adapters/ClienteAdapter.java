@@ -42,13 +42,7 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                 renderedView = renderClienteTelefono(cliente);
                 break;
             case 3:
-                renderedView = renderClienteDireccion(cliente);
-                break;
-            case 4:
-                renderedView = renderClienteConsumoP(cliente);
-                break;
-            case 5:
-                renderedView = renderClienteIdReferencia(cliente);
+                renderedView = renderClienteUltimaVisita(cliente);
                 break;
         }
 
@@ -93,16 +87,8 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
         return renderString(cliente.getCliente_Telefono());
     }
 
-    private View renderClienteDireccion(final ClienteModel cliente) {
-        return renderString(cliente.getCliente_direccion());
-    }
-
-    private View renderClienteConsumoP(final ClienteModel cliente) {
-        return renderString(cliente.getCliente_ConsumoP());
-    }
-
-    private View renderClienteIdReferencia(final ClienteModel cliente) {
-        return renderString(cliente.getCliente_Id_Referencia());
+    private View renderClienteUltimaVisita(final ClienteModel cliente) {
+        return renderString(cliente.getCliente_Ultima_Visita());
     }
 
     private View renderString(final String value) {
