@@ -18,6 +18,11 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.OrdenEcommerceAdapter;
+import com.Danthop.bionet.Adapters.SincronizarAdapter;
+import com.Danthop.bionet.Tables.SortableSincronizarTable;
+import com.Danthop.bionet.model.Ecommerce_orden_Model;
+import com.Danthop.bionet.model.SincronizarModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,8 +39,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import de.codecrafters.tableview.TableView;
+import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
@@ -44,7 +51,7 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
  * A simple {@link Fragment} subclass.
  */
 public class Fragment_ecommerce_Sincronizar extends Fragment {
-    private TableView tabla_sincronizar;
+    private SortableSincronizarTable tabla_sincronizar;
     private View v;
     private String usu_id;
     private Button btn_pestania_ordenes;
@@ -78,6 +85,8 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
     private Button BtnGuardaArticulo;
 
+    private List<SincronizarModel> Sincronizaciones;
+
     public Fragment_ecommerce_Sincronizar() {
         // Required empty public constructor
     }
@@ -89,6 +98,8 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
         crear_Producto_dialog=new Dialog(getContext());
         crear_Producto_dialog.setContentView(R.layout.pop_up_ecommerce_nuevo_producto);
+        Sincronizaciones = new ArrayList<>();
+
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getActivity().MODE_PRIVATE );
 
@@ -190,6 +201,21 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
         LoadButtons();
         LoadSpinners();
 
+        tabla_sincronizar.setSwipeToRefreshEnabled(true);
+        tabla_sincronizar.setSwipeToRefreshListener(new SwipeToRefreshListener() {
+            @Override
+            public void onRefresh(final RefreshIndicator refreshIndicator) {
+                tabla_sincronizar.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Sincronizaciones.clear();
+                        LoadTable();
+                        refreshIndicator.hide();
+                    }
+                }, 2000);
+            }
+        });
+
         return v;
     }
 
@@ -268,19 +294,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
     public void LoadTable(){
 
        try {
-           tabla_sincronizar = (TableView) v.findViewById(R.id.tabla_sincronizar);
-           final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Artículo", "Disponible", "Envio Gratis", "Precio");
-           simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-
-           final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
-           tableColumnWeightModel.setColumnWeight(0, 2);
-           tableColumnWeightModel.setColumnWeight(1, 2);
-           tableColumnWeightModel.setColumnWeight(2, 2);
-           tableColumnWeightModel.setColumnWeight(3, 2);
-
-
-           tabla_sincronizar.setHeaderAdapter(simpleHeader);
-           tabla_sincronizar.setColumnModel(tableColumnWeightModel);
+           tabla_sincronizar = (SortableSincronizarTable) v.findViewById(R.id.tabla_sincronizar);
 
            final String url = "http://187.189.192.150:8010/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML;
 
@@ -345,19 +359,16 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                                            Envio="No";
                                        }
 
-
-                                       SincornizarModel[x][0] = Titulo;
-                                       SincornizarModel[x][1] = Disponibilidad;
-                                       SincornizarModel[x][2] = Envio;
-                                       SincornizarModel[x][3] = Precio;
+                                       final SincronizarModel sincronizar = new SincronizarModel(Titulo, Disponibilidad, Envio,Precio);
+                                       Sincronizaciones.add(sincronizar);
 
                                        x += 1 ;
 
                                    }
 
                                }
-
-                               tabla_sincronizar.setDataAdapter(new SimpleTableDataAdapter(getContext(), SincornizarModel));
+                               final SincronizarAdapter sincronizarAdapter = new SincronizarAdapter(getContext(), Sincronizaciones, tabla_sincronizar);
+                               tabla_sincronizar.setDataAdapter(sincronizarAdapter);
 
 
                            }
