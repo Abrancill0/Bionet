@@ -1,13 +1,17 @@
 package com.Danthop.bionet.Adapters;
 
 import android.content.Context;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.Danthop.bionet.Fragment_crear_cliente;
+import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.model.ClienteModel;
 import com.google.android.gms.common.api.Api;
@@ -42,7 +46,7 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                 renderedView = renderClienteTelefono(cliente);
                 break;
             case 3:
-                renderedView = renderClienteUltimaVisita(cliente);
+                renderedView = renderEliminar(cliente);
                 break;
         }
 
@@ -91,12 +95,29 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
         return renderString(cliente.getCliente_Ultima_Visita());
     }
 
+    private View renderEliminar(final ClienteModel cliente) {
+        return ButtonEliminar(cliente);
+    }
+
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
         textView.setText(value);
         textView.setPadding(20, 10, 20, 10);
         textView.setTextSize(TEXT_SIZE);
         return textView;
+    }
+
+    private View ButtonEliminar(final ClienteModel cliente){
+        final Button eliminar = new Button(getContext());
+        eliminar.setText("Eliminar");
+        eliminar.setPadding(20, 10, 20, 10);
+        eliminar.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                cliente.setCliente_Nombre("");
+            }
+        });
+        return eliminar;
     }
 
     private static class ClienteNameUpdater implements TextWatcher {

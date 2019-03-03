@@ -17,6 +17,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.PreguntasAdapter;
+import com.Danthop.bionet.Adapters.SincronizarAdapter;
+import com.Danthop.bionet.Tables.SortablePreguntasTable;
+import com.Danthop.bionet.model.Preguntas_Model;
+import com.Danthop.bionet.model.SincronizarModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -29,8 +34,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import de.codecrafters.tableview.TableView;
+import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
@@ -41,7 +48,7 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
 
-    private TableView tabla_preguntas;
+    private SortablePreguntasTable tabla_preguntas;
     private View v;
     private String usu_id;
     private Button btn_pestania_sincronizar;
@@ -55,6 +62,8 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
     private String[][] PreguntasModel;
 
+    private List<Preguntas_Model> Preguntas;
+
 
     public Fragment_popup_ecommerce_preguntas() {
         // Required empty public constructor
@@ -64,6 +73,8 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_ecommerce_preguntas,container, false);
+
+        Preguntas = new ArrayList<>();
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getActivity().MODE_PRIVATE );
 
@@ -76,28 +87,27 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
         LoadButtons();
         LoadSpinner();
 
+        tabla_preguntas.setSwipeToRefreshEnabled(true);
+        tabla_preguntas.setSwipeToRefreshListener(new SwipeToRefreshListener() {
+            @Override
+            public void onRefresh(final RefreshIndicator refreshIndicator) {
+                tabla_preguntas.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Preguntas.clear();
+                        LoadTable();
+                        refreshIndicator.hide();
+                    }
+                }, 2000);
+            }
+        });
+
         return v;
     }
 
 
     public void LoadTable(){
-        tabla_preguntas = (TableView) v.findViewById(R.id.tabla_preguntas);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Pregunta",  "Usuario", "Producto");
-        simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-
-        SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
-
-        usu_id = sharedPref.getString("usu_id","");
-
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
-        tableColumnWeightModel.setColumnWeight(0, 5);
-        tableColumnWeightModel.setColumnWeight(1, 3);
-        tableColumnWeightModel.setColumnWeight(2, 3);
-
-        tabla_preguntas.setHeaderAdapter(simpleHeader);
-        tabla_preguntas.setColumnModel(tableColumnWeightModel);
-
-
+        tabla_preguntas = (SortablePreguntasTable) v.findViewById(R.id.tabla_preguntas);
         final String url = "http://187.189.192.150:8010/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML;
 
         // prepare the Request
@@ -181,6 +191,9 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
                                         PreguntasModel[x][1] = comprador;
                                         PreguntasModel[x][2] = Titulo;
 
+                                        final Preguntas_Model pregunta = new Preguntas_Model(preguntas, comprador, Titulo);
+                                        Preguntas.add(pregunta);
+
 
                                     }
 
@@ -189,7 +202,9 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
                             }
 
-                            tabla_preguntas.setDataAdapter(new SimpleTableDataAdapter(getContext(), PreguntasModel));
+                            final PreguntasAdapter preguntasAdapter = new PreguntasAdapter(getContext(), Preguntas, tabla_preguntas);
+                            tabla_preguntas.setDataAdapter(preguntasAdapter);
+
 
 
                         }
