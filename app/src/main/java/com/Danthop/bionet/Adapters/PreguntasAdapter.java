@@ -5,6 +5,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -45,6 +46,12 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
             case 2:
                 renderedView = renderTitulo(pregunta);
                 break;
+            case 3:
+                renderedView = renderButton1(pregunta);
+                break;
+            case 4:
+                renderedView = renderButton2(pregunta);
+                break;
         }
         return renderedView;
     }
@@ -83,6 +90,38 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
     }
     private View renderTitulo(final Preguntas_Model pregunta) {
         return renderString(pregunta.getTitulo());
+    }
+    private View renderButton1(final Preguntas_Model pregunta) {
+        return ButtonUno(pregunta);
+    }
+    private View renderButton2(final Preguntas_Model pregunta) {
+        return ButtonDos(pregunta);
+    }
+
+    private View ButtonUno(final Preguntas_Model pregunta){
+        final Button btn = new Button(getContext());
+        btn.setText("Botón 1");
+        btn.setPadding(20, 10, 20, 10);
+        btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                //aqui se pone que hace el boton 1 con los atributos del modelo orden seleccionado
+            }
+        });
+        return btn;
+    }
+
+    private View ButtonDos (final Preguntas_Model pregunta){
+        final Button btn = new Button(getContext());
+        btn.setText("Botón 2");
+        btn.setPadding(20, 10, 20, 10);
+        btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                //aqui se pone que hace el boton 2 con los atributos del modelo orden seleccionado
+            }
+        });
+        return btn;
     }
 
 

@@ -5,10 +5,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.Danthop.bionet.Tables.SortableOrdenEcommerceTable;
+import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.Ecommerce_orden_Model;
 import com.google.android.gms.common.api.Api;
 
@@ -49,6 +51,12 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
                 break;
             case 5:
                 renderedView = renderOrdenEstatus(orden);
+                break;
+            case 6:
+                renderedView = renderButton1(orden);
+                break;
+            case 7:
+                renderedView = renderButton2(orden);
                 break;
         }
 
@@ -104,6 +112,12 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
     private View renderOrdenEstatus(final Ecommerce_orden_Model orden) {
         return renderString(orden.getEstatus());
     }
+    private View renderButton1(final Ecommerce_orden_Model orden) {
+        return ButtonUno(orden);
+    }
+    private View renderButton2(final Ecommerce_orden_Model orden) {
+        return ButtonDos(orden);
+    }
 
 
     private View renderString(final String value) {
@@ -112,6 +126,32 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
         textView.setPadding(20, 10, 20, 10);
         textView.setTextSize(TEXT_SIZE);
         return textView;
+    }
+
+    private View ButtonUno(final Ecommerce_orden_Model orden){
+        final Button btn = new Button(getContext());
+        btn.setText("Botón 1");
+        btn.setPadding(20, 10, 20, 10);
+        btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                //aqui se pone que hace el boton 1 con los atributos del modelo orden seleccionado
+            }
+        });
+        return btn;
+    }
+
+    private View ButtonDos (final Ecommerce_orden_Model orden){
+        final Button btn = new Button(getContext());
+        btn.setText("Botón 2");
+        btn.setPadding(20, 10, 20, 10);
+        btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                //aqui se pone que hace el boton 1 con los atributos del modelo orden seleccionado
+            }
+        });
+        return btn;
     }
 
     private static class OrdenNameUpdater implements TextWatcher {

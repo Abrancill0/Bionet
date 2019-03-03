@@ -27,16 +27,20 @@ public class SortableOrdenEcommerceTable extends SortableTableView<Ecommerce_ord
     public SortableOrdenEcommerceTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Cliente", "Articulo", "Cantidad", "Envío","Importe","Estatus");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Cliente", "Articulo", "Cantidad", "Envío","Importe","Estatus","","");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(8);
         tableColumnWeightModel.setColumnWeight(0, 4);
         tableColumnWeightModel.setColumnWeight(1, 3);
         tableColumnWeightModel.setColumnWeight(2, 3);
         tableColumnWeightModel.setColumnWeight(3, 3);
-        tableColumnWeightModel.setColumnWeight(3, 3);
+        tableColumnWeightModel.setColumnWeight(4, 3);
+        tableColumnWeightModel.setColumnWeight(5, 3);
+        tableColumnWeightModel.setColumnWeight(6, 3);
+        tableColumnWeightModel.setColumnWeight(7, 3);
+
         setColumnModel(tableColumnWeightModel);
 
         setColumnComparator(0, ComparatorOrden.getClienteNameComparator());
