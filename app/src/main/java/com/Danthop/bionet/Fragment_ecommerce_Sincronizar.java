@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -53,10 +55,28 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
     private ArrayList<String> Articulo;
     private ArrayList<String> Variante;
     private Spinner SpinnerCategoria;
+
     private Spinner SpinnerArticulo;
     private Spinner SpinnerVariante;
-    private ArrayList<String> GiroName1;
-    private ArrayList<String> GiroName2;
+
+    private ArrayList<String> TipoPublicacionName;
+    private ArrayList<String> TipoPublicacionID;
+
+    private ArrayList<String> CategoriaID1;
+    private ArrayList<String> CategoriaID2;
+    private ArrayList<String> CategoriaID3;
+    private ArrayList<String> CategoriaID4;
+    private ArrayList<String> CategoriaID5;
+    private ArrayList<String> CategoriaID6;
+
+    private ArrayList<String> CategoriaName1;
+    private ArrayList<String> CategoriaName2;
+    private ArrayList<String> CategoriaName3;
+    private ArrayList<String> CategoriaName4;
+    private ArrayList<String> CategoriaName5;
+    private ArrayList<String> CategoriaName6;
+
+
     private String UserML;
     private String AccesToken;
     private String TokenLife;
@@ -70,8 +90,16 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
     private ElegantNumberButton TextCantidad;
     private EditText TextGarantia;
 
-    private Spinner SpinnerCategoriaArticulo;
+
     private Spinner SpinnerTipoPublicacion;
+
+    private Spinner SpinnerCategoriaArticulo;
+    private Spinner SpinnerCategoriaArticulo2;
+    private Spinner SpinnerCategoriaArticulo3;
+    private Spinner SpinnerCategoriaArticulo4;
+    private Spinner SpinnerCategoriaArticulo5;
+    private Spinner SpinnerCategoriaArticulo6;
+
 
     private RadioButton RadioUsado;
     private RadioButton RadioNuevo;
@@ -104,9 +132,6 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
             public void onClick(View v) {
                 crear_Producto_dialog.show();
 
-                //Cargar Tipo de publicacion
-                //Cargar Categorias
-
                 TextNombreArticulo = (EditText) crear_Producto_dialog.findViewById(R.id.text_nombre_articulo);
                 TextDescripcionArticulo= (EditText) crear_Producto_dialog.findViewById(R.id.text_descripcion_articulo);
                 TextprecioArticulo= (EditText) crear_Producto_dialog.findViewById(R.id.text_precio_articulo);
@@ -115,6 +140,12 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                 SpinnerCategoriaArticulo = (Spinner) crear_Producto_dialog.findViewById(R.id.Spinner_categoria_articulo);
                 SpinnerTipoPublicacion = (Spinner) crear_Producto_dialog.findViewById(R.id.Spinner_tipo_publicacion_articulo);
+
+                SpinnerCategoriaArticulo2 = (Spinner) crear_Producto_dialog.findViewById(R.id.Spinner_categoria_articulo2);
+                SpinnerCategoriaArticulo3 = (Spinner) crear_Producto_dialog.findViewById(R.id.Spinner_categoria_articulo3);
+                SpinnerCategoriaArticulo4 = (Spinner) crear_Producto_dialog.findViewById(R.id.Spinner_categoria_articulo4);
+                SpinnerCategoriaArticulo5 = (Spinner) crear_Producto_dialog.findViewById(R.id.Spinner_categoria_articulo5);
+                SpinnerCategoriaArticulo6 = (Spinner) crear_Producto_dialog.findViewById(R.id.Spinner_categoria_articulo6);
 
                 RadioUsado = (RadioButton) crear_Producto_dialog.findViewById(R.id.radioButton_Usado);
                 RadioNuevo = (RadioButton) crear_Producto_dialog.findViewById(R.id.radioButton_Nuevo);
@@ -164,6 +195,10 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                             Condiciones = "used";
                         }
 
+                        String TipoPublicacion;
+
+                        TipoPublicacion = TipoPublicacionID.get(SpinnerTipoPublicacion.getSelectedItemPosition());
+
                         smr.addStringParam("access_token", AccesToken);
                         smr.addStringParam("title", String.valueOf(TextNombreArticulo.getText()));
                         smr.addStringParam("category_id", "");
@@ -173,7 +208,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                         smr.addStringParam("condition", Condiciones);
                         smr.addStringParam("buying_mode", "buy_it_now");
                         smr.addStringParam("warranty", String.valueOf(TextGarantia.getText()));
-                        smr.addStringParam("listing_type_id", "lo que sea");
+                        smr.addStringParam("listing_type_id", TipoPublicacion);
                         smr.addStringParam("description", String.valueOf(TextDescripcionArticulo.getText()));
                         smr.addFile("pictures", "1");
 
@@ -181,6 +216,87 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                         mRequestQueue.add(smr);
 
                     }
+                });
+
+
+                SpinnerCategoriaArticulo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                        CargaCategoriaNivel2();
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {
+
+                    }
+
+                });
+
+                SpinnerCategoriaArticulo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                        CargaCategoriaNivel3();
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {
+
+                    }
+
+                });
+                SpinnerCategoriaArticulo3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {
+
+                    }
+
+                });
+                SpinnerCategoriaArticulo4.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {
+
+                    }
+
+                });
+
+                SpinnerCategoriaArticulo5.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {
+
+                    }
+
+                });
+
+                SpinnerCategoriaArticulo6.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {
+
+                    }
+
                 });
 
             }
@@ -205,41 +321,47 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         // display response
-                        JSONObject RespuestaTiposPublicacion = null;
-                        JSONObject RespuestaCategoria = null;
+                        JSONArray RespuestaTiposPublicacion = null;
+                        JSONArray RespuestaCategoria = null;
 
                         try
                         {
 
                             int EstatusApi = Integer.parseInt( response.getString("estatus") );
 
-                            if (EstatusApi == 0) {
+                            if (EstatusApi == 1) {
 
-                                RespuestaTiposPublicacion = response.getJSONObject("aListaTiposPublicacion");
+                                TipoPublicacionID=new ArrayList<>();
+                                CategoriaID1=new ArrayList<>();
+                                TipoPublicacionName = new ArrayList<>();
+                                CategoriaName1=new ArrayList<>();
 
-                                RespuestaCategoria = response.getJSONObject("aCategorias");
+                                RespuestaTiposPublicacion = response.getJSONArray("aListaTiposPublicacion");
+
+                                RespuestaCategoria = response.getJSONArray("aCategorias");
 
                                 for(int x = 0; x < RespuestaTiposPublicacion.length(); x++){
-                                    JSONObject jsonObject1 = RespuestaTiposPublicacion.getJSONObject(String.valueOf(x));
-                                    String giro = jsonObject1.getString("name");
+                                    JSONObject jsonObject1 = RespuestaTiposPublicacion.getJSONObject(x);
+                                    String idpublicacion = jsonObject1.getString("id");
+                                    String publicacion = jsonObject1.getString("name");
 
-                                    GiroName1.add(giro);
+                                    TipoPublicacionID.add(idpublicacion);
+                                    TipoPublicacionName.add(publicacion);
                                 }
 
-                                SpinnerTipoPublicacion.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,GiroName1));
+                                SpinnerTipoPublicacion.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,TipoPublicacionName));
 
 
                                 for(int x = 0; x < RespuestaCategoria.length(); x++){
-                                    JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(String.valueOf(x));
-                                    String giro = jsonObject1.getString("name");
+                                    JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(x);
+                                    String idcategoria = jsonObject1.getString("id");
+                                    String categoria = jsonObject1.getString("name");
 
-                                    GiroName2.add(giro);
+                                    CategoriaID1.add(idcategoria);
+                                    CategoriaName1.add(categoria);
                                 }
 
-                                SpinnerCategoriaArticulo.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,GiroName2));
-
-
-
+                                SpinnerCategoriaArticulo.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,CategoriaName1));
 
                             }
 
@@ -262,6 +384,216 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
         );
 
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+
+    }
+
+
+    public void CargaCategoriaNivel2()
+    {
+
+       String Cat1 = CategoriaID1.get(SpinnerCategoriaArticulo.getSelectedItemPosition());
+
+        final String url = "http://187.189.192.150:8010/api/ecomerce/obtenerSubcategoriasMercadoLibre?sIdCategoria=" +  Cat1;
+
+        // prepare the Request
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // display response
+                        JSONArray RespuestaTiposPublicacion = null;
+                        JSONArray RespuestaCategoria = null;
+
+                        try
+                        {
+
+                            int EstatusApi = Integer.parseInt( response.getString("estatus") );
+
+                            if (EstatusApi == 1) {
+
+                                SpinnerCategoriaArticulo2.setVisibility( Integer.parseInt( "1" ) );
+
+                                CategoriaID2=new ArrayList<>();
+                                CategoriaName2=new ArrayList<>();
+
+                                RespuestaCategoria = response.getJSONArray("resultado");
+
+                                for(int x = 0; x < RespuestaCategoria.length(); x++){
+                                    JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(x);
+                                    String idcategoria = jsonObject1.getString("id");
+                                    String categoria = jsonObject1.getString("name");
+
+                                    CategoriaID2.add(idcategoria);
+                                    CategoriaName2.add(categoria);
+                                }
+
+                                SpinnerCategoriaArticulo2.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,CategoriaName2));
+
+                            }
+
+
+
+                        }
+                        catch (JSONException e)
+                        {   e.printStackTrace();    }
+
+
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Error.Response", String.valueOf(error));
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+
+    }
+
+    public void CargaCategoriaNivel3()
+    {
+        String Cat2 = CategoriaID2.get(SpinnerCategoriaArticulo.getSelectedItemPosition());
+
+        final String url = "http://187.189.192.150:8010/api/ecomerce/obtenerSubcategoriasMercadoLibre?sIdCategoria=" +  Cat2;
+
+        // prepare the Request
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // display response
+                        JSONArray RespuestaTiposPublicacion = null;
+                        JSONArray RespuestaCategoria = null;
+
+                        try
+                        {
+
+                            int EstatusApi = Integer.parseInt( response.getString("estatus") );
+
+                            if (EstatusApi == 1) {
+
+                                SpinnerCategoriaArticulo3.setVisibility( Integer.parseInt( "1" ) );
+
+                                CategoriaID3=new ArrayList<>();
+                                CategoriaName3=new ArrayList<>();
+
+                                RespuestaCategoria = response.getJSONArray("resultado");
+
+                                for(int x = 0; x < RespuestaCategoria.length(); x++){
+                                    JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(x);
+                                    String idcategoria = jsonObject1.getString("id");
+                                    String categoria = jsonObject1.getString("name");
+
+                                    CategoriaID3.add(idcategoria);
+                                    CategoriaName3.add(categoria);
+                                }
+
+                                SpinnerCategoriaArticulo3.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,CategoriaName3));
+
+                            }
+
+
+
+                        }
+                        catch (JSONException e)
+                        {   e.printStackTrace();    }
+
+
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Error.Response", String.valueOf(error));
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+
+    }
+
+    public void CargaCategoriaNivel4()
+    {
+
+        String Cat3 = CategoriaID3.get(SpinnerCategoriaArticulo.getSelectedItemPosition());
+
+        final String url = "http://187.189.192.150:8010/api/ecomerce/obtenerSubcategoriasMercadoLibre?sIdCategoria=" +  Cat3;
+
+        // prepare the Request
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // display response
+                        JSONArray RespuestaTiposPublicacion = null;
+                        JSONArray RespuestaCategoria = null;
+
+                        try
+                        {
+
+                            int EstatusApi = Integer.parseInt( response.getString("estatus") );
+
+                            if (EstatusApi == 1) {
+
+                                SpinnerCategoriaArticulo4.setVisibility( Integer.parseInt( "1" ) );
+
+                                CategoriaID4=new ArrayList<>();
+                                CategoriaName4=new ArrayList<>();
+
+                                RespuestaCategoria = response.getJSONArray("resultado");
+
+                                for(int x = 0; x < RespuestaCategoria.length(); x++){
+                                    JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(x);
+                                    String idcategoria = jsonObject1.getString("id");
+                                    String categoria = jsonObject1.getString("name");
+
+                                    CategoriaID4.add(idcategoria);
+                                    CategoriaName4.add(categoria);
+                                }
+
+                                SpinnerCategoriaArticulo4.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,CategoriaName4));
+
+                            }
+
+
+
+                        }
+                        catch (JSONException e)
+                        {   e.printStackTrace();    }
+
+
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Error.Response", String.valueOf(error));
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+
+
+
+    }
+
+    public void CargaCategoriaNivel5()
+    {
+
+    }
+
+    public void CargaCategoriaNivel6()
+    {
 
     }
 

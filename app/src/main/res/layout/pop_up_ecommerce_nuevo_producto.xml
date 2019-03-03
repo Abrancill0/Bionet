@@ -15,7 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="30dp"
+            android:layout_margin="10dp"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:padding="5dp">
@@ -226,6 +226,44 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="5dp"></Spinner>
+
+                    <Spinner
+                        android:id="@+id/Spinner_categoria_articulo2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"
+                        android:layout_marginHorizontal="5dp"></Spinner>
+
+                    <Spinner
+                        android:id="@+id/Spinner_categoria_articulo3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"
+                        android:layout_marginHorizontal="5dp"></Spinner>
+
+                    <Spinner
+                        android:id="@+id/Spinner_categoria_articulo4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"
+                        android:layout_marginHorizontal="5dp"></Spinner>
+
+                    <Spinner
+                        android:id="@+id/Spinner_categoria_articulo5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"
+                        android:layout_marginHorizontal="5dp"></Spinner>
+
+
+                    <Spinner
+                        android:id="@+id/Spinner_categoria_articulo6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"
+                        android:layout_marginHorizontal="5dp"></Spinner>
+
+
 
                     <TextView
                         android:id="@+id/textVi222212"

@@ -376,6 +376,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         if (AccesToken.length()==0) {
 
+            //Meli.
+
             Meli.startLogin( this, REQUEST_CODE );
         }
         else
@@ -384,10 +386,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             Date date1 =null;
             Date date2 =null;
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             String date = df.format(Calendar.getInstance().getTime());
 
             try {
@@ -404,7 +406,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
             long elapsedSeconds = different / secondsInMilli;
 
-            Long TokenLifeLong = Long.valueOf( TokenLife );
+            long TokenLifeLong = Long.valueOf( TokenLife );
 
             if (TokenLifeLong > elapsedSeconds )
             {
