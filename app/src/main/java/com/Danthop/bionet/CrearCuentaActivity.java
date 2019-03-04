@@ -45,7 +45,6 @@ public class CrearCuentaActivity extends Activity {
 
        //View condiciones = R.layout.pop_up_condiciones;
 
-
     }
 
     public void ActivarLicencia(View view) {

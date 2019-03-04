@@ -221,65 +221,19 @@
                         android:textColor="@color/colorPrimary"
                         android:textSize="18sp" />
 
-                    <Spinner
-                        android:id="@+id/Spinner_categoria_articulo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="5dp"></Spinner>
-
-                    <Spinner
-                        android:id="@+id/Spinner_categoria_articulo2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="invisible"
-                        android:layout_marginHorizontal="5dp"></Spinner>
-
-                    <Spinner
-                        android:id="@+id/Spinner_categoria_articulo3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="invisible"
-                        android:layout_marginHorizontal="5dp"></Spinner>
-
-                    <Spinner
-                        android:id="@+id/Spinner_categoria_articulo4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="invisible"
-                        android:layout_marginHorizontal="5dp"></Spinner>
-
-                    <Spinner
-                        android:id="@+id/Spinner_categoria_articulo5"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="invisible"
-                        android:layout_marginHorizontal="5dp"></Spinner>
-
-
-                    <Spinner
-                        android:id="@+id/Spinner_categoria_articulo6"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="invisible"
-                        android:layout_marginHorizontal="5dp"></Spinner>
-
-
-
-                    <TextView
-                        android:id="@+id/textVi222212"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="1dp"
-                        android:text="Tipo de publicación."
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="18sp" />
-
-                    <Spinner
-                        android:id="@+id/Spinner_tipo_publicacion_articulo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="5dp"></Spinner>
-
+                    <Button
+                        android:id="@+id/Btn_Seleccionar_Categorias"
+                        style="@android:style/Widget.Holo.Light.Button"
+                        android:layout_width="150dp"
+                        android:layout_height="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn"
+                        android:padding="0dp"
+                        android:text="Seleccionar Categoria"
+                        android:textColor="#ffffff"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/textVi22221212"
