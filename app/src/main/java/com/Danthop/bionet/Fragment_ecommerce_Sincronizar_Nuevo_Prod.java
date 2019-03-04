@@ -21,8 +21,11 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.CategoriaAdapter;
 import com.Danthop.bionet.Adapters.SincronizarAdapter;
 import com.Danthop.bionet.Tables.SortableSincronizarTable;
+import com.Danthop.bionet.model.CategoriaModel;
+import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.SincronizarModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -88,6 +91,9 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
     private ArrayList<String> CategoriaName5;
     private ArrayList<String> CategoriaName6;
 
+    private List<CategoriaModel> categorias;
+
+
     private ListView listacategoria1;
     private Dialog pop_up_categoria1;
 
@@ -137,6 +143,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
                     }
                 });
 
+                categorias = new ArrayList<CategoriaModel>();
 
             return v;
 
@@ -503,9 +510,9 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
                                 String fromArray[]={"id","name"};
                                 int to[]={R.id.TextName,R.id.TextID};
 
-                                SimpleAdapter simpleadapter = new SimpleAdapter(getContext(), arrayList,android.R.layout.simple_expandable_list_item_1,fromArray,to);
+                                CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria, categorias);
 
-                                listacategoria1.setAdapter(simpleadapter);//sets the adapter for listView
+                                listacategoria1.setAdapter(adapter);//sets the adapter for listView
                             }
 
 

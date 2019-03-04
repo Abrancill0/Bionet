@@ -1,6 +1,8 @@
 package com.Danthop.bionet.Adapters;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableOrdenEcommerceTable;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.Ecommerce_orden_Model;
@@ -23,6 +26,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecommerce_orden_Model> {
 
     int TEXT_SIZE = 12;
+    public Dialog pop_up1;
 
     public OrdenEcommerceAdapter(final Context context, final List<Ecommerce_orden_Model> data, final SortableOrdenEcommerceTable tableView) {
         super(context, data, tableView);
@@ -135,6 +139,11 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+
+                pop_up1=new Dialog(getContext());
+                pop_up1.setContentView(R.layout.pop_up_confirmacion_correo_contrasenia);
+                pop_up1.show();
+
                 //aqui se pone que hace el boton 1 con los atributos del modelo orden seleccionado
             }
         });

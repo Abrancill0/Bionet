@@ -14,7 +14,7 @@ public final class ComparatorSincronizar {
 
     }
 
-    public static Comparator<SincronizarModel> getArticuloSincronizar() {
+    public static Comparator<SincronizarModel> getArticuloComparator() {
         return new SincronizarNameComparator();
     }
 

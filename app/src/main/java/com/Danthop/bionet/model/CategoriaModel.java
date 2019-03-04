@@ -10,11 +10,11 @@ public class CategoriaModel {
 
     }
 
-    public String getCliente_Nombre() {
+    public String getId() {
         return id;
     }
 
-    public String getCliente_Correo() {
+    public String getName() {
         return name;
     }
 

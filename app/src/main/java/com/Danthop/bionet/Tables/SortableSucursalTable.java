@@ -8,6 +8,7 @@ import com.Danthop.bionet.R;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.Ecommerce_orden_Model;
 import com.Danthop.bionet.model.SincronizarModel;
+import com.Danthop.bionet.model.SucursalesModel;
 
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
@@ -15,32 +16,31 @@ import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 
-public class SortableSincronizarTable extends SortableTableView<SincronizarModel> {
+public class SortableSucursalTable extends SortableTableView<SucursalesModel> {
 
-    public SortableSincronizarTable(final Context context) {
+    public SortableSucursalTable(final Context context) {
         this(context, null);
     }
 
-    public SortableSincronizarTable(final Context context, final AttributeSet attributes) {
+    public SortableSucursalTable(final Context context, final AttributeSet attributes) {
         this(context, attributes, android.R.attr.listViewStyle);
     }
 
-    public SortableSincronizarTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
+    public SortableSucursalTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Artículo", "Disponible", "Envío Gratis", "Precio","");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nombre", "Teléfono", "Correo Electrónico", "Calle");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
         tableColumnWeightModel.setColumnWeight(0, 4);
         tableColumnWeightModel.setColumnWeight(1, 3);
         tableColumnWeightModel.setColumnWeight(2, 3);
         tableColumnWeightModel.setColumnWeight(3, 3);
-        tableColumnWeightModel.setColumnWeight(3, 3);
         setColumnModel(tableColumnWeightModel);
 
-        setColumnComparator(0, ComparatorSincronizar.getArticuloComparator());
+        setColumnComparator(0, ComparatorSucursal.getSucursalComparator());
 
     }
 
