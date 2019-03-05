@@ -48,7 +48,7 @@ import java.util.List;
 
 import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
 
-public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
+public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implements CategoriaAdapter.NameCategoriaSelcted{
 
     private EditText TextNombreArticulo;
     private EditText TextDescripcionArticulo;
@@ -83,10 +83,18 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
     private ListView listacategoria1;
     private Dialog pop_up_categoria1;
 
+    private String NombreCategoria;
+    private String IdCategoria;
+
     private List<SincronizarModel> Sincronizaciones;
 
     public Fragment_ecommerce_Sincronizar_Nuevo_Prod() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void sendInput(String nameCategoria) {
+        System.out.println(nameCategoria);
     }
 
     @Override
@@ -464,9 +472,11 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
 
                                 }
 
-                                CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria,arrayList );
+                                CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria,arrayList,pop_up_categoria1 );
 
                                 listacategoria1.setAdapter(adapter);//sets the adapter for listView
+
+
                             }
 
 

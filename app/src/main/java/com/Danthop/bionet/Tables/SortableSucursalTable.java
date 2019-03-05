@@ -8,6 +8,7 @@ import com.Danthop.bionet.R;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.Ecommerce_orden_Model;
 import com.Danthop.bionet.model.SincronizarModel;
+import com.Danthop.bionet.model.SucursalModel;
 import com.Danthop.bionet.model.SucursalesModel;
 
 import de.codecrafters.tableview.SortableTableView;
@@ -16,7 +17,7 @@ import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 
-public class SortableSucursalTable extends SortableTableView<SucursalesModel> {
+public class SortableSucursalTable extends SortableTableView<SucursalModel> {
 
     public SortableSucursalTable(final Context context) {
         this(context, null);
@@ -30,7 +31,8 @@ public class SortableSucursalTable extends SortableTableView<SucursalesModel> {
         super(context, attributes, styleAttributes);
 
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nombre", "Teléfono", "Correo Electrónico", "Calle");
-        simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+        simpleHeader.setPaddings(10,10,10,10);
         setHeaderAdapter(simpleHeader);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);

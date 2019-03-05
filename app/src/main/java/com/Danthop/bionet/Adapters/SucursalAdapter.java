@@ -23,17 +23,17 @@ import de.codecrafters.tableview.TableDataAdapter;
 import com.Danthop.bionet.Tables.SortableOrdenEcommerceTable;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class SucursalAdapter extends LongPressAwareTableDataAdapter<SucursalesModel> {
+public class SucursalAdapter extends LongPressAwareTableDataAdapter<SucursalModel> {
 
     int TEXT_SIZE = 12;
 
-    public SucursalAdapter(final Context context, final List<SucursalesModel> data, final SortableSucursalTable tableView) {
+    public SucursalAdapter(final Context context, final List<SucursalModel> data, final SortableSucursalTable tableView) {
         super(context, data, tableView);
     }
 
     @Override
     public View getDefaultCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        SucursalesModel sucursal = getRowData(rowIndex);
+        SucursalModel sucursal = getRowData(rowIndex);
         View renderedView = null;
 
         switch (columnIndex) {
@@ -55,7 +55,7 @@ public class SucursalAdapter extends LongPressAwareTableDataAdapter<SucursalesMo
 
     @Override
     public View getLongPressCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        final SucursalesModel sucursal = getRowData(rowIndex);
+        final SucursalModel sucursal = getRowData(rowIndex);
         View renderedView = null;
 
         switch (columnIndex) {
@@ -69,9 +69,9 @@ public class SucursalAdapter extends LongPressAwareTableDataAdapter<SucursalesMo
         return renderedView;
     }
 
-    private View renderEditableClienteName(final SucursalesModel sucursal) {
+    private View renderEditableClienteName(final SucursalModel sucursal) {
         final EditText editText = new EditText(getContext());
-        editText.setText(sucursal.getNombre());
+        editText.setText(sucursal.getSuc_nombre());
         editText.setPadding(20, 10, 20, 10);
         editText.setTextSize(TEXT_SIZE);
         editText.setSingleLine();
@@ -79,19 +79,19 @@ public class SucursalAdapter extends LongPressAwareTableDataAdapter<SucursalesMo
         return editText;
     }
 
-    private View renderNombre(final SucursalesModel sucursal) {
-        return renderString(sucursal.getNombre());
+    private View renderNombre(final SucursalModel sucursal) {
+        return renderString(sucursal.getSuc_nombre());
     }
 
-    private View renderTelefono(final SucursalesModel sucursal) {
-        return renderString(sucursal.getTelefono());
+    private View renderTelefono(final SucursalModel sucursal) {
+        return renderString(sucursal.getSuc_telefono());
     }
 
-    private View renderCorreo(final SucursalesModel sucursal) {
-        return renderString(sucursal.getCorreo_electronico());
+    private View renderCorreo(final SucursalModel sucursal) {
+        return renderString(sucursal.getSuc_correo());
     }
 
-    private View renderCalle(final SucursalesModel sucursal) {
+    private View renderCalle(final SucursalModel sucursal) {
         return renderString(sucursal.getCalle());
     }
 
@@ -106,9 +106,9 @@ public class SucursalAdapter extends LongPressAwareTableDataAdapter<SucursalesMo
 
     private static class OrdenNameUpdater implements TextWatcher {
 
-        private SucursalesModel ordenToUpdate;
+        private SucursalModel ordenToUpdate;
 
-        public OrdenNameUpdater(SucursalesModel ordenToUpdate) {
+        public OrdenNameUpdater(SucursalModel ordenToUpdate) {
             this.ordenToUpdate = ordenToUpdate;
         }
 
@@ -124,6 +124,6 @@ public class SucursalAdapter extends LongPressAwareTableDataAdapter<SucursalesMo
 
         @Override
         public void afterTextChanged(Editable s) {
-            ordenToUpdate.setNombre(s.toString());
+            ordenToUpdate.setSuc_nombre(s.toString());
         }
     }}

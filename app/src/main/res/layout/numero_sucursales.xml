@@ -85,7 +85,7 @@
                 android:textStyle="bold"
                 app:fontFamily="@font/muli" />
 
-            <de.codecrafters.tableview.TableView
+            <com.Danthop.bionet.Tables.SortableSucursalTable
                 android:id="@+id/tabla2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

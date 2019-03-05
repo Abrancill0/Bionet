@@ -16,7 +16,12 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.ClienteAdapter;
+import com.Danthop.bionet.Adapters.SucursalAdapter;
 import com.Danthop.bionet.R;
+import com.Danthop.bionet.Tables.SortableSucursalTable;
+import com.Danthop.bionet.model.ClienteModel;
+import com.Danthop.bionet.model.SucursalModel;
 import com.Danthop.bionet.model.SucursalesModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -45,7 +50,6 @@ public class Numero_sucursal extends Activity {
     private EditText direccion_sucursal;
     private EditText rfc;
     private EditText razon_social;
-    private static final String[] TABLA1_HEADERS = { "Nombre de la sucursal", "Teléfono", "Correo", "Dirección" };
     private String IDUsuario;
     private ProgressDialog progreso;
 
@@ -70,12 +74,15 @@ public class Numero_sucursal extends Activity {
 
     private Dialog crear_sucursal_dialog;
 
+    private List<SucursalModel> sucursales;
+
+
 
     private int NumeroSucursales;
 
     String[][] sucursalModel;
 
-    TableView tb;
+    SortableSucursalTable tb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,16 +96,14 @@ public class Numero_sucursal extends Activity {
         crear_sucursal_dialog=new Dialog(Numero_sucursal.this);
         crear_sucursal_dialog.setContentView(R.layout.pop_up_crear_sucursal);
 
+        sucursales = new ArrayList<>();
+
+
 
         Bundle datos = this.getIntent().getExtras();
         IDUsuario =  "" + datos.get("IDUsuario");
 
-        tb = (TableView) findViewById(R.id.tabla2);
-
-        tb.setHeaderBackgroundColor(getResources().getColor(R.color.white));
-
-        tb.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TABLA1_HEADERS));
-
+        tb = findViewById(R.id.tabla2);
 
 
 
@@ -358,9 +363,13 @@ public class Numero_sucursal extends Activity {
                             sucursalModel[x][2] =correo_electronico;
                             sucursalModel[x][3] =calle;
 
+                            final SucursalModel sucursal = new SucursalModel(nombre, telefono, correo_electronico,calle);
+                            sucursales.add(sucursal);
+
                         }
 
-                        tb.setDataAdapter(new SimpleTableDataAdapter(getApplicationContext(), sucursalModel));
+                        final SucursalAdapter sucursalAdapter = new SucursalAdapter(Numero_sucursal.this, sucursales, tb);
+                        tb.setDataAdapter(sucursalAdapter);
 
                         progreso.hide();
 

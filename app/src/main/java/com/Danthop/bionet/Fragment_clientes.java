@@ -103,26 +103,6 @@ public class Fragment_clientes extends Fragment {
             }
         });
 
-        final TableDataClickListener<ClienteModel> ClienteListener = new TableDataClickListener<ClienteModel>() {
-            @Override
-            public void onDataClicked(int rowIndex, ClienteModel clickedData) {
-
-                ver_cliente_dialog.show();
-                TextView NameCliente = ver_cliente_dialog.findViewById(R.id.cliente_nombre);
-                TextView CorreoCliente = ver_cliente_dialog.findViewById(R.id.email_cliente);
-                TextView TelefonoCliente = ver_cliente_dialog.findViewById(R.id.telefono_cliente);
-                TextView DireccionCliente = ver_cliente_dialog.findViewById(R.id.calle_cliente);
-
-                NameCliente.setText(clickedData.getCliente_Nombre());
-                CorreoCliente.setText(clickedData.getCliente_Correo());
-                TelefonoCliente.setText(clickedData.getCliente_Telefono());
-                DireccionCliente.setText(clickedData.getCliente_Ultima_Visita());
-
-            }
-        };
-
-        tabla_clientes.addDataClickListener(ClienteListener);
-
         return v;
 
 

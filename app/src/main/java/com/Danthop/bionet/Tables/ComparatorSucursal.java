@@ -13,16 +13,16 @@ public final class ComparatorSucursal {
 
     }
 
-    public static Comparator<SucursalesModel> getSucursalComparator() {
+    public static Comparator<SucursalModel> getSucursalComparator() {
         return new SucursalNameComparator();
     }
 
 
-    private static class SucursalNameComparator implements Comparator<SucursalesModel> {
+    private static class SucursalNameComparator implements Comparator<SucursalModel> {
 
         @Override
-        public int compare(final SucursalesModel sucursal1, final SucursalesModel sucursal2) {
-            return sucursal1.getNombre().compareTo(sucursal2.getNombre());
+        public int compare(final SucursalModel sucursal1, final SucursalModel sucursal2) {
+            return sucursal1.getSuc_nombre().compareTo(sucursal2.getSuc_nombre());
         }
     }
 

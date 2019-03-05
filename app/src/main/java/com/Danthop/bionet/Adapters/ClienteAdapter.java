@@ -1,5 +1,6 @@
 package com.Danthop.bionet.Adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -73,6 +74,12 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                 renderedView = renderClienteTelefono(cliente);
                 break;
             case 3:
+                renderedView = renderVerFicha(cliente);
+                break;
+            case 4:
+                renderedView = renderEditar(cliente);
+                break;
+            case 5:
                 renderedView = renderEliminar(cliente);
                 break;
         }
@@ -125,6 +132,54 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
     private View renderEliminar(final ClienteModel cliente) {
         return ButtonEliminar(cliente);
     }
+
+    private View renderVerFicha(final ClienteModel cliente) {
+        return ButtonVerFicha(cliente);
+    }
+
+    private View renderEditar(final ClienteModel cliente) {
+        return ButtonEditar(cliente);
+    }
+
+
+    private View ButtonVerFicha(final ClienteModel cliente){
+        final Button ver = new Button(getContext());
+        ver.setText("Ver");
+        ver.setPadding(10, 10, 10, 10);
+        ver.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Dialog ver_cliente_dialog;
+                ver_cliente_dialog=new Dialog(getContext());
+                ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
+                ver_cliente_dialog.show();
+                TextView NameCliente = ver_cliente_dialog.findViewById(R.id.cliente_nombre);
+                TextView CorreoCliente = ver_cliente_dialog.findViewById(R.id.email_cliente);
+                TextView TelefonoCliente = ver_cliente_dialog.findViewById(R.id.telefono_cliente);
+
+                NameCliente.setText(cliente.getCliente_Nombre());
+                CorreoCliente.setText(cliente.getCliente_Correo());
+                TelefonoCliente.setText(cliente.getCliente_Telefono());
+            }
+        });
+        return ver;
+    }
+
+    private View ButtonEditar(final ClienteModel cliente){
+        final Button editar = new Button(getContext());
+        editar.setText("Editar");
+        editar.setPadding(10, 10, 10, 10);
+        editar.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                /* sdaddsdad >>>___----___---___--__--_-__---_----_-__----_---_---------_-------------------___--*/
+                /*  sdagsdggsssdddsdsd   -->---<>_>__--->>_-<-<<<<-----_-<-<-<-_<-_<--<-xascsvsdvsdv-sd-v-sdv-sd */
+            }
+        });
+        return editar;
+    }
+
 
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
