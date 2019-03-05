@@ -555,7 +555,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             editor.putString("AccessToken", identity.getAccessToken().getAccessTokenValue());
             editor.putString("TokenLifetime", String.valueOf( identity.getAccessToken().getAccessTokenLifetime()));
 
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             String date = df.format(Calendar.getInstance().getTime());
 
             editor.putString("FechaCreacionToken",date );

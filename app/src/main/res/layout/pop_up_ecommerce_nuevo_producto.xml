@@ -225,7 +225,7 @@
                         android:id="@+id/Btn_Seleccionar_Categorias"
                         style="@android:style/Widget.Holo.Light.Button"
                         android:layout_width="150dp"
-                        android:layout_height="15dp"
+                        android:layout_height="30dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="10dp"
                         android:layout_weight="1"
@@ -234,6 +234,20 @@
                         android:text="Seleccionar Categoria"
                         android:textColor="#ffffff"
                         android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/textVi113"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="1dp"
+                        android:text="Tipo Publicacion"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp" />
+
+                    <Spinner android:id="@+id/Spinner_Tipo_Publicacion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"></Spinner>
 
                     <TextView
                         android:id="@+id/textVi22221212"
@@ -251,12 +265,12 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:background="@drawable/shape_gray"
-                        android:ems="10"
+                        android:ems="8"
                         android:gravity="top|left"
                         android:inputType="textMultiLine"
-                        android:lines="8"
-                        android:maxLines="10"
-                        android:minLines="6"
+                        android:lines="7"
+                        android:maxLines="7"
+                        android:minLines="5"
                         android:textSize="14sp" />
 
 

@@ -75,16 +75,8 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
     private ElegantNumberButton TextCantidad;
     private EditText TextGarantia;
 
-    private Spinner SpinnerTipoPublicacion;
     private Spinner SpinnerArticulo;
     private Spinner SpinnerVariante;
-
-    private Spinner SpinnerCategoriaArticulo;
-    private Spinner SpinnerCategoriaArticulo2;
-    private Spinner SpinnerCategoriaArticulo3;
-    private Spinner SpinnerCategoriaArticulo4;
-    private Spinner SpinnerCategoriaArticulo5;
-    private Spinner SpinnerCategoriaArticulo6;
 
     private RadioButton RadioUsado;
     private RadioButton RadioNuevo;

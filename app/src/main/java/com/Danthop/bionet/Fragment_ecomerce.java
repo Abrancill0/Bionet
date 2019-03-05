@@ -105,7 +105,10 @@ public class Fragment_ecomerce extends Fragment {
 
 
     public void LoadTable(){
-        tabla_ecomerce = (SortableOrdenEcommerceTable) v.findViewById(R.id.tabla_ecommerce);
+
+        try {
+
+            tabla_ecomerce = (SortableOrdenEcommerceTable) v.findViewById(R.id.tabla_ecommerce);
 
 
             final String url = "http://187.189.192.150:8010/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML;
@@ -214,6 +217,18 @@ public class Fragment_ecomerce extends Fragment {
             );
 
             VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+
+
+
+        } catch (Error e) {
+
+            Toast toast1 =
+                    Toast.makeText(getContext(),
+                            e.toString(), Toast.LENGTH_LONG);
+
+            toast1.show();
+
+        }
 
 
     }

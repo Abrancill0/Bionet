@@ -76,27 +76,12 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
 
     private ArrayList<String> TipoPublicacionName;
     private ArrayList<String> TipoPublicacionID;
-
-    private ArrayList<String> CategoriaID1;
-    private ArrayList<String> CategoriaID2;
-    private ArrayList<String> CategoriaID3;
-    private ArrayList<String> CategoriaID4;
-    private ArrayList<String> CategoriaID5;
-    private ArrayList<String> CategoriaID6;
-
-    private ArrayList<String> CategoriaName1;
-    private ArrayList<String> CategoriaName2;
-    private ArrayList<String> CategoriaName3;
-    private ArrayList<String> CategoriaName4;
-    private ArrayList<String> CategoriaName5;
-    private ArrayList<String> CategoriaName6;
+    private Spinner SpinnerTipoPublicacion;
 
     private List<CategoriaModel> categorias;
 
-
     private ListView listacategoria1;
     private Dialog pop_up_categoria1;
-
 
     private List<SincronizarModel> Sincronizaciones;
 
@@ -125,15 +110,18 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
                 RadioUsado = (RadioButton) v.findViewById( R.id.radioButton_Usado );
                 RadioNuevo = (RadioButton) v.findViewById( R.id.radioButton_Nuevo );
 
+                SpinnerTipoPublicacion=(Spinner) v.findViewById( R.id.Spinner_Tipo_Publicacion );
+
                 BtnGuardaArticulo = (Button) v.findViewById( R.id.Guardar_articulo );
                 Btn_Seleccionar_Categorias = (Button) v.findViewById( R.id.Btn_Seleccionar_Categorias );
+
+                CargaPublicaciones();
 
                 Btn_Seleccionar_Categorias.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                         pop_up_categoria1 = new Dialog(getContext());
-                       // pop_up_categoria1.setTargetFragment(Fragment_ecommerce_Sincronizar_Nuevo_Prod.this, 1);
                         pop_up_categoria1.setContentView(R.layout.popupcategoriaone);
                         pop_up_categoria1.show();
 
@@ -142,8 +130,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
                         CargaCategorias();
                     }
                 });
-
-                categorias = new ArrayList<CategoriaModel>();
 
             return v;
 
@@ -171,13 +157,13 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
                             if (EstatusApi == 1) {
 
                                 TipoPublicacionID=new ArrayList<>();
-                                CategoriaID1=new ArrayList<>();
                                 TipoPublicacionName = new ArrayList<>();
-                                CategoriaName1=new ArrayList<>();
+
+                                categorias = new ArrayList<CategoriaModel>();
 
                                 RespuestaTiposPublicacion = response.getJSONArray("aListaTiposPublicacion");
 
-                                RespuestaCategoria = response.getJSONArray("aCategorias");
+                               // RespuestaCategoria = response.getJSONArray("aCategorias");
 
                                 for(int x = 0; x < RespuestaTiposPublicacion.length(); x++){
                                     JSONObject jsonObject1 = RespuestaTiposPublicacion.getJSONObject(x);
@@ -188,16 +174,8 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
                                     TipoPublicacionName.add(publicacion);
                                 }
 
-                                for(int x = 0; x < RespuestaCategoria.length(); x++){
-                                    JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(x);
-                                    String idcategoria = jsonObject1.getString("id");
-                                    String categoria = jsonObject1.getString("name");
 
-                                    CategoriaID1.add(idcategoria);
-                                    CategoriaName1.add(categoria);
-                                }
-
-                              //  SpinnerCategoriaArticulo.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,CategoriaName1));
+                                SpinnerTipoPublicacion.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,TipoPublicacionName));
 
                             }
 
@@ -251,9 +229,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
 
                                    // SpinnerCategoriaArticulo2.setVisibility( Integer.parseInt( "1" ) );
 
-                                    CategoriaID2=new ArrayList<>();
-                                    CategoriaName2=new ArrayList<>();
-
                                     RespuestaCategoria = response.getJSONArray("resultado");
 
                                     for(int x = 0; x < RespuestaCategoria.length(); x++){
@@ -261,8 +236,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
                                         String idcategoria = jsonObject1.getString("id");
                                         String categoria = jsonObject1.getString("name");
 
-                                        CategoriaID2.add(idcategoria);
-                                        CategoriaName2.add(categoria);
+
                                     }
 
                                    // SpinnerCategoriaArticulo2.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,CategoriaName2));
@@ -295,8 +269,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
         {   e.printStackTrace();
         }
 
-
-
     }
 
     public void CargaCategoriaNivel3()
@@ -328,8 +300,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
 
                                    // SpinnerCategoriaArticulo3.setVisibility( Integer.parseInt( "1" ) );
 
-                                    CategoriaID3=new ArrayList<>();
-                                    CategoriaName3=new ArrayList<>();
+
 
                                     RespuestaCategoria = response.getJSONArray("resultado");
 
@@ -338,15 +309,12 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
                                         String idcategoria = jsonObject1.getString("id");
                                         String categoria = jsonObject1.getString("name");
 
-                                        CategoriaID3.add(idcategoria);
-                                        CategoriaName3.add(categoria);
+
                                     }
 
                                     //SpinnerCategoriaArticulo3.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,CategoriaName3));
 
                                 }
-
-
 
                             }
                             catch (JSONException e)
@@ -402,10 +370,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
 
                                 if (EstatusApi == 1) {
 
-                                   // SpinnerCategoriaArticulo4.setVisibility( Integer.parseInt( "1" ) );
 
-                                    CategoriaID4=new ArrayList<>();
-                                    CategoriaName4=new ArrayList<>();
 
                                     RespuestaCategoria = response.getJSONArray("resultado");
 
@@ -414,20 +379,14 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
                                         String idcategoria = jsonObject1.getString("id");
                                         String categoria = jsonObject1.getString("name");
 
-                                        CategoriaID4.add(idcategoria);
-                                        CategoriaName4.add(categoria);
+
                                     }
 
-                                 //   SpinnerCategoriaArticulo4.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,CategoriaName4));
-
                                 }
-
-
 
                             }
                             catch (JSONException e)
                             {   e.printStackTrace();    }
-
 
                         }
                     },
@@ -446,7 +405,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
         catch (Error e)
         {   e.printStackTrace();
         }
-
 
     }
 
@@ -493,24 +451,20 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
 
                                 RespuestaCategoria = response.getJSONArray("aCategorias");
 
-                                ArrayList<HashMap<String,String>> arrayList=new ArrayList<>();
+                                ArrayList arrayList = new ArrayList<>();
 
                                 for(int x = 0; x < RespuestaCategoria.length(); x++){
                                     JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(x);
                                     String idcategoria = jsonObject1.getString("id");
                                     String categoria = jsonObject1.getString("name");
 
-                                    HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
-                                    hashMap.put("id",idcategoria);
-                                    hashMap.put("name",categoria);
-                                    arrayList.add(hashMap);//add the hashmap into arrayList
+                                    CategoriaModel cat = new CategoriaModel(idcategoria, categoria );
+
+                                    arrayList.add(cat);//add the hashmap into arrayList
 
                                 }
 
-                                String fromArray[]={"id","name"};
-                                int to[]={R.id.TextName,R.id.TextID};
-
-                                CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria, categorias);
+                                CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria,arrayList );
 
                                 listacategoria1.setAdapter(adapter);//sets the adapter for listView
                             }
@@ -535,8 +489,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
 
     }
-
-
 
     public void Guarda() {
 
@@ -598,7 +550,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment {
         mRequestQueue.add(smr);
 
     }
-
 
     }
 
