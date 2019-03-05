@@ -2,6 +2,7 @@ package com.Danthop.bionet;
 
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -61,6 +62,8 @@ public class Fragment_ecomerce extends Fragment {
 
     private List<Ecommerce_orden_Model> Ordenes;
 
+    ProgressDialog progreso;
+
     private String[][] OrdenesModel;
 
 
@@ -110,6 +113,9 @@ public class Fragment_ecomerce extends Fragment {
 
             tabla_ecomerce = (SortableOrdenEcommerceTable) v.findViewById(R.id.tabla_ecommerce);
 
+            progreso = new ProgressDialog(getContext());
+            progreso.setMessage("Cargando...");
+            progreso.show();
 
             final String url = "http://187.189.192.150:8010/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML;
 
@@ -181,6 +187,8 @@ public class Fragment_ecomerce extends Fragment {
                                     tabla_ecomerce.setDataAdapter(ordenAdapter);
 
 
+                                    progreso.hide();
+
                                 }
                                 else
                                 {
@@ -192,6 +200,8 @@ public class Fragment_ecomerce extends Fragment {
 
                                     toast1.show();
 
+                                    progreso.hide();
+
                                 }
 
 
@@ -202,6 +212,8 @@ public class Fragment_ecomerce extends Fragment {
                                                 e.toString(), Toast.LENGTH_LONG);
 
                                 toast1.show();
+
+                                progreso.hide();
                             }
 
 
@@ -227,6 +239,8 @@ public class Fragment_ecomerce extends Fragment {
                             e.toString(), Toast.LENGTH_LONG);
 
             toast1.show();
+
+            progreso.hide();
 
         }
 

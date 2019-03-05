@@ -44,6 +44,7 @@ public class Fragment_clientes extends Fragment {
     private ProgressDialog progreso;
 
     private String nombre;
+    private String UUID;
     private String telefono;
     private String correo_electronico;
     private String calle;
@@ -51,7 +52,6 @@ public class Fragment_clientes extends Fragment {
     private Dialog ver_cliente_dialog;
 
     private List<ClienteModel> clientes;
-
 
 
     public Fragment_clientes() {
@@ -153,7 +153,7 @@ public class Fragment_clientes extends Fragment {
 
                 JSONObject Respuesta = null;
                 JSONObject RespuestaNodoDireccion= null;
-                JSONObject ElementoTelefono=null;
+                JSONObject ElementoUsuario=null;
                 JSONObject ElementoCorreo=null;
                 JSONArray RespuestaNodoClientes= null;
 
@@ -174,12 +174,15 @@ public class Fragment_clientes extends Fragment {
                         for(int x = 0; x < RespuestaNodoClientes.length(); x++){
                             JSONObject elemento = RespuestaNodoClientes.getJSONObject(x);
 
+                            ElementoUsuario =  elemento.getJSONObject("cli_id");
+
+                            UUID = ElementoUsuario.getString( "uuid");
                             nombre = elemento.getString("cli_nombre");
                             correo_electronico = elemento.getString("cli_correo_electronico");
                             telefono = elemento.getString("cli_telefono");
                             RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion");
                             calle = RespuestaNodoDireccion.getString("cli_calle");
-                            final ClienteModel cliente = new ClienteModel(nombre, correo_electronico, telefono,"");
+                            final ClienteModel cliente = new ClienteModel(UUID,nombre, correo_electronico, telefono,"",usu_id);
                             clientes.add(cliente);
                         }
                         final ClienteAdapter clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes);

@@ -1,6 +1,7 @@
 package com.Danthop.bionet;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -59,6 +60,7 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
     private String UserML;
     private String AccesToken;
     private String TokenLife;
+    ProgressDialog progreso;
 
     private String[][] PreguntasModel;
 
@@ -107,6 +109,11 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
 
     public void LoadTable(){
+
+        progreso = new ProgressDialog(getContext());
+        progreso.setMessage("Cargando...");
+        progreso.show();
+
         tabla_preguntas = (SortablePreguntasTable) v.findViewById(R.id.tabla_preguntas);
         final String url = "http://187.189.192.150:8010/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML;
 
@@ -205,11 +212,14 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
                             final PreguntasAdapter preguntasAdapter = new PreguntasAdapter(getContext(), Preguntas, tabla_preguntas);
                             tabla_preguntas.setDataAdapter(preguntasAdapter);
 
-
+                            progreso.hide();
 
                         }
                         catch (JSONException e)
-                        {   e.printStackTrace();    }
+                        {   e.printStackTrace();
+
+                            progreso.hide();
+                        }
 
 
                     }
@@ -219,6 +229,8 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error.Response", String.valueOf(error));
+
+                        progreso.hide();
                     }
                 }
         );
