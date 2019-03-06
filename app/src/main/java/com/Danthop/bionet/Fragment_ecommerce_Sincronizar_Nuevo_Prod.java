@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Danthop.Fragment_selecciona_categoria;
 import com.Danthop.bionet.Adapters.CategoriaAdapter;
 import com.Danthop.bionet.Adapters.SincronizarAdapter;
 import com.Danthop.bionet.Tables.SortableSincronizarTable;
@@ -69,7 +70,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private RadioButton RadioNuevo;
 
     private Button BtnGuardaArticulo;
-    private Button Btn_Seleccionar_Categorias;
+    private TextView Categoria;
 
     private ArrayList<String> TipoPublicacionName;
     private ArrayList<String> TipoPublicacionID;
@@ -102,6 +103,9 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         String nombre = bundle.getString( "nombre");
         String descripcion = bundle.getString( "descripcion");
         String precio = bundle.getString( "precio");
+        String nombre_categoria = bundle.getString("categoria");
+
+        System.out.println(nombre_categoria);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getActivity().MODE_PRIVATE );
 
@@ -129,23 +133,11 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                 SpinnerTipoPublicacion=(Spinner) v.findViewById( R.id.Spinner_Tipo_Publicacion );
 
                 BtnGuardaArticulo = (Button) v.findViewById( R.id.Guardar_articulo );
-                Btn_Seleccionar_Categorias = (Button) v.findViewById( R.id.Btn_Seleccionar_Categorias );
+                Categoria = (TextView) v.findViewById( R.id.Categoria );
+
+                Categoria.setText(nombre_categoria);
 
                 CargaPublicaciones();
-
-                Btn_Seleccionar_Categorias.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        pop_up_categoria1 = new Dialog(getContext());
-                        pop_up_categoria1.setContentView(R.layout.popupcategoriaone);
-                        pop_up_categoria1.show();
-
-                        listacategoria1 = (ListView) pop_up_categoria1.findViewById(R.id.listviewcat1);
-
-                        CargaCategorias();
-                    }
-                });
 
             return v;
 
@@ -253,9 +245,9 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
                                 }
 
-                                CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria,arrayList,pop_up_categoria1 );
+                                //CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria,arrayList,pop_up_categoria1 );
 
-                                listacategoria1.setAdapter(adapter);//sets the adapter for listView
+                                //listacategoria1.setAdapter(adapter);//sets the adapter for listView
 
 
                             }

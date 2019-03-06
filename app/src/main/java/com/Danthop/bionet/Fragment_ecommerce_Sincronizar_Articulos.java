@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
+
+import com.Danthop.Fragment_selecciona_categoria;
 import com.Danthop.bionet.Adapters.ArticuloAdapter;
 import com.Danthop.bionet.Tables.SortableArticulosTable;
 import com.Danthop.bionet.model.ArticuloModel;
@@ -75,7 +77,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
-                Fragment_ecommerce_Sincronizar_Nuevo_Prod secondFragment = new Fragment_ecommerce_Sincronizar_Nuevo_Prod();
+                Fragment_selecciona_categoria secondFragment = new Fragment_selecciona_categoria();
                 secondFragment.setArguments(bundle);
 
                 fragmentTransaction.replace(R.id.fragment_container,secondFragment);
