@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.Danthop.bionet.Adapters.CategoriaAdapter;
 import com.Danthop.bionet.Adapters.SincronizarAdapter;
 import com.Danthop.bionet.Tables.SortableSincronizarTable;
+import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.CategoriaModel;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.SincronizarModel;
@@ -60,9 +61,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private String UserML;
     private String AccesToken;
     private String TokenLife;
-    private String[][] SincornizarModel;
-    private Dialog crear_Producto_dialog;
-    private Button btn_alta_articulo;
     private String usu_id;
 
     private RadioButton RadioUsado;
@@ -70,9 +68,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
     private Button BtnGuardaArticulo;
     private Button Btn_Seleccionar_Categorias;
-
-    private Spinner SpinnerArticulo;
-    private Spinner SpinnerVariante;
 
     private ArrayList<String> TipoPublicacionName;
     private ArrayList<String> TipoPublicacionID;
@@ -83,10 +78,8 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private ListView listacategoria1;
     private Dialog pop_up_categoria1;
 
-    private String NombreCategoria;
-    private String IdCategoria;
-
-    private List<SincronizarModel> Sincronizaciones;
+    private List<ArticuloModel> Articulos;
+    private String[][] ArticuloModel;
 
     public Fragment_ecommerce_Sincronizar_Nuevo_Prod() {
         // Required empty public constructor
@@ -108,6 +101,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         AccesToken = sharedPref.getString( "AccessToken", "" );
         TokenLife = sharedPref.getString( "TokenLifetime", "" );
         usu_id = sharedPref.getString("usu_id","");
+
 
                 TextNombreArticulo = (EditText) v.findViewById( R.id.text_nombre_articulo );
                 TextDescripcionArticulo = (EditText) v.findViewById( R.id.text_descripcion_articulo );
@@ -207,233 +201,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
 
-    }
-
-    public void CargaCategoriaNivel2()
-    {
-
-        try
-        {
-            String Cat1 ="";// CategoriaID1.get(SpinnerCategoriaArticulo.getSelectedItemPosition());
-
-            final String url = "http://187.189.192.150:8010/api/ecomerce/obtenerSubcategoriasMercadoLibre?sIdCategoria=" +  Cat1;
-
-            // prepare the Request
-            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                    new Response.Listener<JSONObject>()
-                    {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            // display response
-                            JSONArray RespuestaTiposPublicacion = null;
-                            JSONArray RespuestaCategoria = null;
-
-                            try
-                            {
-
-                                int EstatusApi = Integer.parseInt( response.getString("estatus") );
-
-                                if (EstatusApi == 1) {
-
-                                   // SpinnerCategoriaArticulo2.setVisibility( Integer.parseInt( "1" ) );
-
-                                    RespuestaCategoria = response.getJSONArray("resultado");
-
-                                    for(int x = 0; x < RespuestaCategoria.length(); x++){
-                                        JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(x);
-                                        String idcategoria = jsonObject1.getString("id");
-                                        String categoria = jsonObject1.getString("name");
-
-
-                                    }
-
-                                   // SpinnerCategoriaArticulo2.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,CategoriaName2));
-
-                                }
-
-
-
-                            }
-                            catch (JSONException e)
-                            {   e.printStackTrace();    }
-
-
-                        }
-                    },
-                    new Response.ErrorListener()
-                    {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.d("Error.Response", String.valueOf(error));
-                        }
-                    }
-            );
-
-            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
-
-
-        }
-        catch (Error e)
-        {   e.printStackTrace();
-        }
-
-    }
-
-    public void CargaCategoriaNivel3()
-    {
-
-        try
-        {
-
-            String Cat2 =""; //CategoriaID2.get(SpinnerCategoriaArticulo.getSelectedItemPosition());
-
-            final String url = "http://187.189.192.150:8010/api/ecomerce/obtenerSubcategoriasMercadoLibre?sIdCategoria=" +  Cat2;
-
-            // prepare the Request
-            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                    new Response.Listener<JSONObject>()
-                    {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            // display response
-                            JSONArray RespuestaTiposPublicacion = null;
-                            JSONArray RespuestaCategoria = null;
-
-                            try
-                            {
-
-                                int EstatusApi = Integer.parseInt( response.getString("estatus") );
-
-                                if (EstatusApi == 1) {
-
-                                   // SpinnerCategoriaArticulo3.setVisibility( Integer.parseInt( "1" ) );
-
-
-
-                                    RespuestaCategoria = response.getJSONArray("resultado");
-
-                                    for(int x = 0; x < RespuestaCategoria.length(); x++){
-                                        JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(x);
-                                        String idcategoria = jsonObject1.getString("id");
-                                        String categoria = jsonObject1.getString("name");
-
-
-                                    }
-
-                                    //SpinnerCategoriaArticulo3.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,CategoriaName3));
-
-                                }
-
-                            }
-                            catch (JSONException e)
-                            {   e.printStackTrace();    }
-
-
-                        }
-                    },
-                    new Response.ErrorListener()
-                    {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.d("Error.Response", String.valueOf(error));
-                        }
-                    }
-            );
-
-            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
-
-
-        }
-        catch (Error e)
-        {
-            e.printStackTrace();
-        }
-
-
-    }
-
-    public void CargaCategoriaNivel4()
-    {
-
-        try
-        {
-            String Cat3 =""; //CategoriaID3.get(SpinnerCategoriaArticulo.getSelectedItemPosition());
-
-            final String url = "http://187.189.192.150:8010/api/ecomerce/obtenerSubcategoriasMercadoLibre?sIdCategoria=" +  Cat3;
-
-            // prepare the Request
-            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                    new Response.Listener<JSONObject>()
-                    {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            // display response
-                            JSONArray RespuestaTiposPublicacion = null;
-                            JSONArray RespuestaCategoria = null;
-
-                            try
-                            {
-
-                                int EstatusApi = Integer.parseInt( response.getString("estatus") );
-
-                                if (EstatusApi == 1) {
-
-
-
-                                    RespuestaCategoria = response.getJSONArray("resultado");
-
-                                    for(int x = 0; x < RespuestaCategoria.length(); x++){
-                                        JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(x);
-                                        String idcategoria = jsonObject1.getString("id");
-                                        String categoria = jsonObject1.getString("name");
-
-
-                                    }
-
-                                }
-
-                            }
-                            catch (JSONException e)
-                            {   e.printStackTrace();    }
-
-                        }
-                    },
-                    new Response.ErrorListener()
-                    {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.d("Error.Response", String.valueOf(error));
-                        }
-                    }
-            );
-
-            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
-
-        }
-        catch (Error e)
-        {   e.printStackTrace();
-        }
-
-    }
-
-    public void CargaCategoriaNivel5()
-    {
-        try
-        {
-        }
-        catch (Error e)
-        {   e.printStackTrace();
-        }
-    }
-
-    public void CargaCategoriaNivel6()
-    {
-        try
-        {
-        }
-        catch (Error e)
-        {   e.printStackTrace();
-        }
     }
 
     private void CargaCategorias()

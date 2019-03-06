@@ -141,7 +141,6 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
         return ButtonEditar(cliente);
     }
 
-
     private View ButtonVerFicha(final ClienteModel cliente){
         final Button ver = new Button(getContext());
         ver.setText("Ver");
@@ -179,7 +178,6 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
         });
         return editar;
     }
-
 
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());

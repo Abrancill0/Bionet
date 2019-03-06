@@ -129,8 +129,11 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
         btn_alta_articulo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar_Nuevo_Prod()).commit();
+               // FragmentTransaction fr = getFragmentManager().beginTransaction();
+               // fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar_Nuevo_Prod()).commit();
+
+                 FragmentTransaction fr = getFragmentManager().beginTransaction();
+                 fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar_Articulos()).commit();
 
             }
         });
