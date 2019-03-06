@@ -522,18 +522,26 @@
                             android:padding="10dp"
                             android:text="Selecciona"
                             android:textColor="@color/black" />
-
-                        <Button
-                            android:id="@+id/btn"
-                            style="@android:style/Widget.Holo.Light.Button"
-                            android:layout_width="54dp"
+                        <RadioButton
+                            android:id="@+id/Commerce_Premium"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="2.5dp"
-                            android:background="#F7F9F9"
-                            android:onClick="mas_informacion"
-                            android:text="ok"
-                            android:textColor="@color/gray"
-                            android:textSize="14sp" />
+                            android:layout_gravity="center"/>
+                        <RadioButton
+                            android:id="@+id/Commerce_Pro"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"/>
+                        <RadioButton
+                            android:id="@+id/Bussines_Premium"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"/>
+                        <RadioButton
+                            android:id="@+id/Bussines_Pro"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"/>
                     </TableRow>
 
 

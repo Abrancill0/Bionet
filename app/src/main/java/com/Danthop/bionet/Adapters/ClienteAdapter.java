@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Numero_sucursal;
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.model.ClienteModel;
@@ -196,87 +197,107 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
             @Override
             public void onClick(View v) {
 
+                final Dialog pop_up_confirmacion_eliminar =new Dialog(getContext());
+                pop_up_confirmacion_eliminar.setContentView(R.layout.pop_up_confirmar_eliminar_cliente);
+                pop_up_confirmacion_eliminar.show();
+                Button aceptar = pop_up_confirmacion_eliminar.findViewById(R.id.AceptarEliminar);
+                Button cancelar = pop_up_confirmacion_eliminar.findViewById(R.id.CancelarEliminar);
 
-                //tabla_clientes = v.findViewById(R.id.tabla_clientes);
-
-                JSONObject request = new JSONObject();
-                try
-                {
-                    request.put("usu_id", cliente.getCliente_usu_id());
-                    request.put("cli_id", cliente.getCliente_UUID());
-                    request.put("esApp", "1");
-
-                }
-                catch(Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-                String url = "http://187.189.192.150:8010/";
-
-                String ApiPath = url + "api/clientes/delete";
-
-                JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-                {
+                aceptar.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onClick(View v) {
 
-                        JSONObject Respuesta = null;
-
-                        try {
-
-                            int status = Integer.parseInt(response.getString("estatus"));
-                            String Mensaje = response.getString("mensaje");
-
-                            if (status == 1)
-                            {
-
-                                Toast toast1 =
-                                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-
-                                toast1.show();
-
-                                Muestra_clientes(cliente.getCliente_usu_id());
-
-                            }
-                            else
-                            {
-                                Toast toast1 =
-                                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-
-                                toast1.show();
-
-
-                            }
-
-                        } catch (JSONException e) {
-
-                            Toast toast1 =
-                                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
-
-                            toast1.show();
-
+                        JSONObject request = new JSONObject();
+                        try
+                        {
+                            request.put("usu_id", cliente.getCliente_usu_id());
+                            request.put("cli_id", cliente.getCliente_UUID());
+                            request.put("esApp", "1");
 
                         }
+                        catch(Exception e)
+                        {
+                            e.printStackTrace();
+                        }
 
-                    }
+                        String url = "http://187.189.192.150:8010/";
 
-                },
-                        new Response.ErrorListener()
+                        String ApiPath = url + "api/clientes/delete";
+
+                        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
                         {
                             @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Toast toast1 =
-                                        Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                            public void onResponse(JSONObject response) {
 
-                                toast1.show();
+                                JSONObject Respuesta = null;
 
+                                try {
+
+                                    int status = Integer.parseInt(response.getString("estatus"));
+                                    String Mensaje = response.getString("mensaje");
+
+                                    if (status == 1)
+                                    {
+
+                                        Toast toast1 =
+                                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                                        toast1.show();
+
+                                        Muestra_clientes(cliente.getCliente_usu_id());
+
+                                    }
+                                    else
+                                    {
+                                        Toast toast1 =
+                                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                                        toast1.show();
+
+
+                                    }
+
+                                } catch (JSONException e) {
+
+                                    Toast toast1 =
+                                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                                    toast1.show();
+
+
+                                }
 
                             }
-                        }
-                );
 
-                VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+                        },
+                                new Response.ErrorListener()
+                                {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Toast toast1 =
+                                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                                        toast1.show();
+
+
+                                    }
+                                }
+                        );
+
+                        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+                        pop_up_confirmacion_eliminar.dismiss();
+
+
+                    }
+                });
+
+                cancelar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pop_up_confirmacion_eliminar.dismiss();
+                    }
+                });
 
 
             }

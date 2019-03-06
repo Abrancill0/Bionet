@@ -95,15 +95,6 @@ public class Fragment_pantalla_principal extends Fragment {
         tabla_Notificaciones.setDataAdapter(simpleTableDataAdapter2);
 
 
-        //=====Programación de la gráfica=====
-        PieChartView pieChartView = v.findViewById(R.id.chart);
-        List< SliceValue > pieData = new ArrayList<>();
-        pieData.add(new SliceValue(60, Color.parseColor("#194052")));
-        pieData.add(new SliceValue(40, Color.parseColor("#DFDFDF")));
-        PieChartData pieChartData = new PieChartData(pieData);
-        pieChartView.setPieChartData(pieChartData);
-
-
 
 
 

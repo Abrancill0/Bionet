@@ -23,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,6 +84,7 @@ public class Fragment_crear_cliente extends DialogFragment {
     private Spinner SpinnerEstado;
     private Spinner SpinnerSucursal;
     private Spinner SpinnerColonia;
+    private Spinner SpinnerOpcion;
     private String usu_id;
     private int Estado_id;
     private String Sucursal_id;
@@ -97,6 +99,11 @@ public class Fragment_crear_cliente extends DialogFragment {
     private ArrayList<String> SucursalName;
     private ArrayList<String> SucursalID;
     private ArrayList<String> ColoniaName;
+
+    private LinearLayout LayoutDireccionFiscal;
+    private LinearLayout LayoutEmail;
+
+    private final static String[] opciones = { "N/A", "Email de Facturación", "Dirección Fiscal", "Ambas"};
 
 
     public Fragment_crear_cliente() {
@@ -130,27 +137,46 @@ public class Fragment_crear_cliente extends DialogFragment {
         TextRazonSocial=(EditText)v.findViewById(R.id.Text_cliente_razon_social);
         SpinnerEstado=(Spinner)v.findViewById(R.id.Text_cliente_estado);
         SpinnerSucursal=(Spinner)v.findViewById(R.id.Text_cliente_sucursal);
+        SpinnerOpcion=(Spinner)v.findViewById(R.id.Opcion);
+
+        TextFacturacionEmail=(EditText)v.findViewById(R.id.Text_cliente_correo_facturacion);
+        TextFacturacionEmail=(EditText)v.findViewById(R.id.Text_cliente_correo_facturacion);
+        TextFacturacionEstado=(EditText)v.findViewById(R.id.Text_cliente_estado_facturacion);
+        TextFacturacionColonia=(EditText)v.findViewById(R.id.Text_cliente_colonia_facturacion);
+        TextFacturacionNumExt=(EditText)v.findViewById(R.id.Text_cliente_num_ext_facturacion);
+        TextFacturacionCiudad=(EditText)v.findViewById(R.id.Text_cliente_ciudad_facturacion);
+        TextFacturacionCalle=(EditText)v.findViewById(R.id.Text_cliente_calle_facturacion);
+        TextFacturacionCp=(EditText)v.findViewById(R.id.Text_cliente_cp_facturacion);
+        TextFacturacionNumInt=(EditText)v.findViewById(R.id.Text_cliente_num_int_facturacion);
+        TextFacturacionMunicipio=(EditText)v.findViewById(R.id.Text_cliente_municipio_facturacion);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
 
+        LayoutDireccionFiscal = v.findViewById(R.id.LayoutDireccionFiscal);
+        LayoutEmail = v.findViewById(R.id.LayoutEmail);
+
+        LayoutDireccionFiscal.setVisibility(View.GONE);
+        LayoutEmail.setVisibility(View.GONE);
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, opciones);
+        SpinnerOpcion.setAdapter(adapter);
+
+        SpinnerOpcion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                VerificarOpcion();
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+
+        VerificarOpcion();
         LoadSpinnerEstado();
         LoadSpinnerSucursal();
 
-
-        //====Para saber si son los mismos datos de facturación=====
-        if(Mismo_email_personal.isChecked()){
-            CorreoIgual = "True";
-        }
-        else{
-            CorreoIgual = "False";
-        }
-        if(Mismo_direccion_personal.isChecked()){
-            DireccionIgual = "True";
-        }
-        else{
-            DireccionIgual = "False";
-        }
 
         Button guardar = (Button) v.findViewById(R.id.verificar_fiscal);
         guardar.setOnClickListener(new View.OnClickListener() {
@@ -175,6 +201,34 @@ public class Fragment_crear_cliente extends DialogFragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
         return v;
+    }
+
+
+    private void VerificarOpcion(){
+
+        String Seleccion;
+        Seleccion = SpinnerOpcion.getSelectedItem().toString();
+        if(Seleccion.equals("N/A"))
+        {
+            LayoutDireccionFiscal.setVisibility(View.GONE);
+            LayoutEmail.setVisibility(View.GONE);
+        }
+        else if(Seleccion.equals("Email de Facturación"))
+        {
+            LayoutEmail.setVisibility(View.VISIBLE);
+            LayoutDireccionFiscal.setVisibility(View.GONE);
+        }
+        else if(Seleccion.equals("Dirección Fiscal"))
+        {
+            LayoutDireccionFiscal.setVisibility(View.VISIBLE);
+            LayoutEmail.setVisibility(View.GONE);
+        }
+        else if(Seleccion.equals("Ambas"))
+        {
+            LayoutDireccionFiscal.setVisibility(View.VISIBLE);
+            LayoutEmail.setVisibility(View.VISIBLE);
+        }
+
     }
 
 
@@ -293,85 +347,9 @@ public class Fragment_crear_cliente extends DialogFragment {
     public void Verificar_isChecked(CheckBox Mismo_email, CheckBox Misma_direccion){
 
 
-        if (Mismo_email.isChecked() && Misma_direccion.isChecked())
-        {
-            GuardarCliente();
+
+
             return;
-        }
-        if(Mismo_email.isChecked())
-        {
-            final Dialog dialog=new Dialog(getContext());
-            dialog.setContentView(R.layout.pop_up_crear_cliente_diferente_direccion);
-            dialog.show();
-
-            //====Campo correo electrónico es igual====
-            TextFacturacionEstado=(EditText)dialog.findViewById(R.id.Text_cliente_estado_facturacion);
-            TextFacturacionColonia=(EditText)dialog.findViewById(R.id.Text_cliente_colonia_facturacion);
-            TextFacturacionNumExt=(EditText)dialog.findViewById(R.id.Text_cliente_num_ext_facturacion);
-            TextFacturacionCiudad=(EditText)dialog.findViewById(R.id.Text_cliente_ciudad_facturacion);
-            TextFacturacionCalle=(EditText)dialog.findViewById(R.id.Text_cliente_calle_facturacion);
-            TextFacturacionCp=(EditText)dialog.findViewById(R.id.Text_cliente_cp_facturacion);
-            TextFacturacionNumInt=(EditText)dialog.findViewById(R.id.Text_cliente_num_int_facturacion);
-            TextFacturacionMunicipio=(EditText)dialog.findViewById(R.id.Text_cliente_municipio_facturacion);
-
-            Button guardar = (Button) dialog.findViewById(R.id.btn_guardar_cliente);
-            guardar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    dialog.dismiss();
-                }
-            });
-            return;
-        }
-        if(Misma_direccion.isChecked())
-        {
-            final Dialog dialog=new Dialog(getContext());
-            dialog.setContentView(R.layout.pop_up_crear_cliente_diferente_email);
-            dialog.show();
-
-            TextFacturacionEmail=(EditText)dialog.findViewById(R.id.Text_cliente_correo_facturacion);
-            //====Los demás campos son iguales====
-
-
-
-            Button guardar = (Button) dialog.findViewById(R.id.btn_guardar_cliente);
-            guardar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    dialog.dismiss();
-                }
-            });
-            return;
-        }
-        else
-        {
-            final Dialog dialog=new Dialog(getContext());
-            dialog.setContentView(R.layout.pop_up_crear_cliente_diferentes_datos);
-            dialog.show();
-
-            //====Todos los campos son diferentes====
-            TextFacturacionEmail=(EditText)dialog.findViewById(R.id.Text_cliente_correo_facturacion);
-            TextFacturacionEstado=(EditText)dialog.findViewById(R.id.Text_cliente_estado_facturacion);
-            TextFacturacionColonia=(EditText)dialog.findViewById(R.id.Text_cliente_colonia_facturacion);
-            TextFacturacionNumExt=(EditText)dialog.findViewById(R.id.Text_cliente_num_ext_facturacion);
-            TextFacturacionCiudad=(EditText)dialog.findViewById(R.id.Text_cliente_ciudad_facturacion);
-            TextFacturacionCalle=(EditText)dialog.findViewById(R.id.Text_cliente_calle_facturacion);
-            TextFacturacionCp=(EditText)dialog.findViewById(R.id.Text_cliente_cp_facturacion);
-            TextFacturacionNumInt=(EditText)dialog.findViewById(R.id.Text_cliente_num_int_facturacion);
-            TextFacturacionMunicipio=(EditText)dialog.findViewById(R.id.Text_cliente_municipio_facturacion);
-
-            Button guardar = (Button) dialog.findViewById(R.id.btn_guardar_cliente);
-            guardar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    dialog.dismiss();
-                }
-            });
-            return;
-        }
     }
 
     private void LoadSpinnerEstado(){

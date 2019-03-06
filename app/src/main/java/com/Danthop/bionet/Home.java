@@ -450,12 +450,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 .commit();
     }
 
-    public void ShowDireccionFiscal(View view) {
-        Dialog dialog = new Dialog( this );
-        dialog.setContentView( R.layout.pop_up_crear_cliente_diferentes_datos );
-        dialog.setTitle( "Dirección fiscal" );
-        dialog.show();
-    }
 
     public void Aceptar(View view) {
         Intent intent = new Intent( Home.this, Login.class );
