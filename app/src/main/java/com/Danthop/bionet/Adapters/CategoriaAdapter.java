@@ -135,15 +135,21 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
 
                                                         CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria, arrayList, pop_up_tipo_categoria);
 
+
+
                                                         listacategoria1.setAdapter(adapter);//sets the adapter for listView
 
 
                                                     }
                                                     else
                                                     {
+                                                        Fragment_ecommerce_Sincronizar_Nuevo_Prod prueba = new Fragment_ecommerce_Sincronizar_Nuevo_Prod();
+
+                                                        prueba.LlenaTexto( name );
+
                                                         System.out.println(id);
                                                         pop_up_tipo_categoria.dismiss();
-                                                        mOnInputSelected.sendInput(name);
+                                                        //mOnInputSelected.sendInput(name);
                                                     }
 
 
@@ -177,16 +183,6 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
 
         return convertView;
         }
-
-
-    public void onAttach(Context context) {
-        try{
-            mOnInputSelected = (NameCategoriaSelcted) getContext();
-        }catch (ClassCastException e){
-
-        }
-        //super.onAttach(context);
-    }
 
 
 }

@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.CategoriaAdapter;
@@ -54,6 +55,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private EditText TextNombreArticulo;
     private EditText TextDescripcionArticulo;
     private EditText TextprecioArticulo;
+    private TextView textCategoriaSeleccionada;
     private ElegantNumberButton TextCantidad;
     private EditText TextGarantia;
     private View v;
@@ -95,6 +97,12 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.pop_up_ecommerce_nuevo_producto,container, false);
 
+        Bundle bundle = getArguments();
+
+        String nombre = bundle.getString( "nombre");
+        String descripcion = bundle.getString( "descripcion");
+        String precio = bundle.getString( "precio");
+
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getActivity().MODE_PRIVATE );
 
         UserML = sharedPref.getString( "UserIdML", "" );
@@ -108,6 +116,12 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                 TextprecioArticulo = (EditText) v.findViewById( R.id.text_precio_articulo );
                 TextCantidad = (ElegantNumberButton) v.findViewById( R.id.text_cantidad );
                 TextGarantia = (EditText) v.findViewById( R.id.text_garantia );
+
+                textCategoriaSeleccionada = (TextView) v.findViewById( R.id.textCategoriaSeleccionada );
+
+                TextNombreArticulo.setText(nombre);
+                TextDescripcionArticulo.setText(descripcion);
+                TextprecioArticulo.setText(precio);
 
                 RadioUsado = (RadioButton) v.findViewById( R.id.radioButton_Usado );
                 RadioNuevo = (RadioButton) v.findViewById( R.id.radioButton_Nuevo );
@@ -327,6 +341,12 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         mRequestQueue.add(smr);
 
     }
+
+    public void LlenaTexto(String Categoria)
+    {
+        //textCategoriaSeleccionada.setText( Categoria );
+    }
+
 
     }
 

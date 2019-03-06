@@ -1,49 +1,32 @@
 package com.Danthop.bionet;
 
-import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.Toast;
-
 import com.Danthop.bionet.Adapters.ArticuloAdapter;
-import com.Danthop.bionet.Adapters.CategoriaAdapter;
-import com.Danthop.bionet.Adapters.SucursalAdapter;
-import com.Danthop.bionet.Numero_sucursal;
-import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableArticulosTable;
-import com.Danthop.bionet.Tables.SortableSucursalTable;
 import com.Danthop.bionet.model.ArticuloModel;
-import com.Danthop.bionet.model.CategoriaModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
-import com.android.volley.request.SimpleMultiPartRequest;
-import com.android.volley.toolbox.Volley;
-import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
+import de.codecrafters.tableview.listeners.TableDataClickListener;
 
+public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
     private View v;
     private ArrayList<String> TipoPublicacionName;
@@ -73,6 +56,35 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
         tb = v.findViewById(R.id.tablaArticulos);
 
         CargaArticulos();
+
+
+        final TableDataClickListener<ArticuloModel> ArticuloListener = new TableDataClickListener<ArticuloModel>() {
+            @Override
+            public void onDataClicked(int rowIndex, ArticuloModel clickedData) {
+
+                String Nombre = (clickedData.getarticulo_Nombre());
+                String Precio = (clickedData.getarticulo_Precio());
+                String UUID = (clickedData.getarticulo_UUID());
+                String Descripcion = (clickedData.getarticulo_Descripcion());
+
+                Bundle bundle = new Bundle();
+                bundle.putString( "nombre", Nombre );
+                bundle.putString( "descripcion", Descripcion );
+                bundle.putString( "precio", Precio );
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+                Fragment_ecommerce_Sincronizar_Nuevo_Prod secondFragment = new Fragment_ecommerce_Sincronizar_Nuevo_Prod();
+                secondFragment.setArguments(bundle);
+
+                fragmentTransaction.replace(R.id.fragment_container,secondFragment);
+                fragmentTransaction.commit();
+
+            }
+        };
+
+        tb.addDataClickListener(ArticuloListener);
 
         return v;
 
@@ -140,7 +152,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
                                                 NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
-                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto, Precio);
+                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio);
                                                 Articulos.add(Articulo);
                                             }
 
@@ -149,7 +161,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                                         {
                                             NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
-                                            final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto, Precio);
+                                            final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio);
                                             Articulos.add(Articulo);
                                         }
                                     }
