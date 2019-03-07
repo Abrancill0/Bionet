@@ -239,6 +239,60 @@ public class Fragment_crear_cliente extends DialogFragment {
         Estado_id = EstadoID.get(SpinnerEstado.getSelectedItemPosition());
         Sucursal_id = SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
 
+        String FactuacionEmail ="";
+        String FacturacionCalle ="";
+        String FacturacionNumInt ="";
+        String FacturacionNumExt ="";
+        String FacturacionColonia ="";
+        String FacturacionCiudad ="";
+        String FacturacionCp ="";
+
+        String Seleccion;
+        Seleccion = SpinnerOpcion.getSelectedItem().toString();
+        if(Seleccion.equals("N/A"))
+        {
+             FactuacionEmail ="";
+             FacturacionCalle ="";
+             FacturacionNumInt ="";
+             FacturacionNumExt ="";
+             FacturacionColonia ="";
+             FacturacionCiudad ="";
+             FacturacionCp ="";
+
+        }
+        else if(Seleccion.equals("Email de Facturación"))
+        {
+            FactuacionEmail = String.valueOf( TextFacturacionEmail.getText() );
+            FacturacionCalle ="";
+            FacturacionNumInt ="";
+            FacturacionNumExt ="";
+            FacturacionColonia ="";
+            FacturacionCiudad ="";
+            FacturacionCp ="";
+
+        }
+        else if(Seleccion.equals("Dirección Fiscal"))
+        {
+            FactuacionEmail = "";
+            FacturacionCalle = String.valueOf(TextFacturacionCalle.getText());;
+            FacturacionNumInt = String.valueOf(TextFacturacionNumInt.getText());;
+            FacturacionNumExt = String.valueOf(TextFacturacionNumExt.getText());;
+            FacturacionColonia = String.valueOf(TextFacturacionColonia.getText());;
+            FacturacionCiudad = String.valueOf(TextFacturacionCiudad.getText());;
+            FacturacionCp = String.valueOf(TextFacturacionCp.getText());;
+        }
+        else if(Seleccion.equals("Ambas"))
+        {
+            FactuacionEmail = String.valueOf( TextFacturacionEmail.getText() );
+            FacturacionCalle = String.valueOf(TextFacturacionCalle.getText());;
+            FacturacionNumInt = String.valueOf(TextFacturacionNumInt.getText());;
+            FacturacionNumExt = String.valueOf(TextFacturacionNumExt.getText());;
+            FacturacionColonia = String.valueOf(TextFacturacionColonia.getText());;
+            FacturacionCiudad = String.valueOf(TextFacturacionCiudad.getText());;
+            FacturacionCp = String.valueOf(TextFacturacionCp.getText());;
+        }
+
+
         JSONObject request = new JSONObject();
         try
         {
@@ -262,16 +316,16 @@ public class Fragment_crear_cliente extends DialogFragment {
             request.put("cli_id_estado",Estado_id);
             request.put("cli_estado",SpinnerEstado.getSelectedItem().toString());
             request.put("cli_pais","México");
-            request.put("cli_correo_electronico_facturacion",TextFacturacionEmail.getText());
-            request.put("cli_calle_facturacion",TextFacturacionCalle.getText());
-            request.put("cli_numero_interior_facturacion",TextFacturacionNumInt.getText());
-            request.put("cli_numero_exterior_facturacion",TextFacturacionNumExt.getText());
-            request.put("cli_colonia_facturacion",TextFacturacionColonia.getText());
-            request.put("cli_ciudad_facturacion",TextFacturacionCiudad);
-            request.put("cli_codigo_postal_facturacion",TextFacturacionCp.getText());
+            request.put("cli_correo_electronico_facturacion",FactuacionEmail);
+            request.put("cli_calle_facturacion",FacturacionCalle);
+            request.put("cli_numero_interior_facturacion",FacturacionNumInt);
+            request.put("cli_numero_exterior_facturacion",FacturacionNumExt);
+            request.put("cli_colonia_facturacion",FacturacionColonia);
+            request.put("cli_ciudad_facturacion",FacturacionCiudad);
+            request.put("cli_codigo_postal_facturacion",FacturacionCp);
             request.put("cli_id_pais_facturacion",117);
             request.put("cli_id_estado_facturacion",Estado_id);
-            request.put("cli_estado_facturacion",TextFacturacionEstado.getText());
+            request.put("cli_estado_facturacion",FacturacionCiudad);
             request.put("cli_pais_facturacion","Mexico");
 
         }
