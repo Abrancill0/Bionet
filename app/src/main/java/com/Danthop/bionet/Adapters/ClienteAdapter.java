@@ -157,9 +157,37 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                 TextView CorreoCliente = ver_cliente_dialog.findViewById(R.id.email_cliente);
                 TextView TelefonoCliente = ver_cliente_dialog.findViewById(R.id.telefono_cliente);
 
+                TextView EstadoCliente = ver_cliente_dialog.findViewById(R.id.estado_cliente);
+                TextView CalleCliente = ver_cliente_dialog.findViewById(R.id.calle_cliente);
+
+                TextView ColoniaCliente = ver_cliente_dialog.findViewById(R.id.colonia_cliente);
+                TextView NumExtCliente = ver_cliente_dialog.findViewById(R.id.numero_exterior_cliente);
+                TextView NumIntCliente = ver_cliente_dialog.findViewById(R.id.numero_interior_cliente);
+                TextView CPCliente = ver_cliente_dialog.findViewById(R.id.cp_cliente);
+                TextView CiudadCliente = ver_cliente_dialog.findViewById(R.id.ciudad_cliente);
+
+                TextView MunicipioCliente = ver_cliente_dialog.findViewById(R.id.municipio_cliente);
+                TextView RFCCliente = ver_cliente_dialog.findViewById(R.id.rfc_cliente);
+                TextView RazonSocialCliente = ver_cliente_dialog.findViewById(R.id.razon_social_cliente);
+
                 NameCliente.setText(cliente.getCliente_Nombre());
                 CorreoCliente.setText(cliente.getCliente_Correo());
                 TelefonoCliente.setText(cliente.getCliente_Telefono());
+                EstadoCliente.setText(cliente.getcliente_estado());
+
+
+                 //CalleCliente.setText( cliente.getc );
+
+                 ColoniaCliente.setText( cliente.getcliente_colonia() );
+                 NumExtCliente.setText( cliente.getcliente_num_ext() );
+                 NumIntCliente.setText( cliente.getcliente_num_int() );
+                 CPCliente.setText( cliente.getcliente_cp() );
+                 CiudadCliente.setText( cliente.getcliente_ciudad() );
+
+                 MunicipioCliente.setText( cliente.getcliente_municipio() );
+                 RFCCliente.setText( cliente.getcliente_rfc() );
+                 RazonSocialCliente.setText(  cliente.getcliente_razon_social());
+
             }
         });
         return ver;
@@ -370,6 +398,16 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                     if (status == 1)
                     {
 
+                        String estado;
+                        String colonia;
+                        String num_int;
+                        String num_ext;
+                        String cp;
+                        String ciudad;
+                        String municipio;
+                        String rfc;
+                        String razon_social;
+
                         Respuesta = response.getJSONObject("resultado");
 
                         RespuestaNodoClientes = Respuesta.getJSONArray("aClientes");
@@ -389,7 +427,33 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                             telefono = elemento.getString("cli_telefono");
                             RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion");
                             calle = RespuestaNodoDireccion.getString("cli_calle");
-                            final ClienteModel cliente = new ClienteModel(UUID,nombre, correo_electronico, telefono,"",UsuarioID);
+
+                            estado = RespuestaNodoDireccion.getString( "cli_estado");
+                            colonia = RespuestaNodoDireccion.getString( "cli_colonia");
+                            num_int = RespuestaNodoDireccion.getString( "cli_numero_interior");
+                            num_ext = RespuestaNodoDireccion.getString( "cli_numero_exterior");
+                            cp = RespuestaNodoDireccion.getString( "cli_codigo_postal");
+                            ciudad = RespuestaNodoDireccion.getString( "cli_ciudad");
+                            municipio = RespuestaNodoDireccion.getString( "cli_ciudad");
+
+                            rfc = elemento.getString( "cli_rfc");
+                            razon_social = elemento.getString( "cli_razon_social");
+
+                            final ClienteModel cliente = new ClienteModel(UUID,
+                                    nombre,
+                                    correo_electronico,
+                                    telefono,
+                                    UsuarioID,
+                                    estado,
+                                    colonia,
+                                    num_int,
+                                    num_ext,
+                                    cp,
+                                    ciudad,
+                                    municipio,
+                                    rfc,
+                                    razon_social
+                            );
                             clientes.add(cliente);
                         }
 

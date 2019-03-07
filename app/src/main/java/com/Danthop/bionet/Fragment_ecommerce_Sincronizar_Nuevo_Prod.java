@@ -34,6 +34,8 @@ import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyLog;
+import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.request.SimpleMultiPartRequest;
@@ -44,10 +46,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
 
@@ -84,6 +88,8 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private List<ArticuloModel> Articulos;
     private String[][] ArticuloModel;
 
+    private String id_categoria;
+
     public Fragment_ecommerce_Sincronizar_Nuevo_Prod() {
         // Required empty public constructor
     }
@@ -104,6 +110,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         String descripcion = bundle.getString( "descripcion");
         String precio = bundle.getString( "precio");
         String nombre_categoria = bundle.getString("categoria");
+        id_categoria = bundle.getString("id_categoria");
 
         System.out.println(nombre_categoria);
 
@@ -138,6 +145,18 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                 Categoria.setText(nombre_categoria);
 
                 CargaPublicaciones();
+
+
+        BtnGuardaArticulo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Guarda();
+
+            }
+        });
+
+
 
             return v;
 
@@ -275,31 +294,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
     public void Guarda() {
 
-        String ApiPath = "https://api.mercadolibre.com/items";
-
-        SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, ApiPath,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        JSONObject jObj = null;
-                        try {
-                            jObj = new JSONObject(response);
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        Toast.makeText(getContext(), "Se Agrego correctamente el producto", Toast.LENGTH_LONG).show();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-
+        String ApiPath = "https://api.mercadolibre.com/items?access_token=" + AccesToken;
 
         String Condiciones="";
 
@@ -314,29 +309,78 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
         String TipoPublicacion;
 
-        // TipoPublicacion = TipoPublicacionID.get(SpinnerTipoPublicacion.getSelectedItemPosition());
+         TipoPublicacion = TipoPublicacionID.get(SpinnerTipoPublicacion.getSelectedItemPosition());
 
-        smr.addStringParam("access_token", AccesToken);
-        smr.addStringParam("title", String.valueOf(TextNombreArticulo.getText()));
-        smr.addStringParam("category_id", "");
-        smr.addStringParam("price", String.valueOf(TextprecioArticulo.getText()));
-        smr.addStringParam("currency_id", "MXN");
-        smr.addStringParam("available_quantity", String.valueOf(TextCantidad.getNumber()));
-        smr.addStringParam("condition", Condiciones);
-        smr.addStringParam("buying_mode", "buy_it_now");
-        smr.addStringParam("warranty", String.valueOf(TextGarantia.getText()));
-        smr.addStringParam("listing_type_id", "");
-        smr.addStringParam("description", String.valueOf(TextDescripcionArticulo.getText()));
-        smr.addFile("pictures", "1");
+        JSONObject json1= new JSONObject();
 
-        RequestQueue mRequestQueue = Volley.newRequestQueue(getContext());
-        mRequestQueue.add(smr);
+        try {
+            json1.put("source","http://upload.wikimedia.org/wikipedia/commons/f/fd/Ray_Ban_Original_Wayfarer.jpg");
+            json1.put("source","http://upload.wikimedia.org/wikipedia/commons/f/fd/Ray_Ban_Original_Wayfarer.jpg");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-    }
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(json1);
 
-    public void LlenaTexto(String Categoria)
-    {
-        //textCategoriaSeleccionada.setText( Categoria );
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+
+        JSONObject jsonBodyObj = new JSONObject();
+        String url = "https://api.mercadolibre.com/items?access_token=" + AccesToken;
+        try{
+            jsonBodyObj.put("title", String.valueOf(TextNombreArticulo.getText()));
+            jsonBodyObj.put("category_id", id_categoria);
+            jsonBodyObj.put("price", String.valueOf(TextprecioArticulo.getText()));
+            jsonBodyObj.put("currency_id","MXN" );
+            jsonBodyObj.put("available_quantity", String.valueOf(TextCantidad.getNumber()));
+            jsonBodyObj.put("condition", Condiciones);
+            jsonBodyObj.put("buying_mode", "buy_it_now");
+            jsonBodyObj.put("warranty", String.valueOf(TextGarantia.getText()));
+            jsonBodyObj.put("listing_type_id", TipoPublicacion);
+            jsonBodyObj.put("description", String.valueOf(TextDescripcionArticulo.getText()));
+            jsonBodyObj.put("pictures",  jsonArray);
+
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        final String requestBody = jsonBodyObj.toString();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
+                url, null, new Response.Listener<JSONObject>(){
+            @Override    public void onResponse(JSONObject response) {
+
+            Toast.makeText(getContext(), "Se Agrego correctamente el producto", Toast.LENGTH_LONG).show();
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar()).commit();
+            }
+        }, new Response.ErrorListener() {
+            @Override    public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(),  error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override    public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+
+            @Override    public byte[] getBody() {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                            requestBody, "utf-8");
+                    return null;
+                }
+            }
+
+
+        };
+
+        requestQueue.add(jsonObjectRequest);
+
+
     }
 
 

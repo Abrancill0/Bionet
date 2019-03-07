@@ -134,7 +134,7 @@ public class Fragment_clientes extends Fragment {
                 JSONObject Respuesta = null;
                 JSONObject RespuestaNodoDireccion= null;
                 JSONObject ElementoUsuario=null;
-                JSONObject ElementoCorreo=null;
+                JSONObject Elementodireccion=null;
                 JSONArray RespuestaNodoClientes= null;
 
                 try {
@@ -144,6 +144,15 @@ public class Fragment_clientes extends Fragment {
                //     Respuesta = response.getJSONObject("resultado");
                     if (status == 1)
                     {
+                         String estado;
+                         String colonia;
+                         String num_int;
+                         String num_ext;
+                         String cp;
+                         String ciudad;
+                         String municipio;
+                         String rfc;
+                         String razon_social;
 
                         Respuesta = response.getJSONObject("resultado");
 
@@ -162,7 +171,34 @@ public class Fragment_clientes extends Fragment {
                             telefono = elemento.getString("cli_telefono");
                             RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion");
                             calle = RespuestaNodoDireccion.getString("cli_calle");
-                            final ClienteModel cliente = new ClienteModel(UUID,nombre, correo_electronico, telefono,"",usu_id);
+
+                            estado = RespuestaNodoDireccion.getString( "cli_estado");
+                            colonia = RespuestaNodoDireccion.getString( "cli_colonia");
+                            num_int = RespuestaNodoDireccion.getString( "cli_numero_interior");
+                            num_ext = RespuestaNodoDireccion.getString( "cli_numero_exterior");
+                            cp = RespuestaNodoDireccion.getString( "cli_codigo_postal");
+                            ciudad = RespuestaNodoDireccion.getString( "cli_ciudad");
+                            municipio = RespuestaNodoDireccion.getString( "cli_ciudad");
+
+                            rfc = elemento.getString( "cli_rfc");
+                            razon_social = elemento.getString( "cli_razon_social");
+
+
+                            final ClienteModel cliente = new ClienteModel(UUID,
+                                    nombre,
+                                    correo_electronico,
+                                    telefono,
+                                    usu_id,
+                                    estado,
+                                    colonia,
+                                    num_int,
+                                    num_ext,
+                                    cp,
+                                    ciudad,
+                                    municipio,
+                                    rfc,
+                                    razon_social
+                            );
                             clientes.add(cliente);
                         }
                         final ClienteAdapter clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes);

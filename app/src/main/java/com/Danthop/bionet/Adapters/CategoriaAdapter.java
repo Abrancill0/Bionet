@@ -162,6 +162,7 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
                                                         bundle1.putString( "descripcion", Descripcion );
                                                         bundle1.putString( "precio", Precio );
                                                         bundle1.putString( "categoria" , name);
+                                                        bundle1.putString( "id_categoria" , id);
                                                         Fragment_ecommerce_Sincronizar_Nuevo_Prod secondFragment = new Fragment_ecommerce_Sincronizar_Nuevo_Prod();
                                                         secondFragment.setArguments(bundle1);
                                                         fr.replace(R.id.fragment_container,secondFragment).commit();

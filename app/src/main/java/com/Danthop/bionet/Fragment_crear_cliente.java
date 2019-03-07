@@ -140,7 +140,6 @@ public class Fragment_crear_cliente extends DialogFragment {
         SpinnerOpcion=(Spinner)v.findViewById(R.id.Opcion);
 
         TextFacturacionEmail=(EditText)v.findViewById(R.id.Text_cliente_correo_facturacion);
-        TextFacturacionEmail=(EditText)v.findViewById(R.id.Text_cliente_correo_facturacion);
         TextFacturacionEstado=(EditText)v.findViewById(R.id.Text_cliente_estado_facturacion);
         TextFacturacionColonia=(EditText)v.findViewById(R.id.Text_cliente_colonia_facturacion);
         TextFacturacionNumExt=(EditText)v.findViewById(R.id.Text_cliente_num_ext_facturacion);
@@ -183,7 +182,10 @@ public class Fragment_crear_cliente extends DialogFragment {
             @Override
             public void onClick(View v) {
 
-                Verificar_isChecked(Mismo_email_personal,Mismo_direccion_personal);
+                //Verificar_isChecked(Mismo_email_personal,Mismo_direccion_personal);
+
+                GuardarCliente();
+
 
             }
         });
@@ -251,8 +253,8 @@ public class Fragment_crear_cliente extends DialogFragment {
             request.put("cli_telefono",TextTelefono.getText());
             request.put("cli_razon_social",TextRazonSocial.getText());
             request.put("cli_rfc",TextRfc.getText());
-            request.put("cli_correos_iguales",CorreoIgual);
-            request.put("cli_direcciones_iguales",DireccionIgual);
+            request.put("cli_correos_iguales","true");
+            request.put("cli_direcciones_iguales","true");
             request.put("cli_calle",TextCalle.getText());
             request.put("cli_numero_interior",TextNumInterior.getText());
             request.put("cli_numero_exterior",TextNumExt.getText());
@@ -263,17 +265,17 @@ public class Fragment_crear_cliente extends DialogFragment {
             request.put("cli_id_estado",Estado_id);
             request.put("cli_estado",SpinnerEstado.getSelectedItem().toString());
             request.put("cli_pais","México");
-            request.put("cli_correo_electronico_facturacion","");
-            request.put("cli_calle_facturacion","");
-            request.put("cli_numero_interior_facturacion","");
-            request.put("cli_numero_exterior_facturacion","");
-            request.put("cli_colonia_facturacion","");
-            request.put("cli_ciudad_facturacion","");
-            request.put("cli_codigo_postal_facturacion","");
-            request.put("cli_id_pais_facturacion","");
-            request.put("cli_id_estado_facturacion","");
-            request.put("cli_estado_facturacion","");
-            request.put("cli_pais_facturacion","");
+            request.put("cli_correo_electronico_facturacion",TextFacturacionEmail.getText());
+            request.put("cli_calle_facturacion",TextFacturacionCalle.getText());
+            request.put("cli_numero_interior_facturacion",TextFacturacionNumInt.getText());
+            request.put("cli_numero_exterior_facturacion",TextFacturacionNumExt.getText());
+            request.put("cli_colonia_facturacion",TextFacturacionColonia.getText());
+            request.put("cli_ciudad_facturacion",TextFacturacionCiudad);
+            request.put("cli_codigo_postal_facturacion",TextFacturacionCp.getText());
+            request.put("cli_id_pais_facturacion",117);
+            request.put("cli_id_estado_facturacion",Estado_id);
+            request.put("cli_estado_facturacion",TextFacturacionEstado.getText());
+            request.put("cli_pais_facturacion","Mexico");
 
         }
         catch(Exception e)
@@ -608,10 +610,6 @@ public class Fragment_crear_cliente extends DialogFragment {
             return;
         }
     }
-
-
-
-
 
 
 }
