@@ -182,10 +182,7 @@ public class Fragment_crear_cliente extends DialogFragment {
             @Override
             public void onClick(View v) {
 
-                //Verificar_isChecked(Mismo_email_personal,Mismo_direccion_personal);
-
                 GuardarCliente();
-
 
             }
         });
@@ -344,14 +341,6 @@ public class Fragment_crear_cliente extends DialogFragment {
 
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
-    }
-
-    public void Verificar_isChecked(CheckBox Mismo_email, CheckBox Misma_direccion){
-
-
-
-
-            return;
     }
 
     private void LoadSpinnerEstado(){
