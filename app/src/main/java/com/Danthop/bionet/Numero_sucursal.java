@@ -105,6 +105,8 @@ public class Numero_sucursal extends Activity {
 
         tb = findViewById(R.id.tabla2);
 
+        tb.setEmptyDataIndicatorView(findViewById(R.id.Tabla_vacia));
+
 
 
 

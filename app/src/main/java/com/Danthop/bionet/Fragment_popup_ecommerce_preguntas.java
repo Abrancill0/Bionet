@@ -104,6 +104,9 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
             }
         });
 
+        tabla_preguntas.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
+
+
         return v;
     }
 

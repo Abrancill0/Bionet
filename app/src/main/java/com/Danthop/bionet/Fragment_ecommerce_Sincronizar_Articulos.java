@@ -88,6 +88,9 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
         tb.addDataClickListener(ArticuloListener);
 
+        tb.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
+
+
         return v;
 
     }

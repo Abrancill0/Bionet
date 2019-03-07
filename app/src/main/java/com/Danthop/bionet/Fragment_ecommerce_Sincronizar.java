@@ -135,6 +135,9 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
             }
         });
 
+        tabla_sincronizar.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
+
+
 
         return  v;
     }

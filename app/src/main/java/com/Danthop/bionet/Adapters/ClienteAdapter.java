@@ -219,6 +219,7 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
     private View ButtonEliminar(final ClienteModel cliente){
         final Button eliminar = new Button(getContext());
 
+        eliminar.setBackgroundResource(R.drawable.shape_gray);
         eliminar.setText("Eliminar");
         eliminar.setPadding(20, 10, 20, 10);
         eliminar.setOnClickListener(new View.OnClickListener(){

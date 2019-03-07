@@ -17,6 +17,7 @@ import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.Ecommerce_orden_Model;
 import com.google.android.gms.common.api.Api;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 import de.codecrafters.tableview.TableDataAdapter;
@@ -27,6 +28,8 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
 
     int TEXT_SIZE = 12;
     public Dialog pop_up1;
+    private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
+
 
     public OrdenEcommerceAdapter(final Context context, final List<Ecommerce_orden_Model> data, final SortableOrdenEcommerceTable tableView) {
         super(context, data, tableView);
@@ -110,7 +113,14 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
     }
 
     private View renderOrdenImporte(final Ecommerce_orden_Model orden) {
-        return renderString(orden.getImporte());
+        final String priceString = PRICE_FORMATTER.format(orden.getImporte()) + " MXN";
+
+        final TextView textView = new TextView(getContext());
+        textView.setText(priceString);
+        textView.setPadding(20, 10, 20, 10);
+        textView.setTextSize(TEXT_SIZE);
+
+        return textView;
     }
 
     private View renderOrdenEstatus(final Ecommerce_orden_Model orden) {

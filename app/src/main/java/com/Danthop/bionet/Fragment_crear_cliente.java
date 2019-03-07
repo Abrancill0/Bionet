@@ -73,10 +73,9 @@ public class Fragment_crear_cliente extends DialogFragment {
     private String CorreoIgual;
     private String DireccionIgual;
     private EditText TextFacturacionEmail;
-    private EditText TextFacturacionEstado;
-    private EditText TextFacturacionColonia;
+    private Spinner TextFacturacionEstado;
+    private Spinner TextFacturacionColonia;
     private EditText TextFacturacionNumExt;
-    private EditText TextFacturacionCiudad;
     private EditText TextFacturacionCalle;
     private EditText TextFacturacionCp;
     private EditText TextFacturacionNumInt;
@@ -100,6 +99,10 @@ public class Fragment_crear_cliente extends DialogFragment {
     private ArrayList<String> SucursalID;
     private ArrayList<String> ColoniaName;
 
+    private ArrayList<String> EstadoNameFiscal;
+    private ArrayList<Integer> EstadoIDFiscal;
+    private ArrayList<String> ColoniaNameFiscal;
+
     private LinearLayout LayoutDireccionFiscal;
     private LinearLayout LayoutEmail;
 
@@ -122,6 +125,10 @@ public class Fragment_crear_cliente extends DialogFragment {
         SucursalID = new ArrayList<>();
         ColoniaName = new ArrayList<>();
 
+        EstadoNameFiscal=new ArrayList<>();
+        EstadoIDFiscal = new ArrayList<>();
+        ColoniaNameFiscal=new ArrayList<>();
+
         Mismo_email_personal =(CheckBox) v.findViewById(R.id.Mismo_email);
         Mismo_direccion_personal =(CheckBox) v.findViewById(R.id.Misma_direccion);
         TextNombre=(EditText)v.findViewById(R.id.Text_cliente_Nombre);
@@ -140,12 +147,10 @@ public class Fragment_crear_cliente extends DialogFragment {
         SpinnerOpcion=(Spinner)v.findViewById(R.id.Opcion);
 
         TextFacturacionEmail=(EditText)v.findViewById(R.id.Text_cliente_correo_facturacion);
-        TextFacturacionEstado=(EditText)v.findViewById(R.id.Text_cliente_estado_facturacion);
-        TextFacturacionColonia=(EditText)v.findViewById(R.id.Text_cliente_colonia_facturacion);
+        TextFacturacionEstado=(Spinner)v.findViewById(R.id.Text_cliente_estado_facturacion);
+        TextFacturacionColonia=(Spinner)v.findViewById(R.id.Text_cliente_colonia_facturacion);
         TextFacturacionNumExt=(EditText)v.findViewById(R.id.Text_cliente_num_ext_facturacion);
-        TextFacturacionCiudad=(EditText)v.findViewById(R.id.Text_cliente_ciudad_facturacion);
         TextFacturacionCalle=(EditText)v.findViewById(R.id.Text_cliente_calle_facturacion);
-        TextFacturacionCp=(EditText)v.findViewById(R.id.Text_cliente_cp_facturacion);
         TextFacturacionNumInt=(EditText)v.findViewById(R.id.Text_cliente_num_int_facturacion);
         TextFacturacionMunicipio=(EditText)v.findViewById(R.id.Text_cliente_municipio_facturacion);
 
@@ -193,6 +198,19 @@ public class Fragment_crear_cliente extends DialogFragment {
             public void afterTextChanged(Editable s) {
                 ColoniaName.clear();
                 LoadSpinnerColonias();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        TextFacturacionCp=(EditText)v.findViewById(R.id.Text_cliente_cp_facturacion);
+        TextFacturacionCp.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                ColoniaNameFiscal.clear();
+                LoadSpinnerFiscalColonias();
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -316,6 +334,7 @@ public class Fragment_crear_cliente extends DialogFragment {
             request.put("cli_id_estado",Estado_id);
             request.put("cli_estado",SpinnerEstado.getSelectedItem().toString());
             request.put("cli_pais","México");
+
             request.put("cli_correo_electronico_facturacion",FactuacionEmail);
             request.put("cli_calle_facturacion",FacturacionCalle);
             request.put("cli_numero_interior_facturacion",FacturacionNumInt);
@@ -326,6 +345,7 @@ public class Fragment_crear_cliente extends DialogFragment {
             request.put("cli_id_pais_facturacion",117);
             request.put("cli_id_estado_facturacion",Estado_id);
             request.put("cli_estado_facturacion",FacturacionCiudad);
+
             request.put("cli_pais_facturacion","Mexico");
 
         }
@@ -441,8 +461,11 @@ public class Fragment_crear_cliente extends DialogFragment {
                             int id=jsonObject1.getInt("edo_id");
                             EstadoName.add(estado);
                             EstadoID.add(id);
+                            EstadoNameFiscal.add(estado);
+                            EstadoIDFiscal.add(id);
                         }
                         SpinnerEstado.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,EstadoName));
+                        TextFacturacionEstado.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,EstadoNameFiscal));
 
                     }
                     else
@@ -653,6 +676,84 @@ public class Fragment_crear_cliente extends DialogFragment {
             return;
         }
     }
+
+    public void LoadSpinnerFiscalColonias(){
+
+
+        if(TextFacturacionCp.length()==5){
+
+
+            final String url = "https://api-codigos-postales.herokuapp.com/v2/codigo_postal/"+TextFacturacionCp.getText().toString();
+
+            // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>()
+                    {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // display response
+                            JSONArray RespuestaNodoColonias = null;
+
+                            try {
+                                RespuestaNodoColonias = response.getJSONArray("colonias");
+
+                                //Aqui llenar el spiner con el respuesta nodo
+                                for(int x = 0; x < RespuestaNodoColonias.length(); x++){
+                                    //Aqui llenas un arreglo para el adapter del spiner
+                                    String colonia=RespuestaNodoColonias.getString(x);
+                                    ColoniaNameFiscal.add(colonia);
+                                }
+                                TextFacturacionColonia.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,ColoniaNameFiscal));
+                                estado = response.getString("estado");
+
+                                if(estado.equals("")){
+                                    toast2 =
+                                            Toast.makeText(getContext(), "Introduce un código postal válido", Toast.LENGTH_LONG);
+                                    toast2.show();
+                                    return;
+                                }
+                                else{
+                                    for (int x=0;x<=EstadoName.size();x++)
+                                    {
+                                        if(estado!=null && estado.equals(EstadoName.get(x)))
+                                        {
+                                            TextFacturacionEstado.setSelection(x);
+                                            TextFacturacionEstado.setEnabled(false);
+                                            TextFacturacionMunicipio.setText(response.getString("municipio"));
+                                            TextFacturacionMunicipio.setEnabled(false);
+                                            return;
+                                        }
+                                    }
+                                }
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    },
+                    new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("Error.Response", String.valueOf(error));
+                        }
+                    }
+            );
+
+            // add it to the RequestQueue
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+
+        }
+        else{
+            TextFacturacionMunicipio.setEnabled(true);
+            TextFacturacionEstado.setEnabled(true);
+            return;
+        }
+    }
+
+
 
 
 }
