@@ -89,7 +89,28 @@
                 android:id="@+id/tabla2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                table:tableView_columnCount="4" />
+                table:tableView_columnCount="4"
+                android:layout_weight=".7"/>
+
+            <LinearLayout
+                android:id="@+id/Tabla_vacia"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:background="@color/fondo_azul"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="No existen datos"
+                    android:textColor="@color/gray" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

@@ -103,6 +103,9 @@ public class Fragment_ecomerce extends Fragment {
             }
         });
 
+        tabla_ecomerce.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
+
+
         return v;
     }
 

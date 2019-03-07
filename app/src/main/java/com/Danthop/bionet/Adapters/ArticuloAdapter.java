@@ -12,6 +12,7 @@ import com.Danthop.bionet.Tables.SortableArticulosTable;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.SucursalModel;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
@@ -19,6 +20,8 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 public class ArticuloAdapter extends LongPressAwareTableDataAdapter<ArticuloModel> {
 
     int TEXT_SIZE = 12;
+    private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
+
 
     public ArticuloAdapter(final Context context, final List<ArticuloModel> data, final SortableArticulosTable tableView) {
         super(context, data, tableView);
@@ -72,7 +75,15 @@ public class ArticuloAdapter extends LongPressAwareTableDataAdapter<ArticuloMode
     }
 
     private View renderPrecio(final ArticuloModel articulo) {
-        return renderString(articulo.getarticulo_Precio());
+        final String priceString = PRICE_FORMATTER.format(articulo.getarticulo_Precio()) + " MXN";
+
+        final TextView textView = new TextView(getContext());
+        textView.setText(priceString);
+        textView.setPadding(20, 10, 20, 10);
+        textView.setTextSize(TEXT_SIZE);
+
+        return textView;
+
     }
 
 
