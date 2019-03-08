@@ -118,7 +118,7 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
         progreso.show();
 
         tabla_preguntas = (SortablePreguntasTable) v.findViewById(R.id.tabla_preguntas);
-        final String url = "http://187.189.192.150:8010/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML;
+        final String url = "http://187.189.192.150:8010/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
 
         // prepare the Request
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -127,7 +127,7 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         // display response
-                        JSONObject RespuestaDatos = null;
+                        JSONArray RespuestaDatos = null;
                         JSONObject RespuestaObjeto = null;
                         JSONObject Respuestapreguntas = null;
                         JSONArray RespuestaQuestions = null;
@@ -147,18 +147,17 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
                             if (EstatusApi == 1) {
 
-                                RespuestaDatos= response.getJSONObject("aDatos");
+                                RespuestaDatos= response.getJSONArray("aDatos");
 
                                 int numeroregistro =RespuestaDatos.length();
 
-                                PreguntasModel = new String[numeroregistro][3];
+                                PreguntasModel = new String[numeroregistro][4];
 
-                                Iterator<String> keys = RespuestaDatos.keys();
-                                while( keys.hasNext() )
-                                {
-                                    String key = keys.next();
+                                for (int x = 0; x < RespuestaDatos.length(); x++) {
+                                    //JSONObject elemento = RespuestaDatos.getJSONObject(x);
 
-                                    RespuestaObjeto = RespuestaDatos.getJSONObject(key);
+                                    RespuestaObjeto = RespuestaDatos.getJSONObject(x);
+
 
                                     Respuestapreguntas = RespuestaObjeto.getJSONObject("preguntas");
 
@@ -168,9 +167,9 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
                                     RespuestaQuestions = Respuestapreguntas.getJSONArray("questions");
 
-                                    for(int x = 0; x < RespuestaQuestions.length(); x++) {
+                                    for(int i = 0; i < RespuestaQuestions.length(); i++) {
 
-                                        JSONObject elemento = RespuestaQuestions.getJSONObject(x);
+                                        JSONObject elemento = RespuestaQuestions.getJSONObject(i);
 
                                         preguntas = elemento.getString("text");
 
@@ -197,9 +196,9 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
                                         }
 
 
-                                        PreguntasModel[x][0] = preguntas;
-                                        PreguntasModel[x][1] = comprador;
-                                        PreguntasModel[x][2] = Titulo;
+                                        PreguntasModel[i][0] = preguntas;
+                                        PreguntasModel[i][1] = comprador;
+                                        PreguntasModel[i][2] = Titulo;
 
                                         final Preguntas_Model pregunta = new Preguntas_Model(preguntas, comprador, Titulo);
                                         Preguntas.add(pregunta);
@@ -221,7 +220,12 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
                         catch (JSONException e)
                         {   e.printStackTrace();
 
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf(e), Toast.LENGTH_LONG);
+
                             progreso.hide();
+
                         }
 
 
@@ -232,6 +236,10 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error.Response", String.valueOf(error));
+
+                        Toast toast1 =
+                                Toast.makeText(getContext(),
+                        String.valueOf(error), Toast.LENGTH_LONG);
 
                         progreso.hide();
                     }

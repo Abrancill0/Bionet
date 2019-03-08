@@ -2,11 +2,8 @@ package com.Danthop.bionet.Adapters;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,9 +14,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.Danthop.Fragment_selecciona_categoria;
-import com.Danthop.bionet.Fragment_crear_cliente;
-import com.Danthop.bionet.Fragment_ecommerce_Sincronizar;
 import com.Danthop.bionet.Fragment_ecommerce_Sincronizar_Nuevo_Prod;
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.model.CategoriaModel;
@@ -56,6 +50,7 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
     private String Nombre;
     private String Descripcion;
     private String Precio;
+    private String usu_id;
     FragmentTransaction fr;
 
     public interface NameCategoriaSelcted{
@@ -83,6 +78,7 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
         Nombre = bundle1.getString( "nombre");
         Descripcion = bundle1.getString( "descripcion");
         Precio = bundle1.getString( "precio");
+        usu_id = bundle1.getString( "usu_id");
 
         CategoriaModel categoria = new CategoriaModel(name,id);
 
@@ -111,7 +107,7 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
 
 
                         try {
-                            final String url = "http://187.189.192.150:8010/api/ecomerce/obtenerSubcategoriasMercadoLibre?sIdCategoria=" + id;
+                            final String url = "http://187.189.192.150:8010/api/ecomerce/obtenerSubcategoriasMercadoLibre?sIdCategoria=" + id + "&usu_id=" + usu_id + "&esApp=1";
 
                             // prepare the Request
                             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,

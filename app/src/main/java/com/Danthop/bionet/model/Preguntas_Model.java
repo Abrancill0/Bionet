@@ -1,14 +1,17 @@
 package com.Danthop.bionet.model;
 
 public class Preguntas_Model {
+
     private String Preguntas;
     private String Comprador;
     private String Titulo;
+    private String IDdpregunta;
 
-    public Preguntas_Model(String preguntas, String comprador, String titulo) {
+    public Preguntas_Model(String preguntas, String comprador, String titulo,String idpregunta) {
         Preguntas = preguntas;
         Comprador = comprador;
         Titulo = titulo;
+        IDdpregunta = idpregunta;
     }
 
     public String getPreguntas() {
@@ -33,5 +36,13 @@ public class Preguntas_Model {
 
     public void setTitulo(String titulo) {
         Titulo = titulo;
+    }
+
+    public void setidpregunta(String idpregunta) {
+        IDdpregunta = idpregunta;
+    }
+
+    public String getidpregunta() {
+        return IDdpregunta;
     }
 }

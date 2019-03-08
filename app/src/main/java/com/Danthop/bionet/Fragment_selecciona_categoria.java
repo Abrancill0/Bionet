@@ -1,4 +1,4 @@
-package com.Danthop;
+package com.Danthop.bionet;
 
 
 import android.content.SharedPreferences;
@@ -10,10 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.Danthop.bionet.Adapters.CategoriaAdapter;
-import com.Danthop.bionet.R;
 import com.Danthop.bionet.model.CategoriaModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -38,6 +36,7 @@ public class Fragment_selecciona_categoria extends Fragment {
     private Fragment_selecciona_categoria fragment;
     private String nombre;
     private String descripcion;
+    private String usu_id;
     private Bundle bundle;
     FragmentTransaction fr;
 
@@ -60,6 +59,7 @@ public class Fragment_selecciona_categoria extends Fragment {
 
         nombre = bundle.getString( "nombre");
         descripcion = bundle.getString( "descripcion");
+        usu_id = sharedPref.getString( "usu_id", "" );
 
 
         listacategoria = (ListView) v.findViewById(R.id.listView_selecciona);
@@ -71,7 +71,7 @@ public class Fragment_selecciona_categoria extends Fragment {
 
     public void cargaCategorias(){
         {
-            final String url = "http://187.189.192.150:8010/api/ecomerce/create_app/access_token=" + AccesToken  + "&expires_in=21600&user_id=" + UserML + "&domains=localhost";
+            final String url = "http://187.189.192.150:8010/api/ecomerce/create_app/access_token=" + AccesToken  + "&expires_in=21600&user_id=" + UserML + "&domains=localhost" + "?&usu_id=" + usu_id + "&esApp=1";
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,

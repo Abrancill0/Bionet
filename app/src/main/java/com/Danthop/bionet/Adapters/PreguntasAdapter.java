@@ -83,7 +83,7 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
     }
 
     private View renderPregunta(final Preguntas_Model pregunta) {
-        return renderString(pregunta.getComprador());
+        return renderString(pregunta.getPreguntas());
     }
     private View renderComprador(final Preguntas_Model pregunta) {
         return renderString(pregunta.getComprador());

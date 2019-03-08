@@ -2,6 +2,7 @@ package com.Danthop.bionet;
 
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -83,6 +84,8 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
     private Button BtnGuardaArticulo;
 
+    ProgressDialog progreso;
+
     private List<SincronizarModel> Sincronizaciones;
 
     public Fragment_ecommerce_Sincronizar() {
@@ -144,19 +147,27 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
     public void LoadTable(){
 
+
+        progreso = new ProgressDialog(getContext());
+        progreso.setMessage("Cargando...");
+        progreso.show();
+
        try {
            tabla_sincronizar = (SortableSincronizarTable) v.findViewById(R.id.tabla_sincronizar);
 
-           final String url = "http://187.189.192.150:8010/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML;
+           String url = getString(R.string.Url);
+
+           final String ApiPath = url + "/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
 
            // prepare the Request
-           JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+           JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
                    new Response.Listener<JSONObject>()
                    {
                        @Override
                        public void onResponse(JSONObject response) {
                            // display response
-                           JSONObject RespuestaDatos = null;
+                           JSONArray RespuestaDatos = null;
+                           JSONObject RespuestaDatos2 = null;
                            JSONObject RespuestaObjeto = null;
                            JSONObject Respuestaespecificaciones = null;
                            JSONObject Respuestapicture = null;
@@ -168,8 +179,6 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                            String Imagen;
                            String Envio;
 
-                           int x =0;
-
                            try
                            {
 
@@ -177,20 +186,19 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                                if (EstatusApi == 1) {
 
-                                   RespuestaDatos= response.getJSONObject("aDatos");
+                                   //RespuestaDatos2= response.getJSONObject("aDatos");
+
+                                   RespuestaDatos= response.getJSONArray("aDatos");
 
                                    int numeroregistro =RespuestaDatos.length();
 
                                    SincornizarModel = new String[numeroregistro][4];
 
-                                   Iterator<String> keys = RespuestaDatos.keys();
-                                   while( keys.hasNext() )
-                                   {
-                                       String key = keys.next();
+                                   for (int x = 0; x < RespuestaDatos.length(); x++) {
 
-                                       RespuestaObjeto = RespuestaDatos.getJSONObject(key);
+                                       JSONObject elemento = RespuestaDatos.getJSONObject(x);
 
-                                       Respuestaespecificaciones = RespuestaObjeto.getJSONObject("especificaciones");
+                                       Respuestaespecificaciones = elemento.getJSONObject( "especificaciones" );
 
                                        Titulo = Respuestaespecificaciones.getString( "title" );
                                        Disponibilidad = Respuestaespecificaciones.getString( "available_quantity" );
@@ -202,29 +210,33 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                                        Respuestashipping = Respuestaespecificaciones.getJSONObject( "shipping" );
                                        Envio = Respuestashipping.getString( "free_shipping" );
 
-                                       if (Envio == "true"){
-                                           Envio="Si";
-                                       }
-                                       else
-                                       {
-                                           Envio="No";
+                                       if (Envio == "true") {
+                                           Envio = "Si";
+                                       } else {
+                                           Envio = "No";
                                        }
 
-                                       final SincronizarModel sincronizar = new SincronizarModel(Titulo, Disponibilidad, Envio,Precio);
-                                       Sincronizaciones.add(sincronizar);
-
-                                       x += 1 ;
-
+                                       final SincronizarModel sincronizar = new SincronizarModel( Titulo, Disponibilidad, Envio, Precio );
+                                       Sincronizaciones.add( sincronizar );
                                    }
 
                                }
                                final SincronizarAdapter sincronizarAdapter = new SincronizarAdapter(getContext(), Sincronizaciones, tabla_sincronizar);
                                tabla_sincronizar.setDataAdapter(sincronizarAdapter);
 
+                               progreso.hide();
 
                            }
                            catch (JSONException e)
-                           {   e.printStackTrace();    }
+                           {   e.printStackTrace();
+
+                               Toast toast1 =
+                                       Toast.makeText(getContext(),
+                                               e.toString(), Toast.LENGTH_LONG);
+
+                               progreso.hide();
+
+                           }
 
 
                        }
@@ -233,7 +245,13 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                    {
                        @Override
                        public void onErrorResponse(VolleyError error) {
-                           Log.d("Error.Response", String.valueOf(error));
+                          // Log.d("Error.Response", String.valueOf(error));
+
+                           Toast toast1 =
+                                   Toast.makeText(getContext(),
+                                           String.valueOf(error), Toast.LENGTH_LONG);
+
+                           progreso.hide();
                        }
                    }
            );
@@ -243,6 +261,12 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
        }
        catch (Error e)
        {
+
+           Toast toast1 =
+                   Toast.makeText(getContext(),
+                           String.valueOf(e), Toast.LENGTH_LONG);
+
+           progreso.hide();
 
        }
 

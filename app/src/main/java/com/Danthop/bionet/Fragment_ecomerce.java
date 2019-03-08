@@ -120,10 +120,12 @@ public class Fragment_ecomerce extends Fragment {
             progreso.setMessage("Cargando...");
             progreso.show();
 
-            final String url = "http://187.189.192.150:8010/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML;
+            String url = getString(R.string.Url);
+
+            final String ApiPath = url + "/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
 
             // prepare the Request
-            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
                     new Response.Listener<JSONObject>()
                     {
                         @Override
@@ -226,7 +228,15 @@ public class Fragment_ecomerce extends Fragment {
                     {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.d("Error.Response", String.valueOf(error));
+                            //Log.d("Error.Response", String.valueOf(error));
+
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            error.toString(), Toast.LENGTH_LONG);
+
+                            toast1.show();
+
+                            progreso.hide();
                         }
                     }
             );

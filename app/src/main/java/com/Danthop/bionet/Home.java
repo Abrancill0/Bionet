@@ -376,8 +376,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         if (AccesToken.length()==0) {
 
-            //Meli.
-
             Meli.startLogin( this, REQUEST_CODE );
         }
         else

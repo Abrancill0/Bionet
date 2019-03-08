@@ -109,14 +109,27 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
     }
 
     private View renderOrdenEnvio(final Ecommerce_orden_Model orden) {
-        return renderString(orden.getEnvio());
+
+        double Envio = Double.parseDouble(orden.getEnvio());
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+        final TextView textView = new TextView(getContext());
+        textView.setText(formatter.format(Envio));
+        textView.setPadding(20, 10, 20, 10);
+        textView.setTextSize(TEXT_SIZE);
+
+        return textView;
+
     }
 
     private View renderOrdenImporte(final Ecommerce_orden_Model orden) {
-        final String priceString = PRICE_FORMATTER.format(orden.getImporte()) + " MXN";
+        double Importe = Double.parseDouble(orden.getImporte());
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
         final TextView textView = new TextView(getContext());
-        textView.setText(priceString);
+        textView.setText(formatter.format(Importe));
         textView.setPadding(20, 10, 20, 10);
         textView.setTextSize(TEXT_SIZE);
 

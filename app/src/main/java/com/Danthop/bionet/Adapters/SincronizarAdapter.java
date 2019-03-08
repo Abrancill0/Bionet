@@ -1,15 +1,19 @@
 package com.Danthop.bionet.Adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableOrdenEcommerceTable;
 import com.Danthop.bionet.Tables.SortableSincronizarTable;
+import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.Ecommerce_orden_Model;
 import com.Danthop.bionet.model.SincronizarModel;
 import com.google.android.gms.common.api.Api;
@@ -24,7 +28,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 public class SincronizarAdapter extends LongPressAwareTableDataAdapter<SincronizarModel> {
 
     int TEXT_SIZE = 12;
-    private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
+    //private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
 
 
     public SincronizarAdapter(final Context context, final List<SincronizarModel> data, final SortableSincronizarTable tableView) {
@@ -47,6 +51,12 @@ public class SincronizarAdapter extends LongPressAwareTableDataAdapter<Sincroniz
                 renderedView = renderEnvioGratis(sincronizar);
                 break;
             case 3:
+                renderedView = renderPrecio(sincronizar);
+                break;
+            case 5:
+                renderedView = renderVerFicha(sincronizar);
+                break;
+            case 6:
                 renderedView = renderPrecio(sincronizar);
                 break;
     }
@@ -92,17 +102,18 @@ public class SincronizarAdapter extends LongPressAwareTableDataAdapter<Sincroniz
     }
 
     private View renderPrecio(final SincronizarModel sincronizar) {
-        final String priceString = PRICE_FORMATTER.format(sincronizar.getPrecio()) + " MXN";
+        double Importe = Double.parseDouble(sincronizar.getPrecio());
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
         final TextView textView = new TextView(getContext());
-        textView.setText(priceString);
+        textView.setText(formatter.format(Importe));
         textView.setPadding(20, 10, 20, 10);
         textView.setTextSize(TEXT_SIZE);
 
         return textView;
 
     }
-
 
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
@@ -111,6 +122,47 @@ public class SincronizarAdapter extends LongPressAwareTableDataAdapter<Sincroniz
         textView.setTextSize(TEXT_SIZE);
         return textView;
     }
+
+    private View renderVerFicha(final SincronizarModel Sincronizar) {
+        return ButtonVerFicha(Sincronizar);
+    }
+
+    private View ButtonVerFicha(final SincronizarModel Sincronizar){
+        final Button ver = new Button(getContext());
+        ver.setText("Ver");
+        ver.setPadding(10, 10, 10, 10);
+        ver.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                Dialog ver_cliente_dialog;
+                ver_cliente_dialog=new Dialog(getContext());
+                ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_ecommerce_sincroniza);
+                ver_cliente_dialog.show();
+
+                //Articulo;
+                // Disponible;
+                // Envio_gratis;
+                // Precio;
+
+
+                //ecommerse_cliente
+                //ecommerse_tipo_pago
+                //ecommerse_costo
+                //ecommerse_importe
+                //ecommerse_estado
+                //ecommerse_fecha
+
+                TextView NameCliente = ver_cliente_dialog.findViewById(R.id.cliente_nombre);
+                TextView CorreoCliente = ver_cliente_dialog.findViewById(R.id.email_cliente);
+                TextView TelefonoCliente = ver_cliente_dialog.findViewById(R.id.telefono_cliente);
+
+            }
+        });
+        return ver;
+    }
+
+
 
     private static class OrdenNameUpdater implements TextWatcher {
 

@@ -2,7 +2,6 @@ package com.Danthop.bionet;
 
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,25 +10,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.Danthop.Fragment_selecciona_categoria;
 import com.Danthop.bionet.Adapters.CategoriaAdapter;
-import com.Danthop.bionet.Adapters.SincronizarAdapter;
-import com.Danthop.bionet.Tables.SortableSincronizarTable;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.CategoriaModel;
-import com.Danthop.bionet.model.ClienteModel;
-import com.Danthop.bionet.model.SincronizarModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -38,7 +30,6 @@ import com.android.volley.VolleyLog;
 import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
-import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
@@ -49,11 +40,8 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
 
 public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implements CategoriaAdapter.NameCategoriaSelcted{
 
@@ -165,7 +153,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     public void CargaPublicaciones(){
 
 
-        final String url = "http://187.189.192.150:8010/api/ecomerce/create_app/access_token=" + AccesToken  + "&expires_in=21600&user_id=" + UserML + "&domains=localhost";
+        final String url = "http://187.189.192.150:8010/api/ecomerce/create_app/access_token=" + AccesToken  + "&expires_in=21600&user_id=" + UserML + "&domains=localhost"+ "&?usu_id=" + usu_id + "&esApp=1";
 
         // prepare the Request
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,

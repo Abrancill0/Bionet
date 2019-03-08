@@ -75,10 +75,12 @@ public class ArticuloAdapter extends LongPressAwareTableDataAdapter<ArticuloMode
     }
 
     private View renderPrecio(final ArticuloModel articulo) {
-        final String priceString = PRICE_FORMATTER.format(articulo.getarticulo_Precio()) + " MXN";
+        double Importe = Double.parseDouble(articulo.getarticulo_Precio());
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
         final TextView textView = new TextView(getContext());
-        textView.setText(priceString);
+        textView.setText(formatter.format(Importe));
         textView.setPadding(20, 10, 20, 10);
         textView.setTextSize(TEXT_SIZE);
 

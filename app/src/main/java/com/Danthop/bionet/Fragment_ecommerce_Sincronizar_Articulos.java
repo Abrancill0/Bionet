@@ -5,13 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
-import com.Danthop.Fragment_selecciona_categoria;
 import com.Danthop.bionet.Adapters.ArticuloAdapter;
 import com.Danthop.bionet.Tables.SortableArticulosTable;
 import com.Danthop.bionet.model.ArticuloModel;
@@ -73,6 +72,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                 bundle.putString( "nombre", Nombre );
                 bundle.putString( "descripcion", Descripcion );
                 bundle.putString( "precio", Precio );
+                bundle.putString( "usu_id", usu_id );
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -89,7 +89,6 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
         tb.addDataClickListener(ArticuloListener);
 
         tb.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
-
 
         return v;
 
@@ -149,7 +148,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
                                             for (int i = 0; i < RespuestaModificadores.length(); i++) {
 
-                                                JSONObject elemento2 = RespuestaModificadores.getJSONObject(x);
+                                                JSONObject elemento2 = RespuestaModificadores.getJSONObject(i);
                                                 NombreModificador = elemento2.getString( "mod_nombre");
                                                 RespuestaPrecioModificador = elemento2.getJSONObject( "amo_precio");
 
@@ -177,7 +176,12 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                                 }
 
                             } catch (JSONException e) {
-                                e.printStackTrace();
+
+
+                                Toast toast1 =
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(e), Toast.LENGTH_LONG);
+
                             }
 
 
@@ -186,7 +190,11 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.d("Error.Response", String.valueOf(error));
+                            //Log.d("Error.Response", String.valueOf(error));
+
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf(error), Toast.LENGTH_LONG);
                         }
                     }
             );
