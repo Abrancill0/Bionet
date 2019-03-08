@@ -51,6 +51,7 @@ public class Fragment_clientes extends Fragment {
     private String calle;
 
     private Dialog ver_cliente_dialog;
+    private  FragmentTransaction fr;
 
     private List<ClienteModel> clientes;
 
@@ -69,6 +70,7 @@ public class Fragment_clientes extends Fragment {
         tabla_clientes = (SortableClientesTable) v.findViewById(R.id.tabla_clientes);
         ver_cliente_dialog=new Dialog(getContext());
         ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
+        fr = getFragmentManager().beginTransaction();
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
@@ -83,7 +85,7 @@ public class Fragment_clientes extends Fragment {
         btn_crear_cliente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
+
                 fr.replace(R.id.fragment_container,new Fragment_crear_cliente()).commit();
             }
         });
@@ -205,7 +207,7 @@ public class Fragment_clientes extends Fragment {
                             );
                             clientes.add(cliente);
                         }
-                        final ClienteAdapter clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes);
+                        final ClienteAdapter clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes,fr);
                         tabla_clientes.setDataAdapter(clienteAdapter);
 
                     }

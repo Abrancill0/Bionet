@@ -86,6 +86,7 @@ public class Fragment_crear_cliente extends DialogFragment {
     private Spinner SpinnerOpcion;
     private String usu_id;
     private int Estado_id;
+    private int Estado_id_fiscal;
     private String Sucursal_id;
     private String estado;
     private Toast toast2;
@@ -129,8 +130,6 @@ public class Fragment_crear_cliente extends DialogFragment {
         EstadoIDFiscal = new ArrayList<>();
         ColoniaNameFiscal=new ArrayList<>();
 
-        Mismo_email_personal =(CheckBox) v.findViewById(R.id.Mismo_email);
-        Mismo_direccion_personal =(CheckBox) v.findViewById(R.id.Misma_direccion);
         TextNombre=(EditText)v.findViewById(R.id.Text_cliente_Nombre);
         SpinnerColonia=(Spinner)v.findViewById(R.id.Text_cliente_colonia);
         TextNumInterior=(EditText)v.findViewById(R.id.Text_cliente_num_int);
@@ -254,8 +253,10 @@ public class Fragment_crear_cliente extends DialogFragment {
         progreso = new ProgressDialog(getContext());
         progreso.setMessage("Procesando...");
         progreso.show();
+        Estado_id_fiscal=EstadoIDFiscal.get(TextFacturacionEstado.getSelectedItemPosition());
         Estado_id = EstadoID.get(SpinnerEstado.getSelectedItemPosition());
         Sucursal_id = SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+
 
         String FactuacionEmail ="";
         String FacturacionCalle ="";
@@ -295,8 +296,8 @@ public class Fragment_crear_cliente extends DialogFragment {
             FacturacionCalle = String.valueOf(TextFacturacionCalle.getText());;
             FacturacionNumInt = String.valueOf(TextFacturacionNumInt.getText());;
             FacturacionNumExt = String.valueOf(TextFacturacionNumExt.getText());;
-            FacturacionColonia = String.valueOf(TextFacturacionColonia.getText());;
-            FacturacionCiudad = String.valueOf(TextFacturacionCiudad.getText());;
+            FacturacionColonia = String.valueOf(TextFacturacionColonia.getSelectedItem());;
+            FacturacionCiudad = String.valueOf(TextFacturacionMunicipio.getText());;
             FacturacionCp = String.valueOf(TextFacturacionCp.getText());;
         }
         else if(Seleccion.equals("Ambas"))
@@ -305,8 +306,8 @@ public class Fragment_crear_cliente extends DialogFragment {
             FacturacionCalle = String.valueOf(TextFacturacionCalle.getText());;
             FacturacionNumInt = String.valueOf(TextFacturacionNumInt.getText());;
             FacturacionNumExt = String.valueOf(TextFacturacionNumExt.getText());;
-            FacturacionColonia = String.valueOf(TextFacturacionColonia.getText());;
-            FacturacionCiudad = String.valueOf(TextFacturacionCiudad.getText());;
+            FacturacionColonia = String.valueOf(TextFacturacionColonia.getSelectedItem());;
+            FacturacionCiudad = String.valueOf(TextFacturacionMunicipio.getText());;
             FacturacionCp = String.valueOf(TextFacturacionCp.getText());;
         }
 
@@ -343,7 +344,7 @@ public class Fragment_crear_cliente extends DialogFragment {
             request.put("cli_ciudad_facturacion",FacturacionCiudad);
             request.put("cli_codigo_postal_facturacion",FacturacionCp);
             request.put("cli_id_pais_facturacion",117);
-            request.put("cli_id_estado_facturacion",Estado_id);
+            request.put("cli_id_estado_facturacion",Estado_id_fiscal);
             request.put("cli_estado_facturacion",FacturacionCiudad);
 
             request.put("cli_pais_facturacion","Mexico");
