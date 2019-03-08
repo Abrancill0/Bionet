@@ -2,15 +2,23 @@ package com.Danthop.bionet.Adapters;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Danthop.Fragment_selecciona_categoria;
+import com.Danthop.bionet.Fragment_crear_cliente;
+import com.Danthop.bionet.Fragment_editarCliente;
 import com.Danthop.bionet.Numero_sucursal;
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableClientesTable;
@@ -47,15 +55,18 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
     private String telefono;
     private String correo_electronico;
     private String calle;
+    private Typeface s;
+    private FragmentTransaction fr;
 
     private String UsuarioID;
 
-    public ClienteAdapter(final Context context, final List<ClienteModel> data, final SortableClientesTable tableView) {
+    public ClienteAdapter(final Context context, final List<ClienteModel> data, final SortableClientesTable tableView,FragmentTransaction gr) {
         super(context, data, tableView);
 
         if (tabla_clientes ==null ){
             tabla_clientes = tableView;
         }
+        fr = gr;
 
     }
 
@@ -144,7 +155,10 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
 
     private View ButtonVerFicha(final ClienteModel cliente){
         final Button ver = new Button(getContext());
-        ver.setText("Ver");
+        ver.setBackgroundResource(R.drawable.ic_ficha_tecnica);
+        ver.setGravity(Gravity.CENTER);
+        ver.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+
         ver.setPadding(10, 10, 10, 10);
         ver.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -195,11 +209,40 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
 
     private View ButtonEditar(final ClienteModel cliente){
         final Button editar = new Button(getContext());
-        editar.setText("Editar");
-        editar.setPadding(10, 10, 10, 10);
+        editar.setBackgroundResource(R.drawable.ic_edi);
+        editar.setGravity(Gravity.CENTER);
+        editar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+
         editar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+
+                Bundle bundle = new Bundle();
+                bundle.putString( "nombre", cliente.getCliente_Nombre() );
+                bundle.putString( "ultima_visita", cliente.getCliente_Ultima_Visita() );
+                bundle.putString( "email", cliente.getCliente_Correo() );
+                bundle.putString( "telefono", cliente.getCliente_Telefono() );
+                bundle.putString( "cp", cliente.getcliente_cp() );
+                bundle.putString( "estado", cliente.getcliente_estado() );
+                bundle.putString( "municipio", cliente.getcliente_municipio() );
+                bundle.putString( "colonia", cliente.getcliente_colonia() );
+                bundle.putString( "calle", "");
+                bundle.putString( "numero_interior", cliente.getcliente_num_int() );
+                bundle.putString( "numero_exterior", cliente.getcliente_num_ext() );
+                bundle.putString( "sucursal","");
+                bundle.putString( "rfc", cliente.getcliente_rfc() );
+                bundle.putString( "razon_social", cliente.getcliente_razon_social());
+                bundle.putString( "cp_fiscal", "");
+                bundle.putString( "estado_fiscal", "" );
+                bundle.putString( "municipio_fiscal", "");
+                bundle.putString( "colonia_fiscal", "" );
+                bundle.putString( "calle_fiscal", "");
+                bundle.putString( "numero_interior_fiscal", "");
+                bundle.putString( "numero_exterior_fiscal", "");
+                bundle.putString( "correo_fiscal", "");
+                Fragment_editarCliente editarCliente = new Fragment_editarCliente();
+                editarCliente.setArguments(bundle);
+                fr.replace(R.id.fragment_container,editarCliente).commit();
 
                 /* sdaddsdad >>>___----___---___--__--_-__---_----_-__----_---_---------_-------------------___--*/
                 /*  sdagsdggsssdddsdsd   -->---<>_>__--->>_-<-<<<<-----_-<-<-<-_<-_<--<-xascsvsdvsdv-sd-v-sdv-sd */
@@ -218,10 +261,9 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
 
     private View ButtonEliminar(final ClienteModel cliente){
         final Button eliminar = new Button(getContext());
-
-        eliminar.setBackgroundResource(R.drawable.shape_gray);
-        eliminar.setText("Eliminar");
-        eliminar.setPadding(20, 10, 20, 10);
+        eliminar.setBackgroundResource(R.drawable.ic_trash);
+        eliminar.setGravity(Gravity.CENTER);
+        eliminar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         eliminar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -458,7 +500,7 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                             clientes.add(cliente);
                         }
 
-                        final ClienteAdapter clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes);
+                        final ClienteAdapter clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes,fr);
                         tabla_clientes.setDataAdapter(clienteAdapter);
 
                     }

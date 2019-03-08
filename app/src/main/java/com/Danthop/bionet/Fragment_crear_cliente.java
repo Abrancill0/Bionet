@@ -86,6 +86,7 @@ public class Fragment_crear_cliente extends DialogFragment {
     private Spinner SpinnerOpcion;
     private String usu_id;
     private int Estado_id;
+    private int Estado_id_fiscal;
     private String Sucursal_id;
     private String estado;
     private Toast toast2;
@@ -129,8 +130,6 @@ public class Fragment_crear_cliente extends DialogFragment {
         EstadoIDFiscal = new ArrayList<>();
         ColoniaNameFiscal=new ArrayList<>();
 
-        Mismo_email_personal =(CheckBox) v.findViewById(R.id.Mismo_email);
-        Mismo_direccion_personal =(CheckBox) v.findViewById(R.id.Misma_direccion);
         TextNombre=(EditText)v.findViewById(R.id.Text_cliente_Nombre);
         SpinnerColonia=(Spinner)v.findViewById(R.id.Text_cliente_colonia);
         TextNumInterior=(EditText)v.findViewById(R.id.Text_cliente_num_int);
@@ -254,9 +253,11 @@ public class Fragment_crear_cliente extends DialogFragment {
         progreso = new ProgressDialog(getContext());
         progreso.setMessage("Procesando...");
         progreso.show();
+        Estado_id_fiscal=EstadoIDFiscal.get(TextFacturacionEstado.getSelectedItemPosition());
         Estado_id = EstadoID.get(SpinnerEstado.getSelectedItemPosition());
         Sucursal_id = SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
         int Suc_DatosFisc =0;
+
 
         String FactuacionEmail ="";
         String FacturacionCalle ="";
@@ -295,6 +296,7 @@ public class Fragment_crear_cliente extends DialogFragment {
         else if(Seleccion.equals("Dirección Fiscal"))
         {
             FactuacionEmail = "";
+
             FacturacionCalle = String.valueOf(TextFacturacionCalle.getText());
             FacturacionNumInt = String.valueOf(TextFacturacionNumInt.getText());
             FacturacionNumExt = String.valueOf(TextFacturacionNumExt.getText());
@@ -302,6 +304,7 @@ public class Fragment_crear_cliente extends DialogFragment {
             FacturacionCp = String.valueOf(TextFacturacionCp.getText());
             FacturacionMunicipio = String.valueOf( (TextFacturacionMunicipio.getText()) );
             Suc_DatosFisc = EstadoIDFiscal.get(SpinnerSucursal.getSelectedItemPosition());
+
         }
         else if(Seleccion.equals("Ambas"))
         {
@@ -313,6 +316,7 @@ public class Fragment_crear_cliente extends DialogFragment {
             FacturacionCp = String.valueOf(TextFacturacionCp.getText());
             FacturacionMunicipio = String.valueOf( (TextFacturacionMunicipio.getText()) );
             Suc_DatosFisc = EstadoIDFiscal.get(SpinnerSucursal.getSelectedItemPosition());
+
         }
 
 
