@@ -21,7 +21,6 @@ public class VolleySingleton {
        if (instanciaVolley == null) {
            instanciaVolley = new VolleySingleton(context);
        }
-
         return instanciaVolley;
     }
 
@@ -38,6 +37,5 @@ public class VolleySingleton {
     public <T> void addToRequestQueue(Request<T> request){
         getRequestQueue().add(request);
     }
-
 
 }

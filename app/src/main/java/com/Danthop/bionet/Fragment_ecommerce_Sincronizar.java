@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -83,6 +84,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
     private RadioButton RadioNuevo;
 
     private Button BtnGuardaArticulo;
+    private String RespuestaTodo;
 
     ProgressDialog progreso;
 
@@ -108,11 +110,25 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
         TokenLife = sharedPref.getString( "TokenLifetime", "" );
         usu_id = sharedPref.getString( "usu_id", "" );
 
+        Bundle bundle = getArguments();
+
+       String json = bundle.getString( "Resultado");
+
+        RespuestaTodo = bundle.getString( "Resultado");
+
+        try {
+            JSONObject obj = new JSONObject(json);
+            CargaDatos(obj);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         btn_alta_articulo = (Button) v.findViewById( R.id.btn_alta_articulo );
 
         LoadButtons();
         LoadSpinners();
-        LoadTable();
+       // LoadTable();
 
         tabla_sincronizar.setSwipeToRefreshEnabled(true);
         tabla_sincronizar.setSwipeToRefreshListener(new SwipeToRefreshListener() {
@@ -140,9 +156,94 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
         tabla_sincronizar.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
 
-
-
         return  v;
+    }
+
+
+    public void CargaDatos(JSONObject Datos)
+    {
+
+        try {
+
+            progreso = new ProgressDialog(getContext());
+            progreso.setMessage("Cargando...");
+            progreso.show();
+
+            tabla_sincronizar = (SortableSincronizarTable) v.findViewById(R.id.tabla_sincronizar);
+
+
+                            // display response
+                            JSONArray RespuestaDatos = null;
+                            JSONObject RespuestaDatos2 = null;
+                            JSONObject RespuestaObjeto = null;
+                            JSONObject Respuestaespecificaciones = null;
+                            JSONObject Respuestapicture = null;
+                            JSONObject Respuestashipping = null;
+
+                            String Titulo;
+                            String Disponibilidad;
+                            String Precio;
+                            String Imagen;
+                            String Envio;
+
+
+            try {
+                RespuestaDatos= Datos.getJSONArray("aDatos");
+
+
+            int numeroregistro =RespuestaDatos.length();
+
+                                    SincornizarModel = new String[numeroregistro][4];
+
+                                    for (int x = 0; x < RespuestaDatos.length(); x++) {
+
+                                        JSONObject elemento = RespuestaDatos.getJSONObject(x);
+
+                                        Respuestaespecificaciones = elemento.getJSONObject( "especificaciones" );
+
+                                        Titulo = Respuestaespecificaciones.getString( "title" );
+                                        Disponibilidad = Respuestaespecificaciones.getString( "available_quantity" );
+                                        Precio = Respuestaespecificaciones.getString( "price" );
+
+                                        //  Respuestapicture = Respuestaespecificaciones.getJSONObject("pictures");
+                                        //  Imagen = Respuestapicture.getString( "url" );
+
+                                        Respuestashipping = Respuestaespecificaciones.getJSONObject( "shipping" );
+                                        Envio = Respuestashipping.getString( "free_shipping" );
+
+                                        if (Envio == "true") {
+                                            Envio = "Si";
+                                        } else {
+                                            Envio = "No";
+                                        }
+
+                                        final SincronizarModel sincronizar = new SincronizarModel( Titulo, Disponibilidad, Envio, Precio );
+                                        Sincronizaciones.add( sincronizar );
+                                    }
+
+
+                                final SincronizarAdapter sincronizarAdapter = new SincronizarAdapter(getContext(), Sincronizaciones, tabla_sincronizar);
+                                tabla_sincronizar.setDataAdapter(sincronizarAdapter);
+
+                                progreso.hide();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        catch (Error e)
+        {
+
+            Toast toast1 =
+                    Toast.makeText(getContext(),
+                            String.valueOf(e), Toast.LENGTH_LONG);
+
+            progreso.hide();
+
+        }
+
+
     }
 
     public void LoadTable(){
@@ -286,8 +387,17 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
         btn_pestania_preguntas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_popup_ecommerce_preguntas()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putString( "Resultado", String.valueOf( RespuestaTodo ) );
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+                Fragment_popup_ecommerce_preguntas secondFragment = new Fragment_popup_ecommerce_preguntas();
+                secondFragment.setArguments(bundle);
+
+                fragmentTransaction.replace(R.id.fragment_container,secondFragment);
+                fragmentTransaction.commit();
             }
         });
     }

@@ -1,26 +1,45 @@
 package com.Danthop.bionet.Adapters;
 
 import android.content.Context;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.Danthop.bionet.Fragment_clientes;
+import com.Danthop.bionet.Fragment_ecommerce_Sincronizar_Nuevo_Prod;
+import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableOrdenEcommerceTable;
 import com.Danthop.bionet.Tables.SortablePreguntasTable;
 import com.Danthop.bionet.Tables.SortableSincronizarTable;
+import com.Danthop.bionet.model.CategoriaModel;
 import com.Danthop.bionet.model.Ecommerce_orden_Model;
 import com.Danthop.bionet.model.Preguntas_Model;
 import com.Danthop.bionet.model.SincronizarModel;
+import com.Danthop.bionet.model.VolleySingleton;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonArrayRequest;
+import com.android.volley.request.JsonObjectRequest;
 import com.google.android.gms.common.api.Api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.codecrafters.tableview.TableDataAdapter;
 import com.Danthop.bionet.Tables.SortableOrdenEcommerceTable;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_Model> {
@@ -100,12 +119,12 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
 
     private View ButtonUno(final Preguntas_Model pregunta){
         final Button btn = new Button(getContext());
-        btn.setText("Botón 1");
+        btn.setText("Responder");
         btn.setPadding(20, 10, 20, 10);
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                //aqui se pone que hace el boton 1 con los atributos del modelo orden seleccionado
+                Contestapregunta(pregunta.getidpregunta(),pregunta.gettoken());
             }
         });
         return btn;
@@ -113,12 +132,15 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
 
     private View ButtonDos (final Preguntas_Model pregunta){
         final Button btn = new Button(getContext());
-        btn.setText("Botón 2");
+        btn.setText("Eliminar");
         btn.setPadding(20, 10, 20, 10);
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                //aqui se pone que hace el boton 2 con los atributos del modelo orden seleccionado
+
+
+                EliminaPregunta(pregunta.getidpregunta(),pregunta.gettoken());
+
             }
         });
         return btn;
@@ -133,6 +155,101 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
         textView.setTextSize(TEXT_SIZE);
         return textView;
     }
+
+    private void EliminaPregunta(String itemid,String token)
+    {
+
+        //la pregunta debe de estar en este estatus UNANSWERED
+
+
+        try {
+            final String url = "https://api.mercadolibre.com/questions/"+ itemid + "?access_token="+ token;
+
+            // prepare the Request
+            JsonArrayRequest getRequest = new JsonArrayRequest(Request.Method.DELETE, url, null,
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            // display response
+
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf("Pregunta eliminada correctamente"), Toast.LENGTH_LONG);
+
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("Error.Response", String.valueOf(error));
+                        }
+                    }
+            );
+
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+
+
+        } catch (Error e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void Contestapregunta(String itemid,String token)
+    {
+
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("question_id", itemid);
+            request.put("text", "estoy haciendo pruebas vato aguanta");
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String ApiPath = "https://api.mercadolibre.com/answers?access_token=" + token;
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                Toast toast1 =
+                        Toast.makeText(getContext(),
+                                String.valueOf("Pregunta contestada correctamente"), Toast.LENGTH_LONG);
+
+
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+
+                        //progreso.hide();
+
+                        Toast toast1 =
+                                Toast.makeText(getContext(),
+                                        "Error de conexion", Toast.LENGTH_SHORT);
+
+                        toast1.show();
+
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+    }
+
 
     private static class OrdenNameUpdater implements TextWatcher {
 
@@ -157,6 +274,10 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
             ordenToUpdate.setPreguntas(s.toString());
         }
     }}
+
+
+
+    ////https://api.mercadolibre.com/questions/${question_id}?access_token=$ACCESS_TOKEN'
 
 
 

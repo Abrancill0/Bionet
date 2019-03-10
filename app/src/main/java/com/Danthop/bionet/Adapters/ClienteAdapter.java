@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.Danthop.Fragment_selecciona_categoria;
 import com.Danthop.bionet.Fragment_crear_cliente;
 import com.Danthop.bionet.Fragment_editarCliente;
 import com.Danthop.bionet.Numero_sucursal;

@@ -5,13 +5,15 @@ public class Preguntas_Model {
     private String Preguntas;
     private String Comprador;
     private String Titulo;
+    private String Token;
     private String IDdpregunta;
 
-    public Preguntas_Model(String preguntas, String comprador, String titulo,String idpregunta) {
+    public Preguntas_Model(String preguntas, String comprador, String titulo,String idpregunta,String token) {
         Preguntas = preguntas;
         Comprador = comprador;
         Titulo = titulo;
         IDdpregunta = idpregunta;
+        Token = token;
     }
 
     public String getPreguntas() {
@@ -45,4 +47,15 @@ public class Preguntas_Model {
     public String getidpregunta() {
         return IDdpregunta;
     }
+
+
+    public void settoken(String token) {
+        Token = token;
+    }
+
+    public String gettoken() {
+        return Token;
+    }
+
+
 }

@@ -140,14 +140,13 @@ public class Fragment_clientes extends Fragment {
                 JSONObject Respuesta = null;
                 JSONObject RespuestaNodoDireccion= null;
                 JSONObject ElementoUsuario=null;
-                JSONObject Elementodireccion=null;
                 JSONArray RespuestaNodoClientes= null;
 
                 try {
 
                     int status = Integer.parseInt(response.getString("estatus"));
                     String Mensaje = response.getString("mensaje");
-               //     Respuesta = response.getJSONObject("resultado");
+
                     if (status == 1)
                     {
                          String estado;

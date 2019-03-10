@@ -88,7 +88,6 @@ public class ArticuloAdapter extends LongPressAwareTableDataAdapter<ArticuloMode
 
     }
 
-
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
         textView.setText(value);

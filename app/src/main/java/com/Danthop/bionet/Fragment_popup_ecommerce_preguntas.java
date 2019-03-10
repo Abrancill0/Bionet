@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -63,6 +64,7 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
     ProgressDialog progreso;
 
     private String[][] PreguntasModel;
+    private String RespuestaTodo;
 
     private List<Preguntas_Model> Preguntas;
 
@@ -85,7 +87,23 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
         TokenLife = sharedPref.getString( "TokenLifetime", "" );
         usu_id = sharedPref.getString("usu_id","");
 
-        LoadTable();
+        Bundle bundle = getArguments();
+
+        String json = bundle.getString( "Resultado");
+        RespuestaTodo = bundle.getString( "Resultado");
+
+        try {
+            JSONObject obj = new JSONObject(json);
+            CargaDatos(obj);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+        //    LoadTable();
         LoadButtons();
         LoadSpinner();
 
@@ -111,6 +129,134 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
     }
 
 
+    public void CargaDatos(JSONObject Datos)
+    {
+
+        try
+        {
+
+            progreso = new ProgressDialog(getContext());
+            progreso.setMessage("Cargando...");
+            progreso.show();
+
+            tabla_preguntas = (SortablePreguntasTable) v.findViewById(R.id.tabla_preguntas);
+
+            JSONArray RespuestaDatos = null;
+            JSONArray RespuestaDatos2 = null;
+            JSONObject RespuestaObjeto = null;
+            JSONObject RespuestaObjeto2 = null;
+            JSONObject Respuestapreguntas = null;
+            JSONObject Respuestapreguntas2 = null;
+            JSONArray RespuestaQuestions = null;
+            JSONArray RespuestaQuestions2 = null;
+            JSONObject Respuestaespecificaciones =null;
+            JSONArray RespuestaComprador = null;
+
+            String Titulo;
+            String preguntas;
+            String idcomprador;
+            String id_pregunta="";
+            String comprador="";
+            int numeroregistro =0;
+
+
+                RespuestaDatos= Datos.getJSONArray("aDatos");
+
+                RespuestaDatos2= Datos.getJSONArray("aDatos");
+
+                for (int z = 0; z < RespuestaDatos2.length(); z++) {
+
+                    RespuestaObjeto2 = RespuestaDatos2.getJSONObject(z);
+
+                    Respuestapreguntas2 = RespuestaObjeto2.getJSONObject("preguntas");
+
+                    int preguntitas = Respuestapreguntas2.getInt( "total");
+
+                    numeroregistro += Respuestapreguntas2.getInt( "total");
+
+                }
+
+                PreguntasModel = new String[numeroregistro][5];
+
+
+                for (int x = 0; x < RespuestaDatos.length(); x++) {
+
+                    RespuestaObjeto = RespuestaDatos.getJSONObject(x);
+
+                    Respuestapreguntas = RespuestaObjeto.getJSONObject("preguntas");
+
+                    Respuestaespecificaciones = RespuestaObjeto.getJSONObject("especificaciones");
+
+                    Titulo = Respuestaespecificaciones.getString( "title" );
+
+                    RespuestaQuestions = Respuestapreguntas.getJSONArray("questions");
+
+
+
+                    for(int i = 0; i < RespuestaQuestions.length(); i++) {
+
+                        JSONObject elemento = RespuestaQuestions.getJSONObject(i);
+
+                        preguntas = elemento.getString("text");
+
+                        id_pregunta =  elemento.getString("id");
+
+                        idcomprador = elemento.getJSONObject("from").getString( "id");
+
+                        RespuestaComprador = Datos.getJSONArray("aUsuariosQuePregunta");
+
+                        for(int a = 0; a < RespuestaComprador.length(); a++)
+                        {
+                            JSONObject elemento2 = RespuestaComprador.getJSONObject(a);
+
+                            String keyidcomp = elemento2.getString("id_comprador") ;
+
+                            String Valor1= String.valueOf(idcomprador);
+                            String Valor2= String.valueOf(keyidcomp);
+
+                            if(Valor1.equals(Valor2)) {
+
+                                comprador = elemento2.getString("nickname");
+
+                                break;
+                            }
+
+                        }
+
+                        PreguntasModel[i][0] = preguntas;
+                        PreguntasModel[i][1] = comprador;
+                        PreguntasModel[i][2] = Titulo;
+                        PreguntasModel[i][3] = id_pregunta;
+                        PreguntasModel[i][4] = AccesToken;
+
+                        final Preguntas_Model pregunta = new Preguntas_Model(preguntas, comprador, Titulo,id_pregunta,AccesToken);
+                        Preguntas.add(pregunta);
+
+                    }
+
+
+                }
+
+            final PreguntasAdapter preguntasAdapter = new PreguntasAdapter(getContext(), Preguntas, tabla_preguntas);
+            tabla_preguntas.setDataAdapter(preguntasAdapter);
+
+            progreso.hide();
+
+        }
+        catch (JSONException e)
+        {   e.printStackTrace();
+
+            Toast toast1 =
+                    Toast.makeText(getContext(),
+                            String.valueOf(e), Toast.LENGTH_LONG);
+
+            progreso.hide();
+
+        }
+
+
+    }
+
     public void LoadTable(){
 
         progreso = new ProgressDialog(getContext());
@@ -118,9 +264,9 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
         progreso.show();
 
         tabla_preguntas = (SortablePreguntasTable) v.findViewById(R.id.tabla_preguntas);
+
         final String url = "http://187.189.192.150:8010/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
 
-        // prepare the Request
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>()
                 {
@@ -128,17 +274,22 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
                     public void onResponse(JSONObject response) {
                         // display response
                         JSONArray RespuestaDatos = null;
+                        JSONArray RespuestaDatos2 = null;
                         JSONObject RespuestaObjeto = null;
+                        JSONObject RespuestaObjeto2 = null;
                         JSONObject Respuestapreguntas = null;
+                        JSONObject Respuestapreguntas2 = null;
                         JSONArray RespuestaQuestions = null;
+                        JSONArray RespuestaQuestions2 = null;
                         JSONObject Respuestaespecificaciones =null;
-                        JSONObject RespuestaComprador = null;
-
+                        JSONArray RespuestaComprador = null;
 
                         String Titulo;
                         String preguntas;
                         String idcomprador;
+                        String id_pregunta="";
                         String comprador="";
+                        int numeroregistro =0;
 
                         try
                         {
@@ -149,15 +300,26 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
                                 RespuestaDatos= response.getJSONArray("aDatos");
 
-                                int numeroregistro =RespuestaDatos.length();
+                                RespuestaDatos2= response.getJSONArray("aDatos");
 
-                                PreguntasModel = new String[numeroregistro][4];
+                                for (int z = 0; z < RespuestaDatos2.length(); z++) {
+
+                                    RespuestaObjeto2 = RespuestaDatos2.getJSONObject(z);
+
+                                    Respuestapreguntas2 = RespuestaObjeto2.getJSONObject("preguntas");
+
+                                    int preguntitas = Respuestapreguntas2.getInt( "total");
+
+                                    numeroregistro += Respuestapreguntas2.getInt( "total");
+
+                                }
+
+                                PreguntasModel = new String[numeroregistro][5];
+
 
                                 for (int x = 0; x < RespuestaDatos.length(); x++) {
-                                    //JSONObject elemento = RespuestaDatos.getJSONObject(x);
 
                                     RespuestaObjeto = RespuestaDatos.getJSONObject(x);
-
 
                                     Respuestapreguntas = RespuestaObjeto.getJSONObject("preguntas");
 
@@ -167,40 +329,45 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
                                     RespuestaQuestions = Respuestapreguntas.getJSONArray("questions");
 
+
+
                                     for(int i = 0; i < RespuestaQuestions.length(); i++) {
 
                                         JSONObject elemento = RespuestaQuestions.getJSONObject(i);
 
                                         preguntas = elemento.getString("text");
 
+                                        id_pregunta =  elemento.getString("id");
+
                                         idcomprador = elemento.getJSONObject("from").getString( "id");
 
-                                        RespuestaComprador = response.getJSONObject("aUsuariosQuePregunta");
+                                        RespuestaComprador = response.getJSONArray("aUsuariosQuePregunta");
 
-                                        Iterator<String> keys2 = RespuestaComprador.keys();
-                                        while( keys2.hasNext() )
+                                        for(int a = 0; a < RespuestaComprador.length(); a++)
                                         {
+                                            JSONObject elemento2 = RespuestaComprador.getJSONObject(a);
 
-                                            String keyidcomp = keys2.next();
+                                            String keyidcomp = elemento2.getString("id_comprador") ;
 
                                             String Valor1= String.valueOf(idcomprador);
                                             String Valor2= String.valueOf(keyidcomp);
 
-                                            if(!Valor1.equals(Valor2)) {
+                                            if(Valor1.equals(Valor2)) {
 
-                                                RespuestaObjeto = RespuestaComprador.getJSONObject(keyidcomp);
+                                                comprador = elemento2.getString("nickname");
 
-                                                comprador = RespuestaObjeto.getString("nickname");
+                                                break;
                                             }
 
                                         }
 
-
                                         PreguntasModel[i][0] = preguntas;
                                         PreguntasModel[i][1] = comprador;
                                         PreguntasModel[i][2] = Titulo;
+                                        PreguntasModel[i][3] = id_pregunta;
+                                        PreguntasModel[i][4] = AccesToken;
 
-                                        final Preguntas_Model pregunta = new Preguntas_Model(preguntas, comprador, Titulo);
+                                        final Preguntas_Model pregunta = new Preguntas_Model(preguntas, comprador, Titulo,id_pregunta,AccesToken);
                                         Preguntas.add(pregunta);
 
 
@@ -213,6 +380,8 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
                             final PreguntasAdapter preguntasAdapter = new PreguntasAdapter(getContext(), Preguntas, tabla_preguntas);
                             tabla_preguntas.setDataAdapter(preguntasAdapter);
+
+
 
                             progreso.hide();
 
@@ -233,6 +402,7 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
                 },
                 new Response.ErrorListener()
                 {
+
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error.Response", String.valueOf(error));
@@ -246,8 +416,11 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
                 }
         );
 
+        getRequest.setShouldCache(false);
+
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
 
+        //getRequest.
     }
 
     public void LoadButtons(){
@@ -263,8 +436,24 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
         btn_pestania_sincronizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar()).commit();
+
+                Bundle bundle = new Bundle();
+                bundle.putString( "Resultado", String.valueOf( RespuestaTodo ) );
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+                Fragment_ecommerce_Sincronizar secondFragment = new Fragment_ecommerce_Sincronizar();
+                secondFragment.setArguments(bundle);
+
+                fragmentTransaction.replace(R.id.fragment_container,secondFragment);
+                fragmentTransaction.commit();
+
+
+
+               // FragmentTransaction fr = getFragmentManager().beginTransaction();
+               // fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar()).commit();
+
             }
         });
     }

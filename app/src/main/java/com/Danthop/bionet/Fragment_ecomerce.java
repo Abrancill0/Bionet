@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -52,13 +53,12 @@ public class Fragment_ecomerce extends Fragment {
     private Button btn_pestania_preguntas;
     private Button btn_sincronizar;
     private Dialog dialog;
-    private Button btn_sincronizar_no;
-    private Button btn_sincronizar_si;
-    private Button btn_aceptar_cerrar_ventana;
     private static final int REQUEST_CODE = 999;
     private String UserML;
     private String AccesToken;
     private String TokenLife;
+    private  JSONObject RespuestaTodo = null;
+    private String RespuestaTodoString;
 
     private List<Ecommerce_orden_Model> Ordenes;
 
@@ -85,6 +85,25 @@ public class Fragment_ecomerce extends Fragment {
          TokenLife = sharedPref.getString( "TokenLifetime", "" );
          usu_id = sharedPref.getString("usu_id","");
 
+        Bundle bundle = getArguments();
+
+        if (bundle !=null){
+            String json = bundle.getString( "Resultado");
+
+            RespuestaTodoString = bundle.getString( "Resultado");
+
+            try {
+                JSONObject obj = new JSONObject(json);
+                CargaDatos(obj);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+
         LoadTable();
         LoadButtons();
 
@@ -109,6 +128,10 @@ public class Fragment_ecomerce extends Fragment {
         return v;
     }
 
+    public void CargaDatos(JSONObject Datos)
+    {
+
+    }
 
     public void LoadTable(){
 
@@ -152,6 +175,8 @@ public class Fragment_ecomerce extends Fragment {
                                 if (EstatusApi == 1) {
 
                                     RespuestaHistorial = response.getJSONObject("aHistorial");
+
+                                    RespuestaTodo = response;
 
                                     RespuestaHistorialResult = RespuestaHistorial.getJSONArray("results");
 
@@ -241,8 +266,9 @@ public class Fragment_ecomerce extends Fragment {
                     }
             );
 
-            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+            getRequest.setShouldCache(false);
 
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
 
 
         } catch (Error e) {
@@ -266,16 +292,52 @@ public class Fragment_ecomerce extends Fragment {
         btn_pestania_sincronizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar()).commit();
+
+                //RespuestaAdatos
+
+               // FragmentTransaction fr = getFragmentManager().beginTransaction();
+               // fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar()).commit();
+
+
+                Bundle bundle = new Bundle();
+                bundle.putString( "Resultado", String.valueOf( RespuestaTodo ) );
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+                Fragment_ecommerce_Sincronizar secondFragment = new Fragment_ecommerce_Sincronizar();
+                secondFragment.setArguments(bundle);
+
+                fragmentTransaction.replace(R.id.fragment_container,secondFragment);
+                fragmentTransaction.commit();
+
+
+
+               // FragmentTransaction fr = getFragmentManager().beginTransaction();
+               // fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar()).commit();
+
+
             }
         });
         btn_pestania_preguntas = v.findViewById(R.id.btn_pestania_preguntas);
         btn_pestania_preguntas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_popup_ecommerce_preguntas()).commit();
+
+                Bundle bundle = new Bundle();
+                bundle.putString( "Resultado", String.valueOf( RespuestaTodo ) );
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+                Fragment_popup_ecommerce_preguntas secondFragment = new Fragment_popup_ecommerce_preguntas();
+                secondFragment.setArguments(bundle);
+
+                fragmentTransaction.replace(R.id.fragment_container,secondFragment);
+                fragmentTransaction.commit();
+
+               // FragmentTransaction fr = getFragmentManager().beginTransaction();
+               // fr.replace(R.id.fragment_container,new Fragment_popup_ecommerce_preguntas()).commit();
             }
         });
         //btn_sincronizar = v.findViewById(R.id.btn_sincronizar);

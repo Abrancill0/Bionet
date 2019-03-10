@@ -328,7 +328,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
             jsonBodyObj.put("description", String.valueOf(TextDescripcionArticulo.getText()));
             jsonBodyObj.put("pictures",  jsonArray);
 
-
         }catch (JSONException e){
             e.printStackTrace();
         }
