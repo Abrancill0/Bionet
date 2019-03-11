@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
     private ArrayList<String> TipoPublicacionID;
     private Spinner SpinnerTipoPublicacion;
     private String usu_id;
+    private Button atras;
 
     private List<com.Danthop.bionet.model.ArticuloModel> Articulos;
     private String[][] ArticuloModel;

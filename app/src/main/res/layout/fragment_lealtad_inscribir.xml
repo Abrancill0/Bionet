@@ -22,7 +22,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/button4d"
+                android:id="@+id/lealtad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
@@ -41,7 +41,7 @@
             >
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/programas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:background="@drawable/pestanas_desplegables"
+                android:background="#C9D7E1"
                 android:fontFamily="@font/muli"
                 android:text="Inscribir"
                 android:textAllCaps="false" />
@@ -75,7 +75,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/articulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
@@ -141,7 +141,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight=".3"
-                    android:background="@color/fondo_azul"
+                    android:background="@color/gray2"
                     android:gravity="center_vertical|center_horizontal"
                     android:orientation="vertical"
                     android:visibility="visible">>

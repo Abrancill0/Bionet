@@ -2,6 +2,7 @@ package com.Danthop.bionet.Adapters;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.Danthop.bionet.Fragment_ecommerce_Sincronizar_Articulos;
 import com.Danthop.bionet.Fragment_ecommerce_Sincronizar_Nuevo_Prod;
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.model.CategoriaModel;
@@ -39,13 +41,13 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
     public String id;
     private TextView NombreDialog;
     private String AccesToken;
-    private ListView listacategoria1;
     private String UserML;
     private Dialog dialog1;
     private Dialog pop_up_tipo_categoria;
     public NameCategoriaSelcted mOnInputSelected;
     private ListView ListaCategoria;
     private Bundle bundle1;
+    private String id_viejo1;
 
     private String Nombre;
     private String Descripcion;
@@ -54,12 +56,14 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
     private String Imagen1;
     private String Imagen2;
     FragmentTransaction fr;
+    private Button atras;
+    private String idcategoria;
 
     public interface NameCategoriaSelcted{
         void sendInput(String input);
     }
 
-    public CategoriaAdapter(Context context, int resource, ArrayList<CategoriaModel> objects, ListView ListCategoria ,Bundle bundle, FragmentTransaction fg) {
+    public CategoriaAdapter(Context context, int resource, ArrayList<CategoriaModel> objects, ListView ListCategoria ,Bundle bundle, FragmentTransaction fg, Button back, String id_viejo) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
@@ -68,6 +72,8 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
         ListaCategoria = ListCategoria;
         bundle1 = bundle;
         fr = fg;
+        atras = back;
+        id_viejo1=id_viejo;
 
     }
 
@@ -96,15 +102,6 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
         nombre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                listacategoria1 = (ListView) pop_up_tipo_categoria.findViewById(R.id.categoria_siguiente);
-                Button regresar = pop_up_tipo_categoria.findViewById(R.id.Regresar);
-                regresar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        pop_up_tipo_categoria.dismiss();
-                    }
-                });
 
                 name = getItem(position).getName();
                 id = getItem(position).getId();
@@ -136,7 +133,7 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
                                                         ArrayList arrayList = new ArrayList<>();
                                                         for (int x = 0; x < RespuestaCategoria.length(); x++) {
                                                             JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(x);
-                                                            String idcategoria = jsonObject1.getString("id");
+                                                            idcategoria = jsonObject1.getString("id");
                                                             String categoria = jsonObject1.getString("name");
 
                                                             CategoriaModel cat = new CategoriaModel(idcategoria, categoria);
@@ -148,7 +145,7 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
 
                                                         }
 
-                                                        CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria, arrayList,ListaCategoria,bundle1,fr);
+                                                        CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria, arrayList,ListaCategoria,bundle1,fr,atras,id);
 
 
 
@@ -200,6 +197,82 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
 
 
             }});
+
+        atras.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPref = getContext().getSharedPreferences( "DatosPersistentes", getContext().MODE_PRIVATE );
+                UserML = sharedPref.getString( "UserIdML", "" );
+                AccesToken = sharedPref.getString( "AccessToken", "" );
+                if(id_viejo1.equals(""))
+                {
+                    fr.replace(R.id.fragment_container, new Fragment_ecommerce_Sincronizar_Articulos()).commit();
+                }
+                else
+                {
+                    final String url = "http://187.189.192.150:8010/api/ecomerce/create_app/access_token=" + AccesToken  + "&expires_in=21600&user_id=" + UserML + "&domains=localhost" + "?&usu_id=" + usu_id + "&esApp=1";
+
+                    // prepare the Request
+                    JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                            new Response.Listener<JSONObject>()
+                            {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    // display response
+                                    JSONArray RespuestaTiposPublicacion = null;
+                                    JSONArray RespuestaCategoria = null;
+
+                                    try
+                                    {
+
+                                        int EstatusApi = Integer.parseInt( response.getString("estatus") );
+
+                                        if (EstatusApi == 1) {
+
+                                            RespuestaCategoria = response.getJSONArray("aCategorias");
+
+                                            ArrayList arrayList = new ArrayList<>();
+
+                                            for(int x = 0; x < RespuestaCategoria.length(); x++){
+                                                JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(x);
+                                                String idcategoria = jsonObject1.getString("id");
+                                                String categoria = jsonObject1.getString("name");
+
+                                                CategoriaModel cat = new CategoriaModel(idcategoria, categoria );
+
+                                                arrayList.add(cat);//add the hashmap into arrayList
+
+                                            }
+
+                                            CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria,arrayList,ListaCategoria,bundle1,fr,atras,"");
+
+                                            ListaCategoria.setAdapter(adapter);//sets the adapter for listView
+
+
+                                        }
+
+
+                                    }
+                                    catch (JSONException e)
+                                    {   e.printStackTrace();    }
+
+
+                                }
+                            },
+                            new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.d("Error.Response", String.valueOf(error));
+                                }
+                            }
+                    );
+
+                    VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+                }
+
+            }
+        });
 
         return convertView;
         }

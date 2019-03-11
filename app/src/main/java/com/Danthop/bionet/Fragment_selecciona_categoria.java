@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.Danthop.bionet.Adapters.CategoriaAdapter;
@@ -39,6 +40,9 @@ public class Fragment_selecciona_categoria extends Fragment {
     private String usu_id;
     private Bundle bundle;
     FragmentTransaction fr;
+    private Button back;
+    private String idVacio;
+
 
     public Fragment_selecciona_categoria() {
         // Required empty public constructor
@@ -53,6 +57,8 @@ public class Fragment_selecciona_categoria extends Fragment {
         UserML = sharedPref.getString( "UserIdML", "" );
         AccesToken = sharedPref.getString( "AccessToken", "" );
         fr = getFragmentManager().beginTransaction();
+        back = v.findViewById(R.id.atras);
+        idVacio="";
 
         bundle = getArguments();
 
@@ -104,7 +110,7 @@ public class Fragment_selecciona_categoria extends Fragment {
 
                                     }
 
-                                    CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria,arrayList,listacategoria,bundle,fr);
+                                    CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria,arrayList,listacategoria,bundle,fr,back,idVacio);
 
                                     listacategoria.setAdapter(adapter);//sets the adapter for listView
 
