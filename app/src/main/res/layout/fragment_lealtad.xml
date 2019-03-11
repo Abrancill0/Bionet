@@ -26,10 +26,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:background="@drawable/pestanas_desplegables"
+                android:background="#C9D7E1"
                 android:fontFamily="@font/muli"
                 android:text="Puntos Acumulados"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -41,14 +42,14 @@
             >
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/programas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
                 android:text="Programas"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"/>
         </LinearLayout>
 
         <LinearLayout
@@ -58,7 +59,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/fragment_pestania_traslados"
+                android:id="@+id/inscribir"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
@@ -75,7 +76,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/articulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
@@ -101,13 +102,32 @@
             android:background="@drawable/pestanas_desplegables"
             android:padding="20dp">
 
-            <de.codecrafters.tableview.TableView
-                android:id="@+id/tabla_inventario"
+            <com.Danthop.bionet.Tables.SortablePuntosTable
+                android:id="@+id/tabla_puntos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight=".2"
+                android:layout_weight=".7"
                 app:tableView_headerColor="@color/white"
                 table:tableView_columnCount="3" />
+            <LinearLayout
+                android:id="@+id/Tabla_vacia"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:background="@color/gray2"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="No existen datos"
+                    android:textColor="@color/gray" />
+            </LinearLayout>
 
         </LinearLayout>
         <LinearLayout

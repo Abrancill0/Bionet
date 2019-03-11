@@ -101,7 +101,8 @@
                     android:layout_height="41dp"
                     android:padding="5dp"
                     android:src="@drawable/lealtad_azul"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="10dp"
+                    android:onClick="lealtad"/>
                 <ImageView
                     android:layout_width="41dp"
                     android:layout_height="41dp"

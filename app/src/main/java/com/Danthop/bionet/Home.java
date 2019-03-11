@@ -1,7 +1,6 @@
 package com.Danthop.bionet;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,10 +8,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -21,7 +18,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -34,18 +30,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.model.LoginModel;
-import com.Danthop.bionet.model.VolleySingleton;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
-import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,20 +47,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -277,6 +260,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             new Fragment_clientes()).commit();
                     break;
+                case R.id.nav_lealtad:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new FragmentLealtad()).commit();
+                    break;
 
                 case R.id.nav_ecommerce:
 
@@ -428,6 +415,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public void inventario(View view) {
         getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
                 new Fragment_inventarios() ).commit();
+    }
+
+    public void lealtad(View view){
+        getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
+                new FragmentLealtad() ).commit();
     }
 
     public void cerrar_sesion(View view) {
