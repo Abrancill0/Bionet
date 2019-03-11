@@ -162,10 +162,41 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
             public void onClick(View v) {
 
                 pop_up1=new Dialog(getContext());
-                pop_up1.setContentView(R.layout.pop_up_confirmacion_correo_contrasenia);
+                pop_up1.setContentView(R.layout.pop_up_ecommerce_detalle_orden);
                 pop_up1.show();
 
-                //aqui se pone que hace el boton 1 con los atributos del modelo orden seleccionado
+                TextView Orden = pop_up1.findViewById(R.id.text_ordenname);
+                TextView Cliente = pop_up1.findViewById(R.id.text_clientename);
+                TextView TipoPago = pop_up1.findViewById(R.id.text_tipo_pago);
+                TextView Envio = pop_up1.findViewById(R.id.text_costo_envio);
+                TextView Importe = pop_up1.findViewById(R.id.text_importe);
+                TextView OrdenEstado = pop_up1.findViewById(R.id.text_estado);
+                TextView Fecha = pop_up1.findViewById(R.id.text_fecha);
+
+                double Envioformat = Double.parseDouble(orden.getEnvio());
+                NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+                double importeformat = Double.parseDouble(orden.getImporte());
+                NumberFormat formatter2 = NumberFormat.getCurrencyInstance();
+
+                Orden.setText( orden.getArticulo() );
+                Cliente.setText( orden.getCliente() );
+                TipoPago.setText( orden.getTipoPago() );
+                Envio.setText( formatter.format(Envioformat));
+                Importe.setText( formatter2.format(importeformat));
+                OrdenEstado.setText( orden.getEstatus());
+                Fecha.setText( orden.getFecha() );
+
+                Button BtnCerrar = pop_up1.findViewById(R.id.btnordnecerrar);
+
+                BtnCerrar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pop_up1.hide();
+                    }
+
+                });
+
             }
         });
         return btn;

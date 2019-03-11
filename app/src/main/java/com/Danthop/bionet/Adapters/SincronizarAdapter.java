@@ -11,18 +11,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.Danthop.bionet.R;
-import com.Danthop.bionet.Tables.SortableOrdenEcommerceTable;
 import com.Danthop.bionet.Tables.SortableSincronizarTable;
-import com.Danthop.bionet.model.ClienteModel;
-import com.Danthop.bionet.model.Ecommerce_orden_Model;
 import com.Danthop.bionet.model.SincronizarModel;
-import com.google.android.gms.common.api.Api;
 
 import java.text.NumberFormat;
 import java.util.List;
 
-import de.codecrafters.tableview.TableDataAdapter;
-import com.Danthop.bionet.Tables.SortableOrdenEcommerceTable;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class SincronizarAdapter extends LongPressAwareTableDataAdapter<SincronizarModel> {
@@ -137,7 +131,7 @@ public class SincronizarAdapter extends LongPressAwareTableDataAdapter<Sincroniz
 
                 Dialog ver_cliente_dialog;
                 ver_cliente_dialog=new Dialog(getContext());
-                ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_ecommerce_sincroniza);
+                ver_cliente_dialog.setContentView(R.layout.pop_up_ecommerce_contestar_pregunta );
                 ver_cliente_dialog.show();
 
                 //Articulo;

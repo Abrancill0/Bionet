@@ -1,10 +1,10 @@
 package com.Danthop.bionet.Adapters;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -12,32 +12,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.Danthop.bionet.Fragment_clientes;
-import com.Danthop.bionet.Fragment_ecommerce_Sincronizar_Nuevo_Prod;
 import com.Danthop.bionet.R;
-import com.Danthop.bionet.Tables.SortableOrdenEcommerceTable;
 import com.Danthop.bionet.Tables.SortablePreguntasTable;
-import com.Danthop.bionet.Tables.SortableSincronizarTable;
-import com.Danthop.bionet.model.CategoriaModel;
-import com.Danthop.bionet.model.Ecommerce_orden_Model;
 import com.Danthop.bionet.model.Preguntas_Model;
-import com.Danthop.bionet.model.SincronizarModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonArrayRequest;
 import com.android.volley.request.JsonObjectRequest;
-import com.google.android.gms.common.api.Api;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import de.codecrafters.tableview.TableDataAdapter;
-import com.Danthop.bionet.Tables.SortableOrdenEcommerceTable;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
@@ -45,6 +32,9 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_Model> {
 
     int TEXT_SIZE = 12;
+    public Dialog pop_up1;
+    private TextView Respuesta;
+    ProgressDialog progreso;
 
     public PreguntasAdapter(final Context context, final List<Preguntas_Model> data, final SortablePreguntasTable tableView) {
         super(context, data, tableView);
@@ -124,7 +114,39 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Contestapregunta(pregunta.getidpregunta(),pregunta.gettoken());
+
+                pop_up1=new Dialog(getContext());
+                pop_up1.setContentView(R.layout.pop_up_ecommerce_contestar_pregunta );
+                pop_up1.show();
+
+                TextView ArticuloPregunta = pop_up1.findViewById(R.id.text_pregunta_articulo);
+                TextView Pregunta = pop_up1.findViewById(R.id.text_pregunta);
+                Respuesta = pop_up1.findViewById(R.id.text_respuesta);
+                Button BntContestar = pop_up1.findViewById(R.id.btcontestar);
+                Button Btncerrar = pop_up1.findViewById(R.id.btpreguntacerrar);
+
+                ArticuloPregunta.setText( "Mensaje por " + pregunta.getTitulo() );
+                Pregunta.setText( pregunta.getPreguntas() );
+
+                BntContestar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Contestapregunta(pregunta.getidpregunta(),pregunta.gettoken(), String.valueOf( Respuesta.getText() ) );
+
+                        pop_up1.hide();
+                    }
+
+                });
+
+                Btncerrar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pop_up1.hide();
+                    }
+
+                });
+
             }
         });
         return btn;
@@ -139,14 +161,14 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
             public void onClick(View v) {
 
 
+                //pop_up_ecommerce_elimina_pregunta
+
                 EliminaPregunta(pregunta.getidpregunta(),pregunta.gettoken());
 
             }
         });
         return btn;
     }
-
-
 
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
@@ -158,9 +180,9 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
 
     private void EliminaPregunta(String itemid,String token)
     {
-
-        //la pregunta debe de estar en este estatus UNANSWERED
-
+        progreso = new ProgressDialog(getContext());
+        progreso.setMessage("Eliminando pregunta...");
+        progreso.show();
 
         try {
             final String url = "https://api.mercadolibre.com/questions/"+ itemid + "?access_token="+ token;
@@ -170,19 +192,27 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
                     new Response.Listener<JSONArray>() {
                         @Override
                         public void onResponse(JSONArray response) {
-                            // display response
 
                             Toast toast1 =
                                     Toast.makeText(getContext(),
                                             String.valueOf("Pregunta eliminada correctamente"), Toast.LENGTH_LONG);
+                            toast1.show();
 
+                            progreso.hide();
 
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.d("Error.Response", String.valueOf(error));
+
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            error.toString(), Toast.LENGTH_LONG);
+
+                            toast1.show();
+
+                            progreso.hide();
                         }
                     }
             );
@@ -191,20 +221,29 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
 
 
         } catch (Error e) {
-            e.printStackTrace();
+            Toast toast1 =
+                    Toast.makeText(getContext(),
+                            e.toString(), Toast.LENGTH_LONG);
+            toast1.show();
+
+            progreso.hide();
+
         }
 
 
     }
 
-    private void Contestapregunta(String itemid,String token)
+    private void Contestapregunta(String itemid,String token,String Respuesta)
     {
+        progreso = new ProgressDialog(getContext());
+        progreso.setMessage("Respondiendo pregunta...");
+        progreso.show();
 
         JSONObject request = new JSONObject();
         try
         {
             request.put("question_id", itemid);
-            request.put("text", "estoy haciendo pruebas vato aguanta");
+            request.put("text", Respuesta);
 
         }
         catch(Exception e)
@@ -224,7 +263,9 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
                         Toast.makeText(getContext(),
                                 String.valueOf("Pregunta contestada correctamente"), Toast.LENGTH_LONG);
 
+                    toast1.show();
 
+                progreso.hide();
             }
 
         },
@@ -232,15 +273,14 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // error
-
-                        //progreso.hide();
 
                         Toast toast1 =
                                 Toast.makeText(getContext(),
                                         "Error de conexion", Toast.LENGTH_SHORT);
 
                         toast1.show();
+
+                        progreso.hide();
 
                     }
                 }
@@ -276,8 +316,6 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
     }}
 
 
-
-    ////https://api.mercadolibre.com/questions/${question_id}?access_token=$ACCESS_TOKEN'
 
 
 

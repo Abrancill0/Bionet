@@ -5,12 +5,18 @@ public class ArticuloModel {
     private String articulo_Nombre;
     private String articulo_Descripcion;
     private String articulo_Precio;
+    private String articulo_Imagen1;
+    private String articulo_Imagen2;
 
-    public ArticuloModel(String articulo_UUID,String articulo_Nombre,String articulo_Descripcion ,String articulo_Precio) {
+
+    public ArticuloModel(String articulo_UUID,String articulo_Nombre,String articulo_Descripcion ,String articulo_Precio,String articulo_Imagen1,String articulo_Imagen2 ) {
         this.articulo_UUID = articulo_UUID;
         this.articulo_Nombre = articulo_Nombre;
         this.articulo_Descripcion = articulo_Descripcion;
         this.articulo_Precio = articulo_Precio;
+
+        this.articulo_Imagen1 = articulo_Imagen1;
+        this.articulo_Imagen2 = articulo_Imagen2;
     }
 
     public String getarticulo_UUID() {
@@ -43,6 +49,23 @@ public class ArticuloModel {
 
     public void setarticulo_Precio(String articulo_Precio) {
         this.articulo_Precio = articulo_Precio;
+    }
+
+    public String getArticulo_Imagen1() {
+        return articulo_Imagen1;
+    }
+
+    public String getArticulo_Imagen2() {
+        return articulo_Imagen2;
+    }
+
+
+    public void setArticulo_Imagen1(String articulo_Imagen1) {
+        this.articulo_Imagen1 = articulo_Imagen1;
+    }
+
+    public void setArticulo_Imagen2(String articulo_Imagen2) {
+        this.articulo_Imagen2 = articulo_Imagen2;
     }
 
 }

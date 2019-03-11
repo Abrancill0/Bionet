@@ -7,15 +7,27 @@ public class Ecommerce_orden_Model {
     private String Envio;
     private String Importe;
     private String Estatus;
+    private String TipoPago;
+    private String Fecha;
 
 
-    public Ecommerce_orden_Model(String cliente, String articulo, String cantidad, String envio, String importe, String estatus) {
+    public Ecommerce_orden_Model(String cliente,
+                                 String articulo,
+                                 String cantidad,
+                                 String envio,
+                                 String importe,
+                                 String estatus,
+                                 String tipopago,
+                                 String fecha ) {
         Cliente = cliente;
         Articulo = articulo;
         Cantidad = cantidad;
         Envio = envio;
         Importe = importe;
         Estatus = estatus;
+        TipoPago = tipopago;
+        Fecha = fecha;
+
     }
 
     public String getCliente() {
@@ -42,6 +54,14 @@ public class Ecommerce_orden_Model {
         return Estatus;
     }
 
+    public String getTipoPago() {
+        return TipoPago;
+    }
+
+    public String getFecha() {
+        return Fecha;
+    }
+
     public void setCliente(String cliente) {
         Cliente = cliente;
     }
@@ -65,4 +85,14 @@ public class Ecommerce_orden_Model {
     public void setEstatus(String estatus) {
         Estatus = estatus;
     }
+
+    public void setTipoPago(String tipoPago) {
+        TipoPago = tipoPago;
+    }
+
+    public void setFecha(String fecha) {
+        Fecha = fecha;
+    }
+
+
 }

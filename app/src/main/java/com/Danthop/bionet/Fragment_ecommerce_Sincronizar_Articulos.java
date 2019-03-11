@@ -66,12 +66,16 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                 String Precio = (clickedData.getarticulo_Precio());
                 String UUID = (clickedData.getarticulo_UUID());
                 String Descripcion = (clickedData.getarticulo_Descripcion());
+                String image1 = (clickedData.getArticulo_Imagen1());
+                String image2 = (clickedData.getArticulo_Imagen2());
 
                 Bundle bundle = new Bundle();
                 bundle.putString( "nombre", Nombre );
                 bundle.putString( "descripcion", Descripcion );
                 bundle.putString( "precio", Precio );
                 bundle.putString( "usu_id", usu_id );
+                bundle.putString( "image1", image1 );
+                bundle.putString( "image2", image2 );
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -107,10 +111,14 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                         @Override
                         public void onResponse(JSONObject response) {
                             JSONArray RespuestaResultado = null;
+                            JSONArray RespuestaImagenes = null;
                             JSONObject RespuestaUUID = null;
                             JSONObject RespuestaPrecio=null;
                             JSONObject RespuestaPrecioModificador=null;
                             JSONArray RespuestaModificadores = null;
+
+                            String RutaImagen1="";
+                            String RutaImagen2="";
 
                             try {
 
@@ -142,6 +150,22 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
                                         String Modificadores = elemento.getString( "ava_tiene_modificadores");
 
+                                        RespuestaImagenes = elemento.getJSONArray( "imagenes");
+
+                                        for (int z = 0; z < RespuestaImagenes.length(); z++) {
+
+                                            JSONObject elemento3 = RespuestaImagenes.getJSONObject(z);
+
+                                            if(RutaImagen1.equals("")) {
+                                                RutaImagen1 = elemento3.getString( "aim_url");
+                                            }
+                                            else
+                                            {
+                                                RutaImagen2 = elemento3.getString( "aim_url");
+                                            }
+
+                                        }
+
                                         if (Modificadores == "true"){
                                             RespuestaModificadores = elemento.getJSONArray( "modificadores");
 
@@ -155,7 +179,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
                                                 NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
-                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio);
+                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,RutaImagen2);
                                                 Articulos.add(Articulo);
                                             }
 
@@ -164,7 +188,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                                         {
                                             NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
-                                            final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio);
+                                            final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,RutaImagen2);
                                             Articulos.add(Articulo);
                                         }
                                     }
@@ -181,7 +205,6 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                                                 String.valueOf(e), Toast.LENGTH_LONG);
 
                             }
-
 
                         }
                     },

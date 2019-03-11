@@ -99,17 +99,26 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
         Bundle bundle = getArguments();
 
-        String json = bundle.getString( "Resultado" );
-
-        RespuestaTodo = bundle.getString( "Resultado" );
-
-        try {
-            JSONObject obj = new JSONObject( json );
-            CargaDatos( obj );
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (bundle == null)
+        {
+            LoadTable();
         }
+        else
+        {
+            String json = bundle.getString( "Resultado" );
+
+            RespuestaTodo = bundle.getString( "Resultado" );
+
+            try {
+                JSONObject obj = new JSONObject( json );
+                CargaDatos( obj );
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
 
         btn_alta_articulo = (Button) v.findViewById( R.id.btn_alta_articulo );
 

@@ -114,7 +114,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="1dp"
-                        android:text="Sube imagenes del producto"
+                        android:text="Imagenes del producto"
                         android:textColor="@color/colorPrimary"
                         android:textSize="18sp" />
 
@@ -135,16 +135,6 @@
 
                         <ImageView
                             android:id="@+id/foto_articulo2"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_margin="10dp"
-                            android:layout_weight="1"
-                            android:paddingTop="10dp"
-                            android:src="@drawable/imagen_profile" />
-
-                        <ImageView
-                            android:id="@+id/foto_articulo3"
                             android:layout_width="70dp"
                             android:layout_height="70dp"
                             android:layout_centerHorizontal="true"

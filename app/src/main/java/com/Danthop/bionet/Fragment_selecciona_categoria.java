@@ -40,7 +40,6 @@ public class Fragment_selecciona_categoria extends Fragment {
     private Bundle bundle;
     FragmentTransaction fr;
 
-
     public Fragment_selecciona_categoria() {
         // Required empty public constructor
     }

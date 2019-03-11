@@ -146,6 +146,8 @@ public class Fragment_ecomerce extends Fragment {
             String Cantidad = "";
             String Importe = "";
             String Envio = "";
+            String TipoPago="";
+            String Fecha ="";
 
             try {
 
@@ -185,9 +187,12 @@ public class Fragment_ecomerce extends Fragment {
 
                         Importe = elementoP.getString( "transaction_amount" );
                         Envio = elementoP.getString( "shipping_cost" );
+
+                        Fecha = elementoP.getString( "date_created");
+                        TipoPago = elementoP.getString( "payment_type");
                     }
 
-                    final Ecommerce_orden_Model orden = new Ecommerce_orden_Model( Comprador, Descripcion, Cantidad, Envio, Importe, Estatus );
+                    final Ecommerce_orden_Model orden = new Ecommerce_orden_Model( Comprador, Descripcion, Cantidad, Envio, Importe, Estatus,TipoPago,Fecha );
                     Ordenes.add( orden );
                 }
                 final OrdenEcommerceAdapter ordenAdapter = new OrdenEcommerceAdapter( getContext(), Ordenes, tabla_ecomerce );
@@ -255,6 +260,8 @@ public class Fragment_ecomerce extends Fragment {
                             String Cantidad = "";
                             String Importe = "";
                             String Envio = "";
+                            String TipoPago="";
+                            String Fecha ="";
 
                             try {
 
@@ -280,6 +287,8 @@ public class Fragment_ecomerce extends Fragment {
                                         RespuestaShipping = elemento.getJSONObject( "shipping" );
                                         RespuestaShippingItems = RespuestaShipping.getJSONArray( "shipping_items" );
 
+
+
                                         for (int i = 0; i < RespuestaShippingItems.length(); i++) {
 
                                             JSONObject elementoSI = RespuestaShippingItems.getJSONObject( i );
@@ -296,9 +305,13 @@ public class Fragment_ecomerce extends Fragment {
 
                                             Importe = elementoP.getString( "transaction_amount" );
                                             Envio = elementoP.getString( "shipping_cost" );
+
+                                            Fecha = elementoP.getString( "date_created");
+                                            TipoPago = elementoP.getString( "payment_type");
+
                                         }
 
-                                        final Ecommerce_orden_Model orden = new Ecommerce_orden_Model( Comprador, Descripcion, Cantidad, Envio, Importe, Estatus );
+                                        final Ecommerce_orden_Model orden = new Ecommerce_orden_Model( Comprador, Descripcion, Cantidad, Envio, Importe, Estatus,TipoPago,Fecha );
                                         Ordenes.add( orden );
                                     }
                                     final OrdenEcommerceAdapter ordenAdapter = new OrdenEcommerceAdapter( getContext(), Ordenes, tabla_ecomerce );

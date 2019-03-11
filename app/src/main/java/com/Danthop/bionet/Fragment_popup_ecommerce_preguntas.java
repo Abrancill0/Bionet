@@ -117,7 +117,6 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
         tabla_preguntas.setEmptyDataIndicatorView( v.findViewById( R.id.Tabla_vacia ) );
 
-
         return v;
     }
 
@@ -166,7 +165,6 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
             PreguntasModel = new String[numeroregistro][5];
 
-
             for (int x = 0; x < RespuestaDatos.length(); x++) {
 
                 RespuestaObjeto = RespuestaDatos.getJSONObject( x );
@@ -191,32 +189,36 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
                     RespuestaComprador = Datos.getJSONArray( "aUsuariosQuePregunta" );
 
-                    for (int a = 0; a < RespuestaComprador.length(); a++) {
-                        JSONObject elemento2 = RespuestaComprador.getJSONObject( a );
+                    String Status = elemento.getString( "status" );
 
-                        String keyidcomp = elemento2.getString( "id_comprador" );
+                    if(Status.equals("UNANSWERED")){
 
-                        String Valor1 = String.valueOf( idcomprador );
-                        String Valor2 = String.valueOf( keyidcomp );
+                        for (int a = 0; a < RespuestaComprador.length(); a++) {
+                            JSONObject elemento2 = RespuestaComprador.getJSONObject( a );
 
-                        if (Valor1.equals( Valor2 )) {
+                            String keyidcomp = elemento2.getString( "id_comprador" );
 
-                            comprador = elemento2.getString( "nickname" );
+                            String Valor1 = String.valueOf( idcomprador );
+                            String Valor2 = String.valueOf( keyidcomp );
 
-                            break;
+                            if (Valor1.equals( Valor2 )) {
+
+                                comprador = elemento2.getString( "nickname" );
+
+                                break;
+                            }
+
                         }
 
+                        PreguntasModel[i][0] = preguntas;
+                        PreguntasModel[i][1] = comprador;
+                        PreguntasModel[i][2] = Titulo;
+                        PreguntasModel[i][3] = id_pregunta;
+                        PreguntasModel[i][4] = AccesToken;
+
+                        final Preguntas_Model pregunta = new Preguntas_Model( preguntas, comprador, Titulo, id_pregunta, AccesToken );
+                        Preguntas.add( pregunta );
                     }
-
-                    PreguntasModel[i][0] = preguntas;
-                    PreguntasModel[i][1] = comprador;
-                    PreguntasModel[i][2] = Titulo;
-                    PreguntasModel[i][3] = id_pregunta;
-                    PreguntasModel[i][4] = AccesToken;
-
-                    final Preguntas_Model pregunta = new Preguntas_Model( preguntas, comprador, Titulo, id_pregunta, AccesToken );
-                    Preguntas.add( pregunta );
-
                 }
 
 
@@ -324,31 +326,36 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
                                         RespuestaComprador = response.getJSONArray( "aUsuariosQuePregunta" );
 
-                                        for (int a = 0; a < RespuestaComprador.length(); a++) {
-                                            JSONObject elemento2 = RespuestaComprador.getJSONObject( a );
+                                       String Status = elemento.getString( "status" );
 
-                                            String keyidcomp = elemento2.getString( "id_comprador" );
+                                       if (Status =="UNANSWERED")
+                                       {
+                                           for (int a = 0; a < RespuestaComprador.length(); a++) {
+                                               JSONObject elemento2 = RespuestaComprador.getJSONObject( a );
 
-                                            String Valor1 = String.valueOf( idcomprador );
-                                            String Valor2 = String.valueOf( keyidcomp );
+                                               String keyidcomp = elemento2.getString( "id_comprador" );
 
-                                            if (Valor1.equals( Valor2 )) {
+                                               String Valor1 = String.valueOf( idcomprador );
+                                               String Valor2 = String.valueOf( keyidcomp );
 
-                                                comprador = elemento2.getString( "nickname" );
+                                               if (Valor1.equals( Valor2 )) {
 
-                                                break;
-                                            }
+                                                   comprador = elemento2.getString( "nickname" );
 
-                                        }
+                                                   break;
+                                               }
 
-                                        PreguntasModel[i][0] = preguntas;
-                                        PreguntasModel[i][1] = comprador;
-                                        PreguntasModel[i][2] = Titulo;
-                                        PreguntasModel[i][3] = id_pregunta;
-                                        PreguntasModel[i][4] = AccesToken;
+                                           }
 
-                                        final Preguntas_Model pregunta = new Preguntas_Model( preguntas, comprador, Titulo, id_pregunta, AccesToken );
-                                        Preguntas.add( pregunta );
+                                           PreguntasModel[i][0] = preguntas;
+                                           PreguntasModel[i][1] = comprador;
+                                           PreguntasModel[i][2] = Titulo;
+                                           PreguntasModel[i][3] = id_pregunta;
+                                           PreguntasModel[i][4] = AccesToken;
+
+                                           final Preguntas_Model pregunta = new Preguntas_Model( preguntas, comprador, Titulo, id_pregunta, AccesToken );
+                                           Preguntas.add( pregunta );
+                                       }
 
                                     }
 

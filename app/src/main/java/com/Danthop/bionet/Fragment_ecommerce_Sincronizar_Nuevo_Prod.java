@@ -2,7 +2,9 @@ package com.Danthop.bionet;
 
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -32,6 +35,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,26 +61,30 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private String AccesToken;
     private String TokenLife;
     private String usu_id;
-
+    private String Imagen1;
+    private String Imagen2;
     private RadioButton RadioUsado;
     private RadioButton RadioNuevo;
 
+    private ImageView FotoArticulo1;
+    private ImageView FotoArticulo2;
+
     private Button BtnGuardaArticulo;
     private TextView Categoria;
-
     private ArrayList<String> TipoPublicacionName;
     private ArrayList<String> TipoPublicacionID;
     private Spinner SpinnerTipoPublicacion;
-
     private List<CategoriaModel> categorias;
-
     private ListView listacategoria1;
     private Dialog pop_up_categoria1;
-
     private List<ArticuloModel> Articulos;
     private String[][] ArticuloModel;
-
     private String id_categoria;
+
+    ProgressDialog progreso;
+
+    private ImageLoader imageLoader = ImageLoader.getInstance();
+    private ImageLoader imageLoader2 = ImageLoader.getInstance();
 
     public Fragment_ecommerce_Sincronizar_Nuevo_Prod() {
         // Required empty public constructor
@@ -99,8 +107,10 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         String precio = bundle.getString( "precio");
         String nombre_categoria = bundle.getString("categoria");
         id_categoria = bundle.getString("id_categoria");
+        Imagen1 = "http://187.189.192.150:8010" + bundle.getString( "image1");
+        Imagen2 = "http://187.189.192.150:8010" + bundle.getString( "image2");
 
-        System.out.println(nombre_categoria);
+       // System.out.println(nombre_categoria);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getActivity().MODE_PRIVATE );
 
@@ -109,12 +119,22 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         TokenLife = sharedPref.getString( "TokenLifetime", "" );
         usu_id = sharedPref.getString("usu_id","");
 
+        FotoArticulo1 = (ImageView) v.findViewById(R.id.foto_articulo1);
+        FotoArticulo2 = (ImageView) v.findViewById(R.id.foto_articulo2);
+
+        imageLoader.displayImage(Imagen1,FotoArticulo1);
+        imageLoader2.displayImage(Imagen2,FotoArticulo2);
+
+        //FotoArticulo1.setImageURI(Uri.parse(  Imagen1 ) );
+        //FotoArticulo2.setImageURI(Uri.parse(  Imagen2 ) );
 
                 TextNombreArticulo = (EditText) v.findViewById( R.id.text_nombre_articulo );
                 TextDescripcionArticulo = (EditText) v.findViewById( R.id.text_descripcion_articulo );
                 TextprecioArticulo = (EditText) v.findViewById( R.id.text_precio_articulo );
                 TextCantidad = (ElegantNumberButton) v.findViewById( R.id.text_cantidad );
                 TextGarantia = (EditText) v.findViewById( R.id.text_garantia );
+
+                TextCantidad.setNumber( String.valueOf(1) );
 
                 textCategoriaSeleccionada = (TextView) v.findViewById( R.id.textCategoriaSeleccionada );
 
@@ -124,6 +144,8 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
                 RadioUsado = (RadioButton) v.findViewById( R.id.radioButton_Usado );
                 RadioNuevo = (RadioButton) v.findViewById( R.id.radioButton_Nuevo );
+
+                RadioUsado.setChecked(true);
 
                 SpinnerTipoPublicacion=(Spinner) v.findViewById( R.id.Spinner_Tipo_Publicacion );
 
@@ -143,8 +165,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
             }
         });
-
-
 
             return v;
 
@@ -216,8 +236,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
     }
 
-    private void CargaCategorias()
-    {
+    private void CargaCategorias(){
         final String url = "http://187.189.192.150:8010/api/ecomerce/create_app/access_token=" + AccesToken  + "&expires_in=21600&user_id=" + UserML + "&domains=localhost";
 
         // prepare the Request
@@ -282,6 +301,10 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
     public void Guarda() {
 
+        progreso = new ProgressDialog( getContext() );
+        progreso.setMessage( "Guardando..." );
+        progreso.show();
+
         String ApiPath = "https://api.mercadolibre.com/items?access_token=" + AccesToken;
 
         String Condiciones="";
@@ -302,8 +325,8 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         JSONObject json1= new JSONObject();
 
         try {
-            json1.put("source","http://upload.wikimedia.org/wikipedia/commons/f/fd/Ray_Ban_Original_Wayfarer.jpg");
-            json1.put("source","http://upload.wikimedia.org/wikipedia/commons/f/fd/Ray_Ban_Original_Wayfarer.jpg");
+            json1.put("source",Imagen1);
+            json1.put("source",Imagen2);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -340,10 +363,13 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
             Toast.makeText(getContext(), "Se Agrego correctamente el producto", Toast.LENGTH_LONG).show();
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar()).commit();
+
+                progreso.hide();
             }
         }, new Response.ErrorListener() {
             @Override    public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getContext(),  error.toString(), Toast.LENGTH_LONG).show();
+                progreso.hide();
             }
         }){
             @Override    public Map<String, String> getHeaders() throws AuthFailureError {
@@ -362,14 +388,11 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                 }
             }
 
-
         };
 
         requestQueue.add(jsonObjectRequest);
 
-
     }
-
 
     }
 
