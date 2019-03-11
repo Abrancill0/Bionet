@@ -58,7 +58,6 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
         CargaArticulos();
 
-
         final TableDataClickListener<ArticuloModel> ArticuloListener = new TableDataClickListener<ArticuloModel>() {
             @Override
             public void onDataClicked(int rowIndex, ArticuloModel clickedData) {
@@ -123,7 +122,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
                                     RespuestaResultado = response.getJSONArray("resultado");
 
-                                    // ArticuloModel = new String[RespuestaResultado.length()][5];
+                                    // sacar la ruta de las imagenes y mandarlo en el modelo
 
                                     for (int x = 0; x < RespuestaResultado.length(); x++) {
                                         JSONObject elemento = RespuestaResultado.getJSONObject(x);
@@ -177,7 +176,6 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
                             } catch (JSONException e) {
 
-
                                 Toast toast1 =
                                         Toast.makeText(getContext(),
                                                 String.valueOf(e), Toast.LENGTH_LONG);
@@ -190,7 +188,6 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            //Log.d("Error.Response", String.valueOf(error));
 
                             Toast toast1 =
                                     Toast.makeText(getContext(),

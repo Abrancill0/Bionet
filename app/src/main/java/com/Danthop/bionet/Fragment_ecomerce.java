@@ -57,7 +57,7 @@ public class Fragment_ecomerce extends Fragment {
     private String UserML;
     private String AccesToken;
     private String TokenLife;
-    private  JSONObject RespuestaTodo = null;
+    private JSONObject RespuestaTodo = null;
     private String RespuestaTodoString;
 
     private List<Ecommerce_orden_Model> Ordenes;
@@ -66,91 +66,179 @@ public class Fragment_ecomerce extends Fragment {
 
     private String[][] OrdenesModel;
 
-
     public Fragment_ecomerce() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_ecomerce,container, false);
+        v = inflater.inflate( R.layout.fragment_ecomerce, container, false );
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getActivity().MODE_PRIVATE );
         Ordenes = new ArrayList<>();
 
-         UserML = sharedPref.getString( "UserIdML", "" );
-         AccesToken = sharedPref.getString( "AccessToken", "" );
-         TokenLife = sharedPref.getString( "TokenLifetime", "" );
-         usu_id = sharedPref.getString("usu_id","");
+        UserML = sharedPref.getString( "UserIdML", "" );
+        AccesToken = sharedPref.getString( "AccessToken", "" );
+        TokenLife = sharedPref.getString( "TokenLifetime", "" );
+        usu_id = sharedPref.getString( "usu_id", "" );
 
         Bundle bundle = getArguments();
 
-        if (bundle !=null){
-            String json = bundle.getString( "Resultado");
+        if (bundle != null) {
+            String json = bundle.getString( "Resultado" );
 
-            RespuestaTodoString = bundle.getString( "Resultado");
+            RespuestaTodoString = bundle.getString( "Resultado" );
 
             try {
-                JSONObject obj = new JSONObject(json);
-                CargaDatos(obj);
+                JSONObject obj = new JSONObject( json );
+                CargaDatos( obj );
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        } else {
+            LoadTable();
         }
 
 
-
-
-        LoadTable();
         LoadButtons();
 
-        tabla_ecomerce.setSwipeToRefreshEnabled(true);
-        tabla_ecomerce.setSwipeToRefreshListener(new SwipeToRefreshListener() {
+        tabla_ecomerce.setSwipeToRefreshEnabled( true );
+        tabla_ecomerce.setSwipeToRefreshListener( new SwipeToRefreshListener() {
             @Override
             public void onRefresh(final RefreshIndicator refreshIndicator) {
-                tabla_ecomerce.postDelayed(new Runnable() {
+                tabla_ecomerce.postDelayed( new Runnable() {
                     @Override
                     public void run() {
                         Ordenes.clear();
                         LoadTable();
                         refreshIndicator.hide();
                     }
-                }, 2000);
+                }, 2000 );
             }
-        });
+        } );
 
-        tabla_ecomerce.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
-
+        tabla_ecomerce.setEmptyDataIndicatorView( v.findViewById( R.id.Tabla_vacia ) );
 
         return v;
     }
 
-    public void CargaDatos(JSONObject Datos)
-    {
+    public void CargaDatos(JSONObject Datos) {
+        try {
+
+            tabla_ecomerce = (SortableOrdenEcommerceTable) v.findViewById( R.id.tabla_ecommerce );
+
+            progreso = new ProgressDialog( getContext() );
+            progreso.setMessage( "Cargando..." );
+            progreso.show();
+
+            JSONObject RespuestaHistorial = null;
+            JSONArray RespuestaHistorialResult = null;
+            JSONObject RespuestaBuyer = null;
+            JSONObject RespuestaShipping = null;
+            JSONArray RespuestaShippingItems = null;
+            JSONArray RespuestaPayments = null;
+
+            String Estatus;
+            String Comprador;
+            String Descripcion = "";
+            String Cantidad = "";
+            String Importe = "";
+            String Envio = "";
+
+            try {
+
+                int EstatusApi = Integer.parseInt( Datos.getString( "estatus" ) );
+
+                RespuestaHistorial = Datos.getJSONObject( "aHistorial" );
+
+                RespuestaTodo = Datos;
+
+                RespuestaHistorialResult = RespuestaHistorial.getJSONArray( "results" );
+
+                OrdenesModel = new String[RespuestaHistorialResult.length()][6];
+
+                for (int x = 0; x < RespuestaHistorialResult.length(); x++) {
+
+                    JSONObject elemento = RespuestaHistorialResult.getJSONObject( x );
+
+                    Estatus = elemento.getString( "status" );
+                    RespuestaBuyer = elemento.getJSONObject( "buyer" );
+                    Comprador = RespuestaBuyer.getString( "first_name" ) + " " + RespuestaBuyer.getString( "last_name" );
+                    RespuestaShipping = elemento.getJSONObject( "shipping" );
+                    RespuestaShippingItems = RespuestaShipping.getJSONArray( "shipping_items" );
+
+                    for (int i = 0; i < RespuestaShippingItems.length(); i++) {
+
+                        JSONObject elementoSI = RespuestaShippingItems.getJSONObject( i );
+
+                        Descripcion = elementoSI.getString( "description" );
+                        Cantidad = elementoSI.getString( "quantity" );
+                    }
+
+                    RespuestaPayments = elemento.getJSONArray( "payments" );
+
+                    for (int z = 0; z < RespuestaPayments.length(); z++) {
+
+                        JSONObject elementoP = RespuestaPayments.getJSONObject( z );
+
+                        Importe = elementoP.getString( "transaction_amount" );
+                        Envio = elementoP.getString( "shipping_cost" );
+                    }
+
+                    final Ecommerce_orden_Model orden = new Ecommerce_orden_Model( Comprador, Descripcion, Cantidad, Envio, Importe, Estatus );
+                    Ordenes.add( orden );
+                }
+                final OrdenEcommerceAdapter ordenAdapter = new OrdenEcommerceAdapter( getContext(), Ordenes, tabla_ecomerce );
+                tabla_ecomerce.setDataAdapter( ordenAdapter );
+
+
+                progreso.hide();
+
+
+            } catch (JSONException e) {
+
+                Toast toast1 =
+                        Toast.makeText( getContext(),
+                                e.toString(), Toast.LENGTH_LONG );
+
+                toast1.show();
+
+                progreso.hide();
+            }
+
+        } catch (Error e) {
+
+            Toast toast1 =
+                    Toast.makeText( getContext(),
+                            e.toString(), Toast.LENGTH_LONG );
+
+            toast1.show();
+
+            progreso.hide();
+
+        }
 
     }
 
-    public void LoadTable(){
+    public void LoadTable() {
 
         try {
 
-            tabla_ecomerce = (SortableOrdenEcommerceTable) v.findViewById(R.id.tabla_ecommerce);
+            tabla_ecomerce = (SortableOrdenEcommerceTable) v.findViewById( R.id.tabla_ecommerce );
 
-            progreso = new ProgressDialog(getContext());
-            progreso.setMessage("Cargando...");
+            progreso = new ProgressDialog( getContext() );
+            progreso.setMessage( "Cargando..." );
             progreso.show();
 
-            String url = getString(R.string.Url);
+            String url = getString( R.string.Url );
 
-            final String ApiPath = url + "/api/ecomerce/inicio_app/?accesstoken=" + AccesToken  + "&user_id=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
+            final String ApiPath = url + "/api/ecomerce/inicio_app/?accesstoken=" + AccesToken + "&user_id=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
 
             // prepare the Request
-            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
-                    new Response.Listener<JSONObject>()
-                    {
+            JsonObjectRequest getRequest = new JsonObjectRequest( Request.Method.GET, ApiPath, null,
+                    new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             // display response
@@ -163,70 +251,68 @@ public class Fragment_ecomerce extends Fragment {
 
                             String Estatus;
                             String Comprador;
-                            String Descripcion ="";
-                            String Cantidad="";
-                            String Importe ="";
-                            String Envio="";
+                            String Descripcion = "";
+                            String Cantidad = "";
+                            String Importe = "";
+                            String Envio = "";
 
                             try {
 
-                                int EstatusApi = Integer.parseInt( response.getString("estatus") );
+                                int EstatusApi = Integer.parseInt( response.getString( "estatus" ) );
 
                                 if (EstatusApi == 1) {
 
-                                    RespuestaHistorial = response.getJSONObject("aHistorial");
+                                    RespuestaHistorial = response.getJSONObject( "aHistorial" );
 
                                     RespuestaTodo = response;
 
-                                    RespuestaHistorialResult = RespuestaHistorial.getJSONArray("results");
+                                    RespuestaHistorialResult = RespuestaHistorial.getJSONArray( "results" );
 
                                     OrdenesModel = new String[RespuestaHistorialResult.length()][6];
 
-                                    for(int x = 0; x < RespuestaHistorialResult.length(); x++){
+                                    for (int x = 0; x < RespuestaHistorialResult.length(); x++) {
 
-                                        JSONObject elemento = RespuestaHistorialResult.getJSONObject(x);
+                                        JSONObject elemento = RespuestaHistorialResult.getJSONObject( x );
 
-                                        Estatus = elemento.getString("status");
-                                        RespuestaBuyer = elemento.getJSONObject("buyer");
-                                        Comprador = RespuestaBuyer.getString("first_name") + " " + RespuestaBuyer.getString("last_name") ;
-                                        RespuestaShipping = elemento.getJSONObject("shipping");
-                                        RespuestaShippingItems= RespuestaShipping.getJSONArray("shipping_items");
+                                        Estatus = elemento.getString( "status" );
+                                        RespuestaBuyer = elemento.getJSONObject( "buyer" );
+                                        Comprador = RespuestaBuyer.getString( "first_name" ) + " " + RespuestaBuyer.getString( "last_name" );
+                                        RespuestaShipping = elemento.getJSONObject( "shipping" );
+                                        RespuestaShippingItems = RespuestaShipping.getJSONArray( "shipping_items" );
 
-                                        for(int i = 0; i < RespuestaShippingItems.length(); i++){
+                                        for (int i = 0; i < RespuestaShippingItems.length(); i++) {
 
-                                            JSONObject elementoSI = RespuestaShippingItems.getJSONObject(i);
+                                            JSONObject elementoSI = RespuestaShippingItems.getJSONObject( i );
 
                                             Descripcion = elementoSI.getString( "description" );
                                             Cantidad = elementoSI.getString( "quantity" );
                                         }
 
-                                        RespuestaPayments = elemento.getJSONArray("payments");
+                                        RespuestaPayments = elemento.getJSONArray( "payments" );
 
-                                        for(int z = 0; z < RespuestaPayments.length(); z++) {
+                                        for (int z = 0; z < RespuestaPayments.length(); z++) {
 
-                                            JSONObject elementoP = RespuestaPayments.getJSONObject(z);
+                                            JSONObject elementoP = RespuestaPayments.getJSONObject( z );
 
                                             Importe = elementoP.getString( "transaction_amount" );
                                             Envio = elementoP.getString( "shipping_cost" );
                                         }
 
-                                        final Ecommerce_orden_Model orden = new Ecommerce_orden_Model(Comprador, Descripcion, Cantidad,Envio,Importe,Estatus);
-                                        Ordenes.add(orden);
+                                        final Ecommerce_orden_Model orden = new Ecommerce_orden_Model( Comprador, Descripcion, Cantidad, Envio, Importe, Estatus );
+                                        Ordenes.add( orden );
                                     }
-                                    final OrdenEcommerceAdapter ordenAdapter = new OrdenEcommerceAdapter(getContext(), Ordenes, tabla_ecomerce);
-                                    tabla_ecomerce.setDataAdapter(ordenAdapter);
+                                    final OrdenEcommerceAdapter ordenAdapter = new OrdenEcommerceAdapter( getContext(), Ordenes, tabla_ecomerce );
+                                    tabla_ecomerce.setDataAdapter( ordenAdapter );
 
 
                                     progreso.hide();
 
-                                }
-                                else
-                                {
+                                } else {
 
-                                    String Mensaje = response.getString("resultado");
+                                    String Mensaje = response.getString( "resultado" );
                                     Toast toast1 =
-                                            Toast.makeText(getContext(),
-                                                    Mensaje, Toast.LENGTH_LONG);
+                                            Toast.makeText( getContext(),
+                                                    Mensaje, Toast.LENGTH_LONG );
 
                                     toast1.show();
 
@@ -238,8 +324,8 @@ public class Fragment_ecomerce extends Fragment {
                             } catch (JSONException e) {
 
                                 Toast toast1 =
-                                        Toast.makeText(getContext(),
-                                                e.toString(), Toast.LENGTH_LONG);
+                                        Toast.makeText( getContext(),
+                                                e.toString(), Toast.LENGTH_LONG );
 
                                 toast1.show();
 
@@ -249,15 +335,14 @@ public class Fragment_ecomerce extends Fragment {
 
                         }
                     },
-                    new Response.ErrorListener()
-                    {
+                    new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             //Log.d("Error.Response", String.valueOf(error));
 
                             Toast toast1 =
-                                    Toast.makeText(getContext(),
-                                            error.toString(), Toast.LENGTH_LONG);
+                                    Toast.makeText( getContext(),
+                                            error.toString(), Toast.LENGTH_LONG );
 
                             toast1.show();
 
@@ -268,14 +353,14 @@ public class Fragment_ecomerce extends Fragment {
 
             getRequest.setShouldCache(false);
 
-            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+            VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
 
 
         } catch (Error e) {
 
             Toast toast1 =
-                    Toast.makeText(getContext(),
-                            e.toString(), Toast.LENGTH_LONG);
+                    Toast.makeText( getContext(),
+                            e.toString(), Toast.LENGTH_LONG );
 
             toast1.show();
 
@@ -286,18 +371,12 @@ public class Fragment_ecomerce extends Fragment {
 
     }
 
-    public void LoadButtons(){
-        dialog=new Dialog(getContext());
-        btn_pestania_sincronizar = v.findViewById(R.id.btn_pestania_sincronizar);
-        btn_pestania_sincronizar.setOnClickListener(new View.OnClickListener() {
+    public void LoadButtons() {
+        dialog = new Dialog( getContext() );
+        btn_pestania_sincronizar = v.findViewById( R.id.btn_pestania_sincronizar );
+        btn_pestania_sincronizar.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //RespuestaAdatos
-
-               // FragmentTransaction fr = getFragmentManager().beginTransaction();
-               // fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar()).commit();
-
 
                 Bundle bundle = new Bundle();
                 bundle.putString( "Resultado", String.valueOf( RespuestaTodo ) );
@@ -306,21 +385,15 @@ public class Fragment_ecomerce extends Fragment {
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
                 Fragment_ecommerce_Sincronizar secondFragment = new Fragment_ecommerce_Sincronizar();
-                secondFragment.setArguments(bundle);
+                secondFragment.setArguments( bundle );
 
-                fragmentTransaction.replace(R.id.fragment_container,secondFragment);
+                fragmentTransaction.replace( R.id.fragment_container, secondFragment );
                 fragmentTransaction.commit();
 
-
-
-               // FragmentTransaction fr = getFragmentManager().beginTransaction();
-               // fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar()).commit();
-
-
             }
-        });
-        btn_pestania_preguntas = v.findViewById(R.id.btn_pestania_preguntas);
-        btn_pestania_preguntas.setOnClickListener(new View.OnClickListener() {
+        } );
+        btn_pestania_preguntas = v.findViewById( R.id.btn_pestania_preguntas );
+        btn_pestania_preguntas.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -331,48 +404,46 @@ public class Fragment_ecomerce extends Fragment {
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
                 Fragment_popup_ecommerce_preguntas secondFragment = new Fragment_popup_ecommerce_preguntas();
-                secondFragment.setArguments(bundle);
+                secondFragment.setArguments( bundle );
 
-                fragmentTransaction.replace(R.id.fragment_container,secondFragment);
+                fragmentTransaction.replace( R.id.fragment_container, secondFragment );
                 fragmentTransaction.commit();
 
-               // FragmentTransaction fr = getFragmentManager().beginTransaction();
-               // fr.replace(R.id.fragment_container,new Fragment_popup_ecommerce_preguntas()).commit();
             }
-        });
+        } );
         //btn_sincronizar = v.findViewById(R.id.btn_sincronizar);
-       // btn_sincronizar.setOnClickListener(new View.OnClickListener() {
-       //     @Override
-         //   public void onClick(View v) {
-         //       dialog.setContentView(R.layout.pop_up_sincronizar);
-         //       dialog.show();
-         //       btn_sincronizar_no = dialog.findViewById(R.id.btn_sincronizar_no);
-         //       btn_sincronizar_si = dialog.findViewById(R.id.btn_sincronizar_si);
+        // btn_sincronizar.setOnClickListener(new View.OnClickListener() {
+        //     @Override
+        //   public void onClick(View v) {
+        //       dialog.setContentView(R.layout.pop_up_sincronizar);
+        //       dialog.show();
+        //       btn_sincronizar_no = dialog.findViewById(R.id.btn_sincronizar_no);
+        //       btn_sincronizar_si = dialog.findViewById(R.id.btn_sincronizar_si);
 
 
-         //       btn_sincronizar_no.setOnClickListener(new View.OnClickListener() {
-         //           @Override
-         //           public void onClick(View v) {
-         //               dialog.dismiss();
-         //           }
-         //       });
-         //       btn_sincronizar_si.setOnClickListener(new View.OnClickListener() {
-         //           @Override
-         //           public void onClick(View v) {
-         //               dialog.setContentView(R.layout.pop_up_confimacion_sincronizar);
-         //               btn_aceptar_cerrar_ventana = dialog.findViewById(R.id.aceptar_cerrar_ventana1);
+        //       btn_sincronizar_no.setOnClickListener(new View.OnClickListener() {
+        //           @Override
+        //           public void onClick(View v) {
+        //               dialog.dismiss();
+        //           }
+        //       });
+        //       btn_sincronizar_si.setOnClickListener(new View.OnClickListener() {
+        //           @Override
+        //           public void onClick(View v) {
+        //               dialog.setContentView(R.layout.pop_up_confimacion_sincronizar);
+        //               btn_aceptar_cerrar_ventana = dialog.findViewById(R.id.aceptar_cerrar_ventana1);
 
-         //               btn_aceptar_cerrar_ventana.setOnClickListener(new View.OnClickListener() {
-         //                   @Override
-         //                   public void onClick(View v) {
-         //                       dialog.dismiss();
-         //                   }
-         //               });
-          //          }
-         //       });
+        //               btn_aceptar_cerrar_ventana.setOnClickListener(new View.OnClickListener() {
+        //                   @Override
+        //                   public void onClick(View v) {
+        //                       dialog.dismiss();
+        //                   }
+        //               });
+        //          }
+        //       });
 
 
-          //  }
+        //  }
         //});
     }
 

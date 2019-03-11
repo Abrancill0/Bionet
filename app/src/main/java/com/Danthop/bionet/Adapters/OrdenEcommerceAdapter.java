@@ -30,7 +30,6 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
     public Dialog pop_up1;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
 
-
     public OrdenEcommerceAdapter(final Context context, final List<Ecommerce_orden_Model> data, final SortableOrdenEcommerceTable tableView) {
         super(context, data, tableView);
     }
@@ -146,7 +145,6 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
         return ButtonDos(orden);
     }
 
-
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
         textView.setText(value);
@@ -157,7 +155,7 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
 
     private View ButtonUno(final Ecommerce_orden_Model orden){
         final Button btn = new Button(getContext());
-        btn.setText("Botón 1");
+        btn.setText("Ver Ficha");
         btn.setPadding(20, 10, 20, 10);
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -209,4 +207,3 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
             ordenToUpdate.setCliente(s.toString());
         }
     }}
-
