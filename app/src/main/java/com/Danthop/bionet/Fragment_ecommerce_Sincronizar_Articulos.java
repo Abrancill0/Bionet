@@ -56,18 +56,6 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
         usu_id = sharedPref.getString("usu_id","");
 
-        atras = v.findViewById(R.id.atras);
-
-        atras.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar());
-                fr.commit();
-            }
-        });
-
         tb = v.findViewById(R.id.tablaArticulos);
 
         CargaArticulos();
