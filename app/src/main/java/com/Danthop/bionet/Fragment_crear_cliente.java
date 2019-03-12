@@ -70,8 +70,8 @@ public class Fragment_crear_cliente extends DialogFragment {
     private EditText TextTelefono;
     private EditText TextRfc;
     private EditText TextRazonSocial;
-    private String CorreoIgual;
-    private String DireccionIgual;
+    private Boolean CorreoIgual;
+    private Boolean DireccionIgual;
     private EditText TextFacturacionEmail;
     private Spinner TextFacturacionEstado;
     private Spinner TextFacturacionColonia;
@@ -273,29 +273,36 @@ public class Fragment_crear_cliente extends DialogFragment {
         Seleccion = SpinnerOpcion.getSelectedItem().toString();
         if(Seleccion.equals("N/A"))
         {
-             FactuacionEmail ="";
-             FacturacionCalle ="";
-             FacturacionNumInt ="";
-             FacturacionNumExt ="";
-             FacturacionColonia ="";
-             FacturacionMunicipio ="";
-             FacturacionCp ="";
-
+             FactuacionEmail = String.valueOf(TextEmail.getText());
+             FacturacionCalle = String.valueOf(TextCalle.getText());
+             FacturacionNumInt = String.valueOf(TextNumInterior.getText());
+             FacturacionNumExt = String.valueOf(TextNumExt.getText());
+             FacturacionColonia = String.valueOf(SpinnerColonia.getSelectedItem());
+             FacturacionMunicipio = String.valueOf(TextMunicipio.getText());
+             FacturacionCp = String.valueOf(TextCp.getText());
+             CorreoIgual= true;
+             DireccionIgual = true;
         }
         else if(Seleccion.equals("Email de Facturación"))
         {
+
             FactuacionEmail = String.valueOf( TextFacturacionEmail.getText() );
-            FacturacionCalle ="";
-            FacturacionNumInt ="";
-            FacturacionNumExt ="";
-            FacturacionColonia ="";
-            FacturacionMunicipio ="";
-            FacturacionCp ="";
+
+
+            FacturacionCalle = String.valueOf(TextCalle.getText());
+            FacturacionNumInt = String.valueOf(TextNumInterior.getText());
+            FacturacionNumExt = String.valueOf(TextNumExt.getText());
+            FacturacionColonia = String.valueOf(SpinnerColonia.getSelectedItem());
+            FacturacionMunicipio = String.valueOf(TextMunicipio.getText());
+            FacturacionCp = String.valueOf(TextCp.getText());
+
+            CorreoIgual= false;
+            DireccionIgual = true;
 
         }
         else if(Seleccion.equals("Dirección Fiscal"))
         {
-            FactuacionEmail = "";
+            FactuacionEmail = String.valueOf(TextEmail.getText());
 
             FacturacionCalle = String.valueOf(TextFacturacionCalle.getText());
             FacturacionNumInt = String.valueOf(TextFacturacionNumInt.getText());
@@ -304,6 +311,9 @@ public class Fragment_crear_cliente extends DialogFragment {
             FacturacionCp = String.valueOf(TextFacturacionCp.getText());
             FacturacionMunicipio = String.valueOf( (TextFacturacionMunicipio.getText()) );
             Suc_DatosFisc = EstadoIDFiscal.get(SpinnerSucursal.getSelectedItemPosition());
+
+            CorreoIgual= true;
+            DireccionIgual = false;
 
         }
         else if(Seleccion.equals("Ambas"))
@@ -316,6 +326,9 @@ public class Fragment_crear_cliente extends DialogFragment {
             FacturacionCp = String.valueOf(TextFacturacionCp.getText());
             FacturacionMunicipio = String.valueOf( (TextFacturacionMunicipio.getText()) );
             Suc_DatosFisc = EstadoIDFiscal.get(SpinnerSucursal.getSelectedItemPosition());
+
+            CorreoIgual= false;
+            DireccionIgual = false;
 
         }
 
@@ -331,8 +344,8 @@ public class Fragment_crear_cliente extends DialogFragment {
             request.put("cli_telefono",TextTelefono.getText());
             request.put("cli_razon_social",TextRazonSocial.getText());
             request.put("cli_rfc",TextRfc.getText());
-            request.put("cli_correos_iguales","true");
-            request.put("cli_direcciones_iguales","true");
+            request.put("cli_correos_iguales",CorreoIgual);
+            request.put("cli_direcciones_iguales",DireccionIgual);
             request.put("cli_calle",TextCalle.getText());
             request.put("cli_numero_interior",TextNumInterior.getText());
             request.put("cli_numero_exterior",TextNumExt.getText());

@@ -90,14 +90,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 table:tableView_columnCount="4"
-                android:layout_weight=".7"/>
+                android:layout_weight=".7"
+                app:tableView_headerColor="@color/white" />
 
             <LinearLayout
                 android:id="@+id/Tabla_vacia"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".3"
-                android:background="@color/fondo_azul"
+                android:background="@color/gray2"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="vertical"
                 android:visibility="gone">

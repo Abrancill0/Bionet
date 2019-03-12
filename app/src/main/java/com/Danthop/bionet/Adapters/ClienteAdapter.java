@@ -57,6 +57,18 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
     private Typeface s;
     private FragmentTransaction fr;
 
+
+    private String cp_fiscal;
+    private String estado_fiscal;
+    private String municipio_fiscal;
+    private String colonia_fiscal;
+    private String calle_fiscal;
+    private String num_ext_fiscal;
+    private String num_int_fiscal;
+    private String direccion_fiscal;
+    private String email_fiscal;
+
+
     private String UsuarioID;
 
     public ClienteAdapter(final Context context, final List<ClienteModel> data, final SortableClientesTable tableView,FragmentTransaction gr) {
@@ -183,6 +195,9 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                 TextView RFCCliente = ver_cliente_dialog.findViewById(R.id.rfc_cliente);
                 TextView RazonSocialCliente = ver_cliente_dialog.findViewById(R.id.razon_social_cliente);
 
+                TextView DireccionFiscal = ver_cliente_dialog.findViewById(R.id.direccion_fiscal_cliente);
+                TextView EmailFiscal = ver_cliente_dialog.findViewById(R.id.email_facturacion_cliente);
+
                 NameCliente.setText(cliente.getCliente_Nombre());
                 CorreoCliente.setText(cliente.getCliente_Correo());
                 TelefonoCliente.setText(cliente.getCliente_Telefono());
@@ -200,6 +215,12 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                  MunicipioCliente.setText( cliente.getcliente_municipio() );
                  RFCCliente.setText( cliente.getcliente_rfc() );
                  RazonSocialCliente.setText(  cliente.getcliente_razon_social());
+                 CalleCliente.setText(cliente.getCliente_calle());
+
+                 DireccionFiscal.setText(cliente.getCliente_direccion_fiscal());
+                 EmailFiscal.setText(cliente.getCliente_email_facturacion());
+
+
 
             }
         });
@@ -231,14 +252,14 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                 bundle.putString( "sucursal","");
                 bundle.putString( "rfc", cliente.getcliente_rfc() );
                 bundle.putString( "razon_social", cliente.getcliente_razon_social());
-                bundle.putString( "cp_fiscal", "");
-                bundle.putString( "estado_fiscal", "" );
-                bundle.putString( "municipio_fiscal", "");
-                bundle.putString( "colonia_fiscal", "" );
-                bundle.putString( "calle_fiscal", "");
-                bundle.putString( "numero_interior_fiscal", "");
-                bundle.putString( "numero_exterior_fiscal", "");
-                bundle.putString( "correo_fiscal", "");
+                bundle.putString( "cp_fiscal", cliente.getCp_fiscal());
+                bundle.putString( "estado_fiscal", cliente.getEstado_fiscal() );
+                bundle.putString( "municipio_fiscal", cliente.getMunicipio_fiscal());
+                bundle.putString( "colonia_fiscal", cliente.getColonia_fiscal());
+                bundle.putString( "calle_fiscal", cliente.getCalle_fiscal());
+                bundle.putString( "numero_interior_fiscal", cliente.getNum_int_fiscal());
+                bundle.putString( "numero_exterior_fiscal", cliente.getNum_ext_fiscal());
+                bundle.putString( "correo_fiscal", cliente.getCliente_email_facturacion());
                 Fragment_editarCliente editarCliente = new Fragment_editarCliente();
                 editarCliente.setArguments(bundle);
                 fr.replace(R.id.fragment_container,editarCliente).commit();
@@ -481,6 +502,40 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                             rfc = elemento.getString( "cli_rfc");
                             razon_social = elemento.getString( "cli_razon_social");
 
+                            RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion_fiscal");
+                            cp_fiscal = RespuestaNodoDireccion.getString("cli_codigo_postal");
+                            estado_fiscal = RespuestaNodoDireccion.getString("cli_estado");
+                            municipio_fiscal = RespuestaNodoDireccion.getString("cli_ciudad");
+                            colonia_fiscal = RespuestaNodoDireccion.getString("cli_colonia");
+                            calle_fiscal = RespuestaNodoDireccion.getString("cli_calle");
+                            num_ext_fiscal = RespuestaNodoDireccion.getString("cli_numero_exterior");
+                            num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
+
+
+                            String direccion_igual = elemento.getString("cli_direcciones_iguales");
+                            if(direccion_igual.equals("false"))
+                            {
+                                direccion_fiscal = calle_fiscal + " " + num_ext_fiscal + " " + num_int_fiscal + " " +colonia_fiscal + " " + cp_fiscal + " " + estado_fiscal + " " + municipio_fiscal;
+                            }
+                            else if (direccion_igual.equals("true"))
+                            {
+                                direccion_fiscal = calle + " " + num_ext + " " + num_int + " " +colonia + " " + cp + " " + estado + " " + municipio;
+
+                            }
+
+                            String correo_igual = elemento.getString("cli_correos_iguales");
+                            if(correo_igual.equals("false"))
+                            {
+                                email_fiscal = elemento.getString("cli_correo_electronico_facturacion");
+                            }
+                            else if (correo_igual.equals("true"))
+                            {
+                                email_fiscal = correo_electronico;
+                            }
+
+
+
+
                             final ClienteModel cliente = new ClienteModel(UUID,
                                     nombre,
                                     correo_electronico,
@@ -488,13 +543,23 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                                     UsuarioID,
                                     estado,
                                     colonia,
+                                    calle,
                                     num_int,
                                     num_ext,
                                     cp,
                                     ciudad,
                                     municipio,
                                     rfc,
-                                    razon_social
+                                    razon_social,
+                                    direccion_fiscal,
+                                    email_fiscal,
+                                    cp_fiscal,
+                                    estado_fiscal,
+                                    municipio_fiscal,
+                                    colonia_fiscal,
+                                    calle_fiscal,
+                                    num_ext_fiscal,
+                                    num_int_fiscal
                             );
                             clientes.add(cliente);
                         }

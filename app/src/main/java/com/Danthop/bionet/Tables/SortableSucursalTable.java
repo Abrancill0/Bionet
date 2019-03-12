@@ -31,7 +31,7 @@ public class SortableSucursalTable extends SortableTableView<SucursalModel> {
         super(context, attributes, styleAttributes);
 
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nombre", "Teléfono", "Correo Electrónico", "Calle");
-        simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+        simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader.setPaddings(10,10,10,10);
         setHeaderAdapter(simpleHeader);
 

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -192,16 +194,26 @@ public class Fragment_editarCliente extends Fragment {
         TextFacturacionNumInt.setText(num_int_fiscal);
         TextFacturacionCalle.setText(calle_fiscal);
         TextFacturacionMunicipio.setText(municipio_fiscal);
+        TextCp = v.findViewById(R.id.Text_cliente_cp);
+
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
-
         LoadSpinnerEstado();
         LoadSpinnerSucursal();
 
-        TextCp = v.findViewById(R.id.Text_cliente_cp);
+        final Handler handler = new Handler();
+        progreso = new ProgressDialog(getContext());
+        progreso.setMessage("Procesando...");
+        progreso.show();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                LoadSpinnerColonias();
+            }
+        }, 3000);
+        progreso.hide();
 
-        LoadSpinnerColonias();
         TextCp.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {

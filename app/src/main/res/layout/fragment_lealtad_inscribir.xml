@@ -124,17 +124,17 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <com.Danthop.bionet.Tables.SortableClientesTable
+                <com.Danthop.bionet.Tables.SortableLealtadInscribirTable
                     android:id="@+id/tabla_clientes"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight=".7"
                     android:visibility="visible"
                     app:tableView_headerColor="@color/white"
-                    table:tableView_columnCount="7"
+                    table:tableView_columnCount="5"
                     >
 
-                </com.Danthop.bionet.Tables.SortableClientesTable>
+                </com.Danthop.bionet.Tables.SortableLealtadInscribirTable>
 
                 <LinearLayout
                     android:id="@+id/Tabla_vacia"

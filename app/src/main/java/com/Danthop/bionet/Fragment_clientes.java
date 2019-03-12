@@ -50,6 +50,25 @@ public class Fragment_clientes extends Fragment {
     private String correo_electronico;
     private String calle;
 
+    private String estado;
+    private String colonia;
+    private String num_int;
+    private String num_ext;
+    private String cp;
+    private String ciudad;
+    private String municipio;
+    private String rfc;
+    private String razon_social;
+    private String cp_fiscal;
+    private String estado_fiscal;
+    private String municipio_fiscal;
+    private String colonia_fiscal;
+    private String calle_fiscal;
+    private String num_ext_fiscal;
+    private String num_int_fiscal;
+    private String direccion_fiscal;
+    private String email_fiscal;
+
     private Dialog ver_cliente_dialog;
     private  FragmentTransaction fr;
 
@@ -149,15 +168,6 @@ public class Fragment_clientes extends Fragment {
 
                     if (status == 1)
                     {
-                         String estado;
-                         String colonia;
-                         String num_int;
-                         String num_ext;
-                         String cp;
-                         String ciudad;
-                         String municipio;
-                         String rfc;
-                         String razon_social;
 
                         Respuesta = response.getJSONObject("resultado");
 
@@ -188,6 +198,42 @@ public class Fragment_clientes extends Fragment {
                             rfc = elemento.getString( "cli_rfc");
                             razon_social = elemento.getString( "cli_razon_social");
 
+                            RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion_fiscal");
+                            cp_fiscal = RespuestaNodoDireccion.getString("cli_codigo_postal");
+                            estado_fiscal = RespuestaNodoDireccion.getString("cli_estado");
+                            municipio_fiscal = RespuestaNodoDireccion.getString("cli_ciudad");
+                            colonia_fiscal = RespuestaNodoDireccion.getString("cli_colonia");
+                            calle_fiscal = RespuestaNodoDireccion.getString("cli_calle");
+                            num_ext_fiscal = RespuestaNodoDireccion.getString("cli_numero_exterior");
+                            num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
+
+
+                            String direccion_igual = elemento.getString("cli_direcciones_iguales");
+                            if(direccion_igual.equals("false"))
+                            {
+                                direccion_fiscal = calle_fiscal + " " + num_ext_fiscal + " " + num_int_fiscal + " " +colonia_fiscal + " " + cp_fiscal + " " + estado_fiscal + " " + municipio_fiscal;
+                            }
+                            else if (direccion_igual.equals("true"))
+                            {
+                                direccion_fiscal = calle + " " + num_ext + " " + num_int + " " +colonia + " " + cp + " " + estado + " " + municipio;
+
+                            }
+
+                            String correo_igual = elemento.getString("cli_correos_iguales");
+                            if(correo_igual.equals("false"))
+                            {
+                                email_fiscal = elemento.getString("cli_correo_electronico_facturacion");
+                            }
+                            else if (correo_igual.equals("true"))
+                            {
+                                email_fiscal = correo_electronico;
+                            }
+
+
+
+
+
+
 
                             final ClienteModel cliente = new ClienteModel(UUID,
                                     nombre,
@@ -196,13 +242,23 @@ public class Fragment_clientes extends Fragment {
                                     usu_id,
                                     estado,
                                     colonia,
+                                    calle,
                                     num_int,
                                     num_ext,
                                     cp,
                                     ciudad,
                                     municipio,
                                     rfc,
-                                    razon_social
+                                    razon_social,
+                                    direccion_fiscal,
+                                    email_fiscal,
+                                    cp_fiscal,
+                                    estado_fiscal,
+                                    municipio_fiscal,
+                                    colonia_fiscal,
+                                    calle_fiscal,
+                                    num_ext_fiscal,
+                                    num_int_fiscal
                             );
                             clientes.add(cliente);
                         }
