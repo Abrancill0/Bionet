@@ -69,6 +69,9 @@ public class Fragment_clientes extends Fragment {
     private String direccion_fiscal;
     private String email_fiscal;
 
+    private String correo_igual;
+    private String direccion_igual;
+
     private Dialog ver_cliente_dialog;
     private  FragmentTransaction fr;
 
@@ -183,6 +186,7 @@ public class Fragment_clientes extends Fragment {
                             UUID = ElementoUsuario.getString( "uuid");
                             nombre = elemento.getString("cli_nombre");
                             correo_electronico = elemento.getString("cli_correo_electronico");
+
                             telefono = elemento.getString("cli_telefono");
                             RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion");
                             calle = RespuestaNodoDireccion.getString("cli_calle");
@@ -208,7 +212,7 @@ public class Fragment_clientes extends Fragment {
                             num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
 
 
-                            String direccion_igual = elemento.getString("cli_direcciones_iguales");
+                            direccion_igual = elemento.getString("cli_direcciones_iguales");
                             if(direccion_igual.equals("false"))
                             {
                                 direccion_fiscal = calle_fiscal + " " + num_ext_fiscal + " " + num_int_fiscal + " " +colonia_fiscal + " " + cp_fiscal + " " + estado_fiscal + " " + municipio_fiscal;
@@ -219,7 +223,7 @@ public class Fragment_clientes extends Fragment {
 
                             }
 
-                            String correo_igual = elemento.getString("cli_correos_iguales");
+                            correo_igual = elemento.getString("cli_correos_iguales");
                             if(correo_igual.equals("false"))
                             {
                                 email_fiscal = elemento.getString("cli_correo_electronico_facturacion");
@@ -258,7 +262,9 @@ public class Fragment_clientes extends Fragment {
                                     colonia_fiscal,
                                     calle_fiscal,
                                     num_ext_fiscal,
-                                    num_int_fiscal
+                                    num_int_fiscal,
+                                    correo_igual,
+                                    direccion_igual
                             );
                             clientes.add(cliente);
                         }

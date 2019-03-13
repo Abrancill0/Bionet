@@ -14,9 +14,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -87,7 +89,17 @@ public class Fragment_editarCliente extends Fragment {
     private String num_ext_fiscal;
     private String correo_fiscal;
 
+    private String correo_igual;
+    private String direccion_igual;
+
     private String usu_id;
+
+    private LinearLayout LayoutDireccionFiscal;
+    private LinearLayout LayoutEmail;
+
+    private final static String[] opciones = { "N/A", "Email de Facturación", "Dirección Fiscal", "Ambas"};
+
+
 
     private ArrayList<String> EstadoName;
     private ArrayList<Integer> EstadoID;
@@ -102,6 +114,7 @@ public class Fragment_editarCliente extends Fragment {
     private int Estado_id;
     private String Sucursal_id;
     private int Estado_id_fiscal;
+    private String UUID;
 
     private Toast toast2;
 
@@ -154,6 +167,9 @@ public class Fragment_editarCliente extends Fragment {
         num_int_fiscal=bundle.getString( "numero_interior_fiscal");
         num_ext_fiscal=bundle.getString( "numero_exterior_fiscal");
         correo_fiscal=bundle.getString( "correo_fiscal");
+        correo_igual=bundle.getString( "correo_igual");
+        direccion_igual=bundle.getString( "direccion_igual");
+        UUID = bundle.getString("UUID");
 
         TextNombre=v.findViewById(R.id.Text_cliente_Nombre);
         SpinnerColonia=v.findViewById(R.id.Text_cliente_colonia);
@@ -199,6 +215,31 @@ public class Fragment_editarCliente extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
+
+        LayoutDireccionFiscal = v.findViewById(R.id.LayoutDireccionFiscal);
+        LayoutEmail = v.findViewById(R.id.LayoutEmail);
+
+        LayoutDireccionFiscal.setVisibility(View.GONE);
+        LayoutEmail.setVisibility(View.GONE);
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, opciones);
+        SpinnerOpcion.setAdapter(adapter);
+
+
+        SpinnerOpcion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                cambiarOpcion();
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+
+        VerificarOpcion();
+
+
         LoadSpinnerEstado();
         LoadSpinnerSucursal();
 
@@ -253,6 +294,71 @@ public class Fragment_editarCliente extends Fragment {
 
         return v;
     }
+
+    private void VerificarOpcion(){
+
+        if(correo_igual.equals("true") && direccion_igual.equals("true") )
+        {
+            LayoutDireccionFiscal.setVisibility(View.GONE);
+            LayoutEmail.setVisibility(View.GONE);
+            SpinnerOpcion.setSelection(0);
+        }
+        else if(correo_igual.equals("false") && direccion_igual.equals("true") )
+        {
+            LayoutEmail.setVisibility(View.VISIBLE);
+            LayoutDireccionFiscal.setVisibility(View.GONE);
+            SpinnerOpcion.setSelection(1);
+
+        }
+        else if(direccion_igual.equals("false") && correo_igual.equals("true"))
+        {
+            LayoutDireccionFiscal.setVisibility(View.VISIBLE);
+            LayoutEmail.setVisibility(View.GONE);
+            SpinnerOpcion.setSelection(2);
+
+        }
+        else if(direccion_igual.equals("false") && correo_igual.equals("false"))
+        {
+            LayoutDireccionFiscal.setVisibility(View.VISIBLE);
+            LayoutEmail.setVisibility(View.VISIBLE);
+            SpinnerOpcion.setSelection(3);
+        }
+
+    }
+
+    public void cambiarOpcion()
+    {
+        String Seleccion;
+        Seleccion = String.valueOf(SpinnerOpcion.getSelectedItem());
+
+        if(Seleccion.equals("N/A"))
+        {
+            LayoutDireccionFiscal.setVisibility(View.GONE);
+            LayoutEmail.setVisibility(View.GONE);
+            SpinnerOpcion.setSelection(0);
+        }
+        else if(Seleccion.equals("Email de Facturación"))
+        {
+            LayoutEmail.setVisibility(View.VISIBLE);
+            LayoutDireccionFiscal.setVisibility(View.GONE);
+            SpinnerOpcion.setSelection(1);
+
+        }
+        else if( Seleccion.equals("Dirección Fiscal"))
+        {
+            LayoutDireccionFiscal.setVisibility(View.VISIBLE);
+            LayoutEmail.setVisibility(View.GONE);
+            SpinnerOpcion.setSelection(2);
+
+        }
+        else if(Seleccion.equals("Ambas"))
+        {
+            LayoutDireccionFiscal.setVisibility(View.VISIBLE);
+            LayoutEmail.setVisibility(View.VISIBLE);
+            SpinnerOpcion.setSelection(3);
+        }
+    }
+
 
     private void LoadSpinnerEstado(){
 
@@ -601,12 +707,96 @@ public class Fragment_editarCliente extends Fragment {
 
     private void GuardarCliente(){
 
+
         progreso = new ProgressDialog(getContext());
         progreso.setMessage("Procesando...");
         progreso.show();
         Estado_id_fiscal=EstadoIDFiscal.get(TextFacturacionEstado.getSelectedItemPosition());
         Estado_id = EstadoID.get(SpinnerEstado.getSelectedItemPosition());
         Sucursal_id = SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+        int Suc_DatosFisc =0;
+
+
+        String FactuacionEmail ="";
+        String FacturacionCalle ="";
+        String FacturacionNumInt ="";
+        String FacturacionNumExt ="";
+        String FacturacionColonia ="";
+        String FacturacionMunicipio ="";
+        String FacturacionEstado = "";
+        String FacturacionCp ="";
+
+
+
+        String Seleccion;
+        Seleccion = SpinnerOpcion.getSelectedItem().toString();
+        if(Seleccion.equals("N/A"))
+        {
+            FactuacionEmail = String.valueOf(TextEmail.getText());
+            FacturacionCalle = String.valueOf(TextCalle.getText());
+            FacturacionNumInt = String.valueOf(TextNumInterior.getText());
+            FacturacionNumExt = String.valueOf(TextNumExt.getText());
+            FacturacionColonia = String.valueOf(SpinnerColonia.getSelectedItem());
+            FacturacionMunicipio = String.valueOf(TextMunicipio.getText());
+            FacturacionEstado = String.valueOf(SpinnerEstado.getSelectedItem());
+            FacturacionCp = String.valueOf(TextCp.getText());
+            CorreoIgual= "true";
+            DireccionIgual = "true";
+        }
+        else if(Seleccion.equals("Email de Facturación"))
+        {
+
+            FactuacionEmail = String.valueOf( TextFacturacionEmail.getText() );
+
+
+            FacturacionCalle = String.valueOf(TextCalle.getText());
+            FacturacionNumInt = String.valueOf(TextNumInterior.getText());
+            FacturacionNumExt = String.valueOf(TextNumExt.getText());
+            FacturacionColonia = String.valueOf(SpinnerColonia.getSelectedItem());
+            FacturacionMunicipio = String.valueOf(TextMunicipio.getText());
+            FacturacionCp = String.valueOf(TextCp.getText());
+            FacturacionEstado = String.valueOf(SpinnerEstado.getSelectedItem());
+
+
+            CorreoIgual= "false";
+            DireccionIgual = "true";
+
+        }
+        else if(Seleccion.equals("Dirección Fiscal"))
+        {
+            FactuacionEmail = String.valueOf(TextEmail.getText());
+
+            FacturacionCalle = String.valueOf(TextFacturacionCalle.getText());
+            FacturacionNumInt = String.valueOf(TextFacturacionNumInt.getText());
+            FacturacionNumExt = String.valueOf(TextFacturacionNumExt.getText());
+            FacturacionColonia = String.valueOf(TextFacturacionColonia.getSelectedItem());
+            FacturacionCp = String.valueOf(TextFacturacionCp.getText());
+            FacturacionMunicipio = String.valueOf( (TextFacturacionMunicipio.getText()) );
+            Suc_DatosFisc = EstadoIDFiscal.get(SpinnerSucursal.getSelectedItemPosition());
+            FacturacionEstado = String.valueOf(TextFacturacionEstado.getSelectedItem());
+
+
+            CorreoIgual= "true";
+            DireccionIgual = "false";
+
+        }
+        else if(Seleccion.equals("Ambas"))
+        {
+            FactuacionEmail = String.valueOf( TextFacturacionEmail.getText() );
+            FacturacionCalle = String.valueOf(TextFacturacionCalle.getText());
+            FacturacionNumInt = String.valueOf(TextFacturacionNumInt.getText());
+            FacturacionNumExt = String.valueOf(TextFacturacionNumExt.getText());
+            FacturacionColonia = String.valueOf(TextFacturacionColonia.getSelectedItem());
+            FacturacionCp = String.valueOf(TextFacturacionCp.getText());
+            FacturacionMunicipio = String.valueOf( (TextFacturacionMunicipio.getText()) );
+            Suc_DatosFisc = EstadoIDFiscal.get(SpinnerSucursal.getSelectedItemPosition());
+            FacturacionEstado = String.valueOf(TextFacturacionEstado.getSelectedItem());
+
+
+            CorreoIgual= "false";
+            DireccionIgual = "false";
+
+        }
 
 
         JSONObject request = new JSONObject();
@@ -614,14 +804,15 @@ public class Fragment_editarCliente extends Fragment {
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("cli_id", UUID);
             request.put("cli_sucursales",Sucursal_id);
             request.put("cli_nombre",TextNombre.getText());
             request.put("cli_correo_electronico",TextEmail.getText());
             request.put("cli_telefono",TextTelefono.getText());
             request.put("cli_razon_social",TextRazonSocial.getText());
             request.put("cli_rfc",TextRfc.getText());
-            request.put("cli_correos_iguales","true");
-            request.put("cli_direcciones_iguales","true");
+            request.put("cli_correos_iguales",CorreoIgual);
+            request.put("cli_direcciones_iguales",DireccionIgual);
             request.put("cli_calle",TextCalle.getText());
             request.put("cli_numero_interior",TextNumInterior.getText());
             request.put("cli_numero_exterior",TextNumExt.getText());
@@ -632,18 +823,16 @@ public class Fragment_editarCliente extends Fragment {
             request.put("cli_id_estado",Estado_id);
             request.put("cli_estado",SpinnerEstado.getSelectedItem().toString());
             request.put("cli_pais","México");
-
-            request.put("cli_correo_electronico_facturacion",correo_fiscal);
-            request.put("cli_calle_facturacion",calle_fiscal);
-            request.put("cli_numero_interior_facturacion",num_int_fiscal);
-            request.put("cli_numero_exterior_facturacion",num_ext_fiscal);
-            request.put("cli_colonia_facturacion",colonia_fiscal);
-            request.put("cli_ciudad_facturacion",municipio_fiscal);
-            request.put("cli_codigo_postal_facturacion",cp_fiscal);
+            request.put("cli_correo_electronico_facturacion",FactuacionEmail);
+            request.put("cli_calle_facturacion",FacturacionCalle);
+            request.put("cli_numero_interior_facturacion",FacturacionNumInt);
+            request.put("cli_numero_exterior_facturacion",FacturacionNumExt);
+            request.put("cli_colonia_facturacion",FacturacionColonia);
+            request.put("cli_ciudad_facturacion",FacturacionMunicipio);
+            request.put("cli_codigo_postal_facturacion",FacturacionCp);
             request.put("cli_id_pais_facturacion",117);
-            request.put("cli_id_estado_facturacion",Estado_id);
-            request.put("cli_estado_facturacion",estado_fiscal);
-
+            request.put("cli_id_estado_facturacion",Suc_DatosFisc);
+            request.put("cli_estado_facturacion",FacturacionEstado);
             request.put("cli_pais_facturacion","Mexico");
 
         }
