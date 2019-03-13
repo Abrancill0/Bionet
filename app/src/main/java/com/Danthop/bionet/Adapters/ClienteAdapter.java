@@ -260,6 +260,9 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                 bundle.putString( "numero_interior_fiscal", cliente.getNum_int_fiscal());
                 bundle.putString( "numero_exterior_fiscal", cliente.getNum_ext_fiscal());
                 bundle.putString( "correo_fiscal", cliente.getCliente_email_facturacion());
+                bundle.putString("correo_igual", cliente.getCorreo_igual());
+                bundle.putString("direccion_igual", cliente.getDireccion_igual());
+                bundle.putString("UUID",cliente.getCliente_UUID());
                 Fragment_editarCliente editarCliente = new Fragment_editarCliente();
                 editarCliente.setArguments(bundle);
                 fr.replace(R.id.fragment_container,editarCliente).commit();
@@ -559,7 +562,9 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                                     colonia_fiscal,
                                     calle_fiscal,
                                     num_ext_fiscal,
-                                    num_int_fiscal
+                                    num_int_fiscal,
+                                    "",
+                                    ""
                             );
                             clientes.add(cliente);
                         }

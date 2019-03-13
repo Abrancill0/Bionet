@@ -32,6 +32,9 @@ public class ClienteModel {
     private String cliente_direccion_fiscal;
     private String cliente_email_facturacion;
 
+    private String Correo_igual;
+    private String Direccion_igual;
+
 
     public ClienteModel(String cliente_UUID,String cliente_Nombre,
                         String cliente_Correo, String cliente_Telefono,
@@ -53,7 +56,9 @@ public class ClienteModel {
                         String colonia_fiscal,
                         String calle_fiscal,
                         String num_ext_fiscal,
-                        String num_int_fiscal)
+                        String num_int_fiscal,
+                        String correo_igual,
+                        String direccion_igual)
     {
         this.cliente_UUID = cliente_UUID;
         this.cliente_Nombre = cliente_Nombre;
@@ -83,6 +88,8 @@ public class ClienteModel {
         this.num_ext_fiscal = num_ext_fiscal;
         this.num_int_fiscal = num_int_fiscal;
         this.cliente_calle=cliente_calle;
+        Correo_igual = correo_igual;
+        Direccion_igual = direccion_igual;
     }
 
     public String getCliente_UUID() {
@@ -283,5 +290,21 @@ public class ClienteModel {
 
     public void setCliente_calle(String cliente_calle) {
         this.cliente_calle = cliente_calle;
+    }
+
+    public String getCorreo_igual() {
+        return Correo_igual;
+    }
+
+    public void setCorreo_igual(String correo_igual) {
+        this.Correo_igual = correo_igual;
+    }
+
+    public String getDireccion_igual() {
+        return Direccion_igual;
+    }
+
+    public void setDireccion_igual(String direccion_igual) {
+        this.Direccion_igual = direccion_igual;
     }
 }

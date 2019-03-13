@@ -23,6 +23,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -74,6 +75,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private ImageView Logo_empresa;
     LoginModel Resultado = new LoginModel();
 
+    private ImageView op_home;
+    private ImageView op_notificaciones;
+    private ImageView op_ventas;
+    private ImageView op_clientes;
+    private ImageView op_lealtad;
+    private ImageView op_ecommerce;
+    private ImageView op_inventario;
+    private ImageView op_bio;
+    private ImageView op_salir;
+
 
     @Override
     public void getImageBitmap(Bitmap bitmap) {
@@ -109,12 +120,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public void getImagePath(Uri imagePath) {
 
         ImageView SelectPhoto = (ImageView) findViewById(R.id.foto_perfil_hamburguesa);
-        imageLoader.displayImage(imagePath.toString(),SelectPhoto);
+        imageLoader.displayImage(imagePath.toString(), SelectPhoto);
         mSelectedBitmap = null;
         mSelectedUri = imagePath;
 
 
-        GuardarImagen( imagePath.getPath());
+        GuardarImagen(imagePath.getPath());
     }
 
     public static Uri writeToTempImageAndGetPathUri(Context inContext, Bitmap inImage) {
@@ -125,82 +136,80 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.home );
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.home);
 
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(Home.this));
 
-        cerrar = new Dialog( this );
 
-        Toolbar toolbar = findViewById( R.id.toolbar );
+        cerrar = new Dialog(this);
 
-        drawer = findViewById( R.id.drawer_layout );
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        drawer = findViewById(R.id.drawer_layout);
 
         Context context = this;
-        SharedPreferences sharedPref = getSharedPreferences( "DatosPersistentes", context.MODE_PRIVATE );
+        SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", context.MODE_PRIVATE);
 
-        String Nombre = sharedPref.getString( "usu_nombre", "" );
-        String Apellido = sharedPref.getString( "usu_apellidos", "" );
-        String ImagenPerfil = sharedPref.getString( "usu_imagen_perfil", "" );
-        String LogoEmpresa = sharedPref.getString("logo_imagen","");
+        String Nombre = sharedPref.getString("usu_nombre", "");
+        String Apellido = sharedPref.getString("usu_apellidos", "");
+        String ImagenPerfil = sharedPref.getString("usu_imagen_perfil", "");
+        String LogoEmpresa = sharedPref.getString("logo_imagen", "");
 
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace( R.id.fragment_container, new Fragment_pantalla_principal() );
+        tx.replace(R.id.fragment_container, new Fragment_pantalla_principal());
         tx.commit();
 
-        usu_id = sharedPref.getString( "usu_id", "" );
+        usu_id = sharedPref.getString("usu_id", "");
         img_ruta_servidor = ImagenPerfil;
-        NavigationView navigationView = findViewById( R.id.nav_view );
-        navigationView.setNavigationItemSelectedListener( this );
-        View headView = navigationView.getHeaderView( 0 );
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View headView = navigationView.getHeaderView(0);
 
-        img_pantalla_principal = findViewById( R.id.foto_perfil );
-        imgProfile = headView.findViewById( R.id.foto_perfil_hamburguesa );
+        img_pantalla_principal = findViewById(R.id.foto_perfil);
+        imgProfile = headView.findViewById(R.id.foto_perfil_hamburguesa);
         Logo_empresa = findViewById(R.id.logo_empresa);
 
-        if(img_ruta_servidor.equals(""))
-        {
+        if (img_ruta_servidor.equals("")) {
 
-        }
-        else{
-            Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( imgProfile );
+        } else {
+            Picasso.with(getApplicationContext()).load(img_ruta_servidor).into(imgProfile);
         }
 
-        if(LogoEmpresa.equals(""))
-        {
+        if (LogoEmpresa.equals("")) {
 
-        }
-        else{
-            Picasso.with( getApplicationContext() ).load( LogoEmpresa ).into( Logo_empresa );
+        } else {
+            Picasso.with(getApplicationContext()).load(LogoEmpresa).into(Logo_empresa);
         }
 
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle( this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close );
-        drawer.addDrawerListener( toggle );
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
 
+        String url = getString(R.string.Url) + ImagenPerfil;
 
-        String url = getString( R.string.Url ) + ImagenPerfil;
 
+        TextView NombreUsuario = (TextView) headView.findViewById(R.id.TextNombrePerfil);
 
-        TextView NombreUsuario = (TextView) headView.findViewById( R.id.TextNombrePerfil );
+        NombreUsuario.setText(Nombre + " " + Apellido);
 
-        NombreUsuario.setText( Nombre + " " + Apellido );
-
-        imgProfile.setOnClickListener( new View.OnClickListener() {
+        imgProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 verifyPermissions();
                 FragmentManager fm = getSupportFragmentManager();
                 Fragment_pop_up_ProfilePhoto myDialogFragment = new Fragment_pop_up_ProfilePhoto();
-                myDialogFragment.show( fm, "photo_dialog_fragment" );
+                myDialogFragment.show(fm, "photo_dialog_fragment");
             }
-        } );
+        });
+
+
+        LoadButtons();
 
 
     }
@@ -211,17 +220,17 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA};
 
-        if (ContextCompat.checkSelfPermission( this.getApplicationContext(),
-                permissions[0] ) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission( this.getApplicationContext(),
-                permissions[1] ) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission( this.getApplicationContext(),
-                permissions[2] ) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[0]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[1]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[2]) == PackageManager.PERMISSION_GRANTED) {
 
         } else {
-            ActivityCompat.requestPermissions( Home.this,
+            ActivityCompat.requestPermissions(Home.this,
                     permissions,
-                    REQUEST_CODE );
+                    REQUEST_CODE);
 
         }
 
@@ -235,8 +244,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen( GravityCompat.START )) {
-            drawer.closeDrawer( GravityCompat.START );
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -245,126 +254,106 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-            switch (menuItem.getItemId()) {
-                case R.id.nav_notificaciones:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new Fragment_notificaciones()).commit();
-                    break;
-                case R.id.nav_Ventas:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new Fragment_Ventas()).commit();
-                    break;
-                case R.id.nav_home:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new Fragment_pantalla_principal()).commit();
-                    break;
-                case R.id.nav_clientes:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new Fragment_clientes()).commit();
-                    break;
-                case R.id.nav_lealtad:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new FragmentLealtad()).commit();
-                    break;
+        switch (menuItem.getItemId()) {
+            case R.id.nav_notificaciones:
+                notificaciones();
+                break;
+            case R.id.nav_Ventas:
+                ventas();
+                break;
+            case R.id.nav_home:
+                home();
+                break;
+            case R.id.nav_clientes:
+                clientes();
+                break;
+            case R.id.nav_lealtad:
+                lealtad();
+                break;
 
-                case R.id.nav_ecommerce:
+            case R.id.nav_ecommerce:
+                ecomerce();
+                break;
 
-                    Context context = this;
-                    SharedPreferences sharedPref = getSharedPreferences( "DatosPersistentes", context.MODE_PRIVATE );
+            case R.id.nav_inventario:
+                inventario();
+                break;
 
-                    String UserML = sharedPref.getString( "UserIdML", "" );
-                    String AccesToken = sharedPref.getString( "AccessToken", "" );
-                    String TokenLife = sharedPref.getString( "TokenLifetime", "" );
-                    String FechaCreacion = sharedPref.getString( "FechaCreacionToken", "" );
+            case R.id.nav_cerrar_sesion:
+                cerrar_sesion();
+                break;
+        }
 
-
-                    if (AccesToken.length()==0) {
-
-                        Meli.startLogin( this, REQUEST_CODE );
-                    }
-                    else
-                    {
-
-                        Date date1 =null;
-                        Date date2 =null;
-
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-                        try {
-                            date1 = simpleDateFormat.parse( String.valueOf(Calendar.getInstance().getTime()));
-                            date2 = simpleDateFormat.parse( String.valueOf(FechaCreacion));
-
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                        long different = date1.getTime()- date2.getTime();
-
-                        long secondsInMilli = 1000;
-
-                        long elapsedSeconds = different / secondsInMilli;
-
-                        Long TokenLifeLong = Long.valueOf( TokenLife );
-
-                        if (elapsedSeconds >TokenLifeLong)
-                        {
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                    new Fragment_ecomerce()).commit();
-                        }
-                        else
-                        {
-                            Meli.startLogin( this, REQUEST_CODE );
-                        }
-
-                    }
-
-
-                    break;
-
-
-                case R.id.nav_inventario:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new Fragment_inventarios()).commit();
-                    break;
-
-                case R.id.nav_cerrar_sesion:
-                    cerrar.setContentView(R.layout.pop_up_cerrarsesion);
-                    cerrar.show();
-                    break;
-            }
-
-        drawer.closeDrawer( GravityCompat.START );
+        drawer.closeDrawer(GravityCompat.START);
         return true;
 
     }
 
-    public void notificaciones(View view) {
-        getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
-                new Fragment_notificaciones() ).commit();
+    public void notificaciones() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new Fragment_notificaciones()).commit();
+        op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+        op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
     }
 
-    public void ventas(View view){
+    public void ventas() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new Fragment_Ventas()).commit();
+
+        op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_ventas.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+        op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
     }
-    public void clientes(View view){
+
+    public void clientes() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new Fragment_clientes()).commit();
+
+        op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_clientes.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+        op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
     }
 
-    public void ecomerce(View view){
+    public void ecomerce() {
 
-
+        op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+        op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
         Context context = this;
-        SharedPreferences sharedPref = getSharedPreferences( "DatosPersistentes", context.MODE_PRIVATE );
+        SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", context.MODE_PRIVATE);
 
-        String UserML = sharedPref.getString( "UserIdML", "" );
-        String AccesToken = sharedPref.getString( "AccessToken", "" );
-        String TokenLife = sharedPref.getString( "TokenLifetime", "" );
-        String FechaCreacion = sharedPref.getString( "FechaCreacionToken", "" );
+        String UserML = sharedPref.getString("UserIdML", "");
+        String AccesToken = sharedPref.getString("AccessToken", "");
+        String TokenLife = sharedPref.getString("TokenLifetime", "");
+        String FechaCreacion = sharedPref.getString("FechaCreacionToken", "");
 
 
-        if (AccesToken.length()==0) {
-
+        if (AccesToken.length() == 0) {
             SharedPreferences sharedPref1 = getSharedPreferences(context.getPackageName() + ".identity", Context.MODE_PRIVATE);
 
             SharedPreferences.Editor editor =  sharedPref1.edit();
@@ -376,16 +365,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
         else
         {
+            Date date1 = null;
+            Date date2 = null;
 
-            Identity identity = Meli.getCurrentIdentity(getApplicationContext());
-            if (identity == null) {
-
-            } else {
-                identity.getUserId();
-            }
-
-            Date date1 =null;
-            Date date2 =null;
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
@@ -394,23 +376,22 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             String date = df.format(Calendar.getInstance().getTime());
 
             try {
-                 date1 = simpleDateFormat.parse( String.valueOf(date));
-                 date2 = simpleDateFormat.parse( FechaCreacion);
+                date1 = simpleDateFormat.parse(String.valueOf(date));
+                date2 = simpleDateFormat.parse(FechaCreacion);
 
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
-            long different = date1.getTime()- date2.getTime();
+            long different = date1.getTime() - date2.getTime();
 
             long secondsInMilli = 1000;
 
             long elapsedSeconds = different / secondsInMilli;
 
-            long TokenLifeLong = Long.valueOf( TokenLife );
+            long TokenLifeLong = Long.valueOf(TokenLife);
 
-            if (TokenLifeLong > elapsedSeconds )
-            {
+            if (TokenLifeLong > elapsedSeconds) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new Fragment_ecomerce()).commit();
             }
@@ -424,29 +405,60 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 editor.apply();
 
                 Meli.startLogin( this, REQUEST_CODE );
+
             }
 
         }
 
     }
 
-    public void home(View view) {
-        getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
-                new Fragment_pantalla_principal() ).commit();
+    public void home() {
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new Fragment_pantalla_principal()).commit();
+        op_home.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
+
     }
 
-    public void inventario(View view) {
-        getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
-                new Fragment_inventarios() ).commit();
+    public void inventario() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new Fragment_inventarios()).commit();
+
+        op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_inventario.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+        op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
     }
 
-    public void lealtad(View view){
-        getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
-                new FragmentLealtad() ).commit();
+    public void lealtad() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new FragmentLealtad()).commit();
+        op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_lealtad.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
+        op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
     }
 
-    public void cerrar_sesion(View view) {
-        cerrar.setContentView( R.layout.pop_up_cerrarsesion );
+    public void cerrar_sesion() {
+        cerrar.setContentView(R.layout.pop_up_cerrarsesion);
         cerrar.show();
     }
 
@@ -459,16 +471,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace( R.id.fragment_container, fragment )
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
                 .commit();
     }
 
 
     public void Aceptar(View view) {
-        Intent intent = new Intent( Home.this, Login.class );
-        startActivity( intent );
+        Intent intent = new Intent(Home.this, Login.class);
+        startActivity(intent);
 
-        SharedPreferences sharedPref = getSharedPreferences( "DatosPersistentes", Context.MODE_PRIVATE );
+        SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
         sharedPref.edit().clear().commit();
 
@@ -478,7 +490,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         cerrar.dismiss();
     }
 
-    private void GuardarImagen( String RutaReal) {
+    private void GuardarImagen(String RutaReal) {
 
         String url = getString(R.string.Url);
 
@@ -496,12 +508,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                             jObj = new JSONObject(response);
                             img_ruta_servidor = jObj.getString("resultado");
                             System.out.println(img_ruta_servidor);
-                            Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( imgProfile );
+                            Picasso.with(getApplicationContext()).load(img_ruta_servidor).into(imgProfile);
                             //Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( img_pantalla_principal);
 
                             SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor =  sharedPref.edit();
-                            editor.putString("usu_imagen_perfil",img_ruta_servidor);
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString("usu_imagen_perfil", img_ruta_servidor);
                             editor.commit();
 
 
@@ -521,19 +533,19 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         smr.addStringParam("usu_id", usu_id);
         smr.addStringParam("usu_imagen_perfil_old", "lo que sea");
         smr.addStringParam("esApp", "1");
-        smr.addFile("usu_imagen_perfil",  RutaReal);
+        smr.addFile("usu_imagen_perfil", RutaReal);
 
 
         RequestQueue mRequestQueue = Volley.newRequestQueue(getApplicationContext());
         mRequestQueue.add(smr);
     }
 
-    public String getStringImage (Bitmap bn) {
+    public String getStringImage(Bitmap bn) {
         ByteArrayOutputStream ba = new ByteArrayOutputStream();
-        bn.compress( Bitmap.CompressFormat.PNG,100,ba );
+        bn.compress(Bitmap.CompressFormat.PNG, 100, ba);
         byte[] imagebyte = ba.toByteArray();
-        String encode = android.util.Base64.encodeToString(imagebyte, android.util.Base64.DEFAULT );
-        return  encode;
+        String encode = android.util.Base64.encodeToString(imagebyte, android.util.Base64.DEFAULT);
+        return encode;
     }
 
     @Override
@@ -557,15 +569,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
             SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
-            SharedPreferences.Editor editor =  sharedPref.edit();
+            SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("UserIdML", identity.getUserId());
             editor.putString("AccessToken", identity.getAccessToken().getAccessTokenValue());
-            editor.putString("TokenLifetime", String.valueOf( identity.getAccessToken().getAccessTokenLifetime()));
+            editor.putString("TokenLifetime", String.valueOf(identity.getAccessToken().getAccessTokenLifetime()));
 
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             String date = df.format(Calendar.getInstance().getTime());
 
-            editor.putString("FechaCreacionToken",date );
+            editor.putString("FechaCreacionToken", date);
 
             editor.commit();
 
@@ -579,4 +591,69 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Toast.makeText(this, "Oooops, something went wrong with the login process", Toast.LENGTH_SHORT).show();
     }
 
+    private void LoadButtons() {
+        op_home = findViewById(R.id.op_home);
+        op_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                home();
+            }
+        });
+        op_notificaciones = findViewById(R.id.op_notificaciones);
+        op_notificaciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notificaciones();
+            }
+        });
+        op_ventas = findViewById(R.id.op_ventas);
+        op_ventas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ventas();
+            }
+        });
+        op_clientes = findViewById(R.id.op_clientes);
+        op_clientes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clientes();
+            }
+        });
+        op_lealtad = findViewById(R.id.op_lealtad);
+        op_lealtad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lealtad();
+            }
+        });
+        op_ecommerce = findViewById(R.id.op_ecommerce);
+        op_ecommerce.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ecomerce();
+            }
+        });
+        op_inventario = findViewById(R.id.op_inventario);
+        op_inventario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inventario();
+            }
+        });
+        op_bio = findViewById(R.id.op_bio);
+        op_bio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        op_salir = findViewById(R.id.op_salir);
+        op_salir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrar_sesion();
+            }
+        });
+    }
 }

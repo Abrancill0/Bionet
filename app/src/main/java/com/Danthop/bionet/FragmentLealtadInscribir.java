@@ -76,6 +76,9 @@ public class FragmentLealtadInscribir extends Fragment {
     private String email_fiscal;
     private String usu_id;
 
+    private String correo_igual;
+    private String direccion_igual;
+
     private Dialog ver_cliente_dialog;
 
     private List<ClienteModel> clientes;
@@ -221,6 +224,11 @@ public class FragmentLealtadInscribir extends Fragment {
                             num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
 
 
+                            correo_igual = elemento.getString("cli_correos_iguales");
+                            direccion_igual = elemento.getString("cli_direcciones_iguales");
+
+
+
                             String direccion_igual = elemento.getString("cli_direcciones_iguales");
                             if(direccion_igual.equals("false"))
                             {
@@ -272,6 +280,8 @@ public class FragmentLealtadInscribir extends Fragment {
                                     calle_fiscal,
                                     num_ext_fiscal,
                                     num_int_fiscal
+                                    ,correo_igual,
+                                    direccion_igual
                             );
                             clientes.add(cliente);
                         }

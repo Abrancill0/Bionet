@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start"
+    tools:openDrawer="star"
     >
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -56,7 +56,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="#f6f6f6"
+                android:background="@color/gray2"
                 android:orientation="vertical"
                 android:nestedScrollingEnabled="true">
 
@@ -70,65 +70,66 @@
                     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
                 <ImageView
+                    android:id="@+id/op_home"
                     android:layout_width="41dp"
                     android:layout_height="41dp"
                     android:layout_marginTop="10dp"
                     android:padding="5dp"
-                    android:src="@drawable/home_azul"
-                    android:onClick="home"/>
+                    android:src="@drawable/home_azul" />
                 <ImageView
+                    android:id="@+id/op_notificaciones"
                     android:layout_width="41dp"
                     android:layout_height="41dp"
                     android:padding="5dp"
-                    android:src="@drawable/mail"
-                    android:onClick="notificaciones"/>
+                    android:src="@drawable/mail"/>
                 <ImageView
+                    android:id="@+id/op_ventas"
                     android:layout_width="41dp"
                     android:layout_height="41dp"
                     android:padding="5dp"
                     android:src="@drawable/venta_azul"
-                    android:layout_marginTop="10dp"
-                    android:onClick="ventas"/>
+                    android:layout_marginTop="10dp"/>
                 <ImageView
+                    android:id="@+id/op_clientes"
                     android:layout_width="41dp"
                     android:layout_height="41dp"
                     android:padding="5dp"
                     android:src="@drawable/clientes_azul"
-                    android:layout_marginTop="10dp"
-                    android:onClick="clientes"/>
+                    android:layout_marginTop="10dp"/>
                 <ImageView
+                    android:id="@+id/op_lealtad"
                     android:layout_width="41dp"
                     android:layout_height="41dp"
                     android:padding="5dp"
                     android:src="@drawable/lealtad_azul"
-                    android:layout_marginTop="10dp"
-                    android:onClick="lealtad"/>
+                    android:layout_marginTop="10dp"/>
                 <ImageView
+                    android:id="@+id/op_ecommerce"
                     android:layout_width="41dp"
                     android:layout_height="41dp"
                     android:padding="5dp"
-                    android:src="@drawable/ecommerce_azul"
-                    android:onClick="ecomerce"/>
+                    android:src="@drawable/ecommerce_azul"/>
                 <ImageView
+                    android:id="@+id/op_inventario"
                     android:layout_width="41dp"
                     android:layout_height="41dp"
                     android:padding="5dp"
                     android:src="@drawable/inventario_azul"
-                    android:layout_marginTop="10dp"
-                    android:onClick="inventario"/>
+                    android:layout_marginTop="10dp"/>
                 <ImageView
+                    android:id="@+id/op_bio"
                     android:layout_width="41dp"
                     android:layout_height="41dp"
                     android:padding="5dp"
                     android:src="@drawable/asistencia_azul"
                     android:layout_marginTop="10dp"/>
                 <ImageView
+                    android:id="@+id/op_salir"
                     android:layout_width="41dp"
                     android:layout_height="41dp"
                     android:padding="5dp"
                     android:src="@drawable/cerrar_sesion_azul"
-                    android:layout_marginTop="10dp"
-                    android:onClick="cerrar_sesion"/>
+                    android:layout_marginTop="10dp"/>
 
 
             </LinearLayout>
