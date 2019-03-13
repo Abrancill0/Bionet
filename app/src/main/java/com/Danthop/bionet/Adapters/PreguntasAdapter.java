@@ -7,8 +7,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonArrayRequest;
 import com.android.volley.request.JsonObjectRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -33,7 +36,10 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
 
     int TEXT_SIZE = 12;
     public Dialog pop_up1;
+    public Dialog pop_up2;
     private TextView Respuesta;
+    private Spinner spinner1;
+    private String UserML;
     ProgressDialog progreso;
 
     public PreguntasAdapter(final Context context, final List<Preguntas_Model> data, final SortablePreguntasTable tableView) {
@@ -126,7 +132,7 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
                 Button Btncerrar = pop_up1.findViewById(R.id.btpreguntacerrar);
 
                 ArticuloPregunta.setText( "Mensaje por " + pregunta.getTitulo() );
-                Pregunta.setText( pregunta.getPreguntas() );
+                Pregunta.setText( pregunta.getPreguntas());
 
                 BntContestar.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -160,10 +166,92 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
             @Override
             public void onClick(View v) {
 
+                pop_up2 = new Dialog(getContext());
+                pop_up2.setContentView(R.layout.pop_up_ecommerce_elimina_pregunta );
+                pop_up2.show();
 
-                //pop_up_ecommerce_elimina_pregunta
+                spinner1 = pop_up2.findViewById(R.id.spinnerelimina);
+                List<String> list = new ArrayList<String>();
+                list.add("Eliminar Pregunta");
+                list.add("Eliminar y bloquear preguntas del usuario");
+                list.add("Eliminar y bloquear a usuario para que no oferte");
 
-                EliminaPregunta(pregunta.getidpregunta(),pregunta.gettoken());
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(),
+                        android.R.layout.simple_spinner_item, list);
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner1.setAdapter(dataAdapter);
+
+                TextView Titulo= pop_up2.findViewById( R.id.text_pregunta_articulo_eliminar);
+                TextView Cliente= pop_up2.findViewById( R.id.text_clientepreguntaEliminar);
+                TextView PreguntaCliente= pop_up2.findViewById(R.id.text_preguntaeliminar);
+
+                UserML = pregunta.getUserML();
+
+                Titulo.setText("Mensaje por: " + pregunta.getTitulo());
+                Cliente.setText(pregunta.getComprador());
+                PreguntaCliente.setText(pregunta.getPreguntas());
+
+                Button BotonEliminarCliente = pop_up2.findViewById(R.id.btEliminapregunta);
+
+                Button BotonCerrarCliente = pop_up2.findViewById(R.id.btpreguntacerrar);
+
+                BotonEliminarCliente.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String selected = spinner1.getSelectedItem().toString();
+
+                        if (selected.equals("Eliminar Pregunta"))
+                        {
+                            progreso = new ProgressDialog(getContext());
+                            progreso.setMessage("Eliminando pregunta...");
+                            progreso.show();
+
+                            EliminaPregunta(pregunta.getidpregunta(),pregunta.gettoken());
+
+                            progreso.hide();
+                        }
+                        else if (selected.equals("Eliminar y bloquear preguntas del usuario"))
+                        {
+                            progreso = new ProgressDialog(getContext());
+                            progreso.setMessage("Procesando...");
+                            progreso.show();
+
+                            EliminaPregunta(pregunta.getidpregunta(),pregunta.gettoken());
+
+                            EliminaBloquearPregunta(UserML,pregunta.getIDComprador(),pregunta.gettoken());
+
+                            progreso.hide();
+
+                        }
+                        else if (selected.equals("Eliminar y bloquear a usuario para que no oferte"))
+                        {
+                            progreso = new ProgressDialog(getContext());
+                            progreso.setMessage("Procesando...");
+                            progreso.show();
+
+                            EliminaPregunta(pregunta.getidpregunta(),pregunta.gettoken());
+
+                            EliminaPreguntaBloquearUsuario(UserML,pregunta.getIDComprador(),pregunta.gettoken());
+
+                            progreso.hide();
+
+                        }
+
+                        pop_up2.hide();
+                    }
+
+                });
+
+                BotonCerrarCliente.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        pop_up2.hide();
+                    }
+
+                });
+
 
             }
         });
@@ -180,10 +268,6 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
 
     private void EliminaPregunta(String itemid,String token)
     {
-        progreso = new ProgressDialog(getContext());
-        progreso.setMessage("Eliminando pregunta...");
-        progreso.show();
-
         try {
             final String url = "https://api.mercadolibre.com/questions/"+ itemid + "?access_token="+ token;
 
@@ -232,6 +316,140 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
 
 
     }
+
+
+    private void EliminaBloquearPregunta(String UsuMLID,String UsuID,String token)
+    {
+        try {
+
+            JSONObject request = new JSONObject();
+            try
+            {
+                request.put("user_id", UsuID);
+
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            String ApiPath = "https://api.mercadolibre.com/users/"+ UsuMLID + "/questions_blacklist?access_token="+ token;
+
+            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+            {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    Toast toast1 =
+                            Toast.makeText(getContext(),
+                                    String.valueOf("Usuario bloqueado correctamente"), Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+                    progreso.hide();
+
+                }
+
+            },
+                    new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            "Error de conexion", Toast.LENGTH_SHORT);
+
+                            toast1.show();
+
+                            progreso.hide();
+
+                        }
+                    }
+            );
+
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+
+        } catch (Error e) {
+            Toast toast1 =
+                    Toast.makeText(getContext(),
+                            e.toString(), Toast.LENGTH_LONG);
+            toast1.show();
+
+            progreso.hide();
+
+        }
+
+
+    }
+
+
+    private void EliminaPreguntaBloquearUsuario(String UsuMLID,String UsuID,String token)
+    {
+        try {
+
+            JSONObject request = new JSONObject();
+            try
+            {
+                request.put("user_id", UsuID);
+
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            String ApiPath = "https://api.mercadolibre.com/users/"+ UsuMLID + "/order_blacklist?access_token="+ token;
+
+            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+            {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    Toast toast1 =
+                            Toast.makeText(getContext(),
+                                    String.valueOf("Usuario bloqueado correctamente"), Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+                    progreso.hide();
+
+                }
+
+            },
+                    new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            "Error de conexion", Toast.LENGTH_SHORT);
+
+                            toast1.show();
+
+                            progreso.hide();
+                        }
+                    }
+            );
+
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+
+        } catch (Error e) {
+            Toast toast1 =
+                    Toast.makeText(getContext(),
+                            e.toString(), Toast.LENGTH_LONG);
+            toast1.show();
+
+            progreso.hide();
+
+        }
+
+
+    }
+
 
     private void Contestapregunta(String itemid,String token,String Respuesta)
     {
@@ -289,7 +507,6 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
     }
-
 
     private static class OrdenNameUpdater implements TextWatcher {
 

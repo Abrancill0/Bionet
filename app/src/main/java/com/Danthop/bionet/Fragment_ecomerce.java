@@ -136,18 +136,22 @@ public class Fragment_ecomerce extends Fragment {
             JSONObject RespuestaHistorial = null;
             JSONArray RespuestaHistorialResult = null;
             JSONObject RespuestaBuyer = null;
+            JSONObject RespuestaSeller = null;
             JSONObject RespuestaShipping = null;
             JSONArray RespuestaShippingItems = null;
             JSONArray RespuestaPayments = null;
 
             String Estatus;
             String Comprador;
+            String Vendedor;
+            String Nickname;
             String Descripcion = "";
             String Cantidad = "";
             String Importe = "";
             String Envio = "";
             String TipoPago="";
             String Fecha ="";
+            String IDshipping="";
 
             try {
 
@@ -167,9 +171,15 @@ public class Fragment_ecomerce extends Fragment {
 
                     Estatus = elemento.getString( "status" );
                     RespuestaBuyer = elemento.getJSONObject( "buyer" );
+                    RespuestaSeller = elemento.getJSONObject( "seller" );
+
+                    Vendedor =  RespuestaSeller.getString( "first_name" ) + " " + RespuestaSeller.getString( "last_name" );
+                    Nickname = RespuestaSeller.getString( "nickname" );
+
                     Comprador = RespuestaBuyer.getString( "first_name" ) + " " + RespuestaBuyer.getString( "last_name" );
                     RespuestaShipping = elemento.getJSONObject( "shipping" );
                     RespuestaShippingItems = RespuestaShipping.getJSONArray( "shipping_items" );
+                    IDshipping = RespuestaShipping.getString( "id");
 
                     for (int i = 0; i < RespuestaShippingItems.length(); i++) {
 
@@ -192,7 +202,7 @@ public class Fragment_ecomerce extends Fragment {
                         TipoPago = elementoP.getString( "payment_type");
                     }
 
-                    final Ecommerce_orden_Model orden = new Ecommerce_orden_Model( Comprador, Descripcion, Cantidad, Envio, Importe, Estatus,TipoPago,Fecha );
+                    final Ecommerce_orden_Model orden = new Ecommerce_orden_Model( Comprador, Descripcion, Cantidad, Envio, Importe, Estatus,TipoPago,Fecha,IDshipping,Vendedor,Nickname,AccesToken );
                     Ordenes.add( orden );
                 }
                 final OrdenEcommerceAdapter ordenAdapter = new OrdenEcommerceAdapter( getContext(), Ordenes, tabla_ecomerce );
@@ -250,6 +260,7 @@ public class Fragment_ecomerce extends Fragment {
                             JSONObject RespuestaHistorial = null;
                             JSONArray RespuestaHistorialResult = null;
                             JSONObject RespuestaBuyer = null;
+                            JSONObject RespuestaSeller = null;
                             JSONObject RespuestaShipping = null;
                             JSONArray RespuestaShippingItems = null;
                             JSONArray RespuestaPayments = null;
@@ -262,6 +273,9 @@ public class Fragment_ecomerce extends Fragment {
                             String Envio = "";
                             String TipoPago="";
                             String Fecha ="";
+                            String IDshipping;
+                            String Vendedor="";
+                            String Nickname="";
 
                             try {
 
@@ -283,11 +297,19 @@ public class Fragment_ecomerce extends Fragment {
 
                                         Estatus = elemento.getString( "status" );
                                         RespuestaBuyer = elemento.getJSONObject( "buyer" );
+
+                                        RespuestaSeller = elemento.getJSONObject( "seller" );
+
+                                        Vendedor =  RespuestaSeller.getString( "first_name" ) + " " + RespuestaSeller.getString( "last_name" );
+                                        Nickname = RespuestaSeller.getString( "nickname" );
+
+
+
                                         Comprador = RespuestaBuyer.getString( "first_name" ) + " " + RespuestaBuyer.getString( "last_name" );
                                         RespuestaShipping = elemento.getJSONObject( "shipping" );
                                         RespuestaShippingItems = RespuestaShipping.getJSONArray( "shipping_items" );
 
-
+                                        IDshipping = RespuestaShipping.getString( "id");
 
                                         for (int i = 0; i < RespuestaShippingItems.length(); i++) {
 
@@ -311,7 +333,7 @@ public class Fragment_ecomerce extends Fragment {
 
                                         }
 
-                                        final Ecommerce_orden_Model orden = new Ecommerce_orden_Model( Comprador, Descripcion, Cantidad, Envio, Importe, Estatus,TipoPago,Fecha );
+                                        final Ecommerce_orden_Model orden = new Ecommerce_orden_Model( Comprador, Descripcion, Cantidad, Envio, Importe, Estatus,TipoPago,Fecha,IDshipping,Vendedor,Nickname,AccesToken );
                                         Ordenes.add( orden );
                                     }
                                     final OrdenEcommerceAdapter ordenAdapter = new OrdenEcommerceAdapter( getContext(), Ordenes, tabla_ecomerce );

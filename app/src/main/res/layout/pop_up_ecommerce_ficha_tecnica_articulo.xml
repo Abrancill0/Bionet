@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="720dp"
-    android:layout_height="280dp"
+    android:layout_height="380dp"
     android:layout_gravity="center"
     android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:layout_weight=".9"
         android:gravity="center_vertical|center_horizontal"
@@ -25,10 +25,10 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/text_pregunta_articulo_eliminar"
+                android:id="@+id/text_na"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Orden de 1 papel postit"
+                android:text="Articulo en Mercado LIbre"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp" />
         </LinearLayout>
@@ -44,18 +44,25 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <ImageView
+                    android:id="@+id/image_ficha_Producto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
                 <TextView
-                    android:id="@+id/textViedw491"
+                    android:id="@+id/text_ficha_nombre_publicacion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Pregunta de:" />
+                    android:text="Nombre del la publicacion:" />
 
-                <TextView
-                    android:id="@+id/text_clientepreguntaEliminar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pregunta" />
 
             </LinearLayout>
 
@@ -65,31 +72,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textViedw49"
+                    android:id="@+id/text_ficha_descripcion_articulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Pregunta:" />
+                    android:text="Descripcion de articulo" />
 
-                <TextView
-                    android:id="@+id/text_preguntaeliminar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pregunta" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
             </LinearLayout>
 
@@ -99,11 +87,11 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textfView4s9"
+                    android:id="@+id/text_ficha_categoria"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Tipo de Eliminacion:" />
+                    android:text="Categoria" />
 
             </LinearLayout>
 
@@ -112,11 +100,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Spinner
-                    android:id="@+id/spinnerelimina"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"></Spinner>
-
+                <TextView
+                    android:id="@+id/text_ficha_descripcion_categoria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="Descripcion de cateogira:" />
 
             </LinearLayout>
 
@@ -124,6 +113,59 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViexw492"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="Precio:" />
+
+                <TextView
+                    android:id="@+id/text_ficha_precio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="direccio " />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textfView4s19"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="Envio gratis: " />
+
+                <TextView
+                    android:id="@+id/text_ficha_envio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fecha creacion" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textfView14s9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="Estado Producto: " />
+
+                <TextView
+                    android:id="@+id/text_ficha_estado_Articulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="tipo pago" />
 
             </LinearLayout>
 
@@ -136,20 +178,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btEliminapregunta"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/btn"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="Eliminar"
-            android:textAllCaps="false"
-            android:textColor="#fff"
-            android:textSize="22dp" />
-
-        <Button
-            android:id="@+id/btpreguntacerrar"
+            android:id="@+id/btnordnecerrar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -160,8 +189,6 @@
             android:textAllCaps="false"
             android:textColor="#fff"
             android:textSize="22dp" />
-
-
 
     </LinearLayout>
 

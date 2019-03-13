@@ -43,6 +43,8 @@ import org.json.JSONObject;
 
 import com.mercadolibre.android.sdk.Identity;
 import com.mercadolibre.android.sdk.Meli;
+import com.mercadolibre.android.sdk.MeliLogger;
+import com.mercadolibre.android.sdk.internal.RequestRunnable;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.picasso.Picasso;
@@ -363,10 +365,24 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         if (AccesToken.length()==0) {
 
+            SharedPreferences sharedPref1 = getSharedPreferences(context.getPackageName() + ".identity", Context.MODE_PRIVATE);
+
+            SharedPreferences.Editor editor =  sharedPref1.edit();
+
+            editor.putString("user_id", null);
+            editor.apply();
+
             Meli.startLogin( this, REQUEST_CODE );
         }
         else
         {
+
+            Identity identity = Meli.getCurrentIdentity(getApplicationContext());
+            if (identity == null) {
+
+            } else {
+                identity.getUserId();
+            }
 
             Date date1 =null;
             Date date2 =null;
@@ -400,6 +416,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             }
             else
             {
+                SharedPreferences sharedPref1 = getSharedPreferences(context.getPackageName() + ".identity", Context.MODE_PRIVATE);
+
+                SharedPreferences.Editor editor =  sharedPref1.edit();
+
+                editor.putString("user_id", null);
+                editor.apply();
+
                 Meli.startLogin( this, REQUEST_CODE );
             }
 

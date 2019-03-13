@@ -6,12 +6,18 @@ public class SincronizarModel {
     private String Disponible;
     private String Envio_gratis;
     private String Precio;
+    private String Imagen;
+    private String Categoria;
+    private String EstadoOrden;
 
-    public SincronizarModel(String articulo, String disponible, String envio_gratis, String precio) {
+    public SincronizarModel(String articulo, String disponible, String envio_gratis, String precio,String imagen,String categoria, String estadoOrden) {
         Articulo = articulo;
         Disponible = disponible;
         Envio_gratis = envio_gratis;
         Precio = precio;
+        Imagen = imagen;
+        Categoria = categoria;
+        EstadoOrden = estadoOrden;
     }
 
     public String getArticulo() {
@@ -44,5 +50,29 @@ public class SincronizarModel {
 
     public void setPrecio(String precio) {
         Precio = precio;
+    }
+
+    public String getImagen() {
+        return Imagen;
+    }
+
+    public void setImagen(String imagen) {
+        Imagen = imagen;
+    }
+
+    public String getCategoria() {
+        return Categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        Categoria = categoria;
+    }
+
+    public String getEstadoOrden() {
+        return EstadoOrden;
+    }
+
+    public void setEstadoOrden(String estadoOrden) {
+        EstadoOrden = estadoOrden;
     }
 }

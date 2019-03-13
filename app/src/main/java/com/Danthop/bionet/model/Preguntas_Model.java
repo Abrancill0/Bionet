@@ -7,13 +7,17 @@ public class Preguntas_Model {
     private String Titulo;
     private String Token;
     private String IDdpregunta;
+    private String UserML;
+    private String IDComprador;
 
-    public Preguntas_Model(String preguntas, String comprador, String titulo,String idpregunta,String token) {
+    public Preguntas_Model(String preguntas, String comprador, String titulo,String idpregunta,String token,String userML,String idComprador) {
         Preguntas = preguntas;
         Comprador = comprador;
         Titulo = titulo;
         IDdpregunta = idpregunta;
         Token = token;
+        UserML = userML;
+        IDComprador= idComprador;
     }
 
     public String getPreguntas() {
@@ -48,7 +52,6 @@ public class Preguntas_Model {
         return IDdpregunta;
     }
 
-
     public void settoken(String token) {
         Token = token;
     }
@@ -57,5 +60,20 @@ public class Preguntas_Model {
         return Token;
     }
 
+    public void setUserML(String usurml) {
+        UserML = usurml;
+    }
+
+    public String getUserML() {
+        return UserML;
+    }
+
+    public void setIDComprador(String idComprador) {
+        IDComprador = idComprador;
+    }
+
+    public String getIDComprador() {
+        return IDComprador;
+    }
 
 }

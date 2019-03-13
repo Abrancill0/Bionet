@@ -163,7 +163,7 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
             }
 
-            PreguntasModel = new String[numeroregistro][5];
+            PreguntasModel = new String[numeroregistro][7];
 
             for (int x = 0; x < RespuestaDatos.length(); x++) {
 
@@ -215,8 +215,10 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
                         PreguntasModel[i][2] = Titulo;
                         PreguntasModel[i][3] = id_pregunta;
                         PreguntasModel[i][4] = AccesToken;
+                        PreguntasModel[i][5] = UserML;
+                        PreguntasModel[i][6] = idcomprador;
 
-                        final Preguntas_Model pregunta = new Preguntas_Model( preguntas, comprador, Titulo, id_pregunta, AccesToken );
+                        final Preguntas_Model pregunta = new Preguntas_Model( preguntas, comprador, Titulo, id_pregunta, AccesToken,UserML,idcomprador );
                         Preguntas.add( pregunta );
                     }
                 }
@@ -300,7 +302,7 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
                                 }
 
-                                PreguntasModel = new String[numeroregistro][5];
+                                PreguntasModel = new String[numeroregistro][7];
 
                                 for (int x = 0; x < RespuestaDatos.length(); x++) {
 
@@ -326,9 +328,9 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
 
                                         RespuestaComprador = response.getJSONArray( "aUsuariosQuePregunta" );
 
-                                       String Status = elemento.getString( "status" );
+                                        String Status = elemento.getString( "status" );
 
-                                       if (Status =="UNANSWERED")
+                                        if(Status.equals("UNANSWERED"))
                                        {
                                            for (int a = 0; a < RespuestaComprador.length(); a++) {
                                                JSONObject elemento2 = RespuestaComprador.getJSONObject( a );
@@ -352,13 +354,14 @@ public class Fragment_popup_ecommerce_preguntas extends Fragment {
                                            PreguntasModel[i][2] = Titulo;
                                            PreguntasModel[i][3] = id_pregunta;
                                            PreguntasModel[i][4] = AccesToken;
+                                           PreguntasModel[i][5] = UserML;
+                                           PreguntasModel[i][6] = idcomprador;
 
-                                           final Preguntas_Model pregunta = new Preguntas_Model( preguntas, comprador, Titulo, id_pregunta, AccesToken );
+                                           final Preguntas_Model pregunta = new Preguntas_Model( preguntas, comprador, Titulo, id_pregunta, AccesToken,UserML,idcomprador );
                                            Preguntas.add( pregunta );
                                        }
 
                                     }
-
 
                                 }
 

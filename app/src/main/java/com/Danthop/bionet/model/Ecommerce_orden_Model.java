@@ -9,7 +9,10 @@ public class Ecommerce_orden_Model {
     private String Estatus;
     private String TipoPago;
     private String Fecha;
-
+    private String IDshipping;
+    private String Vendedor;
+    private String Nickname;
+    private String Token;
 
     public Ecommerce_orden_Model(String cliente,
                                  String articulo,
@@ -18,7 +21,12 @@ public class Ecommerce_orden_Model {
                                  String importe,
                                  String estatus,
                                  String tipopago,
-                                 String fecha ) {
+                                 String fecha,
+                                 String Idshipping,
+                                 String vendedor,
+                                 String nickname,
+                                 String token
+                                 ) {
         Cliente = cliente;
         Articulo = articulo;
         Cantidad = cantidad;
@@ -27,7 +35,10 @@ public class Ecommerce_orden_Model {
         Estatus = estatus;
         TipoPago = tipopago;
         Fecha = fecha;
-
+        IDshipping = Idshipping;
+        Vendedor = vendedor;
+        Nickname = nickname;
+        Token = token;
     }
 
     public String getCliente() {
@@ -94,5 +105,36 @@ public class Ecommerce_orden_Model {
         Fecha = fecha;
     }
 
+    public String getIDshipping() {
+        return IDshipping;
+    }
+
+    public void setIDshipping(String Idshipping) {
+        IDshipping = Idshipping;
+    }
+
+    public String getVendedor() {
+        return Vendedor;
+    }
+
+    public void setVendedor(String vendedor) {
+        Vendedor = vendedor;
+    }
+
+    public String getNickname() {
+        return Nickname;
+    }
+
+    public void setNickname(String nickname) {
+        Nickname = nickname;
+    }
+
+    public void settoken(String token) {
+        Token = token;
+    }
+
+    public String gettoken() {
+        return Token;
+    }
 
 }

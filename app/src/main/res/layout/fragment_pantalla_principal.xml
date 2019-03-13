@@ -304,7 +304,8 @@
                             android:id="@+id/puntualidad"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            android:layout_weight="1"
+                            android:text="60 %"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -322,7 +323,8 @@
                             android:id="@+id/salida_a_tiempo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            android:layout_weight="1"
+                            android:text="100 %"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
