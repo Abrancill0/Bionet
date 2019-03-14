@@ -140,6 +140,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
+        home();
 
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(Home.this));
@@ -207,10 +208,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 myDialogFragment.show(fm, "photo_dialog_fragment");
             }
         });
-
-
-        LoadButtons();
-
 
     }
 
@@ -292,58 +289,20 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public void notificaciones() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new Fragment_notificaciones()).commit();
-        op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.fondo_botones_menu));
-        op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
     }
 
     public void ventas() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new Fragment_Ventas()).commit();
-
-        op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_ventas.setBackgroundColor(getResources().getColor(R.color.fondo_botones_menu));
-        op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
     }
 
     public void clientes() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new Fragment_clientes()).commit();
-
-        op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_clientes.setBackgroundColor(getResources().getColor(R.color.fondo_botones_menu));
-        op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
     }
 
     public void ecomerce() {
 
-        op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.fondo_botones_menu));
-        op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
         Context context = this;
         SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", context.MODE_PRIVATE);
 
@@ -416,45 +375,17 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new Fragment_pantalla_principal()).commit();
-        op_home.setBackgroundColor(getResources().getColor(R.color.fondo_botones_menu));
-        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
 
     }
 
     public void inventario() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new Fragment_inventarios()).commit();
-
-        op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_inventario.setBackgroundColor(getResources().getColor(R.color.fondo_botones_menu));
-        op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
     }
 
     public void lealtad() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new FragmentLealtad()).commit();
-        op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_lealtad.setBackgroundColor(getResources().getColor(R.color.fondo_botones_menu));
-        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
     }
 
     public void cerrar_sesion() {
@@ -591,69 +522,4 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Toast.makeText(this, "Oooops, something went wrong with the login process", Toast.LENGTH_SHORT).show();
     }
 
-    private void LoadButtons() {
-        op_home = findViewById(R.id.op_home);
-        op_home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                home();
-            }
-        });
-        op_notificaciones = findViewById(R.id.op_notificaciones);
-        op_notificaciones.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notificaciones();
-            }
-        });
-        op_ventas = findViewById(R.id.op_ventas);
-        op_ventas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ventas();
-            }
-        });
-        op_clientes = findViewById(R.id.op_clientes);
-        op_clientes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clientes();
-            }
-        });
-        op_lealtad = findViewById(R.id.op_lealtad);
-        op_lealtad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                lealtad();
-            }
-        });
-        op_ecommerce = findViewById(R.id.op_ecommerce);
-        op_ecommerce.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ecomerce();
-            }
-        });
-        op_inventario = findViewById(R.id.op_inventario);
-        op_inventario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                inventario();
-            }
-        });
-        op_bio = findViewById(R.id.op_bio);
-        op_bio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        op_salir = findViewById(R.id.op_salir);
-        op_salir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cerrar_sesion();
-            }
-        });
-    }
 }

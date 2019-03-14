@@ -95,7 +95,7 @@ public class Login extends Activity {
             e.printStackTrace();
         }
 
-        String url = getString(R.string.Url2); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
+        String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
 
         String ApiPath = url + "/api/login/login";
 

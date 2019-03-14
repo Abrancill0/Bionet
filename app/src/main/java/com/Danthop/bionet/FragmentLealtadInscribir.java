@@ -11,7 +11,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,6 +83,12 @@ public class FragmentLealtadInscribir extends Fragment {
 
     private Dialog ver_cliente_dialog;
 
+    private Spinner SpinnerSucursal;
+
+    private ArrayList<String> SucursalName;
+    private ArrayList<String> SucursalID;
+
+
     private List<ClienteModel> clientes;
 
 
@@ -98,6 +106,13 @@ public class FragmentLealtadInscribir extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
         clientes = new ArrayList<>();
+        SucursalName=new ArrayList<>();
+        SucursalID = new ArrayList<>();
+
+        SpinnerSucursal=(Spinner)v.findViewById(R.id.Sucursal_lealtad);
+        LoadSpinnerSucursal();
+
+
         Muestra_clientes();
         tabla_clientes = v.findViewById(R.id.tabla_clientes);
         tabla_clientes.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
@@ -117,6 +132,9 @@ public class FragmentLealtadInscribir extends Fragment {
         });
 
         tabla_clientes.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
+
+
+
 
         Lealtad=v.findViewById(R.id.lealtad);
         Lealtad.setOnClickListener(new View.OnClickListener() {
@@ -150,14 +168,13 @@ public class FragmentLealtadInscribir extends Fragment {
 
     private void Muestra_clientes()
     {
-        progreso = new ProgressDialog(getContext());
-        progreso.setMessage("Procesando...");
-        progreso.show();
         JSONObject request = new JSONObject();
         try
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("suc_id",SpinnerSucursal.getSelectedItem());
+            request.put("cli_programa_lealtad", "true");
 
         }
         catch(Exception e)
@@ -167,18 +184,14 @@ public class FragmentLealtadInscribir extends Fragment {
 
         String url = getString(R.string.Url);
 
-        String ApiPath = url + "/api/clientes/index_app";
+        String ApiPath = url + "/api/programa-de-lealtad/select-clientes";
 
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
         {
             @Override
             public void onResponse(JSONObject response) {
 
-                JSONObject Respuesta = null;
-                JSONObject RespuestaNodoDireccion= null;
-                JSONObject ElementoUsuario=null;
-                JSONArray RespuestaNodoClientes= null;
-
+                JSONArray Respuesta = null;
                 try {
 
                     int status = Integer.parseInt(response.getString("estatus"));
@@ -187,71 +200,11 @@ public class FragmentLealtadInscribir extends Fragment {
                     if (status == 1)
                     {
 
-                        Respuesta = response.getJSONObject("resultado");
+                        Respuesta = response.getJSONArray("resultado");
 
-                        RespuestaNodoClientes = Respuesta.getJSONArray("aClientes");
-
-                        for(int x = 0; x < RespuestaNodoClientes.length(); x++){
-                            JSONObject elemento = RespuestaNodoClientes.getJSONObject(x);
-
-                            ElementoUsuario =  elemento.getJSONObject("cli_id");
-
-                            UUID = ElementoUsuario.getString( "uuid");
+                        for(int x = 0; x < Respuesta.length(); x++){
+                            JSONObject elemento = Respuesta.getJSONObject(x);
                             nombre = elemento.getString("cli_nombre");
-                            correo_electronico = elemento.getString("cli_correo_electronico");
-                            telefono = elemento.getString("cli_telefono");
-                            RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion");
-                            calle = RespuestaNodoDireccion.getString("cli_calle");
-
-                            estado = RespuestaNodoDireccion.getString( "cli_estado");
-                            colonia = RespuestaNodoDireccion.getString( "cli_colonia");
-                            num_int = RespuestaNodoDireccion.getString( "cli_numero_interior");
-                            num_ext = RespuestaNodoDireccion.getString( "cli_numero_exterior");
-                            cp = RespuestaNodoDireccion.getString( "cli_codigo_postal");
-                            ciudad = RespuestaNodoDireccion.getString( "cli_ciudad");
-                            municipio = RespuestaNodoDireccion.getString( "cli_ciudad");
-
-                            rfc = elemento.getString( "cli_rfc");
-                            razon_social = elemento.getString( "cli_razon_social");
-
-                            RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion_fiscal");
-                            cp_fiscal = RespuestaNodoDireccion.getString("cli_codigo_postal");
-                            estado_fiscal = RespuestaNodoDireccion.getString("cli_estado");
-                            municipio_fiscal = RespuestaNodoDireccion.getString("cli_ciudad");
-                            colonia_fiscal = RespuestaNodoDireccion.getString("cli_colonia");
-                            calle_fiscal = RespuestaNodoDireccion.getString("cli_calle");
-                            num_ext_fiscal = RespuestaNodoDireccion.getString("cli_numero_exterior");
-                            num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
-
-
-                            correo_igual = elemento.getString("cli_correos_iguales");
-                            direccion_igual = elemento.getString("cli_direcciones_iguales");
-
-
-
-                            String direccion_igual = elemento.getString("cli_direcciones_iguales");
-                            if(direccion_igual.equals("false"))
-                            {
-                                direccion_fiscal = calle_fiscal + " " + num_ext_fiscal + " " + num_int_fiscal + " " +colonia_fiscal + " " + cp_fiscal + " " + estado_fiscal + " " + municipio_fiscal;
-                            }
-                            else if (direccion_igual.equals("true"))
-                            {
-                                direccion_fiscal = calle + " " + num_ext + " " + num_int + " " +colonia + " " + cp + " " + estado + " " + municipio;
-
-                            }
-
-                            String correo_igual = elemento.getString("cli_correos_iguales");
-                            if(correo_igual.equals("false"))
-                            {
-                                email_fiscal = elemento.getString("cli_correo_electronico_facturacion");
-                            }
-                            else if (correo_igual.equals("true"))
-                            {
-                                email_fiscal = correo_electronico;
-                            }
-
-
-
 
 
 
@@ -260,28 +213,28 @@ public class FragmentLealtadInscribir extends Fragment {
                                     nombre,
                                     correo_electronico,
                                     telefono,
-                                    usu_id,
-                                    estado,
-                                    colonia,
-                                    calle,
-                                    num_int,
-                                    num_ext,
-                                    cp,
-                                    ciudad,
-                                    municipio,
-                                    rfc,
-                                    razon_social,
-                                    direccion_fiscal,
-                                    email_fiscal,
-                                    cp_fiscal,
-                                    estado_fiscal,
-                                    municipio_fiscal,
-                                    colonia_fiscal,
-                                    calle_fiscal,
-                                    num_ext_fiscal,
-                                    num_int_fiscal
-                                    ,correo_igual,
-                                    direccion_igual
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    ""
                             );
                             clientes.add(cliente);
                         }
@@ -328,10 +281,100 @@ public class FragmentLealtadInscribir extends Fragment {
 
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
-        progreso.hide();
+
+    }
+
+    private void LoadSpinnerSucursal(){
+
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/configuracion/sucursales/index_app";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONArray  RespuestaNodoSucursales= null;
+                JSONObject RespuestaNodoID = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+                    if (status == 1)
+                    {
+
+                        Respuesta = response.getJSONObject("resultado");
+
+                        RespuestaNodoSucursales = Respuesta.getJSONArray("aSucursales");
+
+                        for(int x = 0; x < RespuestaNodoSucursales.length(); x++){
+                            JSONObject jsonObject1=RespuestaNodoSucursales.getJSONObject(x);
+                            String sucursal=jsonObject1.getString("suc_nombre");
+                            SucursalName.add(sucursal);
+                            RespuestaNodoID = jsonObject1.getJSONObject("suc_id");
+                            String id=RespuestaNodoID.getString("uuid");
+                            SucursalID.add(id);
+                        }
+                        SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,SucursalName));
+
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+
+                } catch (JSONException e) {
+
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+
+                }
+
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
 
     }
+
 
 
 }
