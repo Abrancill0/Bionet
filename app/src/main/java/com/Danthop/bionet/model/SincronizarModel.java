@@ -9,8 +9,9 @@ public class SincronizarModel {
     private String Imagen;
     private String Categoria;
     private String EstadoOrden;
+    private String DescripcionLarga;
 
-    public SincronizarModel(String articulo, String disponible, String envio_gratis, String precio,String imagen,String categoria, String estadoOrden) {
+    public SincronizarModel(String articulo, String disponible, String envio_gratis, String precio,String imagen,String categoria, String estadoOrden,String descripcionlarga) {
         Articulo = articulo;
         Disponible = disponible;
         Envio_gratis = envio_gratis;
@@ -18,6 +19,7 @@ public class SincronizarModel {
         Imagen = imagen;
         Categoria = categoria;
         EstadoOrden = estadoOrden;
+        DescripcionLarga = descripcionlarga;
     }
 
     public String getArticulo() {
@@ -74,5 +76,13 @@ public class SincronizarModel {
 
     public void setEstadoOrden(String estadoOrden) {
         EstadoOrden = estadoOrden;
+    }
+
+    public String getDescripcionLarga() {
+        return DescripcionLarga;
+    }
+
+    public void setDescripcionLarga(String descripcionLarga) {
+        DescripcionLarga = descripcionLarga;
     }
 }

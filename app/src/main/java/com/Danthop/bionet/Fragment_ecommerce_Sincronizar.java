@@ -39,12 +39,14 @@ import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.PublicKey;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -80,7 +82,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
     private JSONObject RespuestaTodoJSON;
     ProgressDialog progreso;
     Dialog FichaTecnica;
-
+    private ImageLoader imageLoader = ImageLoader.getInstance();
     private List<SincronizarModel> Sincronizaciones;
 
     public Fragment_ecommerce_Sincronizar() {
@@ -151,30 +153,39 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
             @Override
             public void onDataClicked(int rowIndex, SincronizarModel clickedData) {
 
-                //pop_up_ecommerce_ficha_tecnica_articulo
-
                FichaTecnica.setContentView(R.layout.pop_up_ecommerce_ficha_tecnica_articulo);
                FichaTecnica.show();
 
                ImageView FotoProducto = FichaTecnica.findViewById(R.id.image_ficha_Producto);
                TextView NombrePublicacion = FichaTecnica.findViewById(R.id.text_ficha_nombre_publicacion);
                TextView DescricpionArticulo = FichaTecnica.findViewById(R.id.text_ficha_descripcion_articulo);
-               //TextView Categoria = FichaTecnica.findViewById(R.id.text_ficha_categoria);
                TextView DescripcionCategoria = FichaTecnica.findViewById(R.id.text_ficha_descripcion_categoria);
                TextView Precio = FichaTecnica.findViewById(R.id.text_ficha_precio);
                TextView Envio = FichaTecnica.findViewById(R.id.text_ficha_envio);
                TextView EstadoArticulo =FichaTecnica.findViewById(R.id.text_ficha_estado_Articulo);
+               Button BtnCerrar =FichaTecnica.findViewById(R.id.btnfichaarticuloscerrar);
+
+                imageLoader.displayImage(clickedData.getImagen(),FotoProducto);
 
                 NombrePublicacion.setText( clickedData.getArticulo());
-               // DescricpionArticulo.setText( clickedData.getArticulo());
+                DescricpionArticulo.setText( clickedData.getDescripcionLarga());
 
-               // Categoria.setText( clickedData.getCategoria());
+                double Importe = Double.parseDouble( clickedData.getPrecio());
+                NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                Precio.setText( formatter.format(Importe));
+
                 DescripcionCategoria.setText( clickedData.getCategoria());
-                Precio.setText( clickedData.getPrecio());
+
                 Envio.setText( clickedData.getEnvio_gratis());
-                EstadoArticulo.setText("");
+                EstadoArticulo.setText(clickedData.getEstadoOrden());
 
+                BtnCerrar.setOnClickListener( new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FichaTecnica.hide();
 
+                    }
+                } );
 
 
             }
@@ -206,7 +217,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
             tabla_sincronizar = (SortableSincronizarTable) v.findViewById( R.id.tabla_sincronizar );
 
             JSONArray RespuestaDatos = null;
-            JSONObject RespuestaDatos2 = null;
+            JSONObject RespuestaDescripcion= null;
             JSONObject Respuestacategoria = null;
             JSONObject RespuestaObjeto = null;
             JSONObject Respuestaespecificaciones = null;
@@ -219,6 +230,8 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
             String Imagen="";
             String Envio;
             String Categoria;
+            String DescripcionLarga;
+            String Estatus;
 
             try {
 
@@ -233,15 +246,19 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                     JSONObject elemento = RespuestaDatos.getJSONObject( x );
 
                     Respuestaespecificaciones = elemento.getJSONObject( "especificaciones" );
+                    RespuestaDescripcion = elemento.getJSONObject( "descripcion" );
+
+                    DescripcionLarga =RespuestaDescripcion.getString( "plain_text" );
 
                     Titulo = Respuestaespecificaciones.getString( "title" );
                     Disponibilidad = Respuestaespecificaciones.getString( "available_quantity" );
                     Precio = Respuestaespecificaciones.getString( "price" );
+                    Estatus = Respuestaespecificaciones.getString( "status" );
 
                     Respuestapicture = Respuestaespecificaciones.getJSONArray("pictures");
 
                     for (int k = 0; k < Respuestapicture.length(); k++) {
-                        JSONObject elemento2 = Respuestapicture.getJSONObject( x );
+                        JSONObject elemento2 = Respuestapicture.getJSONObject( k );
 
                         Imagen = elemento2.getString( "url" );
 
@@ -260,7 +277,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                         Envio = "No";
                     }
 
-                    final SincronizarModel sincronizar = new SincronizarModel( Titulo, Disponibilidad, Envio, Precio,Imagen,Categoria,"" );
+                    final SincronizarModel sincronizar = new SincronizarModel( Titulo, Disponibilidad, Envio, Precio,Imagen,Categoria,Estatus,DescripcionLarga );
                     Sincronizaciones.add( sincronizar );
                 }
 
@@ -307,11 +324,12 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                             // display response
                             JSONArray RespuestaDatos = null;
                             JSONObject Respuestacategoria = null;
-                            JSONObject RespuestaDatos2 = null;
+                            JSONObject RespuestaDescripcion = null;
                             JSONObject RespuestaObjeto = null;
                             JSONObject Respuestaespecificaciones = null;
                             JSONArray Respuestapicture = null;
                             JSONObject Respuestashipping = null;
+
 
                             String Titulo;
                             String Disponibilidad;
@@ -319,6 +337,8 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                             String Imagen="";
                             String Envio;
                             String Categoria;
+                            String DescripcionLarga;
+                            String Estatus;
 
                             try {
 
@@ -339,10 +359,15 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                                         JSONObject elemento = RespuestaDatos.getJSONObject( x );
 
                                         Respuestaespecificaciones = elemento.getJSONObject( "especificaciones" );
+                                        RespuestaDescripcion = elemento.getJSONObject( "descripcion" );
+
+                                        DescripcionLarga =RespuestaDescripcion.getString( "plain_text" );
+
 
                                         Titulo = Respuestaespecificaciones.getString( "title" );
                                         Disponibilidad = Respuestaespecificaciones.getString( "available_quantity" );
                                         Precio = Respuestaespecificaciones.getString( "price" );
+                                        Estatus = Respuestaespecificaciones.getString( "status" );
 
                                         Respuestapicture = Respuestaespecificaciones.getJSONArray("pictures");
 
@@ -366,7 +391,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                                             Envio = "No";
                                         }
 
-                                        final SincronizarModel sincronizar = new SincronizarModel( Titulo, Disponibilidad, Envio, Precio,Imagen,Categoria,"" );
+                                        final SincronizarModel sincronizar = new SincronizarModel( Titulo, Disponibilidad, Envio, Precio,Imagen,Categoria,Estatus,DescripcionLarga );
 
                                         Sincronizaciones.add( sincronizar );
                                     }

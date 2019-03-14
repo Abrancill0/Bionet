@@ -27,6 +27,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Url">http://187.189.192.150:8010</string>
+    <string name="Url2">http://192.168.100.164:8010</string>
 
     <!-- Main Screen -->
     <string name="txt_examples">Aquí puedes encontrar una lista de ejemplos que te ayudarán a integrar el SDK de MercadoLibre para Android en tu app. </string>
