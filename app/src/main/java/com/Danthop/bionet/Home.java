@@ -293,7 +293,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new Fragment_notificaciones()).commit();
         op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+        op_notificaciones.setBackgroundColor(getResources().getColor(R.color.fondo_botones_menu));
         op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
@@ -309,7 +309,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_ventas.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+        op_ventas.setBackgroundColor(getResources().getColor(R.color.fondo_botones_menu));
         op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
@@ -325,7 +325,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         op_home.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_clientes.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+        op_clientes.setBackgroundColor(getResources().getColor(R.color.fondo_botones_menu));
         op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
@@ -340,7 +340,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+        op_ecommerce.setBackgroundColor(getResources().getColor(R.color.fondo_botones_menu));
         op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
@@ -416,7 +416,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new Fragment_pantalla_principal()).commit();
-        op_home.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+        op_home.setBackgroundColor(getResources().getColor(R.color.fondo_botones_menu));
         op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
@@ -438,7 +438,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_lealtad.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_inventario.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+        op_inventario.setBackgroundColor(getResources().getColor(R.color.fondo_botones_menu));
         op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_salir.setBackgroundColor(getResources().getColor(R.color.gray2));
     }
@@ -450,7 +450,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         op_notificaciones.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_ventas.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_clientes.setBackgroundColor(getResources().getColor(R.color.gray2));
-        op_lealtad.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+        op_lealtad.setBackgroundColor(getResources().getColor(R.color.fondo_botones_menu));
         op_ecommerce.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_inventario.setBackgroundColor(getResources().getColor(R.color.gray2));
         op_bio.setBackgroundColor(getResources().getColor(R.color.gray2));
