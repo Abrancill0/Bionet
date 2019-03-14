@@ -303,8 +303,6 @@ public class Fragment_ecomerce extends Fragment {
                                         Vendedor =  RespuestaSeller.getString( "first_name" ) + " " + RespuestaSeller.getString( "last_name" );
                                         Nickname = RespuestaSeller.getString( "nickname" );
 
-
-
                                         Comprador = RespuestaBuyer.getString( "first_name" ) + " " + RespuestaBuyer.getString( "last_name" );
                                         RespuestaShipping = elemento.getJSONObject( "shipping" );
                                         RespuestaShippingItems = RespuestaShipping.getJSONArray( "shipping_items" );

@@ -10,8 +10,9 @@ public class SincronizarModel {
     private String Categoria;
     private String EstadoOrden;
     private String DescripcionLarga;
+    private String IDPublicacion;
 
-    public SincronizarModel(String articulo, String disponible, String envio_gratis, String precio,String imagen,String categoria, String estadoOrden,String descripcionlarga) {
+    public SincronizarModel(String articulo, String disponible, String envio_gratis, String precio,String imagen,String categoria, String estadoOrden,String descripcionlarga,String idpublicacion) {
         Articulo = articulo;
         Disponible = disponible;
         Envio_gratis = envio_gratis;
@@ -20,6 +21,7 @@ public class SincronizarModel {
         Categoria = categoria;
         EstadoOrden = estadoOrden;
         DescripcionLarga = descripcionlarga;
+        IDPublicacion = idpublicacion;
     }
 
     public String getArticulo() {
@@ -84,5 +86,13 @@ public class SincronizarModel {
 
     public void setDescripcionLarga(String descripcionLarga) {
         DescripcionLarga = descripcionLarga;
+    }
+
+    public String getIDPublicacion() {
+        return IDPublicacion;
+    }
+
+    public void setIDPublicacion(String IDPublicacion) {
+        this.IDPublicacion = IDPublicacion;
     }
 }
