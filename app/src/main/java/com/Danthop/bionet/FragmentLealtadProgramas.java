@@ -1,6 +1,7 @@
 package com.Danthop.bionet;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -23,6 +24,7 @@ public class FragmentLealtadProgramas extends Fragment{
     private Button Lealtad;
     private Button Inscribir;
     private Button Articulos;
+    private Button Abrir_calendario;
 
     public FragmentLealtadProgramas() {
         // Required empty public constructor
@@ -63,6 +65,17 @@ public class FragmentLealtadProgramas extends Fragment{
 
             }
         });
+
+        Abrir_calendario = v.findViewById(R.id.abrir_calendario);
+        Abrir_calendario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog calendario=new Dialog(getContext());
+                calendario.setContentView(R.layout.calendar);
+            }
+        });
+
+
 
         return v;
     }

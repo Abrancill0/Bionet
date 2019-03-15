@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -162,6 +163,17 @@ public class FragmentLealtadInscribir extends Fragment {
 
             }
         });
+
+        SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                Muestra_clientes();
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
         return v;
 
     }
@@ -173,7 +185,7 @@ public class FragmentLealtadInscribir extends Fragment {
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
-            request.put("suc_id",SpinnerSucursal.getSelectedItem());
+            request.put("suc_id",SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
             request.put("cli_programa_lealtad", "true");
 
         }
@@ -192,10 +204,12 @@ public class FragmentLealtadInscribir extends Fragment {
             public void onResponse(JSONObject response) {
 
                 JSONArray Respuesta = null;
+                JSONObject NodoClientesSeleccionados = null;
                 try {
 
                     int status = Integer.parseInt(response.getString("estatus"));
                     String Mensaje = response.getString("mensaje");
+
 
                     if (status == 1)
                     {
@@ -205,9 +219,8 @@ public class FragmentLealtadInscribir extends Fragment {
                         for(int x = 0; x < Respuesta.length(); x++){
                             JSONObject elemento = Respuesta.getJSONObject(x);
                             nombre = elemento.getString("cli_nombre");
-
-
-
+                            correo_electronico = elemento.getString("cli_correo_electronico");
+                            telefono = elemento.getString("cli_telefono");
 
                             final ClienteModel cliente = new ClienteModel(UUID,
                                     nombre,
