@@ -167,13 +167,24 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                TextView DescripcionCategoria = FichaTecnica.findViewById(R.id.text_ficha_descripcion_categoria);
                TextView Precio = FichaTecnica.findViewById(R.id.text_ficha_precio);
                TextView Envio = FichaTecnica.findViewById(R.id.text_ficha_envio);
-               TextView EstadoArticulo =FichaTecnica.findViewById(R.id.text_ficha_estado_Articulo);
+
+               final EditText Cantidad  = (EditText)FichaTecnica.findViewById(R.id.text_ficha_cantidad);
+
+               Cantidad.setText(clickedData.getDisponible());
+
+                final TextView EstadoArticulo =FichaTecnica.findViewById(R.id.text_ficha_estado_Articulo);
 
                Button BtnCerrar =FichaTecnica.findViewById(R.id.btnfichaarticuloscerrar);
 
                Button BtnActivarPublicacion =FichaTecnica.findViewById(R.id.btnFichaActivarPublicacion);
                Button BtnCerrarPublicacion =FichaTecnica.findViewById(R.id.btnFichaCerrarPublicacion);
                Button BtnPausarPublicacion =FichaTecnica.findViewById(R.id.btnFichaPausarPublicacion);
+               Button BtnEliminarPublicacion =FichaTecnica.findViewById(R.id.btnFichEliminarPublicacion);
+
+              // Button BtnRepublicarPublicacion =FichaTecnica.findViewById(R.id.btnFichEliminarPublicacion);
+               Button BtnActualizarInventarioPublicacion =FichaTecnica.findViewById(R.id.btnFichaActualizarCantidad);
+
+               //btnFichEliminarPublicacion
 
                 imageLoader.displayImage(clickedData.getImagen(),FotoProducto);
 
@@ -198,12 +209,19 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                 } );
 
 
-
                 BtnActivarPublicacion.setOnClickListener( new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        ActivarPublicacion(clickedData.getIDPublicacion());
+                       String Estatus = String.valueOf( EstadoArticulo.getText() );
+
+                        if (Estatus.equals("paused")){
+                            ActivarPublicacion(clickedData.getIDPublicacion());
+                        }
+                        else
+                        {
+                            Toast.makeText(getContext(), "La publicacion debe de estar en estatus pausa", Toast.LENGTH_LONG).show();
+                        }
 
                     }
                 } );
@@ -212,8 +230,15 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                     @Override
                     public void onClick(View v) {
 
-                        CierraPublicacion(clickedData.getIDPublicacion());
+                        String Estatus = String.valueOf( EstadoArticulo.getText() );
 
+                        if (Estatus.equals("active") || Estatus.equals("paused")  ) {
+                            CierraPublicacion( clickedData.getIDPublicacion() );
+                        }
+                        else
+                        {
+                            Toast.makeText(getContext(), "La publicacion debe de estar en estatus activo o pausa", Toast.LENGTH_LONG).show();
+                        }
                     }
                 } );
 
@@ -221,10 +246,47 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                     @Override
                     public void onClick(View v) {
 
-                        PausarPublicacion(clickedData.getIDPublicacion());
+                        String Estatus = String.valueOf( EstadoArticulo.getText() );
+
+                        if (Estatus.equals("active")) {
+                            PausarPublicacion( clickedData.getIDPublicacion() );
+                        }
+                        else
+                        {
+                            Toast.makeText(getContext(), "La publicacion debe de estar en estatus activo", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                } );
+
+
+                BtnEliminarPublicacion.setOnClickListener( new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String Estatus = String.valueOf( EstadoArticulo.getText() );
+
+                        if (!Estatus.equals("closed")) {
+                            EliminarPublicacion( clickedData.getIDPublicacion(),0 );
+                        }
+                        else
+                        {
+                            EliminarPublicacion( clickedData.getIDPublicacion(),1 );
+                        }
+                    }
+                } );
+
+
+
+                BtnActualizarInventarioPublicacion.setOnClickListener( new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        ActualizarStock(clickedData.getIDPublicacion(), String.valueOf( Cantidad.getText()));
 
                     }
                 } );
+
+
 
 
             }
@@ -590,21 +652,139 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
+        //https://api.mercadolibre.com/items/ITEM_ID?access_token=YOUR_ACCESS_TOKEN
+
         JSONObject jsonBodyObj = new JSONObject();
         String url = "https://api.mercadolibre.com/items/" + Item +"?access_token=" + AccesToken;
         try{
-            jsonBodyObj.put("delete", "true");
-
+            jsonBodyObj.put("status", "closed");
         }catch (JSONException e){
             e.printStackTrace();
         }
         final String requestBody = jsonBodyObj.toString();
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT,
                 url, null, new Response.Listener<JSONObject>(){
             @Override    public void onResponse(JSONObject response) {
 
                 Toast.makeText(getContext(), "Se cerro correctamente la publicacion", Toast.LENGTH_LONG).show();
+
+
+                progreso.hide();
+            }
+        }, new Response.ErrorListener() {
+            @Override    public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(),  error.toString(), Toast.LENGTH_LONG).show();
+                progreso.hide();
+            }
+        }){
+            @Override    public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+
+            @Override    public byte[] getBody() {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                            requestBody, "utf-8");
+                    return null;
+                }
+            }
+
+        };
+
+        requestQueue.add(jsonObjectRequest);
+
+
+    }
+
+    public void EliminarPublicacion(String Item, int Valida) {
+
+        if (Valida == 0){
+            CierraPublicacion(Item);
+        }
+
+        progreso = new ProgressDialog( getContext() );
+        progreso.setMessage( "Procesando..." );
+        progreso.show();
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+
+        //https://api.mercadolibre.com/items/ITEM_ID?access_token=YOUR_ACCESS_TOKEN
+
+        JSONObject jsonBodyObj = new JSONObject();
+        String url = "https://api.mercadolibre.com/items/" + Item +"?access_token=" + AccesToken;
+        try{
+            jsonBodyObj.put("deleted", "true");
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        final String requestBody = jsonBodyObj.toString();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT,
+                url, null, new Response.Listener<JSONObject>(){
+            @Override    public void onResponse(JSONObject response) {
+
+                Toast.makeText(getContext(), "Se elimino correctamente la publicacion", Toast.LENGTH_LONG).show();
+
+                progreso.hide();
+            }
+        }, new Response.ErrorListener() {
+            @Override    public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(),  error.toString(), Toast.LENGTH_LONG).show();
+                progreso.hide();
+            }
+        }){
+            @Override    public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+
+            @Override    public byte[] getBody() {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                            requestBody, "utf-8");
+                    return null;
+                }
+            }
+
+        };
+
+        requestQueue.add(jsonObjectRequest);
+
+
+    }
+
+    public void ActualizarStock(String Item,String Cantidad) {
+
+        progreso = new ProgressDialog( getContext() );
+        progreso.setMessage( "Actualizando..." );
+        progreso.show();
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+
+        //https://api.mercadolibre.com/items/ITEM_ID?access_token=YOUR_ACCESS_TOKEN
+
+        JSONObject jsonBodyObj = new JSONObject();
+        String url = "https://api.mercadolibre.com/items/" + Item +"?access_token=" + AccesToken;
+        try{
+            jsonBodyObj.put("available_quantity", Cantidad);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        final String requestBody = jsonBodyObj.toString();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT,
+                url, null, new Response.Listener<JSONObject>(){
+            @Override    public void onResponse(JSONObject response) {
+
+                Toast.makeText(getContext(), "Se actualizo correctamente el stock", Toast.LENGTH_LONG).show();
 
 
                 progreso.hide();
@@ -645,8 +825,6 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
         progreso.show();
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-
-        
 
         JSONObject jsonBodyObj = new JSONObject();
         String url = "https://api.mercadolibre.com/items/" + Item +"?access_token=" + AccesToken;
@@ -712,7 +890,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
         }
         final String requestBody = jsonBodyObj.toString();
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT,
                 url, null, new Response.Listener<JSONObject>(){
             @Override    public void onResponse(JSONObject response) {
 

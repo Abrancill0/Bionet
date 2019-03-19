@@ -170,6 +170,42 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textfView14s19"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:text="Cantidad:" />
+
+                <EditText
+                    android:id="@+id/text_ficha_cantidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="12sp"
+                    android:text="Cantidad" />
+
+                <Button
+                    android:id="@+id/btnFichaActualizarCantidad"
+                    android:layout_width="180dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:layout_marginHorizontal="100dp"
+                    android:text="Actualizar inventario"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
+                    android:textSize="12dp"
+                    />
+
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 
@@ -188,6 +224,19 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="Pausar publicacion"
+            android:textAllCaps="false"
+            android:textColor="#fff"
+            android:textSize="22dp" />
+
+        <Button
+            android:id="@+id/btnFichEliminarPublicacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/btn"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Eliminar publicacion"
             android:textAllCaps="false"
             android:textColor="#fff"
             android:textSize="22dp" />

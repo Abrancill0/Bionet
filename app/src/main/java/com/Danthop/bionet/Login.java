@@ -23,6 +23,7 @@ import com.android.volley.request.JsonObjectRequest;
 import com.mercadolibre.android.sdk.Meli;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -106,7 +107,8 @@ public class Login extends Activity {
 
                 Resultado = new LoginModel();
 
-                JSONObject Respuesta = null;
+                JSONArray Respuesta = null;
+                JSONObject RespuestaObjeto = null;
                 JSONObject RespuestaNodoUsuID = null;
 
                 try {
@@ -119,8 +121,11 @@ public class Login extends Activity {
                     if (status == 1)
                     {
 
-                        Respuesta = response.getJSONObject("resultado");
-                        Resultado.setUsuTipoContrasena(Respuesta.getString("usu_tipo_contrasenia"));
+                        Respuesta = response.getJSONArray("resultado");
+
+                        RespuestaObjeto=Respuesta.getJSONObject( 0);
+
+                        Resultado.setUsuTipoContrasena(RespuestaObjeto.getString("usu_tipo_contrasenia"));
                         String recuperar_contrasena = Resultado.getUsuTipoContrasena();
 
                         if(recuperar_contrasena=="false"){
@@ -130,15 +135,15 @@ public class Login extends Activity {
                         }
                         else
                         {
-                            Resultado.setUsuNombre(Respuesta.getString("usu_nombre"));
-                            Resultado.setUsuApellidos(Respuesta.getString("usu_apellido_paterno") + " " + Respuesta.getString("usu_apellido_materno"));
-                            Resultado.setUsuEmail(Respuesta.getString("usu_correo_electronico"));
-                            Resultado.setUsuImagen(Respuesta.getString("usu_imagen_perfil"));
-                            Resultado.setUsu_activo(Respuesta.getString("usu_activo"));
-                            Resultado.setUsu_administrador(Respuesta.getString("usu_administrador"));
+                            Resultado.setUsuNombre(RespuestaObjeto.getString("usu_nombre"));
+                            Resultado.setUsuApellidos(RespuestaObjeto.getString("usu_apellido_paterno") + " " + RespuestaObjeto.getString("usu_apellido_materno"));
+                            Resultado.setUsuEmail(RespuestaObjeto.getString("usu_correo_electronico"));
+                            Resultado.setUsuImagen(RespuestaObjeto.getString("usu_imagen_perfil"));
+                            Resultado.setUsu_activo(RespuestaObjeto.getString("usu_activo"));
+                            Resultado.setUsu_administrador(RespuestaObjeto.getString("usu_administrador"));
 
 
-                            RespuestaNodoUsuID = Respuesta.getJSONObject("usu_id");
+                            RespuestaNodoUsuID = RespuestaObjeto.getJSONObject("usu_id");
                             Resultado.setUsuId(RespuestaNodoUsuID.getString("uuid"));
 
                             new GuardaPreferencia().execute();
