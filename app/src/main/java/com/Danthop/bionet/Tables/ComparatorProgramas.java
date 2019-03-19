@@ -1,9 +1,6 @@
 package com.Danthop.bionet.Tables;
 
-import com.Danthop.bionet.model.ClienteModel;
-import com.Danthop.bionet.model.Ecommerce_orden_Model;
-import com.Danthop.bionet.model.Preguntas_Model;
-import com.Danthop.bionet.model.ProgramaModel;
+import com.Danthop.bionet.model.ConfiguracionLealtadModel;
 
 import java.util.Comparator;
 
@@ -15,15 +12,15 @@ public final class ComparatorProgramas {
 
     }
 
-    public static Comparator<ProgramaModel> getNivelComparator() {
+    public static Comparator<ConfiguracionLealtadModel> getNivelComparator() {
         return new NivelComparator();
     }
 
 
-    private static class NivelComparator implements Comparator<ProgramaModel> {
+    private static class NivelComparator implements Comparator<ConfiguracionLealtadModel> {
 
         @Override
-        public int compare(final ProgramaModel nivel1, final ProgramaModel nivel2) {
+        public int compare(final ConfiguracionLealtadModel nivel1, final ConfiguracionLealtadModel nivel2) {
             return nivel1.getNivel().compareTo(nivel2.getNivel());
         }
     }

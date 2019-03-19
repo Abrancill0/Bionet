@@ -109,6 +109,7 @@ public class Login extends Activity {
 
                 JSONArray Respuesta = null;
                 JSONObject RespuestaObjeto = null;
+
                 JSONObject RespuestaNodoUsuID = null;
 
                 try {
@@ -122,6 +123,7 @@ public class Login extends Activity {
                     {
 
                         Respuesta = response.getJSONArray("resultado");
+
 
                         RespuestaObjeto=Respuesta.getJSONObject( 0);
 
@@ -142,26 +144,46 @@ public class Login extends Activity {
                             Resultado.setUsu_activo(RespuestaObjeto.getString("usu_activo"));
                             Resultado.setUsu_administrador(RespuestaObjeto.getString("usu_administrador"));
 
+                        JSONObject tipo_id = Respuesta.getJSONObject(0);
+
+                            Resultado.setUsuTipoContrasena(tipo_id.getString("usu_tipo_contrasenia"));
+                            String recuperar_contrasena = Resultado.getUsuTipoContrasena();
+
+                            if (recuperar_contrasena == "false") {
+                                Intent intent = new Intent(Login.this, Reestablecer_contrasena.class);
+                                intent.putExtra("ParametroCorreo", TextUsuario.getText());
+                                startActivity(intent);
+                            } else {
+                                Resultado.setUsuNombre(tipo_id.getString("usu_nombre"));
+                                Resultado.setUsuApellidos(tipo_id.getString("usu_apellido_paterno") + " " + tipo_id.getString("usu_apellido_materno"));
+                                Resultado.setUsuEmail(tipo_id.getString("usu_correo_electronico"));
+                                Resultado.setUsuImagen(tipo_id.getString("usu_imagen_perfil"));
+                                Resultado.setUsu_activo(tipo_id.getString("usu_activo"));
+                                Resultado.setUsu_administrador(tipo_id.getString("usu_administrador"));
 
                             RespuestaNodoUsuID = RespuestaObjeto.getJSONObject("usu_id");
                             Resultado.setUsuId(RespuestaNodoUsuID.getString("uuid"));
 
-                            new GuardaPreferencia().execute();
 
-                            Intent intent = new Intent(Login.this, Home.class);
-                            startActivity(intent);
+                                RespuestaNodoUsuID = tipo_id.getJSONObject("usu_id");
+                                Resultado.setUsuId(RespuestaNodoUsuID.getString("uuid"));
 
+                                new GuardaPreferencia().execute();
 
-                            Toast toast1 =
-                                    Toast.makeText(getApplicationContext(),
-                                            "Bienvenido " + Resultado.getUsuNombre(), Toast.LENGTH_LONG);
-
-                            toast1.show();
+                                Intent intent = new Intent(Login.this, Home.class);
+                                startActivity(intent);
 
 
-                            progreso.hide();
+                                Toast toast1 =
+                                        Toast.makeText(getApplicationContext(),
+                                                "Bienvenido " + Resultado.getUsuNombre(), Toast.LENGTH_LONG);
 
-                        }
+                                toast1.show();
+
+
+                                progreso.hide();
+
+                            }
 
 
 

@@ -1,7 +1,6 @@
 package com.Danthop.bionet;
 
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,11 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
-import com.Danthop.bionet.FragmentLealtadProgramas;
-import com.Danthop.bionet.Fragment_crear_cliente;
-import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortablePuntosTable;
 
 /**
@@ -57,7 +52,7 @@ public class FragmentLealtad extends Fragment {
         Programas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtadProgramas()).commit();
+                fr.replace(R.id.fragment_container,new FragmentLealtadConfiguraciones()).commit();
 
             }
         });

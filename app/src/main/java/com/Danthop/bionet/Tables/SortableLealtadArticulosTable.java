@@ -5,15 +5,9 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import com.Danthop.bionet.R;
-import com.Danthop.bionet.model.ClienteModel;
-import com.Danthop.bionet.model.Ecommerce_orden_Model;
 import com.Danthop.bionet.model.LealtadArticulosModel;
-import com.Danthop.bionet.model.ProgramaModel;
-import com.Danthop.bionet.model.Puntos_acumulados_model;
-import com.Danthop.bionet.model.SincronizarModel;
 
 import de.codecrafters.tableview.SortableTableView;
-import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
