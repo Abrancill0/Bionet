@@ -1,7 +1,6 @@
 package com.Danthop.bionet;
 
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -9,25 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.Danthop.bionet.Adapters.LealtadInscribirAdapter;
-import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.Tables.SortableLealtadArticulosTable;
-import com.Danthop.bionet.Tables.SortableLealtadProgramasTable;
 import com.Danthop.bionet.model.ArticuloModel;
-import com.Danthop.bionet.model.ClienteModel;
-import com.Danthop.bionet.model.ProgramaModel;
-import com.Danthop.bionet.model.VolleySingleton;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.error.VolleyError;
-import com.android.volley.request.JsonObjectRequest;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +56,7 @@ public class FragmentLealtadArticulo extends Fragment {
         Programas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtadProgramas()).commit();
+                fr.replace(R.id.fragment_container,new FragmentLealtadConfiguraciones()).commit();
 
             }
         });

@@ -23,6 +23,7 @@ import com.android.volley.request.JsonObjectRequest;
 import com.mercadolibre.android.sdk.Meli;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -106,7 +107,7 @@ public class Login extends Activity {
 
                 Resultado = new LoginModel();
 
-                JSONObject Respuesta = null;
+                JSONArray Respuesta = null;
                 JSONObject RespuestaNodoUsuID = null;
 
                 try {
@@ -119,44 +120,45 @@ public class Login extends Activity {
                     if (status == 1)
                     {
 
-                        Respuesta = response.getJSONObject("resultado");
-                        Resultado.setUsuTipoContrasena(Respuesta.getString("usu_tipo_contrasenia"));
-                        String recuperar_contrasena = Resultado.getUsuTipoContrasena();
-
-                        if(recuperar_contrasena=="false"){
-                            Intent intent = new Intent(Login.this, Reestablecer_contrasena.class);
-                            intent.putExtra("ParametroCorreo", TextUsuario.getText());
-                            startActivity(intent);
-                        }
-                        else
-                        {
-                            Resultado.setUsuNombre(Respuesta.getString("usu_nombre"));
-                            Resultado.setUsuApellidos(Respuesta.getString("usu_apellido_paterno") + " " + Respuesta.getString("usu_apellido_materno"));
-                            Resultado.setUsuEmail(Respuesta.getString("usu_correo_electronico"));
-                            Resultado.setUsuImagen(Respuesta.getString("usu_imagen_perfil"));
-                            Resultado.setUsu_activo(Respuesta.getString("usu_activo"));
-                            Resultado.setUsu_administrador(Respuesta.getString("usu_administrador"));
+                        Respuesta = response.getJSONArray("resultado");
+                        JSONObject tipo_id = Respuesta.getJSONObject(0);
 
 
-                            RespuestaNodoUsuID = Respuesta.getJSONObject("usu_id");
-                            Resultado.setUsuId(RespuestaNodoUsuID.getString("uuid"));
+                            Resultado.setUsuTipoContrasena(tipo_id.getString("usu_tipo_contrasenia"));
+                            String recuperar_contrasena = Resultado.getUsuTipoContrasena();
 
-                            new GuardaPreferencia().execute();
+                            if (recuperar_contrasena == "false") {
+                                Intent intent = new Intent(Login.this, Reestablecer_contrasena.class);
+                                intent.putExtra("ParametroCorreo", TextUsuario.getText());
+                                startActivity(intent);
+                            } else {
+                                Resultado.setUsuNombre(tipo_id.getString("usu_nombre"));
+                                Resultado.setUsuApellidos(tipo_id.getString("usu_apellido_paterno") + " " + tipo_id.getString("usu_apellido_materno"));
+                                Resultado.setUsuEmail(tipo_id.getString("usu_correo_electronico"));
+                                Resultado.setUsuImagen(tipo_id.getString("usu_imagen_perfil"));
+                                Resultado.setUsu_activo(tipo_id.getString("usu_activo"));
+                                Resultado.setUsu_administrador(tipo_id.getString("usu_administrador"));
 
-                            Intent intent = new Intent(Login.this, Home.class);
-                            startActivity(intent);
+
+                                RespuestaNodoUsuID = tipo_id.getJSONObject("usu_id");
+                                Resultado.setUsuId(RespuestaNodoUsuID.getString("uuid"));
+
+                                new GuardaPreferencia().execute();
+
+                                Intent intent = new Intent(Login.this, Home.class);
+                                startActivity(intent);
 
 
-                            Toast toast1 =
-                                    Toast.makeText(getApplicationContext(),
-                                            "Bienvenido " + Resultado.getUsuNombre(), Toast.LENGTH_LONG);
+                                Toast toast1 =
+                                        Toast.makeText(getApplicationContext(),
+                                                "Bienvenido " + Resultado.getUsuNombre(), Toast.LENGTH_LONG);
 
-                            toast1.show();
+                                toast1.show();
 
 
-                            progreso.hide();
+                                progreso.hide();
 
-                        }
+                            }
 
 
 

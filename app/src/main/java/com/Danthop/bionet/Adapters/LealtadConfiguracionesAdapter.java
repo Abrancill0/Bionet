@@ -5,35 +5,30 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.Danthop.bionet.Tables.SortableArticulosTable;
-import com.Danthop.bionet.Tables.SortableLealtadProgramasTable;
-import com.Danthop.bionet.Tables.SortablePuntosTable;
+import com.Danthop.bionet.Tables.SortableLealtadConfiguracionesTable;
 import com.Danthop.bionet.model.ArticuloModel;
-import com.Danthop.bionet.model.ProgramaModel;
-import com.Danthop.bionet.model.Puntos_acumulados_model;
-import com.Danthop.bionet.model.SucursalModel;
+import com.Danthop.bionet.model.ConfiguracionLealtadModel;
 
 import java.text.NumberFormat;
 import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class LealtadProgramasAdapter extends LongPressAwareTableDataAdapter<ProgramaModel> {
+public class LealtadConfiguracionesAdapter extends LongPressAwareTableDataAdapter<ConfiguracionLealtadModel> {
 
     int TEXT_SIZE = 12;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
 
 
-    public LealtadProgramasAdapter(final Context context, final List<ProgramaModel> data, final SortableLealtadProgramasTable tableView) {
+    public LealtadConfiguracionesAdapter(final Context context, final List<ConfiguracionLealtadModel> data, final SortableLealtadConfiguracionesTable tableView) {
         super(context, data, tableView);
     }
 
     @Override
     public View getDefaultCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        ProgramaModel programa = getRowData(rowIndex);
+        ConfiguracionLealtadModel programa = getRowData(rowIndex);
         View renderedView = null;
 
         switch (columnIndex) {
@@ -41,12 +36,9 @@ public class LealtadProgramasAdapter extends LongPressAwareTableDataAdapter<Prog
                 renderedView = renderNivel(programa);
                 break;
             case 1:
-                renderedView = renderPtMin(programa);
-                break;
-            case 2:
                 renderedView = renderDineroXPt(programa);
                 break;
-            case 3:
+            case 2:
                 renderedView = renderPtXDinero(programa);
                 break;
 
@@ -56,7 +48,7 @@ public class LealtadProgramasAdapter extends LongPressAwareTableDataAdapter<Prog
 
     @Override
     public View getLongPressCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        final ProgramaModel programa = getRowData(rowIndex);
+        final ConfiguracionLealtadModel programa = getRowData(rowIndex);
         View renderedView = null;
 
         switch (columnIndex) {
@@ -66,19 +58,15 @@ public class LealtadProgramasAdapter extends LongPressAwareTableDataAdapter<Prog
         return renderedView;
     }
 
-    private View renderNivel(final ProgramaModel programa) {
+    private View renderNivel(final ConfiguracionLealtadModel programa) {
         return renderString(programa.getNivel());
     }
 
-    private View renderPtMin(final ProgramaModel programa) {
-        return renderString(programa.getPuntosMinimos());
-    }
-
-    private View renderDineroXPt(final ProgramaModel programa) {
+    private View renderDineroXPt(final ConfiguracionLealtadModel programa) {
         return renderString(programa.getDineroPorPuntos());
     }
 
-    private View renderPtXDinero(final ProgramaModel programa) {
+    private View renderPtXDinero(final ConfiguracionLealtadModel programa) {
         return renderString(programa.getPuntosPorDinero());
     }
 

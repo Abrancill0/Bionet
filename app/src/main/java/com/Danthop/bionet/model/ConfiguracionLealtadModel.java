@@ -1,14 +1,12 @@
 package com.Danthop.bionet.model;
 
-public class ProgramaModel {
+public class ConfiguracionLealtadModel {
     private String Nivel;
-    private String PuntosMinimos;
     private String DineroPorPuntos;
     private String PuntosPorDinero;
 
-    public ProgramaModel(String nivel, String puntosMinimos, String dineroPorPuntos, String puntosPorDinero) {
+    public ConfiguracionLealtadModel(String nivel, String dineroPorPuntos, String puntosPorDinero) {
         Nivel = nivel;
-        PuntosMinimos = puntosMinimos;
         DineroPorPuntos = dineroPorPuntos;
         PuntosPorDinero = puntosPorDinero;
     }
@@ -21,13 +19,7 @@ public class ProgramaModel {
         Nivel = nivel;
     }
 
-    public String getPuntosMinimos() {
-        return PuntosMinimos;
-    }
 
-    public void setPuntosMinimos(String puntosMinimos) {
-        PuntosMinimos = puntosMinimos;
-    }
 
     public String getDineroPorPuntos() {
         return DineroPorPuntos;

@@ -15,16 +15,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.Danthop.bionet.Adapters.ClienteAdapter;
 import com.Danthop.bionet.Adapters.LealtadInscribirAdapter;
-import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.Tables.SortableLealtadInscribirTable;
-import com.Danthop.bionet.Tables.SortableLealtadProgramasTable;
 import com.Danthop.bionet.model.ClienteModel;
-import com.Danthop.bionet.model.ProgramaModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -150,7 +145,7 @@ public class FragmentLealtadInscribir extends Fragment {
         Programas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtadProgramas()).commit();
+                fr.replace(R.id.fragment_container,new FragmentLealtadConfiguraciones()).commit();
 
             }
         });

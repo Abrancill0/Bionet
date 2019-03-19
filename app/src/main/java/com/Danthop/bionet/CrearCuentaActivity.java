@@ -157,11 +157,11 @@ public class CrearCuentaActivity extends Activity {
         String ApiPath = url + "/api/cuentas/store";
 
         JsonObjectRequest postRequest = new JsonObjectRequest(Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-        {
-            @Override
-            public void onResponse(JSONObject response) {
+                {
+                    @Override
+                    public void onResponse(JSONObject response) {
 
-                JSONObject Respuesta = null;
+                        JSONObject Respuesta = null;
 
                 try {
 
