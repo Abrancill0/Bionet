@@ -114,90 +114,91 @@ public class Login extends Activity {
 
                 try {
 
-                    Resultado.setEstatus(response.getString("estatus"));
-                    Resultado.setMensaje(response.getString("mensaje"));
+                    Resultado.setEstatus( response.getString( "estatus" ) );
+                    Resultado.setMensaje( response.getString( "mensaje" ) );
 
-                    int status = Integer.parseInt(Resultado.getEstatus());
+                    int status = Integer.parseInt( Resultado.getEstatus() );
 
-                    if (status == 1)
-                    {
+                      if (status == 1)
+                      {
 
-                        Respuesta = response.getJSONArray("resultado");
+                    Respuesta = response.getJSONArray( "resultado" );
+
+                    RespuestaObjeto = Respuesta.getJSONObject( 0 );
+
+                    Resultado.setUsuTipoContrasena( RespuestaObjeto.getString( "usu_tipo_contrasenia" ) );
+                    String recuperar_contrasena = Resultado.getUsuTipoContrasena();
+
+                    if (recuperar_contrasena == "false") {
+                        Intent intent = new Intent( Login.this, Reestablecer_contrasena.class );
+                        intent.putExtra( "ParametroCorreo", TextUsuario.getText() );
+                        startActivity( intent );
+                    } else {
+                        Resultado.setUsuNombre( RespuestaObjeto.getString( "usu_nombre" ) );
+                        Resultado.setUsuApellidos( RespuestaObjeto.getString( "usu_apellido_paterno" ) + " " + RespuestaObjeto.getString( "usu_apellido_materno" ) );
+                        Resultado.setUsuEmail( RespuestaObjeto.getString( "usu_correo_electronico" ) );
+                        Resultado.setUsuImagen( RespuestaObjeto.getString( "usu_imagen_perfil" ) );
+                        Resultado.setUsu_activo( RespuestaObjeto.getString( "usu_activo" ) );
+                        Resultado.setUsu_administrador( RespuestaObjeto.getString( "usu_administrador" ) );
+
+                        JSONObject tipo_id = Respuesta.getJSONObject( 0 );
+
+                        Resultado.setUsuTipoContrasena( tipo_id.getString( "usu_tipo_contrasenia" ) );
+
+                       // String recuperar_contrasena = Resultado.getUsuTipoContrasena();
+
+                        if (recuperar_contrasena == "false") {
+                            Intent intent = new Intent( Login.this, Reestablecer_contrasena.class );
+                            intent.putExtra( "ParametroCorreo", TextUsuario.getText() );
+                            startActivity( intent );
+                        } else {
+                            Resultado.setUsuNombre( tipo_id.getString( "usu_nombre" ) );
+                            Resultado.setUsuApellidos( tipo_id.getString( "usu_apellido_paterno" ) + " " + tipo_id.getString( "usu_apellido_materno" ) );
+                            Resultado.setUsuEmail( tipo_id.getString( "usu_correo_electronico" ) );
+                            Resultado.setUsuImagen( tipo_id.getString( "usu_imagen_perfil" ) );
+                            Resultado.setUsu_activo( tipo_id.getString( "usu_activo" ) );
+                            Resultado.setUsu_administrador( tipo_id.getString( "usu_administrador" ) );
+
+                            RespuestaNodoUsuID = RespuestaObjeto.getJSONObject( "usu_id" );
+                            Resultado.setUsuId( RespuestaNodoUsuID.getString( "uuid" ) );
 
 
-                        RespuestaObjeto=Respuesta.getJSONObject( 0);
+                            RespuestaNodoUsuID = tipo_id.getJSONObject( "usu_id" );
+                            Resultado.setUsuId( RespuestaNodoUsuID.getString( "uuid" ) );
 
-                        Resultado.setUsuTipoContrasena(RespuestaObjeto.getString("usu_tipo_contrasenia"));
-                        String recuperar_contrasena = Resultado.getUsuTipoContrasena();
+                            new GuardaPreferencia().execute();
 
-                        if(recuperar_contrasena=="false"){
-                            Intent intent = new Intent(Login.this, Reestablecer_contrasena.class);
-                            intent.putExtra("ParametroCorreo", TextUsuario.getText());
-                            startActivity(intent);
+                            Intent intent = new Intent( Login.this, Home.class );
+                            startActivity( intent );
+
+
+                            Toast toast1 =
+                                    Toast.makeText( getApplicationContext(),
+                                            "Bienvenido " + Resultado.getUsuNombre(), Toast.LENGTH_LONG );
+
+                            toast1.show();
+
+
+                            progreso.hide();
+
                         }
-                        else
-                        {
-                            Resultado.setUsuNombre(RespuestaObjeto.getString("usu_nombre"));
-                            Resultado.setUsuApellidos(RespuestaObjeto.getString("usu_apellido_paterno") + " " + RespuestaObjeto.getString("usu_apellido_materno"));
-                            Resultado.setUsuEmail(RespuestaObjeto.getString("usu_correo_electronico"));
-                            Resultado.setUsuImagen(RespuestaObjeto.getString("usu_imagen_perfil"));
-                            Resultado.setUsu_activo(RespuestaObjeto.getString("usu_activo"));
-                            Resultado.setUsu_administrador(RespuestaObjeto.getString("usu_administrador"));
-
-                        JSONObject tipo_id = Respuesta.getJSONObject(0);
-
-                            Resultado.setUsuTipoContrasena(tipo_id.getString("usu_tipo_contrasenia"));
-                            String recuperar_contrasena = Resultado.getUsuTipoContrasena();
-
-                            if (recuperar_contrasena == "false") {
-                                Intent intent = new Intent(Login.this, Reestablecer_contrasena.class);
-                                intent.putExtra("ParametroCorreo", TextUsuario.getText());
-                                startActivity(intent);
-                            } else {
-                                Resultado.setUsuNombre(tipo_id.getString("usu_nombre"));
-                                Resultado.setUsuApellidos(tipo_id.getString("usu_apellido_paterno") + " " + tipo_id.getString("usu_apellido_materno"));
-                                Resultado.setUsuEmail(tipo_id.getString("usu_correo_electronico"));
-                                Resultado.setUsuImagen(tipo_id.getString("usu_imagen_perfil"));
-                                Resultado.setUsu_activo(tipo_id.getString("usu_activo"));
-                                Resultado.setUsu_administrador(tipo_id.getString("usu_administrador"));
-
-                            RespuestaNodoUsuID = RespuestaObjeto.getJSONObject("usu_id");
-                            Resultado.setUsuId(RespuestaNodoUsuID.getString("uuid"));
-
-
-                                RespuestaNodoUsuID = tipo_id.getJSONObject("usu_id");
-                                Resultado.setUsuId(RespuestaNodoUsuID.getString("uuid"));
-
-                                new GuardaPreferencia().execute();
-
-                                Intent intent = new Intent(Login.this, Home.class);
-                                startActivity(intent);
-
-
-                                Toast toast1 =
-                                        Toast.makeText(getApplicationContext(),
-                                                "Bienvenido " + Resultado.getUsuNombre(), Toast.LENGTH_LONG);
-
-                                toast1.show();
-
-
-                                progreso.hide();
-
-                            }
-
 
 
                     }
-                    else
-                    {
-                        progreso.hide();
 
-                        Toast toast2 = Toast.makeText(getApplicationContext(),
-                                Resultado.getMensaje(), Toast.LENGTH_LONG);
+                }
+                else{
 
-                        toast2.show();
 
-                    }
+                              progreso.hide();
+
+                              Toast toast2 = Toast.makeText( getApplicationContext(),
+                                      Resultado.getMensaje(), Toast.LENGTH_LONG );
+
+                              toast2.show();
+
+                      }
+
 
                 } catch (JSONException e) {
                     progreso.hide();
