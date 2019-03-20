@@ -30,9 +30,9 @@ public class SortableLealtadConfiguracionesTable extends SortableTableView<Confi
         setHeaderAdapter(simpleHeader);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(3);
-        tableColumnWeightModel.setColumnWeight(0, 2);
+        tableColumnWeightModel.setColumnWeight(0, 1);
+        tableColumnWeightModel.setColumnWeight(1, 2);
         tableColumnWeightModel.setColumnWeight(2, 2);
-        tableColumnWeightModel.setColumnWeight(3, 2);
         setColumnModel(tableColumnWeightModel);
 
         setColumnComparator(0, ComparatorProgramas.getNivelComparator());
