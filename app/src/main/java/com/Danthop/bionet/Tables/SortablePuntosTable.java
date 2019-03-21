@@ -29,14 +29,15 @@ public class SortablePuntosTable extends SortableTableView<Puntos_acumulados_mod
     public SortablePuntosTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "ID Cliente", "Nombre", "Acumulado");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  " ","Nombre", "Correo", "Acumulado");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(3);
-        tableColumnWeightModel.setColumnWeight(0, 4);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
+        tableColumnWeightModel.setColumnWeight(0, 1);
         tableColumnWeightModel.setColumnWeight(1, 3);
         tableColumnWeightModel.setColumnWeight(2, 3);
+        tableColumnWeightModel.setColumnWeight(3, 3);
         setColumnModel(tableColumnWeightModel);
 
         setColumnComparator(0, ComparatorPuntos.getIdClienteComparator());

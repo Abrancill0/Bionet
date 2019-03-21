@@ -1,43 +1,18 @@
 package com.Danthop.bionet.Adapters;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.Danthop.bionet.Fragment_editarCliente;
-import com.Danthop.bionet.R;
-import com.Danthop.bionet.Tables.SortableArticulosTable;
-import com.Danthop.bionet.Tables.SortableLealtadArticulosTable;
 import com.Danthop.bionet.Tables.SortableLealtadInscribirTable;
-import com.Danthop.bionet.Tables.SortablePuntosTable;
-import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
-import com.Danthop.bionet.model.LealtadArticulosModel;
-import com.Danthop.bionet.model.Puntos_acumulados_model;
-import com.Danthop.bionet.model.SucursalModel;
-import com.Danthop.bionet.model.VolleySingleton;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.error.VolleyError;
-import com.android.volley.request.JsonObjectRequest;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;

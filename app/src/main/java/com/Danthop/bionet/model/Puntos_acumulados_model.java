@@ -1,37 +1,48 @@
 package com.Danthop.bionet.model;
 
 public class Puntos_acumulados_model {
-    private String id_cliente;
-    private String nombre;
-    private String acumulado;
+    private String Numero_cliente;
+    private String Nombre;
+    private String Correo;
+    private String Acumulado;
 
-    public Puntos_acumulados_model(String id_cliente, String nombre, String acumulado) {
-        this.id_cliente = id_cliente;
-        this.nombre = nombre;
-        this.acumulado = acumulado;
+    public Puntos_acumulados_model(String numero_cliente, String nombre,String correo, String acumulado) {
+        this.Numero_cliente = numero_cliente;
+        this.Nombre = nombre;
+        this.Correo = correo;
+        this.Acumulado = acumulado;
     }
 
-    public String getId_cliente() {
-        return id_cliente;
+    public String getNumero_cliente() {
+        return Numero_cliente;
     }
 
-    public void setId_cliente(String id_cliente) {
-        this.id_cliente = id_cliente;
+    public void setNumero_cliente(String numero_cliente) {
+        this.Numero_cliente = numero_cliente;
     }
 
     public String getNombre() {
-        return nombre;
+        return Nombre;
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.Nombre = nombre;
     }
 
+    public String getCorreo_cliente() {
+        return Correo;
+    }
+
+    public void setCorreo_cliente(String correo) {
+        this.Correo = correo;
+    }
+
+
     public String getAcumulado() {
-        return acumulado;
+        return Acumulado;
     }
 
     public void setAcumulado(String acumulado) {
-        this.acumulado = acumulado;
+        this.Acumulado = acumulado;
     }
 }

@@ -1,16 +1,32 @@
 package com.Danthop.bionet;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.LealtadArticuloAdapter;
 import com.Danthop.bionet.Tables.SortableLealtadArticulosTable;
-import com.Danthop.bionet.model.ArticuloModel;
+import com.Danthop.bionet.model.LealtadArticuloModel;
+import com.Danthop.bionet.model.VolleySingleton;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonObjectRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +41,18 @@ public class FragmentLealtadArticulo extends Fragment {
     private Button Lealtad;
     private Button Programas;
     private Button Inscribir;
+    private Spinner SpinnerSucursal;
 
-    public List<ArticuloModel> articulos;
+
+    private String usu_id;
+    private String Articulo_nombre;
+    private String Articulo_descripcion;
+    private String Articulo_categoria;
+
+
+    public List<LealtadArticuloModel> articulos;
+    private ArrayList<String> SucursalName;
+    private ArrayList<String> SucursalID;
 
 
     public FragmentLealtadArticulo() {
@@ -39,33 +65,32 @@ public class FragmentLealtadArticulo extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_lealtad_articulos,container, false);
         fr = getFragmentManager().beginTransaction();
+        SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+        usu_id = sharedPref.getString("usu_id","");
         articulos = new ArrayList<>();
+        SucursalName=new ArrayList<>();
+        SucursalID = new ArrayList<>();
+
+        SpinnerSucursal=(Spinner)v.findViewById(R.id.Sucursal_lealtad);
         tabla_articulos = v.findViewById(R.id.tabla_articulos);
         tabla_articulos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
-
         Lealtad=v.findViewById(R.id.lealtad);
-        Lealtad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtad()).commit();
-
-            }
-        });
-
         Programas=v.findViewById(R.id.programas);
-        Programas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtadConfiguraciones()).commit();
-
-            }
-        });
-
         Inscribir=v.findViewById(R.id.inscribir);
-        Inscribir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtadInscribir()).commit();
+
+        LoadPestanias();
+        LoadSpinnerSucursal();
+
+
+
+        SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                articulos.clear();
+                Muestra_articulos();
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
 
             }
         });
@@ -74,18 +99,39 @@ public class FragmentLealtadArticulo extends Fragment {
 
     }
 
+    private void LoadPestanias(){
+        Inscribir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fr.replace(R.id.fragment_container,new FragmentLealtadInscribir()).commit();
 
-/*
-    private void Muestra_articulos()
-    {
-        progreso = new ProgressDialog(getContext());
-        progreso.setMessage("Procesando...");
-        progreso.show();
+            }
+        });
+        Programas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fr.replace(R.id.fragment_container,new FragmentLealtadConfiguraciones()).commit();
+
+            }
+        });
+        Lealtad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fr.replace(R.id.fragment_container,new FragmentLealtad()).commit();
+
+            }
+        });
+    }
+
+    private void Muestra_articulos(){
         JSONObject request = new JSONObject();
         try
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("art_programa_lealtad", "true");
+            request.put("suc_id", SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
+
 
         }
         catch(Exception e)
@@ -95,17 +141,14 @@ public class FragmentLealtadArticulo extends Fragment {
 
         String url = getString(R.string.Url);
 
-        String ApiPath = url + "/api/programa_de_lealtad/select-cliente";
+        String ApiPath = url + "/api/programa-de-lealtad/select-articulos";
 
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
         {
             @Override
             public void onResponse(JSONObject response) {
 
-                JSONObject Respuesta = null;
-                JSONObject RespuestaNodoDireccion= null;
-                JSONObject ElementoUsuario=null;
-                JSONArray RespuestaNodoClientes= null;
+                JSONArray Respuesta = null;
 
                 try {
 
@@ -115,18 +158,22 @@ public class FragmentLealtadArticulo extends Fragment {
                     if (status == 1)
                     {
 
-                        Respuesta = response.getJSONObject("resultado");
+                        Respuesta = response.getJSONArray("resultado");
 
-                        RespuestaNodoClientes = Respuesta.getJSONArray("aClientes");
+                        for(int x = 0; x < Respuesta.length(); x++){
+                            JSONObject elemento = Respuesta.getJSONObject(x);
+                            Articulo_nombre = elemento.getString("art_nombre");
+                            Articulo_descripcion = elemento.getString("art_descripcion");
+                            Articulo_categoria = elemento.getString("cat_nombre");
 
-                        for(int x = 0; x < RespuestaNodoClientes.length(); x++){
-                            JSONObject elemento = RespuestaNodoClientes.getJSONObject(x);
+                           final LealtadArticuloModel articulo = new LealtadArticuloModel(Articulo_nombre,
+                                   Articulo_descripcion,
+                                   Articulo_categoria);
 
-                            ElementoUsuario =  elemento.getJSONObject("cli_id");
-                            articulos.add(cliente);
+                           articulos.add(articulo);
                         }
-                        final LealtadInscribirAdapter clienteAdapter = new LealtadInscribirAdapter(getContext(), clientes, tabla_clientes,fr);
-                        tabla_clientes.setDataAdapter(clienteAdapter);
+                       final LealtadArticuloAdapter articuloAdapter = new LealtadArticuloAdapter(getContext(), articulos, tabla_articulos);
+                       tabla_articulos.setDataAdapter(articuloAdapter);
 
                     }
                     else
@@ -168,9 +215,100 @@ public class FragmentLealtadArticulo extends Fragment {
 
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
-        progreso.hide();
 
 
     }
-*/
+
+    private void LoadSpinnerSucursal(){
+
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/configuracion/sucursales/index_app";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONArray RespuestaNodoSucursales= null;
+                JSONObject RespuestaNodoID = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+                    if (status == 1)
+                    {
+
+                        Respuesta = response.getJSONObject("resultado");
+
+                        RespuestaNodoSucursales = Respuesta.getJSONArray("aSucursales");
+
+                        for(int x = 0; x < RespuestaNodoSucursales.length(); x++){
+                            JSONObject jsonObject1=RespuestaNodoSucursales.getJSONObject(x);
+                            String sucursal=jsonObject1.getString("suc_nombre");
+                            SucursalName.add(sucursal);
+                            RespuestaNodoID = jsonObject1.getJSONObject("suc_id");
+                            String id=RespuestaNodoID.getString("uuid");
+                            SucursalID.add(id);
+                        }
+                        SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,SucursalName));
+
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+
+                } catch (JSONException e) {
+
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+
+                }
+
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+
+
+    }
+
 }

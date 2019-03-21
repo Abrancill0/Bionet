@@ -36,7 +36,7 @@ public class PuntosAcumuladosAdapter extends LongPressAwareTableDataAdapter<Punt
 
         switch (columnIndex) {
             case 0:
-                renderedView = renderId(Puntos);
+                renderedView = renderNumeroCliente(Puntos);
                 break;
             case 1:
                 renderedView = renderNombre(Puntos);
@@ -61,8 +61,8 @@ public class PuntosAcumuladosAdapter extends LongPressAwareTableDataAdapter<Punt
         return renderedView;
     }
 
-    private View renderId(final Puntos_acumulados_model puntos) {
-        return renderString(puntos.getId_cliente());
+    private View renderNumeroCliente(final Puntos_acumulados_model puntos) {
+        return renderString(puntos.getNumero_cliente());
     }
 
     private View renderNombre(final Puntos_acumulados_model puntos) {

@@ -24,7 +24,7 @@ public final class ComparatorPuntos {
 
         @Override
         public int compare(final Puntos_acumulados_model puntos1, final Puntos_acumulados_model puntos2) {
-            return puntos1.getId_cliente().compareTo(puntos2.getId_cliente());
+            return puntos1.getNumero_cliente().compareTo(puntos2.getNumero_cliente());
         }
     }
 

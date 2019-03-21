@@ -5,14 +5,14 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import com.Danthop.bionet.R;
-import com.Danthop.bionet.model.LealtadArticulosModel;
+import com.Danthop.bionet.model.LealtadArticuloModel;
 
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 
-public class SortableLealtadArticulosTable extends SortableTableView<LealtadArticulosModel> {
+public class SortableLealtadArticulosTable extends SortableTableView<LealtadArticuloModel> {
 
     public SortableLealtadArticulosTable(final Context context) {
         this(context, null);
@@ -25,17 +25,14 @@ public class SortableLealtadArticulosTable extends SortableTableView<LealtadArti
     public SortableLealtadArticulosTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Producto", "Categoría", "Existencia", "Precio de Lista", "Descuento Actual", "Precio Total");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nombre", "Descripción","Categoría");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(3);
         tableColumnWeightModel.setColumnWeight(0, 2);
-        tableColumnWeightModel.setColumnWeight(1, 2);
+        tableColumnWeightModel.setColumnWeight(1, 3);
         tableColumnWeightModel.setColumnWeight(2, 2);
-        tableColumnWeightModel.setColumnWeight(3, 2);
-        tableColumnWeightModel.setColumnWeight(4, 2);
-        tableColumnWeightModel.setColumnWeight(5, 2);
         setColumnModel(tableColumnWeightModel);
 
         setColumnComparator(0, ComparatorLealtadArticulo.getArticuloComparator());

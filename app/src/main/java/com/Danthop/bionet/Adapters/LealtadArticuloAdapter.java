@@ -5,55 +5,41 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.Danthop.bionet.Tables.SortableArticulosTable;
 import com.Danthop.bionet.Tables.SortableLealtadArticulosTable;
-import com.Danthop.bionet.Tables.SortablePuntosTable;
 import com.Danthop.bionet.model.ArticuloModel;
-import com.Danthop.bionet.model.LealtadArticulosModel;
-import com.Danthop.bionet.model.Puntos_acumulados_model;
-import com.Danthop.bionet.model.SucursalModel;
+import com.Danthop.bionet.model.LealtadArticuloModel;
 
 import java.text.NumberFormat;
 import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class LealtadArticuloAdapter extends LongPressAwareTableDataAdapter<LealtadArticulosModel> {
+public class LealtadArticuloAdapter extends LongPressAwareTableDataAdapter<LealtadArticuloModel> {
 
     int TEXT_SIZE = 12;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
 
 
-    public LealtadArticuloAdapter(final Context context, final List<LealtadArticulosModel> data, final SortableLealtadArticulosTable tableView) {
+    public LealtadArticuloAdapter(final Context context, final List<LealtadArticuloModel> data, final SortableLealtadArticulosTable tableView) {
         super(context, data, tableView);
     }
 
     @Override
     public View getDefaultCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        LealtadArticulosModel articulo = getRowData(rowIndex);
+        LealtadArticuloModel articulo = getRowData(rowIndex);
         View renderedView = null;
 
         switch (columnIndex) {
             case 0:
-                renderedView = renderProducto(articulo);
+                renderedView = renderNombre(articulo);
                 break;
             case 1:
-                renderedView = renderCategoria(articulo);
+                renderedView = renderDescripcion(articulo);
                 break;
             case 2:
-                renderedView = renderExistencia(articulo);
-                break;
-            case 3:
-                renderedView = renderPrecioLista(articulo);
-                break;
-            case 4:
-                renderedView = renderDescuentoActual(articulo);
-                break;
-            case 5:
-                renderedView = renderPrecioTotal(articulo);
+                renderedView = renderCategoria(articulo);
                 break;
 
         }
@@ -62,7 +48,7 @@ public class LealtadArticuloAdapter extends LongPressAwareTableDataAdapter<Lealt
 
     @Override
     public View getLongPressCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        final LealtadArticulosModel articulo = getRowData(rowIndex);
+        final LealtadArticuloModel articulo = getRowData(rowIndex);
         View renderedView = null;
 
         switch (columnIndex) {
@@ -72,25 +58,16 @@ public class LealtadArticuloAdapter extends LongPressAwareTableDataAdapter<Lealt
         return renderedView;
     }
 
-    private View renderProducto(final LealtadArticulosModel articulo) {
-        return renderString(articulo.getProducto());
+    private View renderNombre(final LealtadArticuloModel articulo) {
+        return renderString(articulo.getArticuloNombre());
     }
 
-    private View renderCategoria(final LealtadArticulosModel articulo) {
-        return renderString(articulo.getCategoria());
+    private View renderCategoria(final LealtadArticuloModel articulo) {
+        return renderString(articulo.getArticuloCategoria());
     }
 
-    private View renderExistencia(final LealtadArticulosModel articulo) {
-        return renderString(articulo.getExistencia());
-    }
-    private View renderPrecioLista(final LealtadArticulosModel articulo) {
-        return renderString(articulo.getPrecio_lista());
-    }
-    private View renderDescuentoActual(final LealtadArticulosModel articulo) {
-        return renderString(articulo.getDescuentoActual());
-    }
-    private View renderPrecioTotal(final LealtadArticulosModel articulo) {
-        return renderString(articulo.getPrecioTotal());
+    private View renderDescripcion(final LealtadArticuloModel articulo) {
+        return renderString(articulo.getArticuloDescripcion());
     }
 
     private View renderString(final String value) {

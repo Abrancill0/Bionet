@@ -1,8 +1,6 @@
 package com.Danthop.bionet.Tables;
 
-import com.Danthop.bionet.model.ArticuloModel;
-import com.Danthop.bionet.model.LealtadArticulosModel;
-import com.Danthop.bionet.model.SucursalModel;
+import com.Danthop.bionet.model.LealtadArticuloModel;
 
 import java.util.Comparator;
 
@@ -12,16 +10,16 @@ public class ComparatorLealtadArticulo {
 
     }
 
-    public static Comparator<LealtadArticulosModel> getArticuloComparator() {
+    public static Comparator<LealtadArticuloModel> getArticuloComparator() {
         return new ProductoNameComparator();
     }
 
 
-    private static class ProductoNameComparator implements Comparator<LealtadArticulosModel> {
+    private static class ProductoNameComparator implements Comparator<LealtadArticuloModel> {
 
         @Override
-        public int compare(final LealtadArticulosModel Articulo1, final LealtadArticulosModel Articulo2) {
-            return Articulo1.getProducto().compareTo(Articulo2.getProducto());
+        public int compare(final LealtadArticuloModel Articulo1, final LealtadArticuloModel Articulo2) {
+            return Articulo1.getArticuloNombre().compareTo(Articulo2.getArticuloNombre());
         }
     }
 

@@ -105,12 +105,17 @@ public class FragmentLealtadInscribir extends Fragment {
         SucursalName=new ArrayList<>();
         SucursalID = new ArrayList<>();
 
-        SpinnerSucursal=(Spinner)v.findViewById(R.id.Sucursal_lealtad);
+        tabla_clientes = v.findViewById(R.id.tabla_clientes);
+        SpinnerSucursal=v.findViewById(R.id.Sucursal_lealtad);
+        Lealtad=v.findViewById(R.id.lealtad);
+        Programas=v.findViewById(R.id.programas);
+        Articulos=v.findViewById(R.id.articulo);
+
+        LoadPestañas();
         LoadSpinnerSucursal();
 
 
-        Muestra_clientes();
-        tabla_clientes = v.findViewById(R.id.tabla_clientes);
+        tabla_clientes.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
         tabla_clientes.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
         tabla_clientes.setSwipeToRefreshEnabled(true);
         tabla_clientes.setSwipeToRefreshListener(new SwipeToRefreshListener() {
@@ -127,41 +132,11 @@ public class FragmentLealtadInscribir extends Fragment {
             }
         });
 
-        tabla_clientes.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
-
-
-
-
-        Lealtad=v.findViewById(R.id.lealtad);
-        Lealtad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtad()).commit();
-
-            }
-        });
-
-        Programas=v.findViewById(R.id.programas);
-        Programas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtadConfiguraciones()).commit();
-
-            }
-        });
-
-        Articulos=v.findViewById(R.id.articulo);
-        Articulos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtadArticulo()).commit();
-
-            }
-        });
 
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
+                clientes.clear();
                 Muestra_clientes();
             }
             public void onNothingSelected(AdapterView<?> parent)
@@ -169,6 +144,7 @@ public class FragmentLealtadInscribir extends Fragment {
 
             }
         });
+
         return v;
 
     }
@@ -383,6 +359,32 @@ public class FragmentLealtadInscribir extends Fragment {
 
     }
 
+    private void LoadPestañas(){
+        Lealtad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fr.replace(R.id.fragment_container,new FragmentLealtad()).commit();
 
+            }
+        });
+
+
+        Programas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fr.replace(R.id.fragment_container,new FragmentLealtadConfiguraciones()).commit();
+
+            }
+        });
+
+
+        Articulos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fr.replace(R.id.fragment_container,new FragmentLealtadArticulo()).commit();
+
+            }
+        });
+    }
 
 }

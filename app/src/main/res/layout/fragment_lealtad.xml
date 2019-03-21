@@ -92,14 +92,52 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@color/white"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".3"
-            android:orientation="vertical"
+            android:layout_weight=".8"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".7"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingHorizontal="50dp">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".7"
+                android:orientation="horizontal"
+                android:paddingLeft="100dp">
+
+                <SearchView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_gray"
+                    android:hint="Busqueda"
+                    android:iconifiedByDefault="false"
+                    android:orientation="horizontal"
+                    android:queryHint="Buscar" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".2"
             android:background="@drawable/pestanas_desplegables"
+            android:orientation="vertical"
             android:padding="20dp">
 
             <com.Danthop.bionet.Tables.SortablePuntosTable
@@ -109,6 +147,7 @@
                 android:layout_weight=".7"
                 app:tableView_headerColor="@color/white"
                 table:tableView_columnCount="3" />
+
             <LinearLayout
                 android:id="@+id/Tabla_vacia"
                 android:layout_width="match_parent"
@@ -129,39 +168,6 @@
                     android:textColor="@color/gray" />
             </LinearLayout>
 
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight=".8"
-            android:background="#F8F9F9"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight=".8"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:padding="10dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Los puntos del Programa de Lealtad vencerán el:"/>
-
-                <Button
-                    android:id="@+id/btn_apartar"
-                    style="@android:style/Widget.Holo.Light.Button"
-                    android:layout_width="match_parent"
-                    android:layout_height="34dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/shape_gray"
-                    android:padding="0dp"
-                    android:text="10/10/2018"
-                    android:textColor="@color/gray"
-                    android:textSize="14sp" />
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

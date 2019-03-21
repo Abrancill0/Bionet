@@ -204,20 +204,19 @@
                 android:layout_height="match_parent"
                 android:layout_weight=".6"
                 android:gravity="center_vertical|center_horizontal"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight=".8"
-                    android:gravity="center_vertical"
                     android:orientation="vertical">
 
                     <CheckBox
                         android:id="@+id/radioButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="100dp"
+                        android:layout_marginHorizontal="50dp"
                         android:text="Todos los clientes aplican para el programa de Lealtad" />
                 </LinearLayout>
 
