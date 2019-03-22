@@ -5,6 +5,7 @@
         android:drawable="@drawable/back"
         android:width="30dp"
         android:height="30dp"
+        android:gravity="center"
         />
 
 </layer-list >
