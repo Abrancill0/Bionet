@@ -270,28 +270,19 @@ public class Fragment_clientes extends Fragment {
                         }
                         final ClienteAdapter clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes,fr);
                         tabla_clientes.setDataAdapter(clienteAdapter);
-
                     }
                     else
                     {
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-
                         toast1.show();
-
-
                     }
 
                 } catch (JSONException e) {
-
                     Toast toast1 =
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
-
                     toast1.show();
-
-
                 }
-
             }
 
         },
@@ -301,17 +292,11 @@ public class Fragment_clientes extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         Toast toast1 =
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
-
                         toast1.show();
-
-
                     }
                 }
         );
-
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
-
-
     }
 
 }

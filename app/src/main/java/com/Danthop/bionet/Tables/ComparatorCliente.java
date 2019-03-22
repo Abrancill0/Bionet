@@ -1,10 +1,7 @@
 package com.Danthop.bionet.Tables;
-
 import com.Danthop.bionet.model.ClienteModel;
 
 import java.util.Comparator;
-
-
 
 public final class ComparatorCliente {
 

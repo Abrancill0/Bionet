@@ -96,9 +96,7 @@ public class ClienteModel {
         return cliente_UUID;
     }
 
-    public String getCliente_Nombre() {
-        return cliente_Nombre;
-    }
+    public String getCliente_Nombre() { return cliente_Nombre; }
 
     public String getCliente_Correo() {
         return cliente_Correo;

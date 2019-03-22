@@ -1,6 +1,4 @@
 package com.Danthop.bionet;
-
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,7 +15,12 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.ClienteAdapter;
+import com.Danthop.bionet.Adapters.InventarioAdapter;
 import com.Danthop.bionet.R;
+import com.Danthop.bionet.Tables.SortableInventariosTable;
+import com.Danthop.bionet.model.ClienteModel;
+import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -29,36 +32,41 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class Fragment_inventarios extends Fragment {
     private String[] [] inventarioModel;
     private String usu_id;
-    //private SortableInventarioTable tabla_inventario;
+    private SortableInventariosTable tabla_inventario;
+    private  FragmentTransaction fr;
     //private ProgressDialog progreso;
-
-    private String sku;
-    private String producto;
-    private String modificadores;
-    private String categoria;
-    private String existencia;
-    private String listado_Inventario;
-    private String traslados;
-    private String creditos_Proveedores;
-    private String agregar_Productos;
-    private String solicitar_Traslado;
-
+    private String sku="";
+    private String producto="";
+    private String modificadores="";
+    private String categoria="";
+    private String existencia="";
+    private String listado_Inventario="";
+    private String traslados="";
+    private String creditos_Proveedores="";
+    private String agregar_Productos="";
+    private String solicitar_Traslado="";
+    private String nombre_sucursal="";
+    private String suc_id="";
+    private String art_descripcion="";
+    private String art_tipo="";
+    private List<InventarioModel> inventarios;
 
 
     public Fragment_inventarios() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,6 +82,7 @@ public class Fragment_inventarios extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
         usu_id = sharedPref.getString("usu_id","");
+        inventarios = new ArrayList<>();
 
         final TableView tabla_inventario = (TableView) v.findViewById(R.id.tabla_inventario);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Producto", "Modificadores", "Categoria", "Existencia");
@@ -85,7 +94,6 @@ public class Fragment_inventarios extends Fragment {
         tableColumnWeightModel.setColumnWeight(2, 3);
         tableColumnWeightModel.setColumnWeight(3, 2);
         tableColumnWeightModel.setColumnWeight(4, 2);
-
 
         tabla_inventario.setHeaderAdapter(simpleHeader);
         tabla_inventario.setColumnModel(tableColumnWeightModel);
@@ -114,7 +122,6 @@ public class Fragment_inventarios extends Fragment {
         catch (Exception e){
             e.printStackTrace();
         }
-
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/inventario/index_app";
 
@@ -123,10 +130,9 @@ public class Fragment_inventarios extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
 
-                JSONArray Resultado = null;
-                JSONObject ElementoInventario = null;
-                JSONArray ResultadoNodoInventario = null;
-
+                JSONObject Resultado = null;
+                JSONArray Articulo = null;
+                JSONArray Sucursales = null;
 
                 try {
                     int status = Integer.parseInt(response.getString("estatus"));
@@ -134,35 +140,58 @@ public class Fragment_inventarios extends Fragment {
 
                     if (status == 1)
                     {
-                        Resultado = response.getJSONArray("resultado");
+                        Resultado = response.getJSONObject("resultado");
 
+                        Articulo = Resultado.getJSONArray("Articulos");
+                        inventarioModel = new String[Articulo.length()][4];
 
-                        inventarioModel = new String[Resultado.length()][4];
-
-                        for (int x = 0; x < Resultado.length(); x++){
-                            JSONObject elemento = Resultado.getJSONObject(x);
-
+                        for (int x = 0; x < Articulo.length(); x++){
+                            JSONObject elemento = Articulo.getJSONObject(x);
                             sku = elemento.getString("ava_sku");
-                            /*producto = elemento.getString("art_nombre");
+                            producto = elemento.getString("art_nombre");
                             categoria = elemento.getString("cat_nombre");
-                            existencia = elemento.getString("exi_cantidad");
-                            modificadores = elemento.getString("");
-                            */
+                            art_descripcion = elemento.getString("art_descripcion");
+                            art_tipo = elemento.getString("art_tipo");
+                            //modificadores = elemento.getString("");
+
+                        Sucursales = elemento.getJSONArray("sucursales");
+
+                            for (int z = 0; z < Sucursales.length(); z++) {
+                                JSONObject elemento2 = Sucursales.getJSONObject(z);
+                                existencia = elemento2.getString("exi_cantidad");
+                                nombre_sucursal= elemento2.getString("suc_nombre");
+                                suc_id = elemento2.getString("suc_id");
+
+                                final InventarioModel inventario = new InventarioModel(
+                                        sku,
+                                        producto,
+                                        modificadores,
+                                        categoria,
+                                        existencia,
+                                        listado_Inventario,
+                                        traslados,
+                                        creditos_Proveedores,
+                                        agregar_Productos,
+                                        solicitar_Traslado,
+                                        nombre_sucursal,
+                                        suc_id,
+                                        art_descripcion,
+                                        art_tipo
+
+                                );
+                                inventarios.add(inventario);
+                            }
                         }
 
-
-
                     }
-                }catch (JSONException e) {
+                    final InventarioAdapter InventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario,fr);
+                    tabla_inventario.setDataAdapter(InventarioAdapter);
 
+                }catch (JSONException e) {
                     Toast toast1 =
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
-
                     toast1.show();
-
-
                 }
-
             }
         },
                 new Response.ErrorListener()
@@ -171,17 +200,10 @@ public class Fragment_inventarios extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         Toast toast1 =
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
-
                         toast1.show();
-
-
                     }
                 }
         );
-
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequets);
-
-
     }
-
 }

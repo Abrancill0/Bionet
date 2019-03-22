@@ -1,5 +1,7 @@
 package com.Danthop.bionet.model;
 
+import android.print.PrinterId;
+
 public class InventarioModel {
 
     private String sku;
@@ -12,6 +14,10 @@ public class InventarioModel {
     private String creditos_Proveedores;
     private String agregar_Productos;
     private String solicitar_Traslado;
+    private String nombre_sucursal;
+    private String suc_id;
+    private String art_descripcion;
+    private String art_tipo;
 
 
     public InventarioModel(String sku,
@@ -23,7 +29,11 @@ public class InventarioModel {
                            String traslados,
                            String creditos_Proveedores,
                            String agregar_Productos,
-                           String solicitar_Traslado)
+                           String solicitar_Traslado,
+                           String nombre_sucursal,
+                           String suc_id,
+                           String art_descripcion,
+                           String art_tipo)
     {
         this.sku = sku;
         this.producto = producto;
@@ -34,7 +44,11 @@ public class InventarioModel {
         this.traslados = traslados;
         this.creditos_Proveedores = creditos_Proveedores;
         this.agregar_Productos = agregar_Productos;
-        this.solicitar_Traslado =solicitar_Traslado;
+        this.solicitar_Traslado = solicitar_Traslado;
+        this.nombre_sucursal = nombre_sucursal;
+        this.suc_id = suc_id;
+        this.art_descripcion = art_descripcion;
+        this.art_tipo = art_tipo;
     }
 
     public String getsku() { return sku; }
@@ -47,4 +61,8 @@ public class InventarioModel {
     public String getcreditos_Proveedores() { return creditos_Proveedores; }
     public String getagregar_Producto() { return agregar_Productos; }
     public String getsolicitar_Traslado() { return solicitar_Traslado; }
+    public String getnombre_sucursal() { return nombre_sucursal; }
+    public String getsuc_id() { return suc_id; }
+    public String getart_descripcion() { return art_descripcion; }
+    public String getart_tipo() { return art_tipo; }
 }
