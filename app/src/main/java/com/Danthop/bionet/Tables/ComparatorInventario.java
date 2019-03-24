@@ -16,8 +16,8 @@ public class ComparatorInventario {
     private static class InventarioNameComparator implements Comparator<InventarioModel> {
 
         @Override
-        public int compare(final InventarioModel cliente1, final InventarioModel cliente2) {
-            return cliente1.getproducto().compareTo(cliente2.getproducto());
+        public int compare(final InventarioModel cliente1, final InventarioModel Inventario) {
+            return Inventario.getNombre_sucursal().compareTo(Inventario.getNombre_sucursal());
         }
     }
 }

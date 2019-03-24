@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.Danthop.bionet.Adapters.ClienteAdapter;
 import com.Danthop.bionet.Adapters.InventarioAdapter;
 import com.Danthop.bionet.R;
+import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.Tables.SortableInventariosTable;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.InventarioModel;
@@ -84,7 +85,7 @@ public class Fragment_inventarios extends Fragment {
         usu_id = sharedPref.getString("usu_id","");
         inventarios = new ArrayList<>();
 
-        final TableView tabla_inventario = (TableView) v.findViewById(R.id.tabla_inventario);
+        tabla_inventario = (SortableInventariosTable) v.findViewById(R.id.tabla_inventario);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Producto", "Modificadores", "Categoria", "Existencia");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
@@ -154,7 +155,7 @@ public class Fragment_inventarios extends Fragment {
                             art_tipo = elemento.getString("art_tipo");
                             //modificadores = elemento.getString("");
 
-                        Sucursales = elemento.getJSONArray("sucursales");
+                                Sucursales = elemento.getJSONArray("sucursales");
 
                             for (int z = 0; z < Sucursales.length(); z++) {
                                 JSONObject elemento2 = Sucursales.getJSONObject(z);
@@ -184,7 +185,7 @@ public class Fragment_inventarios extends Fragment {
                         }
 
                     }
-                    final InventarioAdapter InventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario,fr);
+                    final InventarioAdapter InventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario);
                     tabla_inventario.setDataAdapter(InventarioAdapter);
 
                 }catch (JSONException e) {

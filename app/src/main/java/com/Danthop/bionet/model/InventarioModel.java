@@ -51,18 +51,116 @@ public class InventarioModel {
         this.art_tipo = art_tipo;
     }
 
-    public String getsku() { return sku; }
-    public String getproducto() { return producto; }
-    public String getmodificadores() { return modificadores; }
-    public String getcategoria() { return categoria; }
-    public String getexistencia() { return existencia; }
-    public String getlistado_Inventario() { return listado_Inventario; }
-    public String gettraslados() { return traslados; }
-    public String getcreditos_Proveedores() { return creditos_Proveedores; }
-    public String getagregar_Producto() { return agregar_Productos; }
-    public String getsolicitar_Traslado() { return solicitar_Traslado; }
-    public String getnombre_sucursal() { return nombre_sucursal; }
-    public String getsuc_id() { return suc_id; }
-    public String getart_descripcion() { return art_descripcion; }
-    public String getart_tipo() { return art_tipo; }
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public String getProducto() {
+        return producto;
+    }
+
+    public void setProducto(String producto) {
+        this.producto = producto;
+    }
+
+    public String getModificadores() {
+        return modificadores;
+    }
+
+    public void setModificadores(String modificadores) {
+        this.modificadores = modificadores;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public String getExistencia() {
+        return existencia;
+    }
+
+    public void setExistencia(String existencia) {
+        this.existencia = existencia;
+    }
+
+    public String getListado_Inventario() {
+        return listado_Inventario;
+    }
+
+    public void setListado_Inventario(String listado_Inventario) {
+        this.listado_Inventario = listado_Inventario;
+    }
+
+    public String getTraslados() {
+        return traslados;
+    }
+
+    public void setTraslados(String traslados) {
+        this.traslados = traslados;
+    }
+
+    public String getCreditos_Proveedores() {
+        return creditos_Proveedores;
+    }
+
+    public void setCreditos_Proveedores(String creditos_Proveedores) {
+        this.creditos_Proveedores = creditos_Proveedores;
+    }
+
+    public String getAgregar_Productos() {
+        return agregar_Productos;
+    }
+
+    public void setAgregar_Productos(String agregar_Productos) {
+        this.agregar_Productos = agregar_Productos;
+    }
+
+    public String getSolicitar_Traslado() {
+        return solicitar_Traslado;
+    }
+
+    public void setSolicitar_Traslado(String solicitar_Traslado) {
+        this.solicitar_Traslado = solicitar_Traslado;
+    }
+
+    public String getNombre_sucursal() {
+        return nombre_sucursal;
+    }
+
+    public void setNombre_sucursal(String nombre_sucursal) {
+        this.nombre_sucursal = nombre_sucursal;
+    }
+
+    public String getSuc_id() {
+        return suc_id;
+    }
+
+    public void setSuc_id(String suc_id) {
+        this.suc_id = suc_id;
+    }
+
+    public String getArt_descripcion() {
+        return art_descripcion;
+    }
+
+    public void setArt_descripcion(String art_descripcion) {
+        this.art_descripcion = art_descripcion;
+    }
+
+    public String getArt_tipo() {
+        return art_tipo;
+    }
+
+    public void setArt_tipo(String art_tipo) {
+        this.art_tipo = art_tipo;
+    }
+
 }

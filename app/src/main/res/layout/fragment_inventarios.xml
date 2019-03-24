@@ -120,12 +120,18 @@
             android:background="@drawable/pestanas_desplegables"
             android:padding="20dp">
 
-            <de.codecrafters.tableview.TableView
+            <com.Danthop.bionet.Tables.SortableInventariosTable
                 android:id="@+id/tabla_inventario"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".7"
+                android:visibility="visible"
+                app:tableView_headerColor="@color/white"
                 table:tableView_columnCount="5"
-                app:tableView_headerColor="@color/white"/>
+                >
+
+            </com.Danthop.bionet.Tables.SortableInventariosTable>
+
 
         </LinearLayout>
     </LinearLayout>
