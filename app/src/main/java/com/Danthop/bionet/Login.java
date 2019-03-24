@@ -246,6 +246,11 @@ public class Login extends Activity {
         startActivity(intent);
     }
 
+    public void IniciarContraseña(View view){
+        Intent intent = new Intent(Login.this, Login_contrasena.class );
+        startActivity(intent);
+    }
+
     public void IniciarSesion(View view){
 
         if(TextUsuario.getText().length()==0) {

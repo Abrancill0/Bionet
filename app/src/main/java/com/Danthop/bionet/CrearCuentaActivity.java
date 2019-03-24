@@ -9,18 +9,14 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import static com.android.volley.Request.Method;
 
 public class CrearCuentaActivity extends Activity {
