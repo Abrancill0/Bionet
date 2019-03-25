@@ -160,27 +160,29 @@ public class Fragment_inventarios extends Fragment {
                             for (int z = 0; z < Sucursales.length(); z++) {
                                 JSONObject elemento2 = Sucursales.getJSONObject(z);
                                 existencia = elemento2.getString("exi_cantidad");
-                                nombre_sucursal= elemento2.getString("suc_nombre");
-                                suc_id = elemento2.getString("suc_id");
+                                int exist = Integer.parseInt(existencia);
+                                if(exist >= 1) {
+                                    nombre_sucursal = elemento2.getString("suc_nombre");
+                                    suc_id = elemento2.getString("suc_id");
 
-                                final InventarioModel inventario = new InventarioModel(
-                                        sku,
-                                        producto,
-                                        modificadores,
-                                        categoria,
-                                        existencia,
-                                        listado_Inventario,
-                                        traslados,
-                                        creditos_Proveedores,
-                                        agregar_Productos,
-                                        solicitar_Traslado,
-                                        nombre_sucursal,
-                                        suc_id,
-                                        art_descripcion,
-                                        art_tipo
-
-                                );
-                                inventarios.add(inventario);
+                                    final InventarioModel inventario = new InventarioModel(
+                                            sku,
+                                            producto,
+                                            modificadores,
+                                            categoria,
+                                            existencia,
+                                            listado_Inventario,
+                                            traslados,
+                                            creditos_Proveedores,
+                                            agregar_Productos,
+                                            solicitar_Traslado,
+                                            nombre_sucursal,
+                                            suc_id,
+                                            art_descripcion,
+                                            art_tipo
+                                    );
+                                    inventarios.add(inventario);
+                                }
                             }
                         }
 

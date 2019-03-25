@@ -87,6 +87,7 @@ public class FragmentLealtadInscribir extends Fragment {
     private Dialog EliminarAniadirDialog;
     private Button eliminar;
     private TableDataClickListener<ClienteModel> tablaListener;
+    private Button cancelarEliminar;
 
     private String correo_igual;
     private String direccion_igual;
@@ -395,6 +396,13 @@ public class FragmentLealtadInscribir extends Fragment {
         EliminarAniadirDialog=new Dialog(getContext());
         EliminarAniadirDialog.setContentView(R.layout.pop_up_lealtad_eliminar_cliente);
         EliminarAniadirDialog.show();
+        cancelarEliminar = EliminarAniadirDialog.findViewById(R.id.Cancelar);
+        cancelarEliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EliminarAniadirDialog.dismiss();
+            }
+        });
         eliminar = EliminarAniadirDialog.findViewById(R.id.eliminar_cliente);
         eliminar.setOnClickListener(new View.OnClickListener() {
             @Override

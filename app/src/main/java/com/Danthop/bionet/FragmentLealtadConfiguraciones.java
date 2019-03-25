@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import de.codecrafters.tableview.listeners.TableDataClickListener;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -73,12 +76,15 @@ public class FragmentLealtadConfiguraciones extends Fragment{
     private EditText IntroducirPuntos1;
     private EditText IntroducirPuntos2;
     private Button AceptarCrear;
+    private Dialog Activar;
+    private TableDataClickListener<ConfiguracionLealtadModel> tablaListener;
 
 
     private String Lealtad_puntos_maximos;
     private String Lealtad_con_id;
     private String Lealtad_fecha_vencimiento;
-
+    private String Lealtad_status;
+    private String cpl_id;
 
     private Spinner SpinnerSucursal;
 
@@ -122,12 +128,14 @@ public class FragmentLealtadConfiguraciones extends Fragment{
         Fecha_puntos_vencen = v.findViewById(R.id.fecha_puntos_vencen);
         CrearConfiguracion = v.findViewById(R.id.crear_configuracion);
 
+        LoadListenerTable();
         LoadPestañas();
         LoadSpinnerSucursal();
         FechaVencimiento();
         AñadirEliminarPuntosMaximos();
         CrearConfiguracion();
 
+        tabla_programas.addDataClickListener(tablaListener);
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
@@ -306,7 +314,11 @@ public class FragmentLealtadConfiguraciones extends Fragment{
                                 String pesos2= vale_importe.getString("value");
                                 String pesosxpuntos= "Por cada $ "+ pesos1 + " equivalen a " + puntos1 +" puntos";
                                 String puntosxpesos= "Por cada "+ puntos2 + " puntos equivalen a $ " + pesos2;
-                                final ConfiguracionLealtadModel configuracion = new ConfiguracionLealtadModel(String.valueOf(y+1), pesosxpuntos,puntosxpesos);
+                                Lealtad_status= elemento.getString("cpl_activo");
+                                JSONObject cpl_id_nodo = elemento.getJSONObject("cpl_id");
+                                cpl_id = cpl_id_nodo.getString("uuid");
+
+                                final ConfiguracionLealtadModel configuracion = new ConfiguracionLealtadModel(String.valueOf(y+1), pesosxpuntos,puntosxpesos,Lealtad_status,cpl_id);
                                 Configuraciones.add(configuracion);
                             }
                         final LealtadConfiguracionesAdapter configuracionesAdapter = new LealtadConfiguracionesAdapter(getContext(), Configuraciones, tabla_programas);
@@ -584,6 +596,7 @@ public class FragmentLealtadConfiguraciones extends Fragment{
                 @Override
                 public void onClick(View v) {
                     no_vencen.setBackgroundResource(R.drawable.shape_gray);
+                    no_vencen.setTextColor(getResources().getColor(R.color.black));
                     vencen.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                     vencen.setTextColor(getResources().getColor(R.color.white));
                     Puntos_vencen_dias.setVisibility(View.VISIBLE);
@@ -709,6 +722,7 @@ public class FragmentLealtadConfiguraciones extends Fragment{
                     @Override
                     public void onClick(View v) {
                         vencen.setBackgroundResource(R.drawable.shape_gray);
+                        vencen.setTextColor(getResources().getColor(R.color.black));
                         no_vencen.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                         no_vencen.setTextColor(getResources().getColor(R.color.white));
                         Puntos_vencen_dias.setVisibility(View.GONE);
@@ -795,8 +809,6 @@ public class FragmentLealtadConfiguraciones extends Fragment{
                     }
                 });
     }
-
-
 
 
     private void LoadSpinnerSucursal(){
@@ -892,7 +904,6 @@ public class FragmentLealtadConfiguraciones extends Fragment{
     }
 
 
-
     private void LoadPestañas(){
         Lealtad.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -919,6 +930,223 @@ public class FragmentLealtadConfiguraciones extends Fragment{
 
             }
         });
+    }
+
+    private void LoadListenerTable(){
+        tablaListener = new TableDataClickListener<ConfiguracionLealtadModel>() {
+            @Override
+            public void onDataClicked(int rowIndex, ConfiguracionLealtadModel clickedData) {
+
+                cpl_id = (clickedData.getCpl_id());
+
+                if(clickedData.getStatus().equals("false"))
+                {
+                    LoadActivar();
+                }
+                else if(clickedData.getStatus().equals("true"))
+                {
+                    LoadDesactivar();
+                }
+            }
+        };
+    }
+
+    private void LoadActivar(){
+        Activar =new Dialog(getContext());
+        Activar.setContentView(R.layout.pop_up_lealtad_activar_configuracion);
+        Activar.show();
+        Button cancelar = Activar.findViewById(R.id.Cancelar);
+        cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activar.dismiss();
+            }
+        });
+        Button activar = Activar.findViewById(R.id.activar_configuracion);
+        activar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JSONObject request = new JSONObject();
+                try
+                {
+                    request.put("usu_id", usu_id);
+                    request.put("esApp", "1");
+                    request.put("cpl_id",cpl_id);
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                String url = getString(R.string.Url);
+
+                String ApiPath = url + "/api/programa-de-lealtad/activar-configuracion-puntos";
+
+                JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+
+                        try {
+
+                            int status = Integer.parseInt(response.getString("estatus"));
+                            String Mensaje = response.getString("mensaje");
+
+
+                            if (status == 1)
+                            {
+
+                                Toast toast1 =
+                                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                                toast1.show();
+                                Activar.dismiss();
+                                Configuraciones.clear();
+                                LoadConfiguraciones();
+
+                            }
+                            else
+                            {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                                toast1.show();
+
+
+                            }
+
+                        } catch (JSONException e) {
+
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                            toast1.show();
+
+
+                        }
+
+                    }
+
+                },
+                        new Response.ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                                toast1.show();
+
+
+                            }
+                        }
+                );
+
+                VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+            }
+        });
+
+    }
+
+    private void LoadDesactivar(){
+        final Dialog Desactivar =new Dialog(getContext());
+        Desactivar.setContentView(R.layout.pop_up_lealtad_desactivar_configuracion);
+        Desactivar.show();
+        Button cancelar = Desactivar.findViewById(R.id.Cancelar);
+        cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Desactivar.dismiss();
+            }
+        });
+        Button desactivar = Desactivar.findViewById(R.id.desactivar_configuracion);
+        desactivar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JSONObject request = new JSONObject();
+                try
+                {
+                    request.put("usu_id", usu_id);
+                    request.put("esApp", "1");
+                    request.put("cpl_id",cpl_id);
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                String url = getString(R.string.Url);
+
+                String ApiPath = url + "/api/programa-de-lealtad/desactivar-configuracion-puntos";
+
+                JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+
+                        try {
+
+                            int status = Integer.parseInt(response.getString("estatus"));
+                            String Mensaje = response.getString("mensaje");
+
+
+                            if (status == 1)
+                            {
+
+                                Toast toast1 =
+                                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                                toast1.show();
+                                Desactivar.dismiss();
+                                Configuraciones.clear();
+                                LoadConfiguraciones();
+
+                            }
+                            else
+                            {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                                toast1.show();
+
+
+                            }
+
+                        } catch (JSONException e) {
+
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                            toast1.show();
+
+
+                        }
+
+                    }
+
+                },
+                        new Response.ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                                toast1.show();
+
+
+                            }
+                        }
+                );
+
+                VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+            }
+        });
+
     }
 
 }

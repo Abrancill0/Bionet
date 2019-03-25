@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -65,6 +66,7 @@ public class Fragment_editarCliente extends Fragment {
     private Spinner SpinnerSucursal;
     private Spinner SpinnerColonia;
     private Spinner SpinnerOpcion;
+    private ImageView Back;
 
     private String nombre;
     private String ultima_visita;
@@ -289,6 +291,16 @@ public class Fragment_editarCliente extends Fragment {
 
                 GuardarCliente();
 
+            }
+        });
+
+
+        Back = v.findViewById(R.id.atras);
+        Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_clientes()).commit();
             }
         });
 

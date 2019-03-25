@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableLealtadConfiguracionesTable;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ConfiguracionLealtadModel;
@@ -41,6 +42,9 @@ public class LealtadConfiguracionesAdapter extends LongPressAwareTableDataAdapte
             case 2:
                 renderedView = renderPtXDinero(programa);
                 break;
+            case 3:
+                renderedView = renderStatus(programa);
+                break;
 
         }
         return renderedView;
@@ -68,6 +72,37 @@ public class LealtadConfiguracionesAdapter extends LongPressAwareTableDataAdapte
 
     private View renderPtXDinero(final ConfiguracionLealtadModel programa) {
         return renderString(programa.getPuntosPorDinero());
+    }
+
+    private View renderStatus(final ConfiguracionLealtadModel programa) {
+
+        if(programa.getStatus().equals("false"))
+        {
+            return renderStringInactivo("Inactiva");
+        }
+        else if(programa.getStatus().equals("true")){
+            return renderStringActivo("Activa");
+        }
+
+        return renderString("");
+
+    }
+
+    private View renderStringActivo(final String value) {
+        final TextView textView = new TextView(getContext());
+        textView.setText(value);
+        textView.setPadding(20, 10, 20, 10);
+        textView.setTextSize(TEXT_SIZE);
+        textView.setTextColor(getResources().getColor(R.color.green));
+        return textView;
+    }
+    private View renderStringInactivo(final String value) {
+        final TextView textView = new TextView(getContext());
+        textView.setText(value);
+        textView.setPadding(20, 10, 20, 10);
+        textView.setTextSize(TEXT_SIZE);
+        textView.setTextColor(getResources().getColor(R.color.red));
+        return textView;
     }
 
     private View renderString(final String value) {

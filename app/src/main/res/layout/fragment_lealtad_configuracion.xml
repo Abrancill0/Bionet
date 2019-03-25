@@ -117,19 +117,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="92dp"
                     android:layout_weight=".4"
-                    android:gravity="center_vertical">
+                    android:gravity="center_horizontal">
 
                     <Button
                         android:id="@+id/crear_configuracion"
                         style="@android:style/Widget.Holo.Light.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="34dp"
-                        android:layout_margin="10dp"
                         android:background="@drawable/shape_gray"
                         android:paddingHorizontal="20dp"
                         android:text="Crear Configuración"
                         android:textColor="@color/gray"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:layout_marginTop="10dp"/>
                 </LinearLayout>
 
             </LinearLayout>

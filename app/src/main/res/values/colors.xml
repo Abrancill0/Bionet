@@ -11,4 +11,6 @@
     <color name="transparent"></color>
     <color name="gray2">#DFDFDF</color>
     <color name="fondo_botones_menu">#fff</color>
+    <color name="red">#EC7063</color>
+    <color name="green">#2ECC71</color>
 </resources>
