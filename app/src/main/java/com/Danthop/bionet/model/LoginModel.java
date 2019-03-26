@@ -29,6 +29,7 @@ public class LoginModel {
         private String usu_activo;
         private String usu_administrador;
 
+
         public String getUsuId() {
             return usuId;
         }
@@ -57,17 +58,13 @@ public class LoginModel {
             return usuTipoContrasena;
         }
 
-        public void setUsuTipoContrasena(String usuTipoContrasena) {
-            this.usuTipoContrasena = usuTipoContrasena;
-        }
+        public void setUsuTipoContrasena(String usuTipoContrasena) { this.usuTipoContrasena = usuTipoContrasena; }
 
         public String getUsuUsuarioBloquedado() {
             return usuUsuarioBloquedado;
         }
 
-        public void setUsuUsuarioBloquedado(String usuUsuarioBloquedado) {
-            this.usuUsuarioBloquedado = usuUsuarioBloquedado;
-        }
+        public void setUsuUsuarioBloquedado(String usuUsuarioBloquedado) { this.usuUsuarioBloquedado = usuUsuarioBloquedado; }
 
         public String getUsuNombre() {
             return usuNombre;
@@ -113,25 +110,19 @@ public class LoginModel {
             return usuFechaRegistro;
         }
 
-        public void setUsuFechaRegistro(String usuFechaRegistro) {
-            this.usuFechaRegistro = usuFechaRegistro;
-        }
+        public void setUsuFechaRegistro(String usuFechaRegistro) { this.usuFechaRegistro = usuFechaRegistro; }
 
         public String getUsuFechaNacimiento() {
             return usuFechaNacimiento;
         }
 
-        public void setUsuFechaNacimiento(String usuFechaNacimiento) {
-            this.usuFechaNacimiento = usuFechaNacimiento;
-        }
+        public void setUsuFechaNacimiento(String usuFechaNacimiento) { this.usuFechaNacimiento = usuFechaNacimiento; }
 
         public Integer getUsuIdTarjetaSocio() {
             return usuIdTarjetaSocio;
         }
 
-        public void setUsuIdTarjetaSocio(Integer usuIdTarjetaSocio) {
-            this.usuIdTarjetaSocio = usuIdTarjetaSocio;
-        }
+        public void setUsuIdTarjetaSocio(Integer usuIdTarjetaSocio) { this.usuIdTarjetaSocio = usuIdTarjetaSocio; }
 
         public String getUsuCiudad() {
             return usuCiudad;
@@ -145,25 +136,19 @@ public class LoginModel {
             return usuTipoDocumento;
         }
 
-        public void setUsuTipoDocumento(String usuTipoDocumento) {
-            this.usuTipoDocumento = usuTipoDocumento;
-        }
+        public void setUsuTipoDocumento(String usuTipoDocumento) { this.usuTipoDocumento = usuTipoDocumento; }
 
         public String getUsuNoDocumento() {
             return usuNoDocumento;
         }
 
-        public void setUsuNoDocumento(String usuNoDocumento) {
-            this.usuNoDocumento = usuNoDocumento;
-        }
+        public void setUsuNoDocumento(String usuNoDocumento) { this.usuNoDocumento = usuNoDocumento; }
 
         public String getUsuContrasenaTemp() {
             return usuContrasenaTemp;
         }
 
-        public void setUsuContrasenaTemp(String usuContrasenaTemp) {
-            this.usuContrasenaTemp = usuContrasenaTemp;
-        }
+        public void setUsuContrasenaTemp(String usuContrasenaTemp) { this.usuContrasenaTemp = usuContrasenaTemp; }
 
         public String getUsuImagen() {
             return usuImagen;
@@ -201,40 +186,33 @@ public class LoginModel {
             return updatedAt;
         }
 
-        public void setUpdatedAt(String updatedAt) {
-            this.updatedAt = updatedAt;
-        }
+        public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
 
-
-    public String getUsu_activo() {
+        public String getUsu_activo() {
         return usu_activo;
     }
 
-    public void setUsu_activo(String usu_activo) {
+        public void setUsu_activo(String usu_activo) {
         this.usu_activo = usu_activo;
     }
 
-    public String getUsu_administrador() {
+        public String getUsu_administrador() {
         return usu_administrador;
     }
 
-    public void setUsu_administrador(String usu_administrador) {
-        this.usu_administrador = usu_administrador;
-    }
+        public void setUsu_administrador(String usu_administrador) { this.usu_administrador = usu_administrador; }
 
-    public String getEstatus() {
+        public String getEstatus() {
         return Estatus;
     }
 
-    public void setEstatus(String estatus) {
+        public void setEstatus(String estatus) {
         Estatus = estatus;
     }
 
-    public String getMensaje() {
-        return Mensaje;
-    }
+        public String getMensaje() { return Mensaje; }
 
-    public void setMensaje(String mensaje) {
+        public void setMensaje(String mensaje) {
         Mensaje = mensaje;
     }
 }

@@ -147,7 +147,6 @@ public class Reestablecer_contrasena extends Activity {
                                                 error.toString(), Toast.LENGTH_SHORT);
 
                                 toast1.show();
-
                             }
                         }
                 );
@@ -157,9 +156,7 @@ public class Reestablecer_contrasena extends Activity {
             Toast toast5 =
                     Toast.makeText(getApplicationContext(),
                             "Las contraseñas no coinciden", Toast.LENGTH_SHORT);
-
             toast5.show();
         }
-
     }
 }

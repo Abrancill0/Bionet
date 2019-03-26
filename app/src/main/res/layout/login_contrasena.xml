@@ -103,15 +103,6 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:paddingVertical="10dp">
-
-                <TextView
-                    android:id="@+id/reestablecer_contrasena"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:onClick="forgotPassword"
-                    android:text="@string/contrasenia_olvidada"
-                    android:textSize="12sp" />
             </LinearLayout>
 
             <Button
@@ -126,8 +117,6 @@
                 android:text="Iniciar Sesión"
                 android:textColor="#ffffff"
                 android:textSize="14sp" />
-
-
         </LinearLayout>
 
 

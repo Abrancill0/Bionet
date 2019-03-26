@@ -25,9 +25,7 @@ public class CrearCuentaActivity extends Activity {
     private EditText Password1;
     private EditText Password2;
     private CheckBox AceptaTerminos;
-
     ProgressDialog progreso;
-
     Dialog terminos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
