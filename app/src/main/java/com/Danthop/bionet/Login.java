@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -50,6 +52,14 @@ public class Login extends Activity {
         setContentView(R.layout.login);
 
         SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+
+        //Asi puedes verificar la dirección mac del dispositivo
+        //-------------;)----------------------
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wInfo = wifiManager.getConnectionInfo();
+        String macAddress = wInfo.getMacAddress();
+        System.out.println(macAddress);
+        //------------:)----------------------
 
         TextUsuario = (EditText)findViewById(R.id.TextUsuario);
         TextPassword = (EditText)findViewById(R.id.TextPassword);
@@ -407,6 +417,10 @@ public class Login extends Activity {
                 }
             }
         });
+    }
+
+    public void onBackPressed() {
+        //do nothing
     }
 }
 

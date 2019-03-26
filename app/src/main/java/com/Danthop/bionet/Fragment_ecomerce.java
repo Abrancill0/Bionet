@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.Danthop.bionet.Adapters.ClienteAdapter;
 import com.Danthop.bionet.Adapters.OrdenEcommerceAdapter;
 import com.Danthop.bionet.Tables.SortableOrdenEcommerceTable;
-import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.Ecommerce_orden_Model;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -32,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +61,7 @@ public class Fragment_ecomerce extends Fragment {
     private String RespuestaTodoString;
 
     private List<Ecommerce_orden_Model> Ordenes;
+    private TableDataClickListener<Ecommerce_orden_Model> tablaListener;
 
     ProgressDialog progreso;
 
@@ -103,6 +104,7 @@ public class Fragment_ecomerce extends Fragment {
 
 
         LoadButtons();
+        LoadListenerTable();
 
         tabla_ecomerce.setSwipeToRefreshEnabled( true );
         tabla_ecomerce.setSwipeToRefreshListener( new SwipeToRefreshListener() {
@@ -120,8 +122,157 @@ public class Fragment_ecomerce extends Fragment {
         } );
 
         tabla_ecomerce.setEmptyDataIndicatorView( v.findViewById( R.id.Tabla_vacia ) );
+        tabla_ecomerce.addDataClickListener(tablaListener);
 
         return v;
+    }
+
+    private void LoadListenerTable(){
+        tablaListener = new TableDataClickListener<Ecommerce_orden_Model>() {
+            @Override
+            public void onDataClicked(int rowIndex, final Ecommerce_orden_Model clickedData) {
+                final Dialog pop_up1 = new Dialog( getContext() );
+                pop_up1.setContentView( R.layout.pop_up_ecommerce_detalle_orden );
+                pop_up1.show();
+
+                TextView Orden = pop_up1.findViewById( R.id.text_ordenname );
+                TextView Cliente = pop_up1.findViewById( R.id.text_clientename );
+                TextView TipoPago = pop_up1.findViewById( R.id.text_tipo_pago );
+                TextView Envio = pop_up1.findViewById( R.id.text_costo_envio );
+                TextView Importe = pop_up1.findViewById( R.id.text_importe );
+                TextView OrdenEstado = pop_up1.findViewById( R.id.text_estado );
+                TextView Fecha = pop_up1.findViewById( R.id.text_fecha );
+
+                double Envioformat = Double.parseDouble( clickedData.getEnvio() );
+                NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+                double importeformat = Double.parseDouble( clickedData.getImporte() );
+                NumberFormat formatter2 = NumberFormat.getCurrencyInstance();
+
+                Orden.setText( clickedData.getArticulo() );
+                Cliente.setText( clickedData.getCliente() );
+                TipoPago.setText( clickedData.getTipoPago() );
+                Envio.setText( formatter.format( Envioformat ) );
+                Importe.setText( formatter2.format( importeformat ) );
+                OrdenEstado.setText( clickedData.getEstatus() );
+                Fecha.setText( clickedData.getFecha() );
+
+                Button BtnCerrar = pop_up1.findViewById( R.id.btnordnecerrar );
+
+                BtnCerrar.setOnClickListener( new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pop_up1.hide();
+                    }
+
+                } );
+
+                Button Guia = pop_up1.findViewById(R.id.guia);
+                Guia.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pop_up1.dismiss();
+                        pop_up1.setContentView( R.layout.pop_up_ecommerce_guia );
+                        pop_up1.show();
+
+                        String Envio = clickedData.getIDshipping();
+                        String Token = clickedData.gettoken();
+
+                        TextView Nombre = pop_up1.findViewById( R.id.text_guia_nombre );
+                        TextView Nickname = pop_up1.findViewById( R.id.text_guia_nickname );
+                        TextView Cliente = pop_up1.findViewById( R.id.text_guia_cliente );
+                        Button BtnCerrarGuia = pop_up1.findViewById( R.id.btguianordnecerrar );
+
+                        final TextView Celular = pop_up1.findViewById( R.id.text_guia_celular );
+
+                        final TextView Direccion = pop_up1.findViewById( R.id.text_guia_direccion );
+                        final TextView Fecha = pop_up1.findViewById( R.id.text_guia_fecha_creacion );
+
+                        TextView TipoPago = pop_up1.findViewById( R.id.text_guia_tipo_pago );
+                        TextView EstatoOrden = pop_up1.findViewById( R.id.text_guia_estado_orden );
+
+                        final TextView CostoEnvio = pop_up1.findViewById( R.id.text_guia_costo_envio );
+
+                        TextView Importe = pop_up1.findViewById( R.id.text_guia_importe );
+
+                        final TextView NumeroGuia = pop_up1.findViewById( R.id.text_guia_numeroguia );
+                        final TextView Servicio = pop_up1.findViewById( R.id.text_guia_servicio );
+
+                        Nombre.setText( clickedData.getVendedor() );
+                        Nickname.setText( clickedData.getNickname() );
+                        Cliente.setText( clickedData.getCliente() );
+                        Importe.setText( clickedData.getImporte() );
+                        EstatoOrden.setText( clickedData.getEstatus() );
+                        TipoPago.setText( clickedData.getTipoPago() );
+
+                        try {
+                            final String url = "https://api.mercadolibre.com/shipments/" + Envio + "?access_token=" + Token;
+
+                            // prepare the Request
+                            JsonObjectRequest getRequest = new JsonObjectRequest( Request.Method.GET, url, null,
+                                    new Response.Listener<JSONObject>() {
+                                        @Override
+                                        public void onResponse(JSONObject response) {
+
+                                            JSONObject ResultadoDireccion = null;
+                                            JSONObject ResultadoEnvio = null;
+
+                                            try {
+                                                ResultadoDireccion = response.getJSONObject( "receiver_address" );
+                                                ResultadoEnvio = response.getJSONObject( "shipping_option" );
+
+                                                Direccion.setText( ResultadoDireccion.getString( "address_line" ) + " " + ResultadoDireccion.getString( "comment" ) + " " + ResultadoDireccion.getString( "zip_code" ) );
+
+                                                CostoEnvio.setText( ResultadoEnvio.getString( "cost" ) );
+
+                                                Celular.setText( ResultadoDireccion.getString( "receiver_phone" ) );
+
+                                                Fecha.setText( response.getString( "date_created" ) );
+                                                NumeroGuia.setText( response.getString( "tracking_number" ) );
+                                                Servicio.setText( response.getString( "tracking_method" ) );
+
+
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        }
+                                    },
+                                    new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
+
+                                            Toast toast1 =
+                                                    Toast.makeText( getContext(),
+                                                            error.toString(), Toast.LENGTH_LONG );
+
+                                            toast1.show();
+                                        }
+                                    }
+                            );
+
+                            VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
+
+
+                        } catch (Error e) {
+                            Toast toast1 =
+                                    Toast.makeText( getContext(),
+                                            e.toString(), Toast.LENGTH_LONG );
+                            toast1.show();
+                        }
+
+
+                        BtnCerrarGuia.setOnClickListener( new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                pop_up1.hide();
+                            }
+                        } );
+                    }
+                });
+            }
+        };
     }
 
     public void CargaDatos(JSONObject Datos) {

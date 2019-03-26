@@ -239,13 +239,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
 
-    @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        //do nothing
     }
 
     @Override
@@ -521,5 +516,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private void processLoginProcessWithError() {
         Toast.makeText(this, "Oooops, something went wrong with the login process", Toast.LENGTH_SHORT).show();
     }
+
+
 
 }

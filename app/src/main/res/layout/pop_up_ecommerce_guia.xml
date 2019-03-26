@@ -10,28 +10,30 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_height="match_parent"
         android:layout_weight=".9"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:background="@color/fondo_azul">
+
+        <TextView
+            android:id="@+id/text_guia_nombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Orden de 1 papel postit"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="22sp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:layout_weight=".3"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight=".8"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/text_guia_nombre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Orden de 1 papel postit"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="22sp" />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -280,13 +282,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight=".9"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btguianordnecerrar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/btn"
             android:gravity="center"

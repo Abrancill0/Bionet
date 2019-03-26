@@ -27,6 +27,10 @@ public class Reestablecer_contrasena extends Activity {
     EditText NewRePassword;
     LoginModel Resultado = new LoginModel();
     private String correo;
+    String newPassword;
+    String newRePassword;
+    EditText Password_temp;
+    String contrasena_temp;
 
 
     @Override
@@ -35,6 +39,7 @@ public class Reestablecer_contrasena extends Activity {
         setContentView(R.layout.restablece_contrasenia);
         NewPassword = (EditText) findViewById(R.id.new_password);
         NewRePassword = (EditText) findViewById(R.id.new_repassword);
+        Password_temp = findViewById(R.id.contrasena_temp);
         Bundle datos = this.getIntent().getExtras();
         correo =  "" + datos.get("ParametroCorreo");
     }
@@ -46,10 +51,12 @@ public class Reestablecer_contrasena extends Activity {
 
     public void Reestablecer_contrasenia(View v) {
 
-        String newPassword = String.valueOf(NewPassword.getText());
-        String newRePassword = String.valueOf(NewRePassword.getText());
+        newPassword = String.valueOf(NewPassword.getText());
+        newRePassword = String.valueOf(NewRePassword.getText());
+        contrasena_temp = String.valueOf(Password_temp.getText());
 
-        if(NewPassword.getText().length()==0 || NewRePassword.getText().length()==0 ) {
+
+        if(NewPassword.getText().length()==0 || NewRePassword.getText().length()==0 || Password_temp.getText().length()==0   ) {
             Toast toast1 = Toast.makeText(getApplicationContext(),
                     "Campo contrasena obligatorio ", Toast.LENGTH_SHORT);
 
@@ -66,6 +73,7 @@ public class Reestablecer_contrasena extends Activity {
                 try {
                     request.put("usu_correo_electronico", correo);
                     request.put("usu_contrasenia", NewPassword.getText());
+                    request.put("usu_contrasenia_ant", Password_temp.getText());
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -73,7 +81,7 @@ public class Reestablecer_contrasena extends Activity {
 
                 String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
 
-                String ApiPath = url + "/api/login/actualiza-contrasena";
+                String ApiPath = url + "/api/login/cambiar_contrasena";
 
                 JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
                     @Override

@@ -174,7 +174,6 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                 final TextView EstadoArticulo =FichaTecnica.findViewById(R.id.text_ficha_estado_Articulo);
 
-               Button BtnCerrar =FichaTecnica.findViewById(R.id.btnfichaarticuloscerrar);
 
                Button BtnActivarPublicacion =FichaTecnica.findViewById(R.id.btnFichaActivarPublicacion);
                Button BtnCerrarPublicacion =FichaTecnica.findViewById(R.id.btnFichaCerrarPublicacion);
@@ -199,14 +198,6 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                 Envio.setText( clickedData.getEnvio_gratis());
                 EstadoArticulo.setText(clickedData.getEstadoOrden());
-
-                BtnCerrar.setOnClickListener( new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FichaTecnica.hide();
-
-                    }
-                } );
 
 
                 BtnActivarPublicacion.setOnClickListener( new View.OnClickListener() {

@@ -71,12 +71,6 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
             case 5:
                 renderedView = renderOrdenEstatus( orden );
                 break;
-            case 6:
-                renderedView = renderButton1( orden );
-                break;
-            case 7:
-                renderedView = renderButton2( orden );
-                break;
         }
 
         return renderedView;
@@ -152,184 +146,12 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
         return renderString( orden.getEstatus() );
     }
 
-    private View renderButton1(final Ecommerce_orden_Model orden) {
-        return ButtonUno( orden );
-    }
-
-    private View renderButton2(final Ecommerce_orden_Model orden) {
-
-
-        return ButtonDos( orden );
-    }
-
     private View renderString(final String value) {
         final TextView textView = new TextView( getContext() );
         textView.setText( value );
         textView.setPadding( 20, 10, 20, 10 );
         textView.setTextSize( TEXT_SIZE );
         return textView;
-    }
-
-    private View ButtonUno(final Ecommerce_orden_Model orden) {
-        final Button btn = new Button( getContext() );
-        btn.setText( "Ver Ficha" );
-        btn.setPadding( 20, 10, 20, 10 );
-        btn.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                pop_up1 = new Dialog( getContext() );
-                pop_up1.setContentView( R.layout.pop_up_ecommerce_detalle_orden );
-                pop_up1.show();
-
-                TextView Orden = pop_up1.findViewById( R.id.text_ordenname );
-                TextView Cliente = pop_up1.findViewById( R.id.text_clientename );
-                TextView TipoPago = pop_up1.findViewById( R.id.text_tipo_pago );
-                TextView Envio = pop_up1.findViewById( R.id.text_costo_envio );
-                TextView Importe = pop_up1.findViewById( R.id.text_importe );
-                TextView OrdenEstado = pop_up1.findViewById( R.id.text_estado );
-                TextView Fecha = pop_up1.findViewById( R.id.text_fecha );
-
-                double Envioformat = Double.parseDouble( orden.getEnvio() );
-                NumberFormat formatter = NumberFormat.getCurrencyInstance();
-
-                double importeformat = Double.parseDouble( orden.getImporte() );
-                NumberFormat formatter2 = NumberFormat.getCurrencyInstance();
-
-                Orden.setText( orden.getArticulo() );
-                Cliente.setText( orden.getCliente() );
-                TipoPago.setText( orden.getTipoPago() );
-                Envio.setText( formatter.format( Envioformat ) );
-                Importe.setText( formatter2.format( importeformat ) );
-                OrdenEstado.setText( orden.getEstatus() );
-                Fecha.setText( orden.getFecha() );
-
-                Button BtnCerrar = pop_up1.findViewById( R.id.btnordnecerrar );
-
-                BtnCerrar.setOnClickListener( new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        pop_up1.hide();
-                    }
-
-                } );
-
-            }
-        } );
-        return btn;
-    }
-
-    private View ButtonDos(final Ecommerce_orden_Model orden) {
-        final Button btn = new Button( getContext() );
-        btn.setText( "Guia" );
-        btn.setPadding( 20, 10, 20, 10 );
-        btn.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                pop_up1 = new Dialog( getContext() );
-                pop_up1.setContentView( R.layout.pop_up_ecommerce_guia );
-                pop_up1.show();
-
-                String Envio = orden.getIDshipping();
-                String Token = orden.gettoken();
-
-                TextView Nombre = pop_up1.findViewById( R.id.text_guia_nombre );
-                TextView Nickname = pop_up1.findViewById( R.id.text_guia_nickname );
-                TextView Cliente = pop_up1.findViewById( R.id.text_guia_cliente );
-                Button BtnCerrarGuia = pop_up1.findViewById( R.id.btguianordnecerrar );
-
-                final TextView Celular = pop_up1.findViewById( R.id.text_guia_celular );
-
-                final TextView Direccion = pop_up1.findViewById( R.id.text_guia_direccion );
-                final TextView Fecha = pop_up1.findViewById( R.id.text_guia_fecha_creacion );
-
-                TextView TipoPago = pop_up1.findViewById( R.id.text_guia_tipo_pago );
-                TextView EstatoOrden = pop_up1.findViewById( R.id.text_guia_estado_orden );
-
-                final TextView CostoEnvio = pop_up1.findViewById( R.id.text_guia_costo_envio );
-
-                TextView Importe = pop_up1.findViewById( R.id.text_guia_importe );
-
-                final TextView NumeroGuia = pop_up1.findViewById( R.id.text_guia_numeroguia );
-                final TextView Servicio = pop_up1.findViewById( R.id.text_guia_servicio );
-
-                Nombre.setText( orden.getVendedor() );
-                Nickname.setText( orden.getNickname() );
-                Cliente.setText( orden.getCliente() );
-                Importe.setText( orden.getImporte() );
-                EstatoOrden.setText( orden.getEstatus() );
-                TipoPago.setText( orden.getTipoPago() );
-
-                try {
-                    final String url = "https://api.mercadolibre.com/shipments/" + Envio + "?access_token=" + Token;
-
-                    // prepare the Request
-                    JsonObjectRequest getRequest = new JsonObjectRequest( Request.Method.GET, url, null,
-                            new Response.Listener<JSONObject>() {
-                                @Override
-                                public void onResponse(JSONObject response) {
-
-                                    JSONObject ResultadoDireccion = null;
-                                    JSONObject ResultadoEnvio = null;
-
-                                    try {
-                                        ResultadoDireccion = response.getJSONObject( "receiver_address" );
-                                        ResultadoEnvio = response.getJSONObject( "shipping_option" );
-
-                                        Direccion.setText( ResultadoDireccion.getString( "address_line" ) + " " + ResultadoDireccion.getString( "comment" ) + " " + ResultadoDireccion.getString( "zip_code" ) );
-
-                                        CostoEnvio.setText( ResultadoEnvio.getString( "cost" ) );
-
-                                        Celular.setText( ResultadoDireccion.getString( "receiver_phone" ) );
-
-                                        Fecha.setText( response.getString( "date_created" ) );
-                                        NumeroGuia.setText( response.getString( "tracking_number" ) );
-                                        Servicio.setText( response.getString( "tracking_method" ) );
-
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                }
-                            },
-                            new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-
-                                    Toast toast1 =
-                                            Toast.makeText( getContext(),
-                                                    error.toString(), Toast.LENGTH_LONG );
-
-                                    toast1.show();
-                                }
-                            }
-                    );
-
-                    VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
-
-
-                } catch (Error e) {
-                    Toast toast1 =
-                            Toast.makeText( getContext(),
-                                    e.toString(), Toast.LENGTH_LONG );
-                    toast1.show();
-                }
-
-
-                BtnCerrarGuia.setOnClickListener( new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        pop_up1.hide();
-                    }
-                } );
-
-
-            }
-        } );
-        return btn;
     }
 
     private void VerGuia(String Token, String ship) {
