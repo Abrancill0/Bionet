@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -16,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -93,6 +95,8 @@ public class FragmentLealtadInscribir extends Fragment {
     private String direccion_igual;
 
     private Dialog ver_cliente_dialog;
+    private View tabla_vacia;
+    private View tabla_todos_aplican;
 
     private Spinner SpinnerSucursal;
 
@@ -127,6 +131,8 @@ public class FragmentLealtadInscribir extends Fragment {
         Articulos=v.findViewById(R.id.articulo);
         aniadir = v.findViewById(R.id.aniadir_cliente);
         AniadirTodos = v.findViewById(R.id.AniadirTodos);
+        tabla_vacia = v.findViewById(R.id.Tabla_vacia);
+        tabla_todos_aplican = v.findViewById(R.id.todos_aplican);
 
         LoadButtons();
         LoadSpinnerSucursal();
@@ -149,7 +155,7 @@ public class FragmentLealtadInscribir extends Fragment {
                 }, 2000);
             }
         });
-        tabla_clientes.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
+
 
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -181,6 +187,7 @@ public class FragmentLealtadInscribir extends Fragment {
     }
 
     private void Muestra_clientes() {
+        tabla_clientes.setEmptyDataIndicatorView(tabla_vacia);
         JSONObject request = new JSONObject();
         try
         {
@@ -526,21 +533,51 @@ public class FragmentLealtadInscribir extends Fragment {
         });
 
 
-        AniadirTodos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(AniadirTodos.isChecked())
-                {
-                    LoadConfiguraciones();
-                    AniadirTodos();
-                }
-                else
-                {
-                    LoadConfiguraciones();
-                    EliminarTodos();
-                }
-            }
-        });
+        AniadirTodos.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                                               @Override
+                                               public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                                                   progreso = new ProgressDialog( getContext() );
+                                                   progreso.setMessage( "Cargando..." );
+                                                   progreso.show();
+                                                   final Handler handler = new Handler();
+                                                   handler.postDelayed(new Runnable() {
+                                                       @Override
+                                                       public void run() {
+                                                           // Do something after 5s = 5000ms
+                                                           if(AniadirTodos.isChecked())
+                                                           {
+                                                               LoadConfiguraciones();
+                                                               AniadirTodos();
+                                                               tabla_vacia.setVisibility(View.GONE);
+                                                               tabla_clientes.setEmptyDataIndicatorView(tabla_todos_aplican);
+                                                               clientes.clear();
+                                                               final LealtadInscribirAdapter clienteAdapter = new LealtadInscribirAdapter(getContext(), clientes, tabla_clientes,fr);
+                                                               tabla_clientes.setDataAdapter(clienteAdapter);
+                                                               progreso.hide();
+
+
+                                                           }
+                                                           else
+                                                           {
+                                                               tabla_todos_aplican.setVisibility(View.GONE);
+                                                               LoadConfiguraciones();
+                                                               EliminarTodos();
+                                                               clientes.clear();
+                                                               Muestra_clientes();
+                                                               progreso.hide();
+                                                           }
+                                                           progreso.hide();
+                                                       }
+                                                   }, 5000);
+
+
+
+
+
+                                               }
+                                           }
+        );
     }
 
     private void LoadConfiguraciones(){
@@ -582,6 +619,8 @@ public class FragmentLealtadInscribir extends Fragment {
                         TodosAplican = NodoConfiguraciones2.getString("con_todos_clientes_programa_lealtad");
                         JSONObject elemento_con_id = NodoConfiguraciones2.getJSONObject("con_id");
                         Lealtad_con_id = elemento_con_id.getString("uuid");
+
+
 
                         if(TodosAplican.equals("true"))
                         {
@@ -667,7 +706,7 @@ public class FragmentLealtadInscribir extends Fragment {
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
-                        toast1.show();
+
 
                     }
                     else
@@ -746,8 +785,6 @@ public class FragmentLealtadInscribir extends Fragment {
 
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-
-                        toast1.show();
 
                     }
                     else
