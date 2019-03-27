@@ -61,7 +61,7 @@
             android:textColor="#023950" />
 
         <EditText
-            android:id="@+id/TextCuenta"
+            android:id="@+id/TextNegocio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -81,7 +81,7 @@
             android:textColor="#023950" />
 
         <EditText
-            android:id="@+id/TextPassword"
+            android:id="@+id/TextCodigo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"

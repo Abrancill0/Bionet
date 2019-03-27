@@ -21,14 +21,11 @@ import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class InventarioAdapter extends LongPressAwareTableDataAdapter<InventarioModel> {
-
-
     int TEXT_SIZE = 12;
 
     public InventarioAdapter(final Context context, final List<InventarioModel> data, final SortableInventariosTable tableView) {
         super(context, data, tableView);
     }
-
     @Override
     public View getDefaultCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
         InventarioModel Invetario = getRowData(rowIndex);
@@ -44,7 +41,6 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
             case 2:
                 renderedView = renderexistencia(Invetario);
                 break;
-
         }
         return renderedView;
     }

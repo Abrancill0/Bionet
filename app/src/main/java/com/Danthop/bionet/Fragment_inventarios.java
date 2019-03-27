@@ -64,7 +64,6 @@ public class Fragment_inventarios extends Fragment {
     private String art_tipo="";
     private List<InventarioModel> inventarios;
 
-
     public Fragment_inventarios() {
         // Required empty public constructor
     }
@@ -109,7 +108,6 @@ public class Fragment_inventarios extends Fragment {
         });
 
         Muestra_Inventario();
-
         return v;
     }
 
@@ -185,7 +183,6 @@ public class Fragment_inventarios extends Fragment {
                                 }
                             }
                         }
-
                     }
                     final InventarioAdapter InventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario);
                     tabla_inventario.setDataAdapter(InventarioAdapter);

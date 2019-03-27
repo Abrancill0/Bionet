@@ -1,17 +1,16 @@
 package com.Danthop.bionet.model;
-
-
 public class LoginContrasenaModel {
 
     private String estatus;
     private String mensaje;
     private String usu_contrasenia;
+    private String usu_codigo_acceso;
     private String usu_tipo_contrasenia;
     private String usu_nombre;
     private String apellidos;
     private String usu_apellido_paterno;
     private String usu_apellido_materno;
-    private String usu_correo_electronico;
+    private String cbn_nombre_negocio;
     private String usu_imagen_perfil;
     private String usu_activo;
     private String usu_administrador;
@@ -50,8 +49,8 @@ public class LoginContrasenaModel {
     public String getusu_apellido_materno() { return usu_apellido_materno; }
     public void  setusu_apellido_materno(String usu_apellido_materno) { this.usu_apellido_materno = usu_apellido_materno; }
 
-    public String getusu_correo_electronico() { return usu_correo_electronico; }
-    public void  setusu_correo_electronico(String usu_correo_electronico) { this.usu_correo_electronico = usu_correo_electronico; }
+    public String getcbn_nombre_negocio() { return cbn_nombre_negocio; }
+    public void  setcbn_nombre_negocio(String cbn_nombre_negocio) { this.cbn_nombre_negocio = cbn_nombre_negocio; }
 
     public String getusu_imagen_perfil() {
         return usu_imagen_perfil;
@@ -79,6 +78,9 @@ public class LoginContrasenaModel {
     public void setusu_id(String usu_id) {
         this.usu_id = usu_id;
     }
+
+    public String getusu_codigo_acceso() { return usu_codigo_acceso; }
+    public void setusu_codigo_acceso(String usu_codigo_acceso) { this.usu_codigo_acceso = usu_codigo_acceso; }
 
 
 }
