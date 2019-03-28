@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.Danthop.bionet.Adapters.ClienteAdapter;
 import com.Danthop.bionet.Adapters.OrdenEcommerceAdapter;
 import com.Danthop.bionet.Tables.SortableOrdenEcommerceTable;
 import com.Danthop.bionet.model.Ecommerce_orden_Model;
@@ -35,12 +32,8 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
-import de.codecrafters.tableview.model.TableColumnWeightModel;
-import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
-import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -167,36 +160,71 @@ public class Fragment_ecomerce extends Fragment {
 
                 } );
 
+                Button pago = pop_up1.findViewById(R.id.pago);
+                pago.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Dialog pop_up2 = new Dialog( getContext() );
+                        pop_up2.setContentView( R.layout.pop_up_ecommerce_ver_pago );
+                        pop_up2.show();
+
+                        TextView Cliente = pop_up2.findViewById( R.id.text_clientename );
+                        TextView TipoPago = pop_up2.findViewById( R.id.text_tipo_pago );
+                        TextView Importe = pop_up2.findViewById( R.id.text_importe );
+                        TextView Envio = pop_up2.findViewById( R.id.text_costo_envio );
+
+                        double Envioformat = Double.parseDouble( clickedData.getEnvio() );
+                        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+                        double importeformat = Double.parseDouble( clickedData.getImporte() );
+                        NumberFormat formatter2 = NumberFormat.getCurrencyInstance();
+
+                        Cliente.setText( clickedData.getCliente() );
+                        TipoPago.setText( clickedData.getTipoPago() );
+                        Envio.setText( formatter.format( Envioformat ) );
+                        Importe.setText( formatter2.format( importeformat ) );
+
+                        Button close = pop_up2.findViewById(R.id.btnordnecerrar);
+                        close.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                pop_up2.hide();
+                            }
+                        });
+
+
+                    }
+                });
                 Button Guia = pop_up1.findViewById(R.id.guia);
                 Guia.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        pop_up1.dismiss();
-                        pop_up1.setContentView( R.layout.pop_up_ecommerce_guia );
-                        pop_up1.show();
+                        final Dialog pop_up2 = new Dialog( getContext() );
+                        pop_up2.setContentView( R.layout.pop_up_ecommerce_guia );
+                        pop_up2.show();
 
                         String Envio = clickedData.getIDshipping();
                         String Token = clickedData.gettoken();
 
-                        TextView Nombre = pop_up1.findViewById( R.id.text_guia_nombre );
-                        TextView Nickname = pop_up1.findViewById( R.id.text_guia_nickname );
-                        TextView Cliente = pop_up1.findViewById( R.id.text_guia_cliente );
-                        Button BtnCerrarGuia = pop_up1.findViewById( R.id.btguianordnecerrar );
+                        TextView Nombre = pop_up2.findViewById( R.id.text_guia_nombre );
+                        TextView Nickname = pop_up2.findViewById( R.id.text_guia_nickname );
+                        TextView Cliente = pop_up2.findViewById( R.id.text_guia_cliente );
+                        Button BtnCerrarGuia = pop_up2.findViewById( R.id.btguianordnecerrar );
 
-                        final TextView Celular = pop_up1.findViewById( R.id.text_guia_celular );
+                        final TextView Celular = pop_up2.findViewById( R.id.text_guia_celular );
 
-                        final TextView Direccion = pop_up1.findViewById( R.id.text_guia_direccion );
-                        final TextView Fecha = pop_up1.findViewById( R.id.text_guia_fecha_creacion );
+                        final TextView Direccion = pop_up2.findViewById( R.id.text_guia_direccion );
+                        final TextView Fecha = pop_up2.findViewById( R.id.text_guia_fecha_creacion );
 
-                        TextView TipoPago = pop_up1.findViewById( R.id.text_guia_tipo_pago );
-                        TextView EstatoOrden = pop_up1.findViewById( R.id.text_guia_estado_orden );
+                        TextView TipoPago = pop_up2.findViewById( R.id.text_guia_tipo_pago );
+                        TextView EstatoOrden = pop_up2.findViewById( R.id.text_guia_estado_orden );
 
-                        final TextView CostoEnvio = pop_up1.findViewById( R.id.text_guia_costo_envio );
+                        final TextView CostoEnvio = pop_up2.findViewById( R.id.text_guia_costo_envio );
 
-                        TextView Importe = pop_up1.findViewById( R.id.text_guia_importe );
+                        TextView Importe = pop_up2.findViewById( R.id.text_guia_importe );
 
-                        final TextView NumeroGuia = pop_up1.findViewById( R.id.text_guia_numeroguia );
-                        final TextView Servicio = pop_up1.findViewById( R.id.text_guia_servicio );
+                        final TextView NumeroGuia = pop_up2.findViewById( R.id.text_guia_numeroguia );
+                        final TextView Servicio = pop_up2.findViewById( R.id.text_guia_servicio );
 
                         Nombre.setText( clickedData.getVendedor() );
                         Nickname.setText( clickedData.getNickname() );
@@ -266,7 +294,7 @@ public class Fragment_ecomerce extends Fragment {
                             @Override
                             public void onClick(View v) {
 
-                                pop_up1.hide();
+                                pop_up2.hide();
                             }
                         } );
                     }
@@ -587,7 +615,7 @@ public class Fragment_ecomerce extends Fragment {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
-                Fragment_popup_ecommerce_preguntas secondFragment = new Fragment_popup_ecommerce_preguntas();
+                Fragment_ecommerce_preguntas secondFragment = new Fragment_ecommerce_preguntas();
                 secondFragment.setArguments( bundle );
 
                 fragmentTransaction.replace( R.id.fragment_container, secondFragment );

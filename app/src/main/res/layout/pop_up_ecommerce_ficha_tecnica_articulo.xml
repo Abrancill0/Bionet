@@ -248,7 +248,7 @@
                         android:id="@+id/btnFichaActualizarCantidad"
                         android:layout_width="180dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/btn"
+                        android:background="@color/colorPrimaryDark"
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="Actualizar inventario"

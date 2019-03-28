@@ -120,7 +120,7 @@
                 android:layout_width="170dp"
                 android:layout_height="27dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/btn"
+                android:background="@color/colorPrimaryDark"
                 android:onClick="IniciarSesion"
                 android:padding="0dp"
                 android:text="Iniciar Sesión"
@@ -133,12 +133,12 @@
                 android:layout_width="170dp"
                 android:layout_height="27dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/btn"
+                android:background="@color/colorPrimaryDark"
                 android:onClick="IniciarContraseña"
                 android:padding="0dp"
                 android:text="Iniciar con Contraseña"
                 android:textColor="#ffffff"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/crear_btn"

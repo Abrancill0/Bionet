@@ -51,7 +51,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Nickname:" />
+                    android:text="Nickname:"
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:id="@+id/text_guia_nickname"
@@ -86,7 +87,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Cliente:" />
+                    android:text="Cliente:"
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:id="@+id/text_guia_cliente"
@@ -106,7 +108,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Celular:" />
+                    android:text="Celular:"
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:id="@+id/text_guia_celular"
@@ -126,7 +129,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Direccion:" />
+                    android:text="Direccion:"
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:id="@+id/text_guia_direccion"
@@ -146,7 +150,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Fecha Creacion: " />
+                    android:text="Fecha Creacion: "
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:id="@+id/text_guia_fecha_creacion"
@@ -166,7 +171,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Tipo de pago: " />
+                    android:text="Tipo de pago: "
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:id="@+id/text_guia_tipo_pago"
@@ -186,7 +192,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Estado de la orden: " />
+                    android:text="Estado de la orden: "
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:id="@+id/text_guia_estado_orden"
@@ -206,7 +213,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Costo de envio: " />
+                    android:text="Costo de envio: "
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:id="@+id/text_guia_costo_envio"
@@ -226,7 +234,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Importe del producto: " />
+                    android:text="Importe del producto: "
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:id="@+id/text_guia_importe"
@@ -246,7 +255,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Numero de Guia: " />
+                    android:text="Numero de Guia: "
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:id="@+id/text_guia_numeroguia"
@@ -267,7 +277,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="Servicio: " />
+                    android:text="Servicio: "
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:id="@+id/text_guia_servicio"

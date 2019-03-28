@@ -36,6 +36,7 @@ import lecho.lib.hellocharts.view.PieChartView;
 public class Fragment_pantalla_principal extends Fragment {
 
     private ImageView Foto_perfil;
+    private TextView Text_nombre;
 
 
     public Fragment_pantalla_principal() {
@@ -50,6 +51,9 @@ public class Fragment_pantalla_principal extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getContext().MODE_PRIVATE );
         String ImagenPerfil = sharedPref.getString( "usu_imagen_perfil", "" );
+        String Nombre = sharedPref.getString("usu_nombre", "");
+        Text_nombre = v.findViewById(R.id.TextNombrePerfil);
+        Text_nombre.setText(Nombre);
 
         Foto_perfil = v.findViewById(R.id.foto_perfil);
 

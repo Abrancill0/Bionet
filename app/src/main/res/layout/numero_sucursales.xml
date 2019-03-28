@@ -126,7 +126,7 @@
                 android:id="@+id/button"
                 android:layout_width="177dp"
                 android:layout_height="34dp"
-                android:background="@drawable/btn"
+                android:background="@color/colorPrimaryDark"
                 android:onClick="Home"
                 android:text="Aceptar"
                 android:textAllCaps="false"
