@@ -50,7 +50,6 @@ public class Fragment_clientes extends Fragment {
     private String telefono;
     private String correo_electronico;
     private String calle;
-
     private String estado;
     private String colonia;
     private String num_int;
@@ -346,7 +345,7 @@ public class Fragment_clientes extends Fragment {
 
                 DireccionFiscal.setText(clickedData.getCliente_direccion_fiscal());
                 EmailFiscal.setText(clickedData.getCliente_email_facturacion());
-
+//
                 Button editarCliente = ver_cliente_dialog.findViewById(R.id.editar_cliente);
                 editarCliente.setOnClickListener(new View.OnClickListener() {
                     @Override
