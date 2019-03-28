@@ -82,17 +82,16 @@ public class Fragment_inventarios extends Fragment {
         usu_id = sharedPref.getString("usu_id","");
         inventarios = new ArrayList<>();
 
-
         tabla_inventario = (SortableInventariosTable) v.findViewById(R.id.tabla_inventario);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Producto", "Existencia", "Categoria", "Modificadores");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Producto", "Existencia", "Categoria", "Sucursal");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
         tableColumnWeightModel.setColumnWeight(0, 2);
-        tableColumnWeightModel.setColumnWeight(1, 2);
+        tableColumnWeightModel.setColumnWeight(1, 3);
         tableColumnWeightModel.setColumnWeight(2, 2);
         tableColumnWeightModel.setColumnWeight(3, 2);
-        tableColumnWeightModel.setColumnWeight(4, 3);
+        tableColumnWeightModel.setColumnWeight(4, 2);
 
         tabla_inventario.setHeaderAdapter(simpleHeader);
         tabla_inventario.setColumnModel(tableColumnWeightModel);
@@ -156,12 +155,22 @@ public class Fragment_inventarios extends Fragment {
                             categoria = elemento.getString("cat_nombre");
                             art_descripcion = elemento.getString("art_descripcion");
                             art_tipo = elemento.getString("art_tipo");
+
 //Modificadores y variantes
-                           /* String NombreCompleto = "";
-                            String NombreArticulo = elemento.getString("art_nombre");
+
                             String NombreVariante = elemento.getString("ava_nombre");
-                            String NombreModificador = "";
-                            String Modificadores = elemento.getString( "ava_tiene_modificadores");*/
+                            Boolean Modificadores = Boolean.valueOf(elemento.getString( "ava_tiene_modificadores"));
+                            String NombreCompleto;
+
+                            if (Modificadores == true){
+                                String NombreModificador = elemento.getString("mod_nombre");
+                                NombreCompleto = producto + " " + NombreVariante + " " + NombreModificador ;
+                                producto = NombreCompleto;
+
+                            }else {
+                                NombreCompleto = producto + " " + NombreVariante ;
+                                producto = NombreCompleto;
+                            }
 
                         Sucursales = elemento.getJSONArray("sucursales");
 
@@ -173,24 +182,9 @@ public class Fragment_inventarios extends Fragment {
                                     nombre_sucursal = elemento2.getString("suc_nombre");
                                     suc_id = elemento2.getString("suc_id");
 
-                                   /* if (Modificadores == "true") {
-                                        RespuestaModificadores = elemento.getJSONArray("amo_id");*/
-
-                                        /*for (int i = 0; i < RespuestaModificadores.length(); i++) {
-                                            JSONObject elemento3 = RespuestaModificadores.getJSONObject(i);
-                                            NombreModificador = elemento3.getString("mod_nombre");
-                                            NombreVariante = elemento3.getString("ava_nombre");
-
-                                            NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
-
-                                            final InventarioModel inventario = new InventarioModel();
-                                            inventarios.add(inventario);
-                                        }*/
-                                    } final InventarioModel inventario = new InventarioModel(sku, producto, existencia, categoria, modificadores, nombre_sucursal, suc_id, art_descripcion, art_tipo);
-                                inventarios.add(inventario);
-                                /*else {
-                                        //NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
-                               }*/
+                                    final InventarioModel inventario = new InventarioModel(sku, producto, existencia, categoria, modificadores, nombre_sucursal, suc_id, art_descripcion, art_tipo);
+                                    inventarios.add(inventario);
+                                }
                             }
                         }
                     }
