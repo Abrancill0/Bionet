@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.print.PrinterId;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import com.Danthop.bionet.Adapters.InventarioAdapter;
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.Tables.SortableInventariosTable;
+import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.VolleySingleton;
@@ -37,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.codecrafters.tableview.TableView;
+import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 /**
@@ -46,18 +49,13 @@ public class Fragment_inventarios extends Fragment {
     private String[] [] inventarioModel;
     private String usu_id;
     private SortableInventariosTable tabla_inventario;
-    private  FragmentTransaction fr;
-    //private ProgressDialog progreso;
+    private List<com.Danthop.bionet.model.ArticuloModel> Articulos;
+    private FragmentTransaction fr;
     private String sku="";
     private String producto="";
     private String modificadores="";
     private String categoria="";
     private String existencia="";
-    private String listado_Inventario="";
-    private String traslados="";
-    private String creditos_Proveedores="";
-    private String agregar_Productos="";
-    private String solicitar_Traslado="";
     private String nombre_sucursal="";
     private String suc_id="";
     private String art_descripcion="";
@@ -84,16 +82,17 @@ public class Fragment_inventarios extends Fragment {
         usu_id = sharedPref.getString("usu_id","");
         inventarios = new ArrayList<>();
 
+
         tabla_inventario = (SortableInventariosTable) v.findViewById(R.id.tabla_inventario);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Producto", "Modificadores", "Categoria", "Existencia");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Producto", "Existencia", "Categoria", "Modificadores");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
         tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 2);
-        tableColumnWeightModel.setColumnWeight(2, 3);
+        tableColumnWeightModel.setColumnWeight(2, 2);
         tableColumnWeightModel.setColumnWeight(3, 2);
-        tableColumnWeightModel.setColumnWeight(4, 2);
+        tableColumnWeightModel.setColumnWeight(4, 3);
 
         tabla_inventario.setHeaderAdapter(simpleHeader);
         tabla_inventario.setColumnModel(tableColumnWeightModel);
@@ -110,8 +109,8 @@ public class Fragment_inventarios extends Fragment {
         Muestra_Inventario();
         return v;
     }
-
-    private void Muestra_Inventario()
+    private
+ void Muestra_Inventario()
     {
         JSONObject request = new JSONObject();
         try {
@@ -132,6 +131,9 @@ public class Fragment_inventarios extends Fragment {
                 JSONObject Resultado = null;
                 JSONArray Articulo = null;
                 JSONArray Sucursales = null;
+                JSONArray RespuestaModificadores = null;
+                JSONObject RespuestaUUID = null;
+
 
                 try {
                     int status = Integer.parseInt(response.getString("estatus"));
@@ -146,14 +148,22 @@ public class Fragment_inventarios extends Fragment {
 
                         for (int x = 0; x < Articulo.length(); x++){
                             JSONObject elemento = Articulo.getJSONObject(x);
+
+                            RespuestaUUID = elemento.getJSONObject("art_id");
+                            String UUID = RespuestaUUID.getString( "uuid");
                             sku = elemento.getString("ava_sku");
                             producto = elemento.getString("art_nombre");
                             categoria = elemento.getString("cat_nombre");
                             art_descripcion = elemento.getString("art_descripcion");
                             art_tipo = elemento.getString("art_tipo");
-                            //modificadores = elemento.getString("");
+//Modificadores y variantes
+                           /* String NombreCompleto = "";
+                            String NombreArticulo = elemento.getString("art_nombre");
+                            String NombreVariante = elemento.getString("ava_nombre");
+                            String NombreModificador = "";
+                            String Modificadores = elemento.getString( "ava_tiene_modificadores");*/
 
-                                Sucursales = elemento.getJSONArray("sucursales");
+                        Sucursales = elemento.getJSONArray("sucursales");
 
                             for (int z = 0; z < Sucursales.length(); z++) {
                                 JSONObject elemento2 = Sucursales.getJSONObject(z);
@@ -163,24 +173,24 @@ public class Fragment_inventarios extends Fragment {
                                     nombre_sucursal = elemento2.getString("suc_nombre");
                                     suc_id = elemento2.getString("suc_id");
 
-                                    final InventarioModel inventario = new InventarioModel(
-                                            sku,
-                                            producto,
-                                            modificadores,
-                                            categoria,
-                                            existencia,
-                                            listado_Inventario,
-                                            traslados,
-                                            creditos_Proveedores,
-                                            agregar_Productos,
-                                            solicitar_Traslado,
-                                            nombre_sucursal,
-                                            suc_id,
-                                            art_descripcion,
-                                            art_tipo
-                                    );
-                                    inventarios.add(inventario);
-                                }
+                                   /* if (Modificadores == "true") {
+                                        RespuestaModificadores = elemento.getJSONArray("amo_id");*/
+
+                                        /*for (int i = 0; i < RespuestaModificadores.length(); i++) {
+                                            JSONObject elemento3 = RespuestaModificadores.getJSONObject(i);
+                                            NombreModificador = elemento3.getString("mod_nombre");
+                                            NombreVariante = elemento3.getString("ava_nombre");
+
+                                            NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
+
+                                            final InventarioModel inventario = new InventarioModel();
+                                            inventarios.add(inventario);
+                                        }*/
+                                    } final InventarioModel inventario = new InventarioModel(sku, producto, existencia, categoria, modificadores, nombre_sucursal, suc_id, art_descripcion, art_tipo);
+                                inventarios.add(inventario);
+                                /*else {
+                                        //NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
+                               }*/
                             }
                         }
                     }

@@ -1,5 +1,4 @@
 package com.Danthop.bionet;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,10 +35,8 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
     private Spinner SpinnerTipoPublicacion;
     private String usu_id;
     private Button atras;
-
     private List<com.Danthop.bionet.model.ArticuloModel> Articulos;
     private String[][] ArticuloModel;
-
     SortableArticulosTable tb;
 
     public Fragment_ecommerce_Sincronizar_Articulos() {
@@ -87,7 +84,6 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
                 fragmentTransaction.replace(R.id.fragment_container,secondFragment);
                 fragmentTransaction.commit();
-
             }
         };
 
@@ -138,18 +134,17 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                                         JSONObject elemento = RespuestaResultado.getJSONObject(x);
 
                                         RespuestaUUID = elemento.getJSONObject("art_id");
-
                                         String UUID = RespuestaUUID.getString( "uuid");
 
                                         RespuestaPrecio =  elemento.getJSONObject( "ava_precio");
                                         String Precio = RespuestaPrecio.getString( "value");
-
+                        //VERIFICAR MODIFICADORES
                                         String NombreCompleto="";
                                         String NombreArticulo = elemento.getString("art_nombre");
                                         String NombreVariante = elemento.getString( "ava_nombre");
                                         String Descripcion = elemento.getString( "art_descripcion");
-                                        String NombreModificador="";
 
+                                        String NombreModificador="";
                                         String Modificadores = elemento.getString( "ava_tiene_modificadores");
 
                                         RespuestaImagenes = elemento.getJSONArray( "imagenes");
@@ -194,41 +189,30 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                                             Articulos.add(Articulo);
                                         }
                                     }
-
                                     final ArticuloAdapter ArticuloAdapter = new ArticuloAdapter(getContext(), Articulos, tb);
                                     tb.setDataAdapter(ArticuloAdapter);
 
                                 }
-
                             } catch (JSONException e) {
-
                                 Toast toast1 =
                                         Toast.makeText(getContext(),
                                                 String.valueOf(e), Toast.LENGTH_LONG);
-
                             }
-
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-
                             Toast toast1 =
                                     Toast.makeText(getContext(),
                                             String.valueOf(error), Toast.LENGTH_LONG);
                         }
                     }
             );
-
             VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
-
-
         } catch (Error e) {
             e.printStackTrace();
         }
-
     }
-
 }
 
