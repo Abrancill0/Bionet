@@ -28,16 +28,14 @@ public class SortablePreguntasTable extends SortableTableView<Preguntas_Model> {
     public SortablePreguntasTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Pregunta", "Comprador", "Título","","");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Pregunta", "Comprador", "Título");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(3);
         tableColumnWeightModel.setColumnWeight(0, 4);
         tableColumnWeightModel.setColumnWeight(1, 3);
         tableColumnWeightModel.setColumnWeight(2, 3);
-        tableColumnWeightModel.setColumnWeight(3, 3);
-        tableColumnWeightModel.setColumnWeight(4, 3);
 
 
         setColumnModel(tableColumnWeightModel);

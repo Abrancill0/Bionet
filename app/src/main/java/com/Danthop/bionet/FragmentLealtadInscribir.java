@@ -53,7 +53,6 @@ public class FragmentLealtadInscribir extends Fragment {
     private Button Lealtad;
     private Button Programas;
     private Button Articulos;
-    ProgressDialog progreso;
 
 
     private String nombre;
@@ -102,6 +101,9 @@ public class FragmentLealtadInscribir extends Fragment {
 
     private ArrayList<String> SucursalName;
     private ArrayList<String> SucursalID;
+    Handler handler;
+    ProgressDialog progreso;
+
 
 
     private List<ClienteModel> clientes;
@@ -133,10 +135,13 @@ public class FragmentLealtadInscribir extends Fragment {
         AniadirTodos = v.findViewById(R.id.AniadirTodos);
         tabla_vacia = v.findViewById(R.id.Tabla_vacia);
         tabla_todos_aplican = v.findViewById(R.id.todos_aplican);
+        handler= new Handler();
+        progreso = new ProgressDialog( getContext() );
 
         LoadButtons();
         LoadSpinnerSucursal();
         LoadListenerTable();
+
 
 
 
@@ -161,7 +166,19 @@ public class FragmentLealtadInscribir extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 clientes.clear();
-                Muestra_clientes();
+                progreso.show();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        LoadConfiguraciones();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                LoadAniadirTodos(TodosAplican);
+                            }
+                        }, 5000);
+                    }
+                }, 2000);
             }
             public void onNothingSelected(AdapterView<?> parent)
             {
@@ -531,53 +548,83 @@ public class FragmentLealtadInscribir extends Fragment {
                 fr.replace(R.id.fragment_container,new FragmentLealtadAniadirCliente()).commit();
             }
         });
+    }
 
+    private void LoadAniadirTodos(String AniadirAll)
+    {
+        if(AniadirAll.equals("true"))
+        {
+                            AniadirTodos();
+                            tabla_vacia.setVisibility(View.GONE);
+                            tabla_clientes.setEmptyDataIndicatorView(tabla_todos_aplican);
+                            clientes.clear();
+                            final LealtadInscribirAdapter clienteAdapter = new LealtadInscribirAdapter(getContext(), clientes, tabla_clientes,fr);
+                            tabla_clientes.setDataAdapter(clienteAdapter);
+                            AniadirTodos.setChecked(true);
+                            progreso.hide();
 
-        AniadirTodos.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        }
+        else if(AniadirAll.equals("false"))
+        {
+                            EliminarTodos();
+                            tabla_todos_aplican.setVisibility(View.GONE);
+                            clientes.clear();
+                            Muestra_clientes();
+                            AniadirTodos.setChecked(false);
+                            progreso.hide();
+        }
+        AniadirTodos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                                               @Override
-                                               public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-                                                   progreso = new ProgressDialog( getContext() );
-                                                   progreso.setMessage( "Cargando..." );
-                                                   progreso.show();
-                                                   final Handler handler = new Handler();
-                                                   handler.postDelayed(new Runnable() {
-                                                       @Override
-                                                       public void run() {
-                                                           // Do something after 5s = 5000ms
-                                                           if(AniadirTodos.isChecked())
-                                                           {
-                                                               LoadConfiguraciones();
-                                                               AniadirTodos();
-                                                               tabla_vacia.setVisibility(View.GONE);
-                                                               tabla_clientes.setEmptyDataIndicatorView(tabla_todos_aplican);
-                                                               clientes.clear();
-                                                               final LealtadInscribirAdapter clienteAdapter = new LealtadInscribirAdapter(getContext(), clientes, tabla_clientes,fr);
-                                                               tabla_clientes.setDataAdapter(clienteAdapter);
-                                                               progreso.hide();
-
-
-                                                           }
-                                                           else
-                                                           {
-                                                               tabla_todos_aplican.setVisibility(View.GONE);
-                                                               LoadConfiguraciones();
-                                                               EliminarTodos();
-                                                               clientes.clear();
-                                                               Muestra_clientes();
-                                                               progreso.hide();
-                                                           }
-                                                           progreso.hide();
-                                                       }
-                                                   }, 5000);
-
-
-
-
-
-                                               }
-                                           }
-        );
+                progreso.setMessage( "Cargando..." );
+                progreso.show();
+                if(AniadirTodos.isChecked())
+                {
+                    progreso.show();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            LoadConfiguraciones();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AniadirTodos();
+                                    tabla_vacia.setVisibility(View.GONE);
+                                    tabla_clientes.setEmptyDataIndicatorView(tabla_todos_aplican);
+                                    clientes.clear();
+                                    final LealtadInscribirAdapter clienteAdapter = new LealtadInscribirAdapter(getContext(), clientes, tabla_clientes,fr);
+                                    tabla_clientes.setDataAdapter(clienteAdapter);
+                                    AniadirTodos.setChecked(true);
+                                    progreso.hide();
+                                }
+                            }, 2000);
+                        }
+                    }, 2000);
+                }
+                else
+                {
+                    progreso.show();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            LoadConfiguraciones();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    EliminarTodos();
+                                    tabla_todos_aplican.setVisibility(View.GONE);
+                                    clientes.clear();
+                                    Muestra_clientes();
+                                    AniadirTodos.setChecked(false);
+                                    progreso.hide();
+                                }
+                            }, 2000);
+                        }
+                    }, 2000);
+                }
+            }
+        });
     }
 
     private void LoadConfiguraciones(){
@@ -619,16 +666,6 @@ public class FragmentLealtadInscribir extends Fragment {
                         TodosAplican = NodoConfiguraciones2.getString("con_todos_clientes_programa_lealtad");
                         JSONObject elemento_con_id = NodoConfiguraciones2.getJSONObject("con_id");
                         Lealtad_con_id = elemento_con_id.getString("uuid");
-
-
-
-                        if(TodosAplican.equals("true"))
-                        {
-                            AniadirTodos.setChecked(true);
-                        }
-                        else{
-                            AniadirTodos.setChecked(false);
-                        }
                     }
                     else
                     {

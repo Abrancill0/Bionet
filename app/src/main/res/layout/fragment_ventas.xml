@@ -26,9 +26,9 @@
             <Button
                 android:id="@+id/button2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_margin="0dp"
-                android:background="@drawable/pestanas_desplegables"
+                android:background="@color/fondo_azul"
                 android:fontFamily="@font/muli"
                 android:text="Ventas"
                 android:textAllCaps="false" />
