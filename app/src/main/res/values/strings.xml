@@ -56,4 +56,42 @@
     <string name="meli_redirect_uri">https://www.mobilesdkpoc.com</string>
     <string name="title_activity_main">MainActivity</string>
 
+    <!-- BLUETOOTH -->
+    <string name="textView_buscando_bluetooth">BUSCANDO...</string>
+    <string name="textView_conectando_bluetooth">CONECTANDO...</string>
+    <string name="textView_not_device">BUSQUE PRIMERO UN DISPOSITIVO</string>
+    <string name="text_busquedaFinalizada">BUSQUEDA FINALIZADA</string>
+
+    <string name="text_conexion_sucess">CONEXIÓN EXITOSA</string>
+    <string name="text_conexion_error">ERROR EN CONEXIÓN</string>
+
+    <string name="text_devices_encontrados">DISPOSITIVOS ENCONTRADOS</string>
+    <string name="text_not_devices_encontrados">NINGUN DISPOSITIVO ENCONTRADO</string>
+
+    <!-- TIPOS DE VENTAS -->
+    <string-array name="sale_array">
+        <item>Venta Retail - Sin propina</item>
+        <item>Venta Retail - Con propina</item>
+        <item>Venta MSI - Sin propina</item>
+        <item>Venta MSI - con propina</item>
+    </string-array>
+
+    <string name="btn_search">BUSCAR</string>
+    <string name="btn_connect">CONECTAR</string>
+    <string name="btn_disconnect">DESCONECTAR</string>
+
+    <string name="textView_cobrando">COBRANDO</string>
+    <string name="text_feenicia_demo">FEENICIA BLUETOOTH DEMO</string>
+
+    <string name="textView_ejecutarDispositivo_bluetooth">Inserte tarjeta con CHIP o deslice tarjeta con banda</string>
+
+    <!-- ALERT -->
+    <string name="dialog_mensaje_venta_salir">Puede que una transacción este en curso, ¿Seguro que desea salir?</string>
+    <string name="dialog_NO">No</string>
+    <string name="dialog_SI">Si</string>
+    <!-- MENSAJES COBRO -->
+    <string name="msj_tx_result">RESULTADO DE LA TX</string>
+    <string name="msj_tx_finish">TRANSACCIÓN FINALIZADA</string>
+    <string name="msj_read_Card">LEYENDO TARJETA</string>
+
 </resources>

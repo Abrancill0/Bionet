@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutMontoObtenido"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp">
+
+        <!-- Texto "COBRANDO" -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dp"
+            android:padding="5dp"
+            android:text="@string/textView_cobrando" />
+
+        <!-- Monto recibido  android:typeface="serif"  -->
+        <TextView
+            android:id="@+id/tvMontoMostrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:padding="5dp"/>
+
+        <TextView
+            android:id="@+id/textView_procesando_transaccion"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:text="@string/text_feenicia_demo"
+           />
+
+
+    <Spinner
+        android:id="@+id/sp_sales"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:entries="@array/sale_array"
+        android:layout_margin="25dp"
+        />
+
+    <Button
+        android:id="@+id/btn_search_devices"
+        android:layout_width="160dp"
+        android:layout_height="70dp"
+        android:layout_below="@+id/sp_sales"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:text="@string/btn_search"
+        android:textSize="18dp"
+        android:visibility="visible"/>
+
+    <Button
+        android:id="@+id/btn_conectar"
+        android:layout_width="160dp"
+        android:layout_height="70dp"
+        android:layout_alignBottom="@+id/btn_search_devices"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:text="@string/btn_connect"
+        android:textSize="18dp"
+        android:visibility="visible"
+        />
+
+    <Button
+        android:id="@+id/btn_desconectar"
+        android:layout_width="160dp"
+        android:layout_height="70dp"
+        android:layout_alignBottom="@+id/btn_search_devices"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:text="@string/btn_disconnect"
+        android:textSize="18dp"
+        android:visibility="gone"
+        />
+
+        <TextView
+            android:id="@+id/textView_Devices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="DISPOSITIVOS ENCONTRADOS:\n\nFNZA_0000\nFNZA_0001\nFNZA_0002"
+
+            android:textSize="22dp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textView_resultTx"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="60dp"
+            android:gravity="center"
+            android:text="RESULTADO DE LA TX:\n\n\n\nresponseCode: 00 \nDescription: Sucess\n\n{orderId:10000, numAuth:123456, transactionId:1234567, last4Digits: 3456}"
+
+            android:textSize="22dp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+</RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
