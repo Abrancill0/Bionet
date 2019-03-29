@@ -271,43 +271,34 @@
                         </LinearLayout>
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="331dp"
+                        android:layout_weight=".5"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/img"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
                 </LinearLayout>
 
 
             </LinearLayout>
         </ScrollView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight=".9">
-
-            <Button
-                android:id="@+id/editar_articulo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btn"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="Editar articulo"
-                android:textAllCaps="false"
-                android:textColor="#fff"
-                android:textSize="22dp" />
-
-            <Button
-                android:id="@+id/eliminar_articulo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/btn"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="Eliminar articulo"
-                android:textAllCaps="false"
-                android:textColor="#fff"
-                android:textSize="22dp" />
-
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

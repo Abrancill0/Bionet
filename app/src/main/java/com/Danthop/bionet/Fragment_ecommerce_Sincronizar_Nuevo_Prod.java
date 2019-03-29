@@ -153,7 +153,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                 Categoria = (TextView) v.findViewById( R.id.Categoria );
 
                 Categoria.setText(nombre_categoria);
-
                 CargaPublicaciones();
 
 

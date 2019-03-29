@@ -16,6 +16,7 @@ public class InventarioModel {
     private String art_disponible_compra;
     private String ava_aplica_apartados;
     private String ava_aplica_cambio_devolucion;
+    private String aim_url;
 
 
 
@@ -31,7 +32,8 @@ public class InventarioModel {
                            String art_disponible_venta,
                            String art_disponible_compra,
                            String ava_aplica_apartados,
-                           String ava_aplica_cambio_devolucion)
+                           String ava_aplica_cambio_devolucion,
+                           String aim_url)
     {
 
         this.sku = sku;
@@ -47,6 +49,8 @@ public class InventarioModel {
         this.art_disponible_compra = art_disponible_compra;
         this.ava_aplica_apartados = ava_aplica_apartados;
         this.ava_aplica_cambio_devolucion = ava_aplica_cambio_devolucion;
+        this.aim_url = aim_url;
+
     }
 
     public String getSku() {
@@ -123,6 +127,9 @@ public class InventarioModel {
         return ava_aplica_cambio_devolucion;
     }
     public void setava_aplica_cambio_devolucion(String ava_aplica_cambio_devolucion) { this.ava_aplica_cambio_devolucion = ava_aplica_cambio_devolucion; }
+
+    public String getaim_url() { return aim_url; }
+    public void setaim_url(String aim_url) {this.aim_url = aim_url;}
 
 
 

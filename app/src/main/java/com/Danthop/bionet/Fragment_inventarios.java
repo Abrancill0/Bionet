@@ -1,7 +1,9 @@
 package com.Danthop.bionet;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.print.PrinterId;
 import android.support.v4.app.Fragment;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -31,6 +34,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 import org.json.JSONArray;
@@ -53,9 +57,14 @@ public class Fragment_inventarios extends Fragment {
     private SortableInventariosTable tabla_inventario;
     private List<com.Danthop.bionet.model.ArticuloModel> Articulos;
     private TableDataClickListener<InventarioModel> tablaListener;
+    private ImageLoader imageLoader = ImageLoader.getInstance();
     private List<InventarioModel> inventarios;
     private FragmentTransaction fr;
     private Dialog ver_producto_dialog;
+    private View v;
+    private String Imagen;
+    private String img_ruta;
+    private ImageView FotoArticulo;
 
     private String usu_id;
     private String suc_id = "";
@@ -72,6 +81,7 @@ public class Fragment_inventarios extends Fragment {
     private String art_disponible_compra;
     private String ava_aplica_apartados;
     private String ava_aplica_cambio_devolucion;
+    private String aim_url;
 
 
     public Fragment_inventarios() {
@@ -163,9 +173,8 @@ public class Fragment_inventarios extends Fragment {
                 JSONObject Resultado = null;
                 JSONArray Articulo = null;
                 JSONArray Sucursales = null;
-                JSONArray RespuestaModificadores = null;
+                JSONArray imagenes = null;
                 JSONObject RespuestaUUID = null;
-
 
                 try {
                     int status = Integer.parseInt(response.getString("estatus"));
@@ -216,7 +225,11 @@ public class Fragment_inventarios extends Fragment {
                                 ava_aplica_cambio_devolucion = "no";
                             }
 
-//Modificadores y variantes
+                            imagenes = elemento.getJSONArray( "imagenes");
+                            JSONObject elemento3 = imagenes.getJSONObject(0);
+                            aim_url = getString(R.string.Url) + elemento3.getString("aim_url");
+
+
 
                             String NombreVariante = elemento.getString("ava_nombre");
                             Boolean Modificadores = Boolean.valueOf(elemento.getString("ava_tiene_modificadores"));
@@ -233,7 +246,6 @@ public class Fragment_inventarios extends Fragment {
                             }
 
                             Sucursales = elemento.getJSONArray("sucursales");
-
                             for (int z = 0; z < Sucursales.length(); z++) {
                                 JSONObject elemento2 = Sucursales.getJSONObject(z);
                                 existencia = elemento2.getString("exi_cantidad");
@@ -255,8 +267,8 @@ public class Fragment_inventarios extends Fragment {
                                             art_disponible_venta,
                                             art_disponible_compra,
                                             ava_aplica_apartados,
-                                            ava_aplica_cambio_devolucion);
-
+                                            ava_aplica_cambio_devolucion,
+                                            aim_url);
                                     inventarios.add(inventario);
                                 }
                             }
@@ -302,7 +314,7 @@ public class Fragment_inventarios extends Fragment {
                 TextView art_disponible_compra = ver_producto_dialog.findViewById(R.id.disponible_compra);
                 TextView ava_aplica_apartados = ver_producto_dialog.findViewById(R.id.aplica_apartados);
                 TextView ava_aplica_cambio_devolucion = ver_producto_dialog.findViewById(R.id.aplica_devoluciones);
-
+                ImageView FotoArticulo = (ImageView) ver_producto_dialog.findViewById(R.id.img);
 
                 nombre_producto.setText(clickedData.getProducto());
                 tipo_articulo.setText(clickedData.getArt_tipo());
@@ -313,8 +325,7 @@ public class Fragment_inventarios extends Fragment {
                 art_disponible_compra.setText(clickedData.getart_disponible_compra());
                 ava_aplica_apartados.setText(clickedData.getava_aplica_apartados());
                 ava_aplica_cambio_devolucion.setText(clickedData.getava_aplica_cambio_devolucion());
-
-
+                imageLoader.displayImage(String.valueOf(clickedData.getaim_url()),FotoArticulo);
             }
         };
     }
