@@ -411,6 +411,7 @@ public class Fragment_ecomerce extends Fragment {
             toast1.show();
 
             progreso.hide();
+            progreso.hide();
 
         }
 
