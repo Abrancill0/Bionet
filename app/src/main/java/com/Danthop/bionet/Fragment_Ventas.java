@@ -2,8 +2,6 @@ package com.Danthop.bionet;
 
 
 import android.app.Dialog;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ScaleDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -15,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
@@ -31,6 +28,7 @@ public class Fragment_Ventas extends Fragment {
     private Button btn_agregar_vendedor;
     private Button crear_cliente;
     private Button aceptar_agregar_vendedor;
+    private Button Corte_Caja;
     private Dialog dialog;
     private Spinner vendedores;
     private ArrayList<String> VendedorName;
@@ -59,14 +57,23 @@ public class Fragment_Ventas extends Fragment {
             }
         };
         carouselView.setImageListener(imageListener);
+        btn_agregar_cliente = v.findViewById(R.id.btn_agregar_cliente);
+        btn_agregar_vendedor = v.findViewById(R.id.btn_agregar_vendedor);
+        Corte_Caja = v.findViewById(R.id.CorteCaja);
+
+
         VendedorName=new ArrayList<>();
 
-        btn_agregar_cliente = v.findViewById(R.id.btn_agregar_cliente);
+        return v;
+    }
+
+    public void LoadButtons()
+    {
         btn_agregar_cliente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog=new Dialog(getContext());
-                dialog.setContentView(R.layout.pop_up_seleccionar_cliente);
+                dialog.setContentView(R.layout.pop_up_ventas_seleccionar_cliente);
                 dialog.show();
                 crear_cliente = (Button) dialog.findViewById(R.id.btn_crear_cliente);
 
@@ -82,12 +89,11 @@ public class Fragment_Ventas extends Fragment {
             }
         });
 
-        btn_agregar_vendedor = v.findViewById(R.id.btn_agregar_vendedor);
         btn_agregar_vendedor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog=new Dialog(getContext());
-                dialog.setContentView(R.layout.pop_up_agregar_vendedor);
+                dialog.setContentView(R.layout.pop_up_ventas_agregar_vendedor);
                 dialog.show();
                 VendedorName.add("Roberto Carrera");
                 VendedorName.add("Gerardo Rodríguez");
@@ -104,7 +110,14 @@ public class Fragment_Ventas extends Fragment {
 
             }
         });
-        return v;
+
+        Corte_Caja.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja()).commit();
+            }
+        });
     }
 
 }

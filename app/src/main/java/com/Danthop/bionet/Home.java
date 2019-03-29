@@ -2,14 +2,18 @@ package com.Danthop.bionet;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -30,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.LealtadInscribirAdapter;
 import com.Danthop.bionet.model.LoginModel;
 
 import com.android.volley.Request;
@@ -57,6 +62,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import android.provider.Settings.Secure;
+
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Fragment_pop_up_ProfilePhoto.OnPhotoSelectedListener {
     private DrawerLayout drawer;
@@ -84,7 +91,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private ImageView op_inventario;
     private ImageView op_bio;
     private ImageView op_salir;
+    private String android_id;
+    private View Internet;
+    private TextView textInternet;
+    private Handler handler1;
+    private Boolean networkstatus;
 
+    private WifiManager wifiManager;
 
     @Override
     public void getImageBitmap(Bitmap bitmap) {
@@ -140,7 +153,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
+        wifiManager = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+        handler1 = new Handler();
+        Internet = findViewById(R.id.internet);
+        textInternet = findViewById(R.id.internet_text);
+
         home();
+
+
 
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(Home.this));
@@ -370,7 +391,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new Fragment_pantalla_principal()).commit();
-
     }
 
     public void inventario() {
@@ -517,6 +537,49 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Toast.makeText(this, "Oooops, something went wrong with the login process", Toast.LENGTH_SHORT).show();
     }
 
+
+    protected void onStart(){
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        registerReceiver(wifiStateReceiver,intentFilter);
+    }
+
+    protected void onStop(){
+        super.onStop();
+        unregisterReceiver(wifiStateReceiver);
+    }
+
+
+
+    private BroadcastReceiver wifiStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int wifiStateExtra = intent.getIntExtra(wifiManager.EXTRA_WIFI_STATE,
+                    WifiManager.WIFI_STATE_UNKNOWN);
+
+            switch (wifiStateExtra){
+                case WifiManager.WIFI_STATE_ENABLED:
+                    networkstatus = NetworkUtils.isOnlineNet();
+                    if(networkstatus == false)
+                    {
+                        Internet.setVisibility(View.VISIBLE);
+                        textInternet.setText("La red no se encuentra disponible");
+                        while (networkstatus!=true)
+                        {
+                            networkstatus= NetworkUtils.isOnlineNet();
+                        }
+                        Internet.setVisibility(View.GONE);
+                    }
+
+                    break;
+                case WifiManager.WIFI_STATE_DISABLED:
+                    Internet.setVisibility(View.VISIBLE);
+                    textInternet.setText("No te encuentras conectado a ninguna red");
+                    break;
+
+            }
+        }
+    };
 
 
 }
