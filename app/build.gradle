@@ -45,6 +45,9 @@ dependencies {
     implementation 'com.mercadolibre.android.sdk:mercadolibre_android_sdk:1.0.0'
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
     implementation 'com.squareup:android-times-square:1.6.5@aar'
+
+    compile files('libs/FeeniciaBT_JAR.jar')
+
 }
 
 apply plugin: 'com.google.gms.google-services'
