@@ -30,12 +30,13 @@ import java.util.List;
 
 
 /*  DEPENDENCIAS DE FEENICIA */
-import com.Feenicia.BT.Android.BTReceiverConnection;
-import com.Feenicia.BT.Android.SaleConfiguration;
-import com.Feenicia.BT.Android.SaleUtils;
-import com.Feenicia.BT.Android.SppHandlerConnection;
-import com.Feenicia.BT.Android.core.dto.ResponseCode;
-import com.Feenicia.BT.Android.core.dto.SendReceiptResponse;
+//import com.Danthop.bionet.Android.BTReceiverConnection;
+import com.Danthop.bionet.BTReceiverConnection;
+import com.Danthop.bionet.SaleConfiguration;
+import com.Danthop.bionet.SaleUtils;
+import com.Danthop.bionet.SppHandlerConnection;
+import com.Danthop.bionet.core.dto.ResponseCode;
+import com.Danthop.bionet.core.dto.SendReceiptResponse;
 
 import com.imagpay.Settings;
 import com.imagpay.spp.BTReceiver;
