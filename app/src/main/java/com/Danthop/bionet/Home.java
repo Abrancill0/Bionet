@@ -129,18 +129,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
 
-    @Override
-    public void getImagePath(Uri imagePath) {
-
-        ImageView SelectPhoto = (ImageView) findViewById(R.id.foto_perfil_hamburguesa);
-        imageLoader.displayImage(imagePath.toString(), SelectPhoto);
-        mSelectedBitmap = null;
-        mSelectedUri = imagePath;
-
-
-        GuardarImagen(imagePath.getPath());
-    }
-
     public static Uri writeToTempImageAndGetPathUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);

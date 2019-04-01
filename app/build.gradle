@@ -92,9 +92,9 @@ dependencies {
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
     implementation 'com.squareup:android-times-square:1.6.5@aar'
 
-    compile files('libs/FeeniciaBT_JAR.jar')
+    implementation files('libs/FeeniciaBT_JAR.jar')
     implementation 'com.android.support:multidex:1.0.3'
-    compile 'com.pnikosis:materialish-progress:1.5' // Circulo de Cargando
+    implementation 'com.pnikosis:materialish-progress:1.5' // Circulo de Cargando
 
 
 }
