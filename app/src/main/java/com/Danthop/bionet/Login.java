@@ -9,7 +9,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -421,6 +420,11 @@ public class Login extends Activity {
 
     public void onBackPressed() {
         //do nothing
+    }
+
+    public void Pagar(View view) {
+        Intent intent = new Intent(Login.this, Feenicia_Transaction_Bluetooth.class);
+        startActivity(intent);
     }
 }
 

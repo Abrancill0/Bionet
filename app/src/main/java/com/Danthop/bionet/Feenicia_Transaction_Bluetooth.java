@@ -1,4 +1,4 @@
-package com.Danthop.bionet.Tables;
+package com.Danthop.bionet;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -8,42 +8,48 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.app.AlertDialog;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.Danthop.bionet.R;
+import java.util.ArrayList;
+import java.util.List;
+
+
+/*  DEPENDENCIAS DE FEENICIA */
 import com.Feenicia.BT.Android.BTReceiverConnection;
 import com.Feenicia.BT.Android.SaleConfiguration;
 import com.Feenicia.BT.Android.SaleUtils;
 import com.Feenicia.BT.Android.SppHandlerConnection;
 import com.Feenicia.BT.Android.core.dto.ResponseCode;
-
-/*  DEPENDENCIAS DE FEENICIA */
-import com.Feenicia.BT.Android.core.dto.ResponseCode;
-//import com.Feenicia.BT.Android.core.dto.SendReceiptResponse;
-
+import com.Feenicia.BT.Android.core.dto.SendReceiptResponse;
 
 import com.imagpay.Settings;
 import com.imagpay.spp.BTReceiver;
 import com.imagpay.spp.SppHandler;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class Fragment_Pagos extends AppCompatActivity {
+/**
+ * Created by Feenicia on 05/10/2018.
+ */
 
+/// Lector Bluetooth ///
+public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
+{
     private Toolbar toolbar;
     private TextView tvMontoMostrar;
     private static AppCompatActivity FEENICIA_TRANSACCION;
@@ -68,13 +74,17 @@ public class Fragment_Pagos extends AppCompatActivity {
     static TextView textView_resultTx; // RESULTADO DE LA TRANSACCION
     ArrayList<BluetoothDevice> adapter;
     Spinner sp_sale;
-    //static ProgressWheel progressBar;
+    static ProgressWheel progressBar;
 
     SppHandlerConnection sppHandlerConnection;
     BTReceiverConnection bTReceiverConnection;
 
     SaleConfiguration sale = new SaleConfiguration();
 
+
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -93,7 +103,7 @@ public class Fragment_Pagos extends AppCompatActivity {
         textView_Devices = (TextView)findViewById(R.id.textView_Devices);
         textView_Devices.setText("");
         sp_sale = (Spinner) findViewById(R.id.sp_sales);
-        //progressBar = (ProgressWheel) findViewById(R.id.progressBar);
+        progressBar = (ProgressWheel) findViewById(R.id.progressBar);
 
         askForContactPermission();
 
@@ -111,11 +121,14 @@ public class Fragment_Pagos extends AppCompatActivity {
         tvMontoMostrar.setText( "$ " + monto + " MN");
 
 
+       // toolbar = (Toolbar) findViewById(R.id.app_bar);
+       // setSupportActionBar(toolbar);
+       // getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
         // PERMISO DE BLUETOOTH
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.BLUETOOTH_ADMIN}, 1);
-            }
+            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_ADMIN}, 1);
             return;
 
         }
@@ -360,6 +373,7 @@ public class Fragment_Pagos extends AppCompatActivity {
         _receiver.registerReceiver();
     }
 
+
     public static void statusReaderCard(final String result){
         Log.i("RESULTADO_READ_CARD: " , result);
 
@@ -370,7 +384,7 @@ public class Fragment_Pagos extends AppCompatActivity {
 
                 if(result.equals("LEYENDO TARJETA")){
                     textViewTransaccion.setText(FEENICIA_TRANSACCION.getResources().getString(R.string.msj_read_Card));
-                    //progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                 }else{
                     textViewTransaccion.setText(FEENICIA_TRANSACCION.getResources().getString(R.string.textView_ejecutarDispositivo_bluetooth));
                 }
@@ -409,7 +423,7 @@ public class Fragment_Pagos extends AppCompatActivity {
                     }
 
                     setTextTx(setValue);
-                  //  progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
 
                 }
             });
@@ -422,12 +436,12 @@ public class Fragment_Pagos extends AppCompatActivity {
 
     }
 
-   // public static void onResultSendReceipt(SendReceiptResponse response){
-   //     if(response != null){
-   //         Log.i("RESPONSE_SEND_RECEIPT", response.toString());
-   //     }
+    public static void onResultSendReceipt(SendReceiptResponse response){
+        if(response != null){
+            Log.i("RESPONSE_SEND_RECEIPT", response.toString());
+        }
 
-   // }
+    }
 
 
     /* PINTA EN PANTALLA UN MENSAJE TOAST */
@@ -553,7 +567,6 @@ public class Fragment_Pagos extends AppCompatActivity {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
-
 
 
 }

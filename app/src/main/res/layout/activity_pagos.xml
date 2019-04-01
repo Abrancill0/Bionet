@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:CircleProgressView="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutMontoObtenido"
@@ -49,6 +51,19 @@
         android:entries="@array/sale_array"
         android:layout_margin="25dp"
         />
+
+        <com.pnikosis.materialishprogress.ProgressWheel
+            xmlns:wheel="http://schemas.android.com/apk/res-auto"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/progressBar"
+            android:layout_below="@+id/btn_search_devices"
+            android:layout_marginTop="90dp"
+           
+            wheel:matProg_progressIndeterminate="true"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"/>
 
     <Button
         android:id="@+id/btn_search_devices"
