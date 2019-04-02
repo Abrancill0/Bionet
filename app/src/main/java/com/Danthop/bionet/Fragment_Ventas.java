@@ -60,9 +60,9 @@ public class Fragment_Ventas extends Fragment {
         btn_agregar_cliente = v.findViewById(R.id.btn_agregar_cliente);
         btn_agregar_vendedor = v.findViewById(R.id.btn_agregar_vendedor);
         Corte_Caja = v.findViewById(R.id.CorteCaja);
-
-
         VendedorName=new ArrayList<>();
+
+        LoadButtons();
 
         return v;
     }
@@ -83,7 +83,7 @@ public class Fragment_Ventas extends Fragment {
                     public void onClick(View v) {
                         dialog.dismiss();
                         FragmentTransaction fr = getFragmentManager().beginTransaction();
-                        fr.replace(R.id.fragment_container,new Fragment_crear_cliente()).commit();
+                        fr.replace(R.id.fragment_container,new Fragment_ventas_crear_cliente()).commit();
                     }
                 });
             }

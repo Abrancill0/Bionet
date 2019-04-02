@@ -61,29 +61,19 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
     private Spinner GiroNegocio;
     ProgressDialog progreso;
     private String IDUsuario;
-    private  Uri Rutaimagen;
-    private Bitmap mSelectedBitmap;
-    private Uri mSelectedUri;
     private String img_ruta_servidor;
     private static final String TAG = "RegistroDatos";
     private static final int REQUEST_CODE = 23;
     private ArrayList<String> GiroName;
-    private String RealPath;
     private ImageView Image;
+    private Cursor cursor;
 
     private ImageLoader imageLoader;
 
     private String RutaReal;
 
     @Override
-    public void getImagePath(Uri imagePath) {
-
-    }
-
-    @Override
     public void getImageBitmap(Bitmap bitmap) {
-        mSelectedUri = null;
-        mSelectedBitmap = bitmap;
 
         // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
         Uri tempUri = getImageUri(getApplicationContext(), bitmap);
@@ -92,8 +82,14 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
         File finalFile = new File(getRealPathFromURI(tempUri));
 
         RutaReal=finalFile.getAbsolutePath();
-        imageLoader.displayImage(tempUri.toString(),Image);
-
+        if(tempUri.toString().equals(""))
+        {
+            imageLoader.displayImage(finalFile.toString(),Image);
+        }
+        else
+        {
+            imageLoader.displayImage(tempUri.toString(),Image);
+        }
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -104,7 +100,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
     }
 
     public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor = getContentResolver().query(uri, null, null, null, null);
         cursor.moveToFirst();
         int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
         return cursor.getString(idx);

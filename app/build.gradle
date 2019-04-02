@@ -1,7 +1,38 @@
 apply plugin: 'com.android.application'
 
+buildscript
+        {
+            repositories
+                    {
+                        maven { url 'https://maven.fabric.io/public' }
+                    }
+
+            dependencies
+                    {
+                        classpath 'io.fabric.tools:gradle:1.+'
+                    }
+        }
+
+apply plugin: 'com.android.application'  //// com.android.library    com.android.application
+apply plugin: 'io.fabric'
+
+repositories
+        {
+            maven { url "https://jitpack.io" }
+            maven { url 'https://maven.fabric.io/public' }
+            maven { url "http://dl.bintray.com/glomadrian/maven" }
+            maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
+
+        }
+
+
 android {
     compileSdkVersion 28
+
+    dexOptions {
+        jumboMode true
+        preDexLibraries false
+    }
     defaultConfig {
         applicationId "com.Danthop.bionet"
         minSdkVersion 15
@@ -9,6 +40,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        // Enabling multidex support.
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -18,8 +52,20 @@ android {
     }
 }
 
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.android.support:support-v4:27.0.0'
+    }
+    resolutionStrategy.dependencySubstitution {
+        substitute module('org.apache.commons:commons-io:1.3.2') with module('commons-io:commons-io:1.3.2')
+    }
+}
+
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
@@ -46,7 +92,10 @@ dependencies {
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
     implementation 'com.squareup:android-times-square:1.6.5@aar'
 
-    compile files('libs/FeeniciaBT_JAR.jar')
+    implementation files('libs/FeeniciaBT_JAR.jar')
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.pnikosis:materialish-progress:1.5' // Circulo de Cargando
+
 
 }
 

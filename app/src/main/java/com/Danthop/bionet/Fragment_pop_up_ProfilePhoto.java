@@ -4,7 +4,9 @@ package com.Danthop.bionet;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,6 +19,8 @@ import android.widget.Button;
 
 import com.Danthop.bionet.R;
 
+import java.io.IOException;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +31,6 @@ public class Fragment_pop_up_ProfilePhoto extends DialogFragment {
     private static final int CAMERA_REQUEST_CODE = 12345;
 
     public interface  OnPhotoSelectedListener{
-        void getImagePath(Uri imagePath);
         void getImageBitmap(Bitmap bitmap);
     }
     OnPhotoSelectedListener mOnPhotoSelectedListener;
@@ -67,8 +70,13 @@ public class Fragment_pop_up_ProfilePhoto extends DialogFragment {
 
         if(requestCode == PICKFILE_REQUEST_CODE && resultCode == Activity.RESULT_OK){
             Uri selectedImageUri = data.getData();
-            mOnPhotoSelectedListener.getImagePath(selectedImageUri);
-            getDialog().dismiss();
+            try {
+                Bitmap bitmap= MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImageUri);
+                mOnPhotoSelectedListener.getImageBitmap(bitmap);
+                getDialog().dismiss();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
 
