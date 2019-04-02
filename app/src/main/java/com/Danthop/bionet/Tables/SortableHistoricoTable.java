@@ -1,31 +1,29 @@
 package com.Danthop.bionet.Tables;
+
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
-import com.Danthop.bionet.Adapters.InventarioAdapter;
 import com.Danthop.bionet.R;
-import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.InventarioModel;
 
 import de.codecrafters.tableview.SortableTableView;
-import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
-public class SortableInventariosTable extends SortableTableView<InventarioModel> {
-    public SortableInventariosTable(final Context context) {
+public class SortableHistoricoTable extends SortableTableView<InventarioModel> {
+    public SortableHistoricoTable(final Context context) {
         this(context, null);
     }
 
-    public SortableInventariosTable(final Context context, final AttributeSet attributes) {
+    public SortableHistoricoTable(final Context context, final AttributeSet attributes) {
         this(context, attributes, android.R.attr.listViewStyle);
     }
 
-    public SortableInventariosTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
+    public SortableHistoricoTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Artículo", "Categoría", "Movimiento", "Cantidad", "Observaciones","");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Movimiento", "Cantidad", "Observaciones","");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
 
@@ -41,8 +39,4 @@ public class SortableInventariosTable extends SortableTableView<InventarioModel>
         setColumnComparator(0, ComparatorInventario.getInventarioNameComparator());
 
     }
-
-
-
-
 }

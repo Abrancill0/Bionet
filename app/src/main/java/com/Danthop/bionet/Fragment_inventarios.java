@@ -1,13 +1,9 @@
 package com.Danthop.bionet;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.print.PrinterId;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -21,13 +17,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.Danthop.bionet.Adapters.ClienteAdapter;
 import com.Danthop.bionet.Adapters.InventarioAdapter;
-import com.Danthop.bionet.R;
-import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.Tables.SortableInventariosTable;
-import com.Danthop.bionet.model.ArticuloModel;
-import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -44,7 +35,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
@@ -71,7 +61,6 @@ public class Fragment_inventarios extends Fragment {
     private String modificadores = "";
     private String existencia = "";
     private String nombre_sucursal = "";
-
     private String producto = "";
     private String art_tipo = "";
     private String sku = "";
@@ -82,6 +71,11 @@ public class Fragment_inventarios extends Fragment {
     private String ava_aplica_apartados;
     private String ava_aplica_cambio_devolucion;
     private String aim_url;
+    private String art_nombre;
+    private String cat_nombre;
+    private String his_tipo;
+    private String his_cantidad;
+    private String his_observaciones;
 
 
     public Fragment_inventarios() {
@@ -89,9 +83,10 @@ public class Fragment_inventarios extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_inventarios, container, false);
+        fr = getFragmentManager().beginTransaction();
+
         SearchView Search = (SearchView) v.findViewById(R.id.search_inventario);
         Search.setQueryHint("Buscar");
         Spinner spinner = (Spinner) v.findViewById(R.id.categoria_inventario);
@@ -103,7 +98,6 @@ public class Fragment_inventarios extends Fragment {
         ver_producto_dialog.setContentView(R.layout.pop_up_ficha_articulos);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
-
         usu_id = sharedPref.getString("usu_id", "");
         inventarios = new ArrayList<>();
 
@@ -121,12 +115,21 @@ public class Fragment_inventarios extends Fragment {
         tabla_inventario.setHeaderAdapter(simpleHeader);
         tabla_inventario.setColumnModel(tableColumnWeightModel);
 
-        Button btn_traslados = (Button) v.findViewById(R.id.fragment_pestania_traslados);
-        btn_traslados.setOnClickListener(new View.OnClickListener() {
+        Button btnTraslados = (Button) v.findViewById(R.id.btn_traslados);
+        btnTraslados.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container, new Fragment_pestania_traslados()).commit();
+            }
+        });
+
+        Button btnHistorico = (Button) v.findViewById(R.id.btn_historico);
+        btnHistorico.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_pestania_historico()).commit();
             }
         });
 
@@ -150,7 +153,6 @@ public class Fragment_inventarios extends Fragment {
 
         tabla_inventario.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
         tabla_inventario.addDataClickListener(tablaListener);
-
 
         return v;
     }
@@ -191,6 +193,7 @@ public class Fragment_inventarios extends Fragment {
 
                             RespuestaUUID = elemento.getJSONObject("art_id");
                             String UUID = RespuestaUUID.getString("uuid");
+
                             sku = elemento.getString("ava_sku");
                             producto = elemento.getString("art_nombre");
                             categoria = elemento.getString("cat_nombre");
@@ -230,7 +233,6 @@ public class Fragment_inventarios extends Fragment {
                             aim_url = getString(R.string.Url) + elemento3.getString("aim_url");
 
 
-
                             String NombreVariante = elemento.getString("ava_nombre");
                             Boolean Modificadores = Boolean.valueOf(elemento.getString("ava_tiene_modificadores"));
                             String NombreCompleto;
@@ -268,13 +270,17 @@ public class Fragment_inventarios extends Fragment {
                                             art_disponible_compra,
                                             ava_aplica_apartados,
                                             ava_aplica_cambio_devolucion,
-                                            aim_url);
+                                            aim_url,
+                                            art_nombre,
+                                            cat_nombre,
+                                            his_tipo,
+                                            his_cantidad,
+                                            his_observaciones);
                                     inventarios.add(inventario);
                                 }
                             }
                         }
-                    }
-                    final InventarioAdapter InventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario);
+                    }final InventarioAdapter InventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario);
                     tabla_inventario.setDataAdapter(InventarioAdapter);
 
                 } catch (JSONException e) {

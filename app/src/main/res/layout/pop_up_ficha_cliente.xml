@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:table="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="720dp"
-    android:layout_height="460dp"
+    android:layout_width="780dp"
+    android:layout_height="520dp"
     android:layout_gravity="center"
     android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical">
@@ -601,7 +601,7 @@
             <Button
                 android:id="@+id/editar_cliente"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/btn"
                 android:gravity="center"

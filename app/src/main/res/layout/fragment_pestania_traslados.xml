@@ -18,12 +18,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".3"
-            android:orientation="vertical"
-
-            >
+            android:orientation="vertical">
 
             <Button
-                android:id="@+id/fragment_inventarios"
+                android:id="@+id/btn_inventarios"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
@@ -40,7 +38,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/btn_tras"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
@@ -57,12 +55,12 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/btn_hist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
-                android:text="Créditos Proveedores"
+                android:text="Histórico"
                 android:textAllCaps="false"
                 android:fontFamily="@font/muli"/>
         </LinearLayout>
@@ -88,6 +86,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingVertical="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="17dp"
+                    android:text="Traslados."/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="normal"
+                    android:textSize="15dp"
+                    android:text="Solicita y verifica los traslados."/>
 
                 <Spinner
                     android:id="@+id/categoria_sku"

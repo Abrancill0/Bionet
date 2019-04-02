@@ -41,13 +41,13 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/fragment_pestania_traslados"
+                android:id="@+id/btn_reporte"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
-                android:text="Transacciones"
+                android:text="Reporte de Venta"
                 android:textAllCaps="false" />
         </LinearLayout>
 

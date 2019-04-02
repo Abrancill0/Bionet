@@ -17,6 +17,11 @@ public class InventarioModel {
     private String ava_aplica_apartados;
     private String ava_aplica_cambio_devolucion;
     private String aim_url;
+    private String art_nombre;
+    private String cat_nombre;
+    private String his_tipo;
+    private String his_cantidad;
+    private String his_observaciones;
 
 
 
@@ -33,7 +38,12 @@ public class InventarioModel {
                            String art_disponible_compra,
                            String ava_aplica_apartados,
                            String ava_aplica_cambio_devolucion,
-                           String aim_url)
+                           String aim_url,
+                           String art_nombre,
+                           String cat_nombre,
+                           String his_tipo,
+                           String his_cantidad,
+                           String his_observaciones)
     {
 
         this.sku = sku;
@@ -50,7 +60,11 @@ public class InventarioModel {
         this.ava_aplica_apartados = ava_aplica_apartados;
         this.ava_aplica_cambio_devolucion = ava_aplica_cambio_devolucion;
         this.aim_url = aim_url;
-
+        this.art_nombre = art_nombre;
+        this.cat_nombre = cat_nombre;
+        this.his_tipo = his_tipo;
+        this.his_cantidad = his_cantidad;
+        this.his_observaciones = his_observaciones;
     }
 
     public String getSku() {
@@ -131,6 +145,37 @@ public class InventarioModel {
     public String getaim_url() { return aim_url; }
     public void setaim_url(String aim_url) {this.aim_url = aim_url;}
 
+    public String getArt_nombre() {
+        return art_nombre;
+    }
+    public void setArt_nombre(String art_nombre) {
+        this.art_nombre = art_nombre;
+    }
 
+    public String getCat_nombre() {
+        return cat_nombre;
+    }
+    public void setCat_nombre(String cat_nombre) {
+        this.cat_nombre = cat_nombre;
+    }
+
+    public String getHis_tipo() {
+        return his_tipo;
+    }
+    public void setHis_tipo(String his_tipo) {
+        this.his_tipo = his_tipo;
+    }
+
+    public String getHis_cantidad() {
+        return his_cantidad;
+    }
+    public void setHis_cantidad(String his_cantidad) {
+        this.his_cantidad = his_cantidad;
+    }
+
+    public String getHis_observaciones() {
+        return his_observaciones;
+    }
+    public void setHis_observaciones(String his_observaciones) { this.his_observaciones = his_observaciones; }
 
 }

@@ -1,30 +1,26 @@
 package com.Danthop.bionet.Adapters;
+
 import android.content.Context;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.Danthop.bionet.Tables.SortableArticulosTable;
-import com.Danthop.bionet.Tables.SortableClientesTable;
+
+import com.Danthop.bionet.Tables.SortableHistoricoTable;
 import com.Danthop.bionet.Tables.SortableInventariosTable;
-import com.Danthop.bionet.Tables.SortableSucursalTable;
-import com.Danthop.bionet.model.ArticuloModel;
-import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.InventarioModel;
-import com.Danthop.bionet.model.SucursalModel;
-import java.text.NumberFormat;
 import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class InventarioAdapter extends LongPressAwareTableDataAdapter<InventarioModel> {
+public class HistoricoAdapter extends LongPressAwareTableDataAdapter<InventarioModel> {
     int TEXT_SIZE = 12;
 
-    public InventarioAdapter(final Context context, final List<InventarioModel> data, final SortableInventariosTable tableView) {
+    public HistoricoAdapter(final Context context, final List<InventarioModel> data, final SortableHistoricoTable tableView) {
         super(context, data, tableView);
     }
+
     @Override
     public View getDefaultCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
         InventarioModel Invetario = getRowData(rowIndex);
@@ -32,20 +28,21 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
 
         switch (columnIndex) {
             case 0:
-                renderedView = renderSKU(Invetario);
+                renderedView = renderart_nombre(Invetario);
                 break;
             case 1:
-                renderedView = renderproducto(Invetario);
+                renderedView = rendercat_nombre(Invetario);
                 break;
             case 2:
-                renderedView = renderexistencia(Invetario);
+                renderedView = renderhis_tipo(Invetario);
                 break;
             case 3:
-                renderedView = rendercategoria(Invetario);
+                renderedView = renderhis_cantidad(Invetario);
                 break;
             case 4:
-                renderedView = rendersucursal(Invetario);
+                renderedView = renderhis_observaciones(Invetario);
                 break;
+
         }
         return renderedView;
     }
@@ -72,31 +69,28 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
         editText.setPadding(20, 10, 20, 10);
         editText.setTextSize(TEXT_SIZE);
         editText.setSingleLine();
-        editText.addTextChangedListener(new InventarioAdapter.OrdenNameUpdater(Inventario));
+        editText.addTextChangedListener(new HistoricoAdapter.OrdenNameUpdater(Inventario));
         return editText;
     }
 
-    private View renderSKU(final InventarioModel Inventario) {
-        return renderString(Inventario.getSku());
+    private View renderart_nombre(final InventarioModel Inventario) {
+        return renderString(Inventario.getArt_nombre());
     }
 
-    private View renderproducto(final InventarioModel Inventario) {
-        return renderString(Inventario.getProducto());
+    private View rendercat_nombre(final InventarioModel Inventario) {
+        return renderString(Inventario.getCat_nombre());
     }
 
-    private View renderexistencia(final InventarioModel Inventario) {
-        return renderString(Inventario.getExistencia());
+    private View renderhis_tipo(final InventarioModel Inventario) {
+        return renderString(Inventario.getHis_tipo());
     }
 
-    private View rendercategoria(final InventarioModel Inventario) {
-        return renderString(Inventario.getCategoria());
+    private View renderhis_cantidad(final InventarioModel Inventario) {
+        return renderString(Inventario.getHis_cantidad());
     }
-
-    private View rendersucursal(final InventarioModel Inventario) {
-        return renderString(Inventario.getNombre_sucursal());
+    private View renderhis_observaciones(final InventarioModel Inventario) {
+        return renderString(Inventario.getHis_observaciones());
     }
-
-
 
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
