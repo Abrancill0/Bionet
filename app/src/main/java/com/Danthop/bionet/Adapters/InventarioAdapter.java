@@ -15,7 +15,6 @@ import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.SucursalModel;
-
 import java.text.NumberFormat;
 import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
@@ -96,6 +95,8 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
     private View rendersucursal(final InventarioModel Inventario) {
         return renderString(Inventario.getNombre_sucursal());
     }
+
+
 
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());

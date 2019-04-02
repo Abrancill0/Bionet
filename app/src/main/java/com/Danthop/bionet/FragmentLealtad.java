@@ -58,8 +58,7 @@ public class FragmentLealtad extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_lealtad,container, false);
         fr = getFragmentManager().beginTransaction();
         tabla_puntos = v.findViewById(R.id.tabla_puntos);

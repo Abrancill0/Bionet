@@ -1,6 +1,4 @@
 package com.Danthop.bionet;
-
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,30 +10,22 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import com.Danthop.bionet.R;
-
 
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class Fragment_pestania_traslados extends Fragment {
-
-
     public Fragment_pestania_traslados() {
         // Required empty public constructor
     }
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pestania_traslados,container, false);
 
-        Button btn_traslados = (Button) v.findViewById(R.id.fragment_inventarios);
+       Button btn_traslados = (Button) v.findViewById(R.id.btn_inventarios);
         btn_traslados.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,8 +34,17 @@ public class Fragment_pestania_traslados extends Fragment {
             }
         });
 
-        Button trasladar = (Button) v.findViewById(R.id.pop_up_traslados);
+        Button btnHistorico = (Button) v.findViewById(R.id.btn_hist);
+        btnHistorico.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_pestania_historico()).commit();
+            }
+        });
 
+
+        Button trasladar = (Button) v.findViewById(R.id.pop_up_traslados);
         trasladar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,6 +53,7 @@ public class Fragment_pestania_traslados extends Fragment {
                 dialog.show(getFragmentManager(), "MyCustomDialog");
             }
         });
+
 
         final TableView tabla_inventario = (TableView) v.findViewById(R.id.tabla_inventario);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Producto", "Modificadores", "Categoria", "Existencia");
@@ -75,18 +75,15 @@ public class Fragment_pestania_traslados extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         spinner.setAdapter(adapter);
 
-
         Spinner spinner2 = (Spinner) v.findViewById(R.id.categoria_categoria);
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getContext(), R.array.Categoría, android.R.layout.simple_spinner_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_item);
         spinner2.setAdapter(adapter2);
 
-
         Spinner spinner3 = (Spinner) v.findViewById(R.id.categoria_producto);
         ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(getContext(), R.array.Producto, android.R.layout.simple_spinner_item);
         adapter3.setDropDownViewResource(android.R.layout.simple_spinner_item);
         spinner3.setAdapter(adapter3);
-
 
         return v;
     }
