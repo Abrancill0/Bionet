@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".87"
+        android:layout_weight=".9"
         android:background="@color/fondo_azul"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal">
@@ -41,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".1"
-            android:background="@color/gray"
+            android:background="@color/white"
             android:orientation="vertical"
             android:padding="2dp">
 
@@ -50,18 +52,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="Editar Cliente"
-                android:textColor="@color/white"
-                android:textSize="24sp" />
+                android:text="Crear Cliente"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textView51"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="Edita los campos del cliente"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:text="Llena los campos del cliente"
+                android:textSize="15sp" />
 
         </LinearLayout>
     </LinearLayout>
@@ -69,7 +70,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".12">
+        android:layout_weight=".1">
 
         <LinearLayout
             android:id="@+id/Principal"

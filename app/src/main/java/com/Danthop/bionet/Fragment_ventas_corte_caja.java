@@ -16,6 +16,7 @@ import android.widget.TextView;
 public class Fragment_ventas_corte_caja extends Fragment {
 
     Button pestania_ventas;
+    Button pestania_reporte;
 
 
     public Fragment_ventas_corte_caja() {
@@ -28,6 +29,13 @@ public class Fragment_ventas_corte_caja extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ventas_corte_caja_listado,container, false);
         pestania_ventas = v.findViewById(R.id.Ventas_btn);
+        pestania_reporte = v.findViewById(R.id.btn_pestania_reporte);
+        loadButtons();
+
+        return v;
+    }
+
+    public void loadButtons(){
         pestania_ventas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,7 +43,13 @@ public class Fragment_ventas_corte_caja extends Fragment {
                 fr.replace(R.id.fragment_container,new Fragment_Ventas()).commit();
             }
         });
-        return v;
+        pestania_reporte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_ventas_reporte_ventas()).commit();
+            }
+        });
     }
 
 }
