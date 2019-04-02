@@ -7,40 +7,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.Danthop.bionet.Tables.SortableHistoricoTable;
 import com.Danthop.bionet.Tables.SortableInventariosTable;
-import com.Danthop.bionet.model.InventarioModel;
+import com.Danthop.bionet.model.HistoricoModel;
 import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class HistoricoAdapter extends LongPressAwareTableDataAdapter<InventarioModel> {
+public class HistoricoAdapter extends LongPressAwareTableDataAdapter<HistoricoModel> {
     int TEXT_SIZE = 12;
 
-    public HistoricoAdapter(final Context context, final List<InventarioModel> data, final SortableHistoricoTable tableView) {
+    public HistoricoAdapter(final Context context, final List<HistoricoModel> data, final SortableHistoricoTable tableView) {
         super(context, data, tableView);
     }
 
     @Override
     public View getDefaultCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        InventarioModel Invetario = getRowData(rowIndex);
+        HistoricoModel Historico = getRowData(rowIndex);
         View renderedView = null;
 
         switch (columnIndex) {
             case 0:
-                renderedView = renderart_nombre(Invetario);
+                renderedView = renderart_nombre(Historico);
                 break;
             case 1:
-                renderedView = rendercat_nombre(Invetario);
+                renderedView = rendercat_nombre(Historico);
                 break;
             case 2:
-                renderedView = renderhis_tipo(Invetario);
+                renderedView = renderhis_tipo(Historico);
                 break;
             case 3:
-                renderedView = renderhis_cantidad(Invetario);
+                renderedView = renderhis_cantidad(Historico);
                 break;
             case 4:
-                renderedView = renderhis_observaciones(Invetario);
+                renderedView = renderhis_observaciones(Historico);
                 break;
 
         }
@@ -49,12 +48,12 @@ public class HistoricoAdapter extends LongPressAwareTableDataAdapter<InventarioM
 
     @Override
     public View getLongPressCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        final InventarioModel Invetario = getRowData(rowIndex);
+        final HistoricoModel Historico = getRowData(rowIndex);
         View renderedView = null;
 
         switch (columnIndex) {
             case 1:
-                renderedView = renderEditableInventarioName(Invetario);
+                renderedView = renderEditableInventarioName(Historico);
                 break;
             default:
                 renderedView = getDefaultCellView(rowIndex, columnIndex, parentView);
@@ -63,7 +62,7 @@ public class HistoricoAdapter extends LongPressAwareTableDataAdapter<InventarioM
         return renderedView;
     }
 
-    private View renderEditableInventarioName(final InventarioModel Inventario) {
+    private View renderEditableInventarioName(final HistoricoModel Inventario) {
         final EditText editText = new EditText(getContext());
         editText.setText(Inventario.getNombre_sucursal());
         editText.setPadding(20, 10, 20, 10);
@@ -73,23 +72,23 @@ public class HistoricoAdapter extends LongPressAwareTableDataAdapter<InventarioM
         return editText;
     }
 
-    private View renderart_nombre(final InventarioModel Inventario) {
-        return renderString(Inventario.getArt_nombre());
+    private View renderart_nombre(final HistoricoModel Historico) {
+        return renderString(Historico.getArt_nombre());
     }
 
-    private View rendercat_nombre(final InventarioModel Inventario) {
-        return renderString(Inventario.getCat_nombre());
+    private View rendercat_nombre(final HistoricoModel Historico) {
+        return renderString(Historico.getCat_nombre());
     }
 
-    private View renderhis_tipo(final InventarioModel Inventario) {
-        return renderString(Inventario.getHis_tipo());
+    private View renderhis_tipo(final HistoricoModel Historico) {
+        return renderString(Historico.getHis_tipo());
     }
 
-    private View renderhis_cantidad(final InventarioModel Inventario) {
-        return renderString(Inventario.getHis_cantidad());
+    private View renderhis_cantidad(final HistoricoModel Historico) {
+        return renderString(Historico.getHis_cantidad());
     }
-    private View renderhis_observaciones(final InventarioModel Inventario) {
-        return renderString(Inventario.getHis_observaciones());
+    private View renderhis_observaciones(final HistoricoModel Historico) {
+        return renderString(Historico.getHis_observaciones());
     }
 
     private View renderString(final String value) {
@@ -102,9 +101,9 @@ public class HistoricoAdapter extends LongPressAwareTableDataAdapter<InventarioM
 
     private static class OrdenNameUpdater implements TextWatcher {
 
-        private InventarioModel ordenToUpdate;
+        private HistoricoModel ordenToUpdate;
 
-        public OrdenNameUpdater(InventarioModel ordenToUpdate) {
+        public OrdenNameUpdater(HistoricoModel ordenToUpdate) {
             this.ordenToUpdate = ordenToUpdate;
         }
 

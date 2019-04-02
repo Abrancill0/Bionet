@@ -118,7 +118,6 @@
                         android:background="@drawable/spinner_giro" />
                 </LinearLayout>
 
-
             </LinearLayout>
         </LinearLayout>
 

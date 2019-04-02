@@ -87,8 +87,8 @@
             android:text="Verifica los movimientos del inventario."
             android:textSize="15dp"
             android:textStyle="normal" />
-
     </LinearLayout>
+
 
 
     <LinearLayout
@@ -116,5 +116,5 @@
                 table:tableView_columnCount="5">
             </com.Danthop.bionet.Tables.SortableHistoricoTable>
         </LinearLayout>
-    </LinearLayout>
+</LinearLayout>
 </LinearLayout>

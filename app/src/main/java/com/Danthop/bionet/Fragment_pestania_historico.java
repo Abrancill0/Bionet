@@ -13,38 +13,31 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.Danthop.bionet.Adapters.HistoricoAdapter;
-import com.Danthop.bionet.Adapters.InventarioAdapter;
 import com.Danthop.bionet.Tables.SortableHistoricoTable;
-import com.Danthop.bionet.Tables.SortableInventariosTable;
-import com.Danthop.bionet.model.InventarioModel;
+import com.Danthop.bionet.model.HistoricoModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 public class Fragment_pestania_historico extends Fragment {
-    private String[][] inventarioModel;
-    private List<InventarioModel> inventarios;
+    private String[][] HistoricoModel;
+    private List<HistoricoModel> historico;
     private SortableHistoricoTable tabla_historico;
     private Dialog ver_producto_dialog;
-    private TableDataClickListener<InventarioModel> tablaListener;
+    private TableDataClickListener<HistoricoModel> tablaListener;
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private FragmentTransaction fr;
 
@@ -52,22 +45,23 @@ public class Fragment_pestania_historico extends Fragment {
     private String modificadores;
     private String existencia;
     private String nombre_sucursal;
-    private String producto;
-    private String art_tipo;
-    private String sku;
-    private String articulo_descripcion;
-    private String categoria;
-    private String art_disponible_venta;
-    private String art_disponible_compra;
-    private String ava_aplica_apartados;
-    private String ava_aplica_cambio_devolucion;
-    private String aim_url;
+    private String producto = "";
+    private String art_tipo = "";
+    private String sku = "";
+    private String articulo_descripcion = "";
+    private String categoria = "";
+    private String art_disponible_venta = "";
+    private String art_disponible_compra = "";
+    private String ava_aplica_apartados = "";
+    private String ava_aplica_cambio_devolucion = "";
+    private String aim_url = "";
     private String usu_id;
     private String art_nombre;
     private String cat_nombre;
     private String his_tipo;
     private String his_cantidad;
     private String his_observaciones;
+    private String his_fecha_hora_creo;
 
     public Fragment_pestania_historico() {
         // Required empty public constructor
@@ -97,10 +91,12 @@ public class Fragment_pestania_historico extends Fragment {
             }
         });
 
+        ver_producto_dialog=new Dialog(getContext());
+        ver_producto_dialog.setContentView(R.layout.pop_up_ficha_articulos_historico);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
-        inventarios = new ArrayList<>();
+        historico = new ArrayList<>();
 
         tabla_historico = (SortableHistoricoTable) v.findViewById(R.id.tabla_historico);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Movimiento", "Cantidad", "Observaciones");
@@ -116,9 +112,6 @@ public class Fragment_pestania_historico extends Fragment {
         tabla_historico.setHeaderAdapter(simpleHeader);
         tabla_historico.setColumnModel(tableColumnWeightModel);
 
-        ver_producto_dialog=new Dialog(getContext());
-        ver_producto_dialog.setContentView(R.layout.pop_up_ficha_articulos);
-
         Muestra_historico();
         LoadListenerTable();
 
@@ -129,7 +122,7 @@ public class Fragment_pestania_historico extends Fragment {
                 tabla_historico.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        //inventarios.clear();
+                        historico.clear();
                         //Muestra_Inventario();
                         refreshIndicator.hide();
                     }
@@ -157,6 +150,7 @@ public class Fragment_pestania_historico extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 JSONObject Resultado = null;
+                JSONObject RespuestaFecha = null;
                 JSONArray Historicos = null;
                 JSONArray imagenes = null;
                 JSONArray Articulo = null;
@@ -165,71 +159,76 @@ public class Fragment_pestania_historico extends Fragment {
                 try {
                     int status = Integer.parseInt(response.getString("estatus"));
                     String Mensaje = response.getString("mensaje");
+
                     if (status == 1) {
                         Resultado = response.getJSONObject("resultado");
 
-                            Articulo = Resultado.getJSONArray("Articulos");
-                            inventarioModel = new String[Articulo.length()][4];
+//---------------------------------------------------------------------------------------
+                        Articulo = Resultado.getJSONArray("Articulos");
+                        HistoricoModel = new String[Articulo.length()][4];
 
-                            for (int x = 0; x < Articulo.length(); x++) {
-                                JSONObject elementoA = Articulo.getJSONObject(x);
+                        for (int x = 0; x < Articulo.length(); x++) {
+                            JSONObject elemento = Articulo.getJSONObject(x);
 
-                                RespuestaUUID = elementoA.getJSONObject("art_id");
-                                String UUID = RespuestaUUID.getString("uuid");
+                            RespuestaUUID = elemento.getJSONObject("art_id");
+                            String UUID = RespuestaUUID.getString("uuid");
 
-                                sku = elementoA.getString("ava_sku");
-                                producto = elementoA.getString("art_nombre");
-                                categoria = elementoA.getString("cat_nombre");
-                                articulo_descripcion = elementoA.getString("art_descripcion");
-                                art_tipo = elementoA.getString("art_tipo");
+                            sku = elemento.getString("ava_sku");
+                            producto = elemento.getString("art_nombre");
+                            categoria = elemento.getString("cat_nombre");
+                            articulo_descripcion = elemento.getString("art_descripcion");
+                            art_tipo = elemento.getString("art_tipo");
 
-                                Boolean Disponible_venta = Boolean.valueOf(elementoA.getString("art_disponible_venta"));
-                                if (Disponible_venta == true) {
-                                    art_disponible_venta = "si";
-                                } else {
-                                    art_disponible_venta = "no";
-                                }
-
-                                Boolean Disponible_compra = Boolean.valueOf(elementoA.getString("art_disponible_compra"));
-                                if (Disponible_compra == true) {
-                                    art_disponible_compra = "si";
-                                } else {
-                                    art_disponible_compra = "no";
-                                }
-
-                                Boolean Disponible_apartados = Boolean.valueOf(elementoA.getString("ava_aplica_apartados"));
-                                if (Disponible_apartados == true) {
-                                    ava_aplica_apartados = "si";
-                                } else {
-                                    ava_aplica_apartados = "no";
-                                }
-
-                                Boolean Disponible_devoluciones = Boolean.valueOf(elementoA.getString("ava_aplica_cambio_devolucion"));
-                                if (Disponible_devoluciones == true) {
-                                    ava_aplica_cambio_devolucion = "si";
-                                } else {
-                                    ava_aplica_cambio_devolucion = "no";
-                                }
-
-                                imagenes = elementoA.getJSONArray("imagenes");
-                                JSONObject elemento3 = imagenes.getJSONObject(0);
-                                aim_url = getString(R.string.Url) + elemento3.getString("aim_url");
+                            Boolean Disponible_venta = Boolean.valueOf(elemento.getString("art_disponible_venta"));
+                            if (Disponible_venta == true) {
+                                art_disponible_venta = "si";
+                            } else {
+                                art_disponible_venta = "no";
                             }
 
+                            Boolean Disponible_compra = Boolean.valueOf(elemento.getString("art_disponible_compra"));
+                            if (Disponible_compra == true) {
+                                art_disponible_compra = "si";
+                            } else {
+                                art_disponible_compra = "no";
+                            }
+
+                            Boolean Disponible_apartados = Boolean.valueOf(elemento.getString("ava_aplica_apartados"));
+                            if (Disponible_apartados == true) {
+                                ava_aplica_apartados = "si";
+                            } else {
+                                ava_aplica_apartados = "no";
+                            }
+
+                            Boolean Disponible_devoluciones = Boolean.valueOf(elemento.getString("ava_aplica_cambio_devolucion"));
+                            if (Disponible_devoluciones == true) {
+                                ava_aplica_cambio_devolucion = "si";
+                            } else {
+                                ava_aplica_cambio_devolucion = "no";
+                            }
+
+                            imagenes = elemento.getJSONArray("imagenes");
+                            JSONObject elemento3 = imagenes.getJSONObject(0);
+                            aim_url = getString(R.string.Url) + elemento3.getString("aim_url");
+                        }
+//---------------------------------------------------------------------------------------
+
                         Historicos = Resultado.getJSONArray("Historicos");
-                        inventarioModel = new String[Historicos.length()][4];
+                        //inventarioModel = new String[Historicos.length()][4];
 
-                        for (int x = 0; x < Historicos.length(); x++) {
-                            JSONObject elemento = Historicos.getJSONObject(x);
+                        for (int y = 0; y < Historicos.length(); y++) {
+                            JSONObject elementos = Historicos.getJSONObject(y);
 
-                            art_nombre = elemento.getString("art_nombre");
-                            cat_nombre = elemento.getString("cat_nombre");
-                            his_tipo = elemento.getString("his_tipo");
-                            his_cantidad = elemento.getString("his_cantidad");
-                            his_observaciones = elemento.getString("his_observaciones");
+                            art_nombre = elementos.getString("art_nombre");
+                            cat_nombre = elementos.getString("cat_nombre");
+                            his_tipo = elementos.getString("his_tipo");
+                            his_cantidad = elementos.getString("his_cantidad");
+                            his_observaciones = elementos.getString("his_observaciones");
 
+                            /*RespuestaFecha = elementos.getJSONObject("his_fecha_hora_creo");
+                            String Fecha = RespuestaFecha.getString("");*/
 
-                            final InventarioModel inventario = new InventarioModel(
+                            final HistoricoModel historicos = new HistoricoModel(
                                     sku,
                                     producto,
                                     existencia,
@@ -248,12 +247,13 @@ public class Fragment_pestania_historico extends Fragment {
                                     cat_nombre,
                                     his_tipo,
                                     his_cantidad,
-                                    his_observaciones);
-                            inventarios.add(inventario);
-
+                                    his_observaciones,
+                                    his_fecha_hora_creo);
+                            historico.add(historicos);
                         }
-                    }final HistoricoAdapter HistoricoAdapter = new HistoricoAdapter(getContext(), inventarios, tabla_historico);
-                    tabla_historico.setDataAdapter(HistoricoAdapter);
+                        final HistoricoAdapter HistoricoAdapter = new HistoricoAdapter(getContext(), historico, tabla_historico);
+                         tabla_historico.setDataAdapter(HistoricoAdapter);
+                     }
                 } catch (JSONException e) {
                     Toast toast1 =
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
@@ -274,12 +274,12 @@ public class Fragment_pestania_historico extends Fragment {
     }
 
     private void LoadListenerTable(){
-        tablaListener = new TableDataClickListener<InventarioModel>() {
+        tablaListener = new TableDataClickListener<HistoricoModel>() {
             @Override
-            public void onDataClicked(int rowIndex, final InventarioModel clickedData) {
+            public void onDataClicked(int rowIndex, final HistoricoModel clickedData) {
                 final Dialog ver_producto_dialog;
                 ver_producto_dialog = new Dialog(getContext());
-                ver_producto_dialog.setContentView(R.layout.pop_up_ficha_articulos);
+                ver_producto_dialog.setContentView(R.layout.pop_up_ficha_articulos_historico);
                 ver_producto_dialog.show();
 
                 TextView nombre_producto = ver_producto_dialog.findViewById(R.id.articulo_nombre);

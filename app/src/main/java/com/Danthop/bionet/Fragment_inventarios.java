@@ -76,6 +76,7 @@ public class Fragment_inventarios extends Fragment {
     private String his_tipo;
     private String his_cantidad;
     private String his_observaciones;
+    private String his_fecha_hora_creo;
 
 
     public Fragment_inventarios() {
@@ -201,37 +202,36 @@ public class Fragment_inventarios extends Fragment {
                             art_tipo = elemento.getString("art_tipo");
 
                             Boolean Disponible_venta = Boolean.valueOf(elemento.getString("art_disponible_venta"));
-                            if (Disponible_venta == true){
+                            if (Disponible_venta == true) {
                                 art_disponible_venta = "si";
-                            }else{
+                            } else {
                                 art_disponible_venta = "no";
                             }
 
                             Boolean Disponible_compra = Boolean.valueOf(elemento.getString("art_disponible_compra"));
-                            if (Disponible_compra == true){
+                            if (Disponible_compra == true) {
                                 art_disponible_compra = "si";
-                            }else{
+                            } else {
                                 art_disponible_compra = "no";
                             }
 
                             Boolean Disponible_apartados = Boolean.valueOf(elemento.getString("ava_aplica_apartados"));
-                            if (Disponible_apartados == true){
+                            if (Disponible_apartados == true) {
                                 ava_aplica_apartados = "si";
-                            }else{
+                            } else {
                                 ava_aplica_apartados = "no";
                             }
 
                             Boolean Disponible_devoluciones = Boolean.valueOf(elemento.getString("ava_aplica_cambio_devolucion"));
-                            if (Disponible_devoluciones == true){
+                            if (Disponible_devoluciones == true) {
                                 ava_aplica_cambio_devolucion = "si";
-                            }else{
+                            } else {
                                 ava_aplica_cambio_devolucion = "no";
                             }
 
-                            imagenes = elemento.getJSONArray( "imagenes");
+                            imagenes = elemento.getJSONArray("imagenes");
                             JSONObject elemento3 = imagenes.getJSONObject(0);
                             aim_url = getString(R.string.Url) + elemento3.getString("aim_url");
-
 
                             String NombreVariante = elemento.getString("ava_nombre");
                             Boolean Modificadores = Boolean.valueOf(elemento.getString("ava_tiene_modificadores"));
@@ -275,14 +275,15 @@ public class Fragment_inventarios extends Fragment {
                                             cat_nombre,
                                             his_tipo,
                                             his_cantidad,
-                                            his_observaciones);
+                                            his_observaciones,
+                                            his_fecha_hora_creo);
                                     inventarios.add(inventario);
                                 }
                             }
-                        }
-                    }final InventarioAdapter InventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario);
-                    tabla_inventario.setDataAdapter(InventarioAdapter);
 
+                        }final InventarioAdapter InventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario);
+                        tabla_inventario.setDataAdapter(InventarioAdapter);
+                    }
                 } catch (JSONException e) {
                     Toast toast1 =
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);

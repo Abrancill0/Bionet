@@ -5,13 +5,14 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import com.Danthop.bionet.R;
+import com.Danthop.bionet.model.HistoricoModel;
 import com.Danthop.bionet.model.InventarioModel;
 
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
-public class SortableHistoricoTable extends SortableTableView<InventarioModel> {
+public class SortableHistoricoTable extends SortableTableView<HistoricoModel> {
     public SortableHistoricoTable(final Context context) {
         this(context, null);
     }
@@ -36,7 +37,7 @@ public class SortableHistoricoTable extends SortableTableView<InventarioModel> {
         tableColumnWeightModel.setColumnWeight(3, 1);
         setColumnModel(tableColumnWeightModel);
 
-        setColumnComparator(0, ComparatorInventario.getInventarioNameComparator());
+        setColumnComparator(0, ComparatorInventarioHistorico.getInventarioNameComparator());
 
     }
 }

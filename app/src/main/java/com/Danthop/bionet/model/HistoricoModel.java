@@ -1,7 +1,7 @@
 package com.Danthop.bionet.model;
 import android.print.PrinterId;
 
-public class InventarioModel {
+public class HistoricoModel {
 
     private String sku;
     private String producto;
@@ -26,7 +26,7 @@ public class InventarioModel {
 
 
 
-    public InventarioModel(String sku,
+    public HistoricoModel(String sku,
                            String producto,
                            String existencia,
                            String categoria,

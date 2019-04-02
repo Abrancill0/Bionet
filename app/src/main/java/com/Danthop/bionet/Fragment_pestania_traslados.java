@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 
+import com.Danthop.bionet.Tables.SortableHistoricoTable;
+import com.Danthop.bionet.Tables.SortableInventariosTable;
+
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
@@ -56,13 +59,13 @@ public class Fragment_pestania_traslados extends Fragment {
 
 
         final TableView tabla_inventario = (TableView) v.findViewById(R.id.tabla_inventario);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Producto", "Modificadores", "Categoria", "Existencia");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Origen", "Destino", "Artículos", "Cantidad", "Estatus");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
         tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 2);
-        tableColumnWeightModel.setColumnWeight(2, 3);
+        tableColumnWeightModel.setColumnWeight(2, 2);
         tableColumnWeightModel.setColumnWeight(3, 2);
         tableColumnWeightModel.setColumnWeight(4, 2);
 
