@@ -45,6 +45,7 @@ public class Fragment_Ventas extends Fragment {
 
     private Button btn_agregar_cliente;
     private Button btn_agregar_vendedor;
+    private Button btn_agregar_articulo;
     private Button btn_reporte;
     private Button crear_cliente;
     private Button aceptar_agregar_vendedor;
@@ -106,6 +107,8 @@ public class Fragment_Ventas extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
         fr = getFragmentManager().beginTransaction();
+        dialog=new Dialog(getContext());
+
 
         ImageListener imageListener = new ImageListener() {
             @Override
@@ -116,6 +119,7 @@ public class Fragment_Ventas extends Fragment {
         carouselView.setImageListener(imageListener);
         btn_agregar_cliente = v.findViewById(R.id.btn_agregar_cliente);
         btn_agregar_vendedor = v.findViewById(R.id.btn_agregar_vendedor);
+        btn_agregar_articulo = v.findViewById(R.id.btn_agregar_articulo);
         btn_reporte = v.findViewById(R.id.btn_reporte);
         Corte_Caja = v.findViewById(R.id.CorteCaja);
         VendedorName=new ArrayList<>();
@@ -162,7 +166,6 @@ public class Fragment_Ventas extends Fragment {
         btn_agregar_vendedor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog=new Dialog(getContext());
                 dialog.setContentView(R.layout.pop_up_ventas_agregar_vendedor);
                 dialog.show();
                 VendedorName.add("Roberto Carrera");
@@ -192,6 +195,14 @@ public class Fragment_Ventas extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja()).commit();
+            }
+        });
+
+        btn_agregar_articulo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.setContentView(R.layout.pop_up_ventas_seleccionar_articulo);
+                dialog.show();
             }
         });
 
