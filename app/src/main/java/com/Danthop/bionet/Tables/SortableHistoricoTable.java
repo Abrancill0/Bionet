@@ -36,7 +36,6 @@ public class SortableHistoricoTable extends SortableTableView<HistoricoModel> {
         tableColumnWeightModel.setColumnWeight(3, 1);
         tableColumnWeightModel.setColumnWeight(3, 1);
         setColumnModel(tableColumnWeightModel);
-
         setColumnComparator(0, ComparatorInventarioHistorico.getInventarioNameComparator());
 
     }

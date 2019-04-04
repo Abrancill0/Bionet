@@ -87,7 +87,7 @@ public class Fragment_pestania_historico extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_traslados()).commit();
+                fr.replace(R.id.fragment_container,new Fragment_pestania_traslado()).commit();
             }
         });
 

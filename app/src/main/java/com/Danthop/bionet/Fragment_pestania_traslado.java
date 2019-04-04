@@ -11,17 +11,14 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 
-import com.Danthop.bionet.Tables.SortableHistoricoTable;
-import com.Danthop.bionet.Tables.SortableInventariosTable;
-
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Fragment_pestania_traslados extends Fragment {
-    public Fragment_pestania_traslados() {
+public class Fragment_pestania_traslado extends Fragment {
+    public Fragment_pestania_traslado() {
         // Required empty public constructor
     }
     @Override
@@ -52,11 +49,20 @@ public class Fragment_pestania_traslados extends Fragment {
             @Override
             public void onClick(View v) {
                 Fragment_pop_up_traslados dialog = new Fragment_pop_up_traslados();
-                dialog.setTargetFragment(Fragment_pestania_traslados.this, 1);
+                dialog.setTargetFragment(Fragment_pestania_traslado.this, 1);
                 dialog.show(getFragmentManager(), "MyCustomDialog");
             }
         });
 
+        Button agregar = (Button) v.findViewById(R.id.btnAgregarProd);
+        agregar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment_pop_up_agrear_puntoReorden dialog = new Fragment_pop_up_agrear_puntoReorden();
+                dialog.setTargetFragment(Fragment_pestania_traslado.this, 1);
+                dialog.show(getFragmentManager(), "MyCustomDialog");
+            }
+        });
 
         final TableView tabla_inventario = (TableView) v.findViewById(R.id.tabla_inventario);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Origen", "Destino", "Artículos", "Cantidad", "Estatus");
