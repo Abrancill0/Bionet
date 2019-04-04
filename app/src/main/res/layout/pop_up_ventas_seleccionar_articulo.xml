@@ -28,7 +28,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".8"
+                android:layout_weight=".9"
                 android:orientation="vertical">
 
                 <android.support.constraint.ConstraintLayout
@@ -40,7 +40,7 @@
                     <ImageView
                         android:id="@+id/imageView9"
                         android:layout_width="88dp"
-                        android:layout_height="0dp"
+                        android:layout_height="wrap_content"
                         android:src="@drawable/seleccionar_producto"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +52,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".7"
+                android:layout_weight=".85"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -75,13 +75,12 @@
 
                     <SearchView
                         android:layout_width="276dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
                         android:background="@drawable/shape_gray"
                         android:hint="Busqueda"
                         android:iconifiedByDefault="false"
                         android:orientation="horizontal"
-                        android:padding="3dp"
                         android:queryHint="Buscar" />
                 </LinearLayout>
 
@@ -90,11 +89,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".5"
+                android:layout_weight=".4"
                 android:orientation="vertical">
 
-                <com.Danthop.bionet.Tables.SortableArticulosTable
-                    android:id="@+id/tabla_clientes"
+                <com.Danthop.bionet.Tables.SortableSeleccionarArticuloTable
+                    android:id="@+id/tabla_seleccionar_articulos"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight=".7"
@@ -102,7 +101,7 @@
                     app:tableView_headerColor="@color/white"
                     table:tableView_columnCount="4">
 
-                </com.Danthop.bionet.Tables.SortableArticulosTable>
+                </com.Danthop.bionet.Tables.SortableSeleccionarArticuloTable>
 
                 <LinearLayout
                     android:id="@+id/Tabla_vacia"
@@ -126,15 +125,6 @@
 
             </LinearLayout>
         </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight=".9"
-        android:orientation="horizontal"
-        android:background="@color/colorPrimaryDark">
 
     </LinearLayout>
 

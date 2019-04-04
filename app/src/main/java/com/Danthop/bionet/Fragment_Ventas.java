@@ -19,8 +19,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.ArticuloAdapter;
 import com.Danthop.bionet.Adapters.ClienteAdapter;
+import com.Danthop.bionet.Adapters.SeleccionarArticuloVentaAdapter;
+import com.Danthop.bionet.Tables.SortableArticulosTable;
 import com.Danthop.bionet.Tables.SortableClientesTable;
+import com.Danthop.bionet.Tables.SortableSeleccionarArticuloTable;
+import com.Danthop.bionet.Tables.SortableVentaArticulos;
+import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -83,9 +89,15 @@ public class Fragment_Ventas extends Fragment {
     private String correo_igual;
     private String direccion_igual;
     private SortableClientesTable tabla_clientes;
+    private SortableSeleccionarArticuloTable tabla_selecciona_articulo;
+    private SortableVentaArticulos tabla_venta_articulos;
+
 
     private List<ClienteModel> clientes;
+    private List<ArticuloModel> Articulos;
     private FragmentTransaction fr;
+
+    private CarouselView carouselView;
 
 
 
@@ -99,25 +111,15 @@ public class Fragment_Ventas extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ventas,container, false);
 
-        final int[] sampleImages = {R.drawable.milk, R.drawable.bread, R.drawable.strawberrie, R.drawable.lake};
-        CarouselView carouselView;
-        carouselView = (CarouselView) v.findViewById(R.id.carouselView);
-        carouselView.setPageCount(sampleImages.length);
-        carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+
+
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
         fr = getFragmentManager().beginTransaction();
         dialog=new Dialog(getContext());
 
-
-        ImageListener imageListener = new ImageListener() {
-            @Override
-            public void setImageForPosition(int position, ImageView imageView) {
-                imageView.setImageResource(sampleImages[position]);
-            }
-        };
-        carouselView.setImageListener(imageListener);
+        carouselView = (CarouselView) v.findViewById(R.id.carouselView);
         btn_agregar_cliente = v.findViewById(R.id.btn_agregar_cliente);
         btn_agregar_vendedor = v.findViewById(R.id.btn_agregar_vendedor);
         btn_agregar_articulo = v.findViewById(R.id.btn_agregar_articulo);
@@ -126,9 +128,29 @@ public class Fragment_Ventas extends Fragment {
         Corte_Caja = v.findViewById(R.id.CorteCaja);
         VendedorName=new ArrayList<>();
 
+        tabla_venta_articulos=v.findViewById(R.id.tabla_venta_articulos);
+        tabla_venta_articulos.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
+
+
+        LoadImages();
         LoadButtons();
 
+
         return v;
+    }
+
+    public void LoadImages()
+    {
+        final int[] sampleImages = {R.drawable.milk, R.drawable.bread, R.drawable.strawberrie, R.drawable.lake};
+        carouselView.setPageCount(sampleImages.length);
+        carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+        ImageListener imageListener = new ImageListener() {
+            @Override
+            public void setImageForPosition(int position, ImageView imageView) {
+                imageView.setImageResource(sampleImages[position]);
+            }
+        };
+        carouselView.setImageListener(imageListener);
     }
 
     public void LoadButtons()
@@ -205,6 +227,9 @@ public class Fragment_Ventas extends Fragment {
             public void onClick(View v) {
                 dialog.setContentView(R.layout.pop_up_ventas_seleccionar_articulo);
                 dialog.show();
+                tabla_selecciona_articulo = dialog.findViewById(R.id.tabla_seleccionar_articulos);
+                tabla_selecciona_articulo.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
+                CargaArticulos();
             }
         });
 
@@ -393,6 +418,130 @@ public class Fragment_Ventas extends Fragment {
 
     public void LoadDatos(){
         btn_agregar_cliente.setText(nombre);
+    }
+
+    private void CargaArticulos(){
+
+        try {
+
+            String url = getString(R.string.Url);
+
+            String ApiPath = url + "/api/articulos/index_app/?usu_id=" + usu_id + "&esApp=1";
+
+            // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            JSONArray RespuestaResultado = null;
+                            JSONArray RespuestaImagenes = null;
+                            JSONObject RespuestaUUID = null;
+                            JSONObject RespuestaPrecio=null;
+                            JSONObject RespuestaPrecioModificador=null;
+                            JSONArray RespuestaModificadores = null;
+
+                            String RutaImagen1="";
+                            String RutaImagen2="";
+
+                            try {
+
+                                int EstatusApi = Integer.parseInt(response.getString("estatus"));
+
+                                Articulos = new ArrayList<>();
+
+                                if (EstatusApi == 1) {
+
+                                    RespuestaResultado = response.getJSONArray("resultado");
+
+                                    // sacar la ruta de las imagenes y mandarlo en el modelo
+
+                                    for (int x = 0; x < RespuestaResultado.length(); x++) {
+                                        JSONObject elemento = RespuestaResultado.getJSONObject(x);
+
+                                        RespuestaUUID = elemento.getJSONObject("art_id");
+                                        String UUID = RespuestaUUID.getString( "uuid");
+
+                                        RespuestaPrecio =  elemento.getJSONObject( "ava_precio");
+                                        String Precio = RespuestaPrecio.getString( "value");
+                                        //VERIFICAR MODIFICADORES
+                                        String NombreCompleto="";
+                                        String NombreArticulo = elemento.getString("art_nombre");
+                                        String NombreVariante = elemento.getString( "ava_nombre");
+                                        String Descripcion = elemento.getString( "art_descripcion");
+                                        String Categoria = elemento.getString("cat_nombre");
+                                        String SKU = elemento.getString("ava_sku");
+
+                                        String NombreModificador="";
+                                        String Modificadores = elemento.getString( "ava_tiene_modificadores");
+
+                                        RespuestaImagenes = elemento.getJSONArray( "imagenes");
+
+                                        for (int z = 0; z < RespuestaImagenes.length(); z++) {
+
+                                            JSONObject elemento3 = RespuestaImagenes.getJSONObject(z);
+
+                                            if(RutaImagen1.equals("")) {
+                                                RutaImagen1 = elemento3.getString( "aim_url");
+                                            }
+                                            else
+                                            {
+                                                RutaImagen2 = elemento3.getString( "aim_url");
+                                            }
+
+                                        }
+
+                                        if (Modificadores == "true"){
+                                            RespuestaModificadores = elemento.getJSONArray( "modificadores");
+
+                                            for (int i = 0; i < RespuestaModificadores.length(); i++) {
+
+                                                JSONObject elemento2 = RespuestaModificadores.getJSONObject(i);
+                                                NombreModificador = elemento2.getString( "mod_nombre");
+                                                RespuestaPrecioModificador = elemento2.getJSONObject( "amo_precio");
+
+                                                Precio = RespuestaPrecioModificador.getString( "value");
+
+                                                NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
+
+                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
+                                                        RutaImagen2,SKU,Categoria);
+                                                Articulos.add(Articulo);
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
+
+                                            final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
+                                                    RutaImagen2,SKU,Categoria);
+                                            Articulos.add(Articulo);
+                                        }
+                                    }
+                                    final SeleccionarArticuloVentaAdapter ArticuloAdapter = new SeleccionarArticuloVentaAdapter(getContext(), Articulos, tabla_selecciona_articulo);
+                                    tabla_selecciona_articulo.setDataAdapter(ArticuloAdapter);
+
+                                }
+                            } catch (JSONException e) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(e), Toast.LENGTH_LONG);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf(error), Toast.LENGTH_LONG);
+                        }
+                    }
+            );
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+        } catch (Error e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -86,7 +86,7 @@
                 android:id="@+id/layout_titulo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".8"
+                android:layout_weight=".9"
                 android:orientation="vertical"
                 android:padding="20dp">
 
@@ -107,18 +107,19 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btn_movimientos"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".95"
-                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
 
                 <TextView
-                    android:id="@+id/textView55"
+                    android:id="@+id/pestaniaMovimientos"
+                    android:layout_marginLeft="50dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:drawableRight="@drawable/ic_flecha_abajo"
+                    android:drawableLeft="@drawable/ic_flecha_abajo"
                     android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="Movimientos"
@@ -158,17 +159,18 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btn_apartado"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".95"
-                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView59"
+                    android:id="@+id/pestaniaApartados"
+                    android:layout_marginLeft="50dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:drawableRight="@drawable/ic_flecha_abajo"
+                    android:drawableLeft="@drawable/ic_flecha_abajo"
                     android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="Apartado"
@@ -184,20 +186,21 @@
                 android:visibility="gone"></LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btn_ordenes_especiales"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".95"
-                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView60"
+                    android:id="@+id/pestaniaOrdenesEspeciales"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:drawableRight="@drawable/ic_flecha_abajo"
+                    android:drawableLeft="@drawable/ic_flecha_abajo"
                     android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="Órdenes Especiales"
+                    android:layout_marginLeft="50dp"
                     android:textColor="@color/colorPrimaryDark" />
             </LinearLayout>
 

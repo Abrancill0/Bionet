@@ -176,7 +176,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
                                                 NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
-                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,RutaImagen2);
+                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,RutaImagen2,"","");
                                                 Articulos.add(Articulo);
                                             }
 
@@ -185,7 +185,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                                         {
                                             NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
-                                            final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,RutaImagen2);
+                                            final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,RutaImagen2,"","");
                                             Articulos.add(Articulo);
                                         }
                                     }
