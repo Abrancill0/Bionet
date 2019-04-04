@@ -400,6 +400,14 @@ public class Fragment_ecomerce extends Fragment {
                 toast1.show();
 
                 progreso.hide();
+
+                try {
+                    JSONObject jsonObj = new JSONObject("{\"Estatus\":\"0\"}");
+
+                    RespuestaTodo = jsonObj;
+                } catch (JSONException ea) {
+                    e.printStackTrace();
+                }
             }
 
         } catch (Error e) {
@@ -411,7 +419,15 @@ public class Fragment_ecomerce extends Fragment {
             toast1.show();
 
             progreso.hide();
-            progreso.hide();
+
+            try {
+                JSONObject jsonObj = new JSONObject("{\"Estatus\":\"0\"}");
+
+                RespuestaTodo = jsonObj;
+            } catch (JSONException ee) {
+                e.printStackTrace();
+            }
+
 
         }
 
@@ -560,6 +576,15 @@ public class Fragment_ecomerce extends Fragment {
                             toast1.show();
 
                             progreso.hide();
+
+                            try {
+                                JSONObject jsonObj = new JSONObject("{\"Estatus\":\"0\"}");
+
+                                RespuestaTodo = jsonObj;
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     }
             );

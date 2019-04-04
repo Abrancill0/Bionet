@@ -84,7 +84,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                              Bundle savedInstanceState) {
         v = inflater.inflate( R.layout.fragment_ecommerce_sincronizar, container, false );
 
-        FichaTecnica = new Dialog(getContext());
+        FichaTecnica = new Dialog( getContext() );
 
         Sincronizaciones = new ArrayList<>();
 
@@ -97,12 +97,11 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
         Bundle bundle = getArguments();
 
-        if (bundle == null)
-        {
-            LoadTable();
-        }
-        else
-        {
+        int resultado = 0;
+
+        if (bundle == null) {
+            resultado = LoadTable();
+        } else {
             String json = bundle.getString( "Resultado" );
 
             RespuestaTodo = bundle.getString( "Resultado" );
@@ -116,87 +115,84 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
             }
         }
 
-
-
         btn_alta_articulo = (Button) v.findViewById( R.id.btn_alta_articulo );
 
         LoadButtons();
         LoadSpinners();
         // LoadTable();
 
-        tabla_sincronizar.setSwipeToRefreshEnabled( true );
-        tabla_sincronizar.setSwipeToRefreshListener( new SwipeToRefreshListener() {
-            @Override
-            public void onRefresh(final RefreshIndicator refreshIndicator) {
-                tabla_sincronizar.postDelayed( new Runnable() {
-                    @Override
-                    public void run() {
-                        Sincronizaciones.clear();
-                        LoadTable();
-                        refreshIndicator.hide();
-                    }
-                }, 2000 );
-            }
-        } );
+            tabla_sincronizar.setSwipeToRefreshEnabled( true );
+            tabla_sincronizar.setSwipeToRefreshListener( new SwipeToRefreshListener() {
+                @Override
+                public void onRefresh(final RefreshIndicator refreshIndicator) {
+                    tabla_sincronizar.postDelayed( new Runnable() {
+                        @Override
+                        public void run() {
+                            Sincronizaciones.clear();
+                            LoadTable();
+                            refreshIndicator.hide();
+                        }
+                    }, 2000 );
+                }
+            } );
+
 
         tabla_sincronizar.addDataClickListener( new TableDataClickListener<SincronizarModel>() {
             @Override
             public void onDataClicked(int rowIndex, final SincronizarModel clickedData) {
 
-               FichaTecnica.setContentView(R.layout.pop_up_ecommerce_ficha_tecnica_articulo);
-               FichaTecnica.show();
+                FichaTecnica.setContentView( R.layout.pop_up_ecommerce_ficha_tecnica_articulo );
+                FichaTecnica.show();
 
-               ImageView FotoProducto = FichaTecnica.findViewById(R.id.image_ficha_Producto);
-               TextView NombrePublicacion = FichaTecnica.findViewById(R.id.text_ficha_nombre_publicacion);
-               TextView DescricpionArticulo = FichaTecnica.findViewById(R.id.text_ficha_descripcion_articulo);
-               TextView DescripcionCategoria = FichaTecnica.findViewById(R.id.text_ficha_descripcion_categoria);
-               TextView Precio = FichaTecnica.findViewById(R.id.text_ficha_precio);
-               TextView Envio = FichaTecnica.findViewById(R.id.text_ficha_envio);
+                ImageView FotoProducto = FichaTecnica.findViewById( R.id.image_ficha_Producto );
+                TextView NombrePublicacion = FichaTecnica.findViewById( R.id.text_ficha_nombre_publicacion );
+                TextView DescricpionArticulo = FichaTecnica.findViewById( R.id.text_ficha_descripcion_articulo );
+                TextView DescripcionCategoria = FichaTecnica.findViewById( R.id.text_ficha_descripcion_categoria );
+                TextView Precio = FichaTecnica.findViewById( R.id.text_ficha_precio );
+                TextView Envio = FichaTecnica.findViewById( R.id.text_ficha_envio );
 
-               final EditText Cantidad  = (EditText)FichaTecnica.findViewById(R.id.text_ficha_cantidad);
+                final EditText Cantidad = (EditText) FichaTecnica.findViewById( R.id.text_ficha_cantidad );
 
-               Cantidad.setText(clickedData.getDisponible());
+                Cantidad.setText( clickedData.getDisponible() );
 
-                final TextView EstadoArticulo =FichaTecnica.findViewById(R.id.text_ficha_estado_Articulo);
+                final TextView EstadoArticulo = FichaTecnica.findViewById( R.id.text_ficha_estado_Articulo );
 
 
-               Button BtnActivarPublicacion =FichaTecnica.findViewById(R.id.btnFichaActivarPublicacion);
-               Button BtnCerrarPublicacion =FichaTecnica.findViewById(R.id.btnFichaCerrarPublicacion);
-               Button BtnPausarPublicacion =FichaTecnica.findViewById(R.id.btnFichaPausarPublicacion);
-               Button BtnEliminarPublicacion =FichaTecnica.findViewById(R.id.btnFichEliminarPublicacion);
+                Button BtnActivarPublicacion = FichaTecnica.findViewById( R.id.btnFichaActivarPublicacion );
+                Button BtnCerrarPublicacion = FichaTecnica.findViewById( R.id.btnFichaCerrarPublicacion );
+                Button BtnPausarPublicacion = FichaTecnica.findViewById( R.id.btnFichaPausarPublicacion );
+                Button BtnEliminarPublicacion = FichaTecnica.findViewById( R.id.btnFichEliminarPublicacion );
 
-              // Button BtnRepublicarPublicacion =FichaTecnica.findViewById(R.id.btnFichEliminarPublicacion);
-               Button BtnActualizarInventarioPublicacion =FichaTecnica.findViewById(R.id.btnFichaActualizarCantidad);
+                // Button BtnRepublicarPublicacion =FichaTecnica.findViewById(R.id.btnFichEliminarPublicacion);
+                Button BtnActualizarInventarioPublicacion = FichaTecnica.findViewById( R.id.btnFichaActualizarCantidad );
 
-               //btnFichEliminarPublicacion
+                //btnFichEliminarPublicacion
 
-                imageLoader.displayImage(clickedData.getImagen(),FotoProducto);
+                imageLoader.displayImage( clickedData.getImagen(), FotoProducto );
 
-                NombrePublicacion.setText( clickedData.getArticulo());
-                DescricpionArticulo.setText( clickedData.getDescripcionLarga());
+                NombrePublicacion.setText( clickedData.getArticulo() );
+                DescricpionArticulo.setText( clickedData.getDescripcionLarga() );
 
-                double Importe = Double.parseDouble( clickedData.getPrecio());
+                double Importe = Double.parseDouble( clickedData.getPrecio() );
                 NumberFormat formatter = NumberFormat.getCurrencyInstance();
-                Precio.setText( formatter.format(Importe));
+                Precio.setText( formatter.format( Importe ) );
 
-                DescripcionCategoria.setText( clickedData.getCategoria());
+                DescripcionCategoria.setText( clickedData.getCategoria() );
 
-                Envio.setText( clickedData.getEnvio_gratis());
-                EstadoArticulo.setText(clickedData.getEstadoOrden());
+                Envio.setText( clickedData.getEnvio_gratis() );
+                EstadoArticulo.setText( clickedData.getEstadoOrden() );
 
 
                 BtnActivarPublicacion.setOnClickListener( new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                       String Estatus = String.valueOf( EstadoArticulo.getText() );
+                        String Estatus = String.valueOf( EstadoArticulo.getText() );
 
-                        if (Estatus.equals("paused")){
-                            ActivarPublicacion(clickedData.getIDPublicacion());
-                        }
-                        else
-                        {
-                            Toast.makeText(getContext(), "La publicacion debe de estar en estatus pausa", Toast.LENGTH_LONG).show();
+                        if (Estatus.equals( "paused" )) {
+                            ActivarPublicacion( clickedData.getIDPublicacion() );
+                        } else {
+                            Toast.makeText( getContext(), "La publicacion debe de estar en estatus pausa", Toast.LENGTH_LONG ).show();
                         }
 
                     }
@@ -208,12 +204,10 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                         String Estatus = String.valueOf( EstadoArticulo.getText() );
 
-                        if (Estatus.equals("active") || Estatus.equals("paused")  ) {
+                        if (Estatus.equals( "active" ) || Estatus.equals( "paused" )) {
                             CierraPublicacion( clickedData.getIDPublicacion() );
-                        }
-                        else
-                        {
-                            Toast.makeText(getContext(), "La publicacion debe de estar en estatus activo o pausa", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText( getContext(), "La publicacion debe de estar en estatus activo o pausa", Toast.LENGTH_LONG ).show();
                         }
                     }
                 } );
@@ -224,12 +218,10 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                         String Estatus = String.valueOf( EstadoArticulo.getText() );
 
-                        if (Estatus.equals("active")) {
+                        if (Estatus.equals( "active" )) {
                             PausarPublicacion( clickedData.getIDPublicacion() );
-                        }
-                        else
-                        {
-                            Toast.makeText(getContext(), "La publicacion debe de estar en estatus activo", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText( getContext(), "La publicacion debe de estar en estatus activo", Toast.LENGTH_LONG ).show();
                         }
                     }
                 } );
@@ -241,32 +233,30 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                         String Estatus = String.valueOf( EstadoArticulo.getText() );
 
-                        if (!Estatus.equals("closed")) {
-                            EliminarPublicacion( clickedData.getIDPublicacion(),0 );
-                        }
-                        else
-                        {
-                            EliminarPublicacion( clickedData.getIDPublicacion(),1 );
+                        if (!Estatus.equals( "closed" )) {
+                            EliminarPublicacion( clickedData.getIDPublicacion(), 0 );
+                        } else {
+                            EliminarPublicacion( clickedData.getIDPublicacion(), 1 );
                         }
                     }
                 } );
-
 
 
                 BtnActualizarInventarioPublicacion.setOnClickListener( new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        ActualizarStock(clickedData.getIDPublicacion(), String.valueOf( Cantidad.getText()));
+                        ActualizarStock( clickedData.getIDPublicacion(), String.valueOf( Cantidad.getText() ) );
 
                     }
                 } );
 
 
-
-
             }
         } );
+
+            tabla_sincronizar.setEmptyDataIndicatorView( v.findViewById( R.id.Tabla_vacia ) );
+
 
         btn_alta_articulo.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -276,8 +266,6 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
             }
         } );
-
-        tabla_sincronizar.setEmptyDataIndicatorView( v.findViewById( R.id.Tabla_vacia ) );
 
         return v;
     }
@@ -368,6 +356,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                progreso.hide();
             }
 
         } catch (Error e) {
@@ -383,7 +372,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
     }
 
-    public void LoadTable() {
+    public  int LoadTable() {
 
         progreso = new ProgressDialog( getContext() );
         progreso.setMessage( "Cargando..." );
@@ -505,6 +494,15 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                                             String.valueOf( error ), Toast.LENGTH_LONG );
 
                             progreso.hide();
+
+                            try {
+                                JSONObject jsonObj = new JSONObject("{\"Estatus\":\"0\"}");
+
+                                RespuestaTodoJSON = jsonObj;
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     }
             );
@@ -513,6 +511,8 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
             VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
 
+            return  1;
+
         } catch (Error e) {
 
             Toast toast1 =
@@ -520,6 +520,8 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                             String.valueOf( e ), Toast.LENGTH_LONG );
 
             progreso.hide();
+
+            return  0;
 
         }
 

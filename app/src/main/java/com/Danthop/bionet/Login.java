@@ -422,9 +422,5 @@ public class Login extends Activity {
         //do nothing
     }
 
-    public void Pagar(View view) {
-        Intent intent = new Intent(Login.this, Feenicia_Transaction_Bluetooth.class);
-        startActivity(intent);
-    }
 }
 

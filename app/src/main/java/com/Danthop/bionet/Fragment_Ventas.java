@@ -3,6 +3,7 @@ package com.Danthop.bionet;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -46,6 +47,7 @@ public class Fragment_Ventas extends Fragment {
     private Button btn_agregar_cliente;
     private Button btn_agregar_vendedor;
     private Button btn_agregar_articulo;
+    private Button btn_feenicia;
     private Button btn_reporte;
     private Button crear_cliente;
     private Button aceptar_agregar_vendedor;
@@ -53,7 +55,6 @@ public class Fragment_Ventas extends Fragment {
     private Dialog dialog;
     private Spinner vendedores;
     private ArrayList<String> VendedorName;
-
 
     private String usu_id;
     private String nombre;
@@ -120,6 +121,7 @@ public class Fragment_Ventas extends Fragment {
         btn_agregar_cliente = v.findViewById(R.id.btn_agregar_cliente);
         btn_agregar_vendedor = v.findViewById(R.id.btn_agregar_vendedor);
         btn_agregar_articulo = v.findViewById(R.id.btn_agregar_articulo);
+        btn_feenicia = v.findViewById(R.id.btn_feenicia);
         btn_reporte = v.findViewById(R.id.btn_reporte);
         Corte_Caja = v.findViewById(R.id.CorteCaja);
         VendedorName=new ArrayList<>();
@@ -206,8 +208,32 @@ public class Fragment_Ventas extends Fragment {
             }
         });
 
+        btn_feenicia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
+                getActivity().startActivity(myIntent);
+
+
+                //Intent intent = new Intent(this, Feenicia_Transaction_Bluetooth.class);
+               // startActivity(intent);
+               // dialog.setContentView(R.layout.pop_up_procesamiento_pagos);
+               // dialog.show();
+
+
+              //  Button Btn_Buscar_Dispositivo = dialog.findViewById(R.id.Btn_Buscar_Dispositivo);
+              //  Button Btn_Conectar_Dispositivo = dialog.findViewById(R.id.Btn_Conectar_Dispositivo);
+
+
+               // Btn_Buscar_Dispositivo
+
+            }
+        });
+
 
     }
+
 
     private void Muestra_clientes()
     {

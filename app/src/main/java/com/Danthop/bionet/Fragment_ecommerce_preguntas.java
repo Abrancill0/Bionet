@@ -384,6 +384,14 @@ public class Fragment_ecommerce_preguntas extends Fragment {
 
             progreso.hide();
 
+            try {
+                JSONObject jsonObj = new JSONObject("{\"Estatus\":\"0\"}");
+
+                RespuestaTodoJSON = jsonObj;
+            } catch (JSONException ea) {
+                e.printStackTrace();
+            }
+
         }
 
 
