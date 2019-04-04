@@ -15,7 +15,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".9"
+        android:layout_weight=".1"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical">
 
@@ -41,7 +41,7 @@
                         android:id="@+id/imageView9"
                         android:layout_width="88dp"
                         android:layout_height="0dp"
-                        android:src="@drawable/clientes_azul"
+                        android:src="@drawable/seleccionar_producto"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +62,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight=".6"
                     android:gravity="center"
-                    android:text="Seleccionar Cliente"
+                    android:text="Seleccionar Artículo"
                     android:textColor="@color/gray"
                     android:textSize="22dp" />
 
@@ -93,7 +93,7 @@
                 android:layout_weight=".5"
                 android:orientation="vertical">
 
-                <com.Danthop.bionet.Tables.SortableClientesTable
+                <com.Danthop.bionet.Tables.SortableArticulosTable
                     android:id="@+id/tabla_clientes"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -102,7 +102,7 @@
                     app:tableView_headerColor="@color/white"
                     table:tableView_columnCount="4">
 
-                </com.Danthop.bionet.Tables.SortableClientesTable>
+                </com.Danthop.bionet.Tables.SortableArticulosTable>
 
                 <LinearLayout
                     android:id="@+id/Tabla_vacia"
@@ -131,21 +131,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn_crear_cliente"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/btn"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="Crear Cliente"
-            android:textAllCaps="false"
-            android:textColor="#fff"
-            android:textSize="22dp" />
+        android:layout_height="match_parent"
+        android:layout_weight=".9"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimaryDark">
 
     </LinearLayout>
 
