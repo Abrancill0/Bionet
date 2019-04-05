@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.Danthop.bionet.Tables.SortableArticulosTable;
 import com.Danthop.bionet.Tables.SortableSeleccionarArticuloTable;
+import com.Danthop.bionet.Tables.SortableVentaArticulos;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.SucursalModel;
 
@@ -24,7 +25,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
 
 
-    public VentaArticuloAdapter(final Context context, final List<ArticuloModel> data, final SortableSeleccionarArticuloTable tableView) {
+    public VentaArticuloAdapter(final Context context, final List<ArticuloModel> data, final SortableVentaArticulos tableView) {
         super(context, data, tableView);
     }
 
@@ -41,10 +42,10 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                 renderedView = renderSKU(Articulo);
                 break;
             case 2:
-                renderedView = renderSKU(Articulo);
+                renderedView = renderCantidad(Articulo);
                 break;
             case 3:
-                renderedView = renderCategoria(Articulo);
+                renderedView = renderPrecio(Articulo);
                 break;
 
         }
@@ -73,13 +74,13 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
         return renderString(articulo.getArticulo_sku());
 
     }
-    private View renderDescripcion(final ArticuloModel articulo) {
-        return renderString(articulo.getarticulo_Descripcion());
+    private View renderCantidad(final ArticuloModel articulo) {
+        return renderString(articulo.getArticulo_cantidad());
 
     }
 
-    private View renderCategoria(final ArticuloModel articulo) {
-        return renderString(articulo.getArticulo_categoria());
+    private View renderPrecio(final ArticuloModel articulo) {
+        return renderString(articulo.getarticulo_Precio());
 
     }
 

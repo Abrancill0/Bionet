@@ -9,11 +9,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -22,6 +25,7 @@ import android.widget.Toast;
 import com.Danthop.bionet.Adapters.ArticuloAdapter;
 import com.Danthop.bionet.Adapters.ClienteAdapter;
 import com.Danthop.bionet.Adapters.SeleccionarArticuloVentaAdapter;
+import com.Danthop.bionet.Adapters.VentaArticuloAdapter;
 import com.Danthop.bionet.Tables.SortableArticulosTable;
 import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.Tables.SortableSeleccionarArticuloTable;
@@ -95,9 +99,18 @@ public class Fragment_Ventas extends Fragment {
 
     private List<ClienteModel> clientes;
     private List<ArticuloModel> Articulos;
+    private List<ArticuloModel> ArticulosVenta;
     private FragmentTransaction fr;
 
+    private Spinner SpinnerSucursal;
+    private ArrayList<String> SucursalName;
+    private ArrayList<String> SucursalID;
+
     private CarouselView carouselView;
+
+    private String TicketIDVenta;
+
+    private EditText BuscarPorSKU;
 
 
 
@@ -119,6 +132,7 @@ public class Fragment_Ventas extends Fragment {
         fr = getFragmentManager().beginTransaction();
         dialog=new Dialog(getContext());
 
+        ArticulosVenta = new ArrayList<>();
         carouselView = (CarouselView) v.findViewById(R.id.carouselView);
         btn_agregar_cliente = v.findViewById(R.id.btn_agregar_cliente);
         btn_agregar_vendedor = v.findViewById(R.id.btn_agregar_vendedor);
@@ -126,17 +140,115 @@ public class Fragment_Ventas extends Fragment {
         btn_feenicia = v.findViewById(R.id.btn_feenicia);
         btn_reporte = v.findViewById(R.id.btn_reporte);
         Corte_Caja = v.findViewById(R.id.CorteCaja);
+        BuscarPorSKU = v.findViewById(R.id.buscarXSKU);
         VendedorName=new ArrayList<>();
+
+        SucursalName=new ArrayList<>();
+        SucursalID = new ArrayList<>();
+        SpinnerSucursal=(Spinner)v.findViewById(R.id.sucursal);
 
         tabla_venta_articulos=v.findViewById(R.id.tabla_venta_articulos);
         tabla_venta_articulos.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
 
 
+
+        LoadSucursales();
         LoadImages();
         LoadButtons();
 
 
         return v;
+    }
+
+    public void LoadSucursales()
+    {
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/configuracion/sucursales/index_app";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONArray RespuestaNodoSucursales= null;
+                JSONObject RespuestaNodoID = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+                    if (status == 1)
+                    {
+
+                        Respuesta = response.getJSONObject("resultado");
+
+                        RespuestaNodoSucursales = Respuesta.getJSONArray("aSucursales");
+
+                        for(int x = 0; x < RespuestaNodoSucursales.length(); x++){
+                            JSONObject jsonObject1=RespuestaNodoSucursales.getJSONObject(x);
+                            String sucursal=jsonObject1.getString("suc_nombre");
+                            SucursalName.add(sucursal);
+                            RespuestaNodoID = jsonObject1.getJSONObject("suc_id");
+                            String id=RespuestaNodoID.getString("uuid");
+                            SucursalID.add(id);
+                        }
+                        SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,SucursalName));
+
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+
+                } catch (JSONException e) {
+
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+
+                }
+
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+
     }
 
     public void LoadImages()
@@ -155,6 +267,8 @@ public class Fragment_Ventas extends Fragment {
 
     public void LoadButtons()
     {
+
+
         btn_agregar_cliente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,7 +285,8 @@ public class Fragment_Ventas extends Fragment {
                     public void onDataClicked(int rowIndex, final ClienteModel clickedData) {
                         dialog.dismiss();
                         nombre= clickedData.getCliente_Nombre();
-                        LoadDatos();
+                        btn_agregar_cliente.setText(nombre);
+
                     }
                 };
                 tabla_clientes.addDataClickListener(tablaListener);
@@ -256,6 +371,131 @@ public class Fragment_Ventas extends Fragment {
             }
         });
 
+        BuscarPorSKU.setOnEditorActionListener(
+            new EditText.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                            actionId == EditorInfo.IME_ACTION_DONE ||
+                            event != null &&
+                                    event.getAction() == KeyEvent.ACTION_DOWN &&
+                                    event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                        if (event == null || !event.isShiftPressed()) {
+                            Aniadir_a_venta(BuscarPorSKU.getText().toString());
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            });
+
+
+    }
+
+    private void Aniadir_a_venta(String CBoSKULL)
+    {
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("tic_id_sucursal",SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
+            request.put("articulo",CBoSKULL);
+            request.put("cantidad",1);
+            if(TicketIDVenta!=null)
+            {
+                request.put("cantidad",TicketIDVenta);
+            }
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/tickets/store";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONObject RespuestaNodoTicket= null;
+                JSONObject TicketID=null;
+                JSONArray NodoTicketArticulos=null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1)
+                    {
+
+                        Respuesta = response.getJSONObject("resultado");
+
+                        RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
+                        TicketID = RespuestaNodoTicket.getJSONObject("tic_id");
+                        TicketIDVenta = TicketID.getString("uuid");
+
+                        NodoTicketArticulos = Respuesta.getJSONArray("aDetalleTicket");
+
+
+                        for(int x = 0; x < NodoTicketArticulos.length(); x++){
+                            JSONObject elemento = NodoTicketArticulos.getJSONObject(x);
+
+                            String NombreArticulo =  elemento.getString("tar_nombre_articulo");
+                            String SKUArticulo = elemento.getString("art_sku");
+                            JSONObject cantidadNodo = elemento.getJSONObject("tar_cantidad");
+                            String cantidad = cantidadNodo.getString("value");
+
+
+
+
+                            final ArticuloModel articulo = new ArticuloModel("",
+                                    NombreArticulo,
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    SKUArticulo,
+                                    "",
+                                    cantidad
+                            );
+                            ArticulosVenta.add(articulo);
+                        }
+                        final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos);
+                        tabla_venta_articulos.setDataAdapter(articuloAdapter);
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
     }
 
@@ -416,10 +656,6 @@ public class Fragment_Ventas extends Fragment {
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
-    public void LoadDatos(){
-        btn_agregar_cliente.setText(nombre);
-    }
-
     private void CargaArticulos(){
 
         try {
@@ -504,7 +740,7 @@ public class Fragment_Ventas extends Fragment {
                                                 NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
                                                 final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
-                                                        RutaImagen2,SKU,Categoria);
+                                                        RutaImagen2,SKU,Categoria,"");
                                                 Articulos.add(Articulo);
                                             }
 
@@ -514,7 +750,7 @@ public class Fragment_Ventas extends Fragment {
                                             NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
                                             final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
-                                                    RutaImagen2,SKU,Categoria);
+                                                    RutaImagen2,SKU,Categoria,"");
                                             Articulos.add(Articulo);
                                         }
                                     }

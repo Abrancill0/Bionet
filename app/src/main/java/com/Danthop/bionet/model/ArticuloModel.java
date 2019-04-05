@@ -9,10 +9,11 @@ public class ArticuloModel {
     private String articulo_Imagen2;
     private String articulo_sku;
     private String articulo_categoria;
+    private String articulo_cantidad;
 
 
     public ArticuloModel(String articulo_UUID,String articulo_Nombre,String articulo_Descripcion ,String articulo_Precio,String articulo_Imagen1,
-                         String articulo_Imagen2, String articulo_SKU, String articulo_Categoria) {
+                         String articulo_Imagen2, String articulo_SKU, String articulo_Categoria,String articulo_Cantidad) {
         this.articulo_UUID = articulo_UUID;
         this.articulo_Nombre = articulo_Nombre;
         this.articulo_Descripcion = articulo_Descripcion;
@@ -22,6 +23,7 @@ public class ArticuloModel {
         this.articulo_Imagen2 = articulo_Imagen2;
         this.articulo_sku = articulo_SKU;
         this.articulo_categoria = articulo_Categoria;
+        this.articulo_cantidad = articulo_Cantidad;
     }
 
     public String getarticulo_UUID() {
@@ -87,5 +89,13 @@ public class ArticuloModel {
 
     public void setArticulo_categoria(String articulo_categoria) {
         this.articulo_categoria = articulo_categoria;
+    }
+
+    public String getArticulo_cantidad() {
+        return articulo_cantidad;
+    }
+
+    public void setArticulo_cantidad(String articulo_cantidad) {
+        this.articulo_cantidad = articulo_cantidad;
     }
 }

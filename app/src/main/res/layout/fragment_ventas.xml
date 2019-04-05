@@ -91,6 +91,12 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal">
 
+                <Spinner
+                    android:id="@+id/sucursal"
+                    android:layout_width="131dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"></Spinner>
+
                 <Button
                     android:id="@+id/btn_agregar_articulo"
                     style="@android:style/Widget.Holo.Light.Button"
@@ -197,7 +203,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/editText2"
+                        android:id="@+id/buscarXSKU"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight=".3"
