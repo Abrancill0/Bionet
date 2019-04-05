@@ -67,11 +67,18 @@ public class Fragment_pantalla_principal extends Fragment {
         }
 
         //=====Programación de las tablas=====
-        String[][] DATA_TO_SHOW = { { "Producto1", "Sucursal1"},
+        String[][] DATA_TO_SHOW = { { "Producto 1", "Sucursal 1"},
                 {""}};
 
-        String[][] DATA_TO_SHOW2 = { { "Notificacion1"},
+        String[][] DATA_TO_SHOW2 = { { "Notificacion 1"},
                 {""}};
+
+        String[][] DATA_TO_SHOW3 = { { "Producto 1", "Sucursal 1"},
+                {""}};
+
+        String[][] DATA_TO_SHOW4 = { { "Cliente 1"},
+                {""}};
+
         final TableView tabla_Productos = (TableView) v.findViewById(R.id.tablaProductos_sucursales);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Producto", "Sucursal");
         final SimpleTableDataAdapter simpleTableDataAdapter = new SimpleTableDataAdapter(getContext(),DATA_TO_SHOW);
@@ -93,12 +100,39 @@ public class Fragment_pantalla_principal extends Fragment {
         simpleTableDataAdapter2.setPaddingLeft(0);
         simpleTableDataAdapter2.setPaddingRight(0);
 
+
+        final TableView tablaPocas_Existencias = (TableView) v.findViewById(R.id.tablaPocas_Existencias);
+        final SimpleTableHeaderAdapter simpleHeader3 = new SimpleTableHeaderAdapter(getContext(), "Producto", "Sucursal");
+        final SimpleTableDataAdapter simpleTableDataAdapter3 = new SimpleTableDataAdapter(getContext(),DATA_TO_SHOW3);
+        simpleHeader3.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        simpleHeader3.setTextSize(12);
+        simpleHeader3.setPaddings(10,10,10,10);
+        simpleTableDataAdapter3.setTextSize(12);
+        simpleTableDataAdapter3.setPaddingLeft(0);
+        simpleTableDataAdapter3.setPaddingRight(0);
+
+
+        final TableView tablaClientesFrecuentes = (TableView) v.findViewById(R.id.tablaClientesFrecuentes);
+        final SimpleTableHeaderAdapter simpleHeader4 = new SimpleTableHeaderAdapter(getContext(), "Cliente");
+        final SimpleTableDataAdapter simpleTableDataAdapter4 = new SimpleTableDataAdapter(getContext(),DATA_TO_SHOW4);
+        simpleHeader4.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        simpleHeader4.setTextSize(12);
+        simpleHeader4.setPaddings(10,10,10,10);
+        simpleTableDataAdapter4.setTextSize(12);
+        simpleTableDataAdapter4.setPaddingLeft(0);
+        simpleTableDataAdapter4.setPaddingRight(0);
+
         tabla_Productos.setHeaderAdapter(simpleHeader);
         tabla_Productos.setDataAdapter(simpleTableDataAdapter);
 
         tabla_Notificaciones.setHeaderAdapter(simpleHeader2);
         tabla_Notificaciones.setDataAdapter(simpleTableDataAdapter2);
 
+        tablaPocas_Existencias.setHeaderAdapter(simpleHeader3);
+        tablaPocas_Existencias.setDataAdapter(simpleTableDataAdapter3);
+
+        tablaClientesFrecuentes.setHeaderAdapter(simpleHeader4);
+        tablaClientesFrecuentes.setDataAdapter(simpleTableDataAdapter4);
 
 
 

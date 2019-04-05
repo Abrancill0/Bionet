@@ -2,14 +2,16 @@ package com.Danthop.bionet;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
-public class Fragment_pop_up_agrear_puntoReorden extends DialogFragment {
+public class Fragment_pop_up_punto_reorden extends DialogFragment {
 
-    public Fragment_pop_up_agrear_puntoReorden() {
+    public Fragment_pop_up_punto_reorden() {
         // Required empty public constructor
     }
 
@@ -22,9 +24,19 @@ public class Fragment_pop_up_agrear_puntoReorden extends DialogFragment {
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment_pop_up_agregar_producto_exitoso dialog = new Fragment_pop_up_agregar_producto_exitoso();  //
-                dialog.setTargetFragment(Fragment_pop_up_agrear_puntoReorden.this, 1);
+                Fragment_pop_up_traslados dialog = new Fragment_pop_up_traslados();  //
+                dialog.setTargetFragment(Fragment_pop_up_punto_reorden.this, 1);
                 dialog.show(getFragmentManager(), "MyCustomDialog");
+                onDestroyView();
+            }
+        });
+
+        ImageView back = v.findViewById(R.id.ImgSalir);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    onDestroyView();
+
             }
         });
 

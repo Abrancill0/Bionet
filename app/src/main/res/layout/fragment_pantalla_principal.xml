@@ -17,13 +17,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".7"
+            android:layout_weight=".6"
             android:gravity="center"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="500dp"
                 android:layout_weight=".8"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="vertical"
@@ -42,7 +42,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="500dp"
                 android:layout_weight=".3"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
@@ -54,7 +54,8 @@
                     android:layout_margin="10dp"
                     android:layout_marginHorizontal="10dp"
                     android:text="Nombre de usuario"
-                    android:textSize="18dp" />
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </LinearLayout>
@@ -70,32 +71,27 @@
                 android:id="@+id/textView17"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Top 5 artículos más vendidos"
+                android:text="Artículos más vendidos"
                 android:textColor="@color/colorPrimaryDark"
+                android:layout_marginBottom="10dp"
                 android:textSize="18sp"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:background="@color/gray2"
                 android:orientation="horizontal"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginBottom="10dp"></LinearLayout>
+                android:layout_marginBottom="10dp">
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/linearLayout3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            </LinearLayout>
 
                 <de.codecrafters.tableview.TableView
                     android:id="@+id/tablaProductos_sucursales"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="20dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
                     table:tableView_columnCount="2" />
-            </android.support.constraint.ConstraintLayout>
 
         </LinearLayout>
 
@@ -107,7 +103,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:paddingTop="5dp"
                 android:id="@+id/textView31"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -116,21 +111,24 @@
                 android:textSize="18sp"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:background="@color/gray2"
                 android:orientation="horizontal"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginBottom="10dp"></LinearLayout>
+                android:layout_marginBottom="10dp">
+            </LinearLayout>
 
             <de.codecrafters.tableview.TableView
                 android:id="@+id/tablaNotificaciones"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="20dp"
-                android:paddingBottom="10dp"
                 table:tableView_columnCount="1" />
+
         </LinearLayout>
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -141,195 +139,101 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="380dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight=".6"
             android:orientation="vertical"
-            android:padding="20dp"
-            android:layout_marginBottom="10dp">
+            android:padding="20dp">
+
             <com.synnapps.carouselview.CarouselView
                 android:id="@+id/carouselView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:fillColor="@color/colorPrimaryDark"
+                app:indicatorMarginVertical="0dp"
                 app:pageColor="@color/white"
                 app:radius="4dp"
                 app:slideInterval="3000"
                 app:strokeColor="#FF777777"
-                app:strokeWidth="1dp"
-                app:indicatorMarginVertical="0dp"/>
+                app:strokeWidth="1dp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".4"
-            android:gravity="center_horizontal"
+            android:layout_weight=".5"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView37"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tiempo y Asistencia"
-                android:textSize="18sp"
-                android:textColor="@color/colorPrimaryDark"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".6"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewProd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pocas existencias"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray2"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="10dp">
+
+                </LinearLayout>
+
+                    <de.codecrafters.tableview.TableView
+                        android:id="@+id/tablaPocas_Existencias"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="20dp"
+                        table:tableView_columnCount="2" />
+
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/gray2"
-                android:orientation="horizontal"
-                android:layout_marginRight="5dp"></LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_weight=".6"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
+                <TextView
+                    android:id="@+id/textView32"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Clientes frecuentes"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp"/>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".5"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".8"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="60dp">
-
-                        <Switch
-                            android:id="@+id/Entrada_switch"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Entrada"
-                            android:textColor="@color/gray" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".8"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="60dp">
-
-                        <Switch
-                            android:id="@+id/Salida_switch"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Salida"
-                            android:textColor="@color/gray" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".8"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/textView39"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Asistencia" />
-
-                        <TextView
-                            android:id="@+id/textView40"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="30dp"
-                            android:text="60%"
-                            android:textColor="@color/colorPrimaryDark" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".8"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="10dp"
-                            android:layout_height="10dp"
-                            android:layout_marginHorizontal="5dp"
-                            android:background="@color/colorPrimaryDark"
-                            android:orientation="vertical"></LinearLayout>
-
-                        <TextView
-                            android:id="@+id/textView41"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight=".3"
-                            android:text="Asistencia" />
-
-                        <LinearLayout
-                            android:layout_width="10dp"
-                            android:layout_height="10dp"
-                            android:layout_marginHorizontal="5dp"
-                            android:background="#DFDFDF"
-                            android:orientation="vertical"></LinearLayout>
-
-                        <TextView
-                            android:id="@+id/textView42"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight=".3"
-                            android:text="Inasistencia" />
-                    </LinearLayout>
+                    android:layout_height="1dp"
+                    android:background="@color/gray2"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="10dp">
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/linearLayout2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".5"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:orientation="vertical">
+                <de.codecrafters.tableview.TableView
+                    android:id="@+id/tablaClientesFrecuentes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="20dp"
+                    table:tableView_columnCount="1" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/textView18"
-                            android:layout_width="103dp"
-                            android:layout_height="wrap_content"
-                            android:text="Puntualidad: " />
-
-                        <TextView
-                            android:id="@+id/puntualidad"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="60 %"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/fs"
-                            android:layout_width="103dp"
-                            android:layout_height="wrap_content"
-                            android:text="Salida a tiempo: " />
-
-                        <TextView
-                            android:id="@+id/salida_a_tiempo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="100 %"/>
-                    </LinearLayout>
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
+
+
     </LinearLayout>
 </LinearLayout>

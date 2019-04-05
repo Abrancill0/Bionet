@@ -58,7 +58,7 @@ public class Fragment_pestania_traslado extends Fragment {
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment_pop_up_agrear_puntoReorden dialog = new Fragment_pop_up_agrear_puntoReorden();
+                Fragment_pop_up_punto_reorden dialog = new Fragment_pop_up_punto_reorden();
                 dialog.setTargetFragment(Fragment_pestania_traslado.this, 1);
                 dialog.show(getFragmentManager(), "MyCustomDialog");
             }

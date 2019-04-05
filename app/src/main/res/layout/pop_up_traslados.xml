@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="450dp"
-    android:layout_height="480dp"
+    android:layout_height="380dp"
     android:layout_gravity="center"
     android:background="@color/white"
     android:gravity="center_vertical|center_horizontal"
@@ -17,6 +17,7 @@
         android:layout_weight="1"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="300dp"
@@ -25,8 +26,8 @@
 
             <Button
                 android:id="@+id/btnSalir"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="30dp"
+                android:layout_height="25dp"
                 android:layout_gravity="right"
                 android:background="@drawable/clear2"
                 tools:ignore="MissingConstraints"
@@ -51,7 +52,7 @@
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_weight=".4">
 
                     <ImageView
@@ -67,9 +68,6 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
-
-
                 </android.support.constraint.ConstraintLayout>
 
                 <TextView
@@ -80,6 +78,7 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="Traslado de artículos entre sucursales"
+                    android:textStyle="bold"
                     android:textColor="@color/gray"
                     android:textSize="22dp" />
 
@@ -246,7 +245,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btnAceptar"
+                android:id="@+id/ImgAceptar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
