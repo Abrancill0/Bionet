@@ -358,8 +358,7 @@ public class Fragment_Ventas extends Fragment {
 
                 //Intent intent = new Intent(this, Feenicia_Transaction_Bluetooth.class);
                // startActivity(intent);
-               // dialog.setContentView(R.layout.pop_up_procesamiento_pagos);
-               // dialog.show();
+               //
 
 
               //  Button Btn_Buscar_Dispositivo = dialog.findViewById(R.id.Btn_Buscar_Dispositivo);
