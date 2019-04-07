@@ -63,6 +63,8 @@ public class Fragment_Ventas extends Fragment {
     private Button aceptar_agregar_vendedor;
     private Button Corte_Caja;
     private Dialog dialog;
+    private TextView descuento;
+    private TextView total;
     private Spinner vendedores;
     private ArrayList<String> VendedorName;
 
@@ -109,6 +111,8 @@ public class Fragment_Ventas extends Fragment {
     private CarouselView carouselView;
 
     private String TicketIDVenta;
+    private String TicketImporteDescuento;
+    private String TicketImporteTotal;
 
     private EditText BuscarPorSKU;
 
@@ -141,6 +145,8 @@ public class Fragment_Ventas extends Fragment {
         btn_reporte = v.findViewById(R.id.btn_reporte);
         Corte_Caja = v.findViewById(R.id.CorteCaja);
         BuscarPorSKU = v.findViewById(R.id.buscarXSKU);
+        descuento = v.findViewById(R.id.descuento_text);
+        total = v.findViewById(R.id.total_text);
         VendedorName=new ArrayList<>();
 
         SucursalName=new ArrayList<>();
@@ -148,7 +154,8 @@ public class Fragment_Ventas extends Fragment {
         SpinnerSucursal=(Spinner)v.findViewById(R.id.sucursal);
 
         tabla_venta_articulos=v.findViewById(R.id.tabla_venta_articulos);
-        tabla_venta_articulos.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
+        tabla_venta_articulos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
+
 
 
 
@@ -345,6 +352,16 @@ public class Fragment_Ventas extends Fragment {
                 tabla_selecciona_articulo = dialog.findViewById(R.id.tabla_seleccionar_articulos);
                 tabla_selecciona_articulo.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
                 CargaArticulos();
+                TableDataClickListener<ArticuloModel> tablaListener = new TableDataClickListener<ArticuloModel>() {
+                    @Override
+                    public void onDataClicked(int rowIndex, final ArticuloModel clickedData) {
+                        dialog.dismiss();
+                        String SKU= clickedData.getArticulo_sku();
+                        Aniadir_a_venta(SKU);
+
+                    }
+                };
+                tabla_selecciona_articulo.addDataClickListener(tablaListener);
             }
         });
 
@@ -393,6 +410,7 @@ public class Fragment_Ventas extends Fragment {
 
     private void Aniadir_a_venta(String CBoSKULL)
     {
+        ArticulosVenta.clear();
         JSONObject request = new JSONObject();
         try
         {
@@ -401,10 +419,7 @@ public class Fragment_Ventas extends Fragment {
             request.put("tic_id_sucursal",SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
             request.put("articulo",CBoSKULL);
             request.put("cantidad",1);
-            if(TicketIDVenta!=null)
-            {
-                request.put("cantidad",TicketIDVenta);
-            }
+            request.put("tic_id",TicketIDVenta);
 
         }
         catch(Exception e)
@@ -439,10 +454,15 @@ public class Fragment_Ventas extends Fragment {
                         RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
                         TicketID = RespuestaNodoTicket.getJSONObject("tic_id");
                         TicketIDVenta = TicketID.getString("uuid");
+                        JSONObject TicketDesc = RespuestaNodoTicket.getJSONObject("tic_importe_descuentos");
+                        TicketImporteDescuento = TicketDesc.getString("value");
+                        descuento.setText(TicketImporteDescuento);
+                        JSONObject TicketTotal = RespuestaNodoTicket.getJSONObject("tic_importe_total");
+                        TicketImporteTotal = TicketTotal.getString("value");
+                        total.setText(TicketImporteTotal);
+
 
                         NodoTicketArticulos = Respuesta.getJSONArray("aDetalleTicket");
-
-
                         for(int x = 0; x < NodoTicketArticulos.length(); x++){
                             JSONObject elemento = NodoTicketArticulos.getJSONObject(x);
 
