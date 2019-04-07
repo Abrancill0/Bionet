@@ -9,6 +9,8 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,8 +81,10 @@ public class Login extends Activity {
             Intent intent2 = new Intent(Login.this, Home.class);
             startActivity(intent2);
         }
-
     }
+
+
+
 
     private void Login(){
         progreso = new ProgressDialog(this);
@@ -416,10 +420,6 @@ public class Login extends Activity {
                 }
             }
         });
-    }
-
-    public void onBackPressed() {
-        //do nothing
     }
 
 }

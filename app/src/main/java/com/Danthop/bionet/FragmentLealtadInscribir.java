@@ -54,7 +54,6 @@ public class FragmentLealtadInscribir extends Fragment {
     private Button Programas;
     private Button Articulos;
 
-
     private String nombre;
     private String UUID;
     private String telefono;
@@ -104,20 +103,14 @@ public class FragmentLealtadInscribir extends Fragment {
     Handler handler;
     ProgressDialog progreso;
 
-
-
     private List<ClienteModel> clientes;
-
-
 
     public FragmentLealtadInscribir() {
         // Required empty public constructor
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_lealtad_inscribir,container, false);
         fr = getFragmentManager().beginTransaction();
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
@@ -142,9 +135,6 @@ public class FragmentLealtadInscribir extends Fragment {
         LoadSpinnerSucursal();
         LoadListenerTable();
 
-
-
-
         tabla_clientes.setSwipeToRefreshEnabled(true);
         tabla_clientes.addDataClickListener(tablaListener);
         tabla_clientes.setSwipeToRefreshListener(new SwipeToRefreshListener() {
@@ -166,6 +156,7 @@ public class FragmentLealtadInscribir extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 clientes.clear();
+                progreso.setMessage("Iniciando sesion...");
                 progreso.show();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -417,6 +408,9 @@ public class FragmentLealtadInscribir extends Fragment {
     }
 
     private void LoadDialog(){
+
+
+
         EliminarAniadirDialog=new Dialog(getContext());
         EliminarAniadirDialog.setContentView(R.layout.pop_up_lealtad_eliminar_cliente);
         EliminarAniadirDialog.show();
@@ -516,6 +510,7 @@ public class FragmentLealtadInscribir extends Fragment {
     }
 
     private void LoadButtons(){
+
         Lealtad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

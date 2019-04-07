@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -38,7 +40,6 @@ public class CrearCuentaActivity extends Activity {
         Password2 =(EditText) findViewById(R.id.text_repassword);
 
        //View condiciones = R.layout.pop_up_condiciones;
-
     }
 
     public void ActivarLicencia(View view) {

@@ -31,7 +31,7 @@ public class Fragment_pop_up_punto_reorden extends DialogFragment {
             }
         });
 
-        ImageView back = v.findViewById(R.id.ImgSalir);
+        Button back = v.findViewById(R.id.btnSalir);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -2,6 +2,8 @@ package com.Danthop.bionet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 
 public class SplashScreen extends AppCompatActivity {
@@ -16,4 +18,5 @@ public class SplashScreen extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
 }

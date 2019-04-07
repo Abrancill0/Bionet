@@ -113,6 +113,7 @@
                         android:background="#E5E7E9"
                         android:queryHint="Buscar"
                         android:iconifiedByDefault="false" />
+
                     <Spinner
                         android:id="@+id/categoria_inventario"
                         android:layout_width="match_parent"

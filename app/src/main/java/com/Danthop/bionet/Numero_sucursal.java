@@ -440,8 +440,7 @@ public class Numero_sucursal extends Activity {
 
         String ApiPath = url + "/api/configuracion/sucursales/select_estados";
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-        {
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
@@ -457,7 +456,6 @@ public class Numero_sucursal extends Activity {
                     {
 
                         Respuesta = response.getJSONObject("resultado");
-
                         RespuestaNodoEstados = Respuesta.getJSONObject("aEstados");
 
                         for(int x = 0; x < RespuestaNodoEstados.length(); x++){

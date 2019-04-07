@@ -65,9 +65,9 @@ import java.util.Date;
 import android.provider.Settings.Secure;
 
 
-public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Fragment_pop_up_ProfilePhoto.OnPhotoSelectedListener {
+public class Home extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener, Fragment_pop_up_ProfilePhoto.OnPhotoSelectedListener {
     private DrawerLayout drawer;
-
+    private static AppCompatActivity HOME;
     Dialog cerrar;
     private static final int REQUEST_CODE = 23;
     private Bitmap mSelectedBitmap;
@@ -114,6 +114,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     }
 
+
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
@@ -149,11 +150,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         home();
 
-
-
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(Home.this));
-
 
         cerrar = new Dialog(this);
 
@@ -220,6 +218,18 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     }
 
+    public void onBackPressed(){
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer(GravityCompat.START);
+        }else {
+            super.onBackPressed();
+        }
+        }
+
+
+
+
     private void verifyPermissions() {
 
         String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -237,9 +247,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             ActivityCompat.requestPermissions(Home.this,
                     permissions,
                     REQUEST_CODE);
-
         }
-
     }
 
     @Override
@@ -248,9 +256,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
 
-    public void onBackPressed() {
-        //do nothing
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -291,18 +296,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     public void notificaciones() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new Fragment_notificaciones()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_notificaciones()).addToBackStack(null).commit();
     }
 
     public void ventas() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new Fragment_Ventas()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_Ventas()).addToBackStack(null).commit();
     }
 
     public void clientes() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new Fragment_clientes()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_clientes()).addToBackStack(null).commit();
     }
 
     public void ecomerce() {
@@ -355,8 +357,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             long TokenLifeLong = Long.valueOf(TokenLife);
 
             if (TokenLifeLong > elapsedSeconds) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new Fragment_ecomerce()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_ecomerce()).addToBackStack(null).commit();
             }
             else
             {
@@ -377,18 +378,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     public void home() {
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new Fragment_pantalla_principal()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_pantalla_principal()).addToBackStack(null).commit();
     }
 
     public void inventario() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new Fragment_inventarios()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_inventarios()).addToBackStack(null).commit();
     }
 
     public void lealtad() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new FragmentLealtad()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentLealtad()).addToBackStack(null).commit();
     }
 
     public void cerrar_sesion() {
@@ -405,8 +403,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
-                .commit();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).addToBackStack(null).commit();
     }
 
 
@@ -516,7 +513,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             editor.commit();
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new Fragment_ecomerce()).commit();
+                    new Fragment_ecomerce()).addToBackStack(null).commit();
 
         }
     }

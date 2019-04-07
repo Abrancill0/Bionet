@@ -1,6 +1,4 @@
 package com.Danthop.bionet;
-
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -13,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import android.view.KeyEvent;
+import android.media.MediaPlayer;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
@@ -29,24 +29,24 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Fragment_pantalla_principal extends Fragment {
+public class Fragment_pantalla_principal extends Fragment{
 
     private ImageView Foto_perfil;
     private TextView Text_nombre;
-
+    private long backPressedTime;
+    private Toast backToast;
+    MediaPlayer mp = new MediaPlayer();
 
     public Fragment_pantalla_principal() {
         // Required empty public constructor
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.fragment_pantalla_principal,container, false);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getContext().MODE_PRIVATE );
@@ -134,9 +134,6 @@ public class Fragment_pantalla_principal extends Fragment {
         tablaClientesFrecuentes.setHeaderAdapter(simpleHeader4);
         tablaClientesFrecuentes.setDataAdapter(simpleTableDataAdapter4);
 
-
-
-
         //=====Programación del carrousel=====
         final int[] sampleImages = {R.drawable.milk, R.drawable.bread, R.drawable.strawberrie, R.drawable.lake};
         CarouselView carouselView;
@@ -152,7 +149,6 @@ public class Fragment_pantalla_principal extends Fragment {
         };
 
         carouselView.setImageListener(imageListener);
-
 
         return v;
     }

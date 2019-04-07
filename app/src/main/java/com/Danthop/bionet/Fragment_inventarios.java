@@ -90,6 +90,7 @@ public class Fragment_inventarios extends Fragment {
 
         SearchView Search = (SearchView) v.findViewById(R.id.search_inventario);
         Search.setQueryHint("Buscar");
+
         Spinner spinner = (Spinner) v.findViewById(R.id.categoria_inventario);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.Giros, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);

@@ -1,6 +1,7 @@
 package com.Danthop.bionet;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public class FragmentLealtad extends Fragment {
     private Button Programas;
     private Button Inscribir;
     private Button Articulos;
+    ProgressDialog progreso;
 
 
     private String nombre;
@@ -60,6 +62,7 @@ public class FragmentLealtad extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_lealtad,container, false);
+
         fr = getFragmentManager().beginTransaction();
         tabla_puntos = v.findViewById(R.id.tabla_puntos);
         tabla_puntos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
@@ -83,12 +86,15 @@ public class FragmentLealtad extends Fragment {
         });
 
         Inscribir=v.findViewById(R.id.inscribir);
+
+
         Inscribir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container,new FragmentLealtadInscribir()).commit();
 
             }
+
         });
 
         Articulos=v.findViewById(R.id.articulo);
