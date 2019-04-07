@@ -89,7 +89,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pagos);
+        setContentView(R.layout.activity_procesamiento_pagos);
         FEENICIA_TRANSACCION = this;
 
         intent = getIntent();
@@ -120,12 +120,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
 
         //DIBUJAMOS EL MONTO
         tvMontoMostrar.setText( "$ " + monto + " MN");
-
-
-       // toolbar = (Toolbar) findViewById(R.id.app_bar);
-       // setSupportActionBar(toolbar);
-       // getSupportActionBar().setDisplayShowHomeEnabled(true);
-
 
         // PERMISO DE BLUETOOTH
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
