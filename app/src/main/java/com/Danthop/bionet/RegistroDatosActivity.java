@@ -358,4 +358,6 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
     }
 
 
+
+
 }

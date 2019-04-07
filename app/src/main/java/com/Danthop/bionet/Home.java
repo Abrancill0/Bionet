@@ -227,9 +227,6 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         }
         }
 
-
-
-
     private void verifyPermissions() {
 
         String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
