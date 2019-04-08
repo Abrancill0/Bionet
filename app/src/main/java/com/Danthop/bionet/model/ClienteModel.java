@@ -37,6 +37,7 @@ public class ClienteModel {
 
 
 
+
     public ClienteModel(String cliente_UUID,String cliente_Nombre,
                         String cliente_Correo, String cliente_Telefono,
                         String cliente_usu_id,String cliente_estado,
