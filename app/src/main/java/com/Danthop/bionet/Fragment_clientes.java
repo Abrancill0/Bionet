@@ -71,6 +71,7 @@ public class Fragment_clientes extends Fragment {
 
     private String correo_igual;
     private String direccion_igual;
+    private String Estatus;
 
     private Dialog ver_cliente_dialog;
     private  FragmentTransaction fr;

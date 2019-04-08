@@ -97,6 +97,7 @@ public class Fragment_Ventas extends Fragment {
     private SortableVentaArticulos tabla_venta_articulos;
 
 
+
     private List<ClienteModel> clientes;
     private List<ArticuloModel> Articulos;
     private List<ArticuloModel> ArticulosVenta;

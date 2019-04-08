@@ -1,5 +1,4 @@
 package com.Danthop.bionet;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;

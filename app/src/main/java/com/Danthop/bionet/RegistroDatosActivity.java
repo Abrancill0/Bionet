@@ -1,5 +1,4 @@
 package com.Danthop.bionet;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -69,7 +68,6 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
     private Cursor cursor;
 
     private ImageLoader imageLoader;
-
     private String RutaReal;
 
     @Override
@@ -293,8 +291,7 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
 
         //String image = getStringImage( imagePath );
 
-        SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, ApiPath,
-                new Response.Listener<String>() {
+        SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, ApiPath, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
 
@@ -308,8 +305,6 @@ public class RegistroDatosActivity extends FragmentActivity implements Fragment_
                             img_ruta_servidor = NodoResultado.getString("url_logo");
 
                             System.out.println(img_ruta_servidor);
-
-
 
                             Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( Image );
                             //Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( img_pantalla_principal);

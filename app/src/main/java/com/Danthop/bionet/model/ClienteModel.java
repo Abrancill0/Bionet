@@ -36,6 +36,7 @@ public class ClienteModel {
     private String Direccion_igual;
 
 
+
     public ClienteModel(String cliente_UUID,String cliente_Nombre,
                         String cliente_Correo, String cliente_Telefono,
                         String cliente_usu_id,String cliente_estado,
@@ -90,6 +91,7 @@ public class ClienteModel {
         this.cliente_calle=cliente_calle;
         Correo_igual = correo_igual;
         Direccion_igual = direccion_igual;
+
     }
 
     public String getCliente_UUID() {

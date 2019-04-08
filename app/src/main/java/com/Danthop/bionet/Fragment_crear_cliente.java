@@ -92,6 +92,7 @@ public class Fragment_crear_cliente extends DialogFragment {
     private String estado;
     private Toast toast2;
     private ImageView Back;
+    private String rfc;
 
     String URLGetEstados="http://192.168.100.192:8010/api/configuracion/sucursales/select_estados?usu_id=18807ae8-0a10-540c-91cf-aa7eaccf3cbf&esApp=1";
 
@@ -109,6 +110,12 @@ public class Fragment_crear_cliente extends DialogFragment {
     private LinearLayout LayoutDireccionFiscal;
     private LinearLayout LayoutEmail;
 
+    private String codigo;
+    private String determinacion;
+    private String mensaje;
+    private String valido;
+    private String valor;
+
     private final static String[] opciones = { "N/A", "Email de Facturación", "Dirección Fiscal", "Ambas"};
 
 
@@ -119,8 +126,7 @@ public class Fragment_crear_cliente extends DialogFragment {
     ProgressDialog progreso;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crear_cliente,container, false);
         EstadoName=new ArrayList<>();
         EstadoID = new ArrayList<>();
@@ -183,13 +189,11 @@ public class Fragment_crear_cliente extends DialogFragment {
         LoadSpinnerSucursal();
 
 
-        Button guardar = (Button) v.findViewById(R.id.verificar_fiscal);
+        Button guardar = (Button) v.findViewById(R.id.verificar_fiscal);//Boton Guardar_cliente
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                GuardarCliente();
-
+                ValidacionRfc();
             }
         });
 
@@ -454,8 +458,8 @@ public class Fragment_crear_cliente extends DialogFragment {
         );
 
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
-
     }
+
 
     private void LoadSpinnerEstado(){
 
@@ -650,9 +654,7 @@ public class Fragment_crear_cliente extends DialogFragment {
             final String url = "https://api-codigos-postales.herokuapp.com/v2/codigo_postal/"+TextCp.getText().toString();
 
                 // prepare the Request
-            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                    new Response.Listener<JSONObject>()
-                    {
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             // display response
@@ -791,9 +793,75 @@ public class Fragment_crear_cliente extends DialogFragment {
             TextFacturacionEstado.setEnabled(true);
             return;
         }
+
+
     }
 
+//---------------------------------------------------------------------------------------------
+
+    private void ValidacionRfc() {
+
+        JSONObject request = new JSONObject();
 
 
+        try {
 
+            request.put("rfc",TextRfc.getText());
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+        String ApiPath = url + "/api/validar-rfc";
+
+        JsonObjectRequest postRequets = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Resultado = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        Resultado = response.getJSONObject("resultado");
+
+                                codigo = Resultado.getString("codigo");
+                                determinacion = Resultado.getString("determinacion");
+                                mensaje = Resultado.getString("mensaje");
+                                valido = Resultado.getString("valido");
+                                valor = Resultado.getString("valor");
+                        GuardarCliente();
+
+                    }else {
+                        Toast toast1 =
+                                Toast.makeText( getContext(),
+                                        "El RFC ingresado es inválido, no se encuentra en la lista de RFCs inscritos y no cancelados del SAT", Toast.LENGTH_LONG );
+                                toast1.show();
+                        return ;
+                    }
+
+                }catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequets);
+    }
+ //----------------------------------------------------------------------------------
 }

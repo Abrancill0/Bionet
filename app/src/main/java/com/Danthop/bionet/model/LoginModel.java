@@ -176,9 +176,7 @@ public class LoginModel {
     }
         public void setUsu_administrador(String usu_administrador) { this.usu_administrador = usu_administrador; }
 
-        public String getEstatus() {
-        return Estatus;
-    }
+        public String getEstatus() { return Estatus; }
         public void setEstatus(String estatus) { Estatus = estatus; }
 
         public String getMensaje() { return Mensaje; }
