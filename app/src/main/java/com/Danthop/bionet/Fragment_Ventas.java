@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -32,6 +34,7 @@ import com.Danthop.bionet.Tables.SortableSeleccionarArticuloTable;
 import com.Danthop.bionet.Tables.SortableVentaArticulos;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
+import com.Danthop.bionet.model.TicketModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -72,7 +75,7 @@ public class Fragment_Ventas extends Fragment {
     private ArrayList<String> VendedorName;
 
     private String usu_id;
-    private String nombre;
+    private String nombreCliente;
     private String UUID;
     private String telefono;
     private String correo_electronico;
@@ -101,11 +104,15 @@ public class Fragment_Ventas extends Fragment {
     private SortableSeleccionarArticuloTable tabla_selecciona_articulo;
     private SortableVentaArticulos tabla_venta_articulos;
 
+    private String IDCliente;
+    private String NombreCli;
 
 
     private List<ClienteModel> clientes;
     private List<ArticuloModel> Articulos;
     private List<ArticuloModel> ArticulosVenta;
+    private TicketModel ticket_de_venta;
+
     private FragmentTransaction fr;
 
     private Spinner SpinnerSucursal;
@@ -164,6 +171,7 @@ public class Fragment_Ventas extends Fragment {
         tabla_venta_articulos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
 
 
+        InstanciarModeloTicket();
         LoadSucursales();
         LoadImages();
         LoadListener();
@@ -297,8 +305,10 @@ public class Fragment_Ventas extends Fragment {
                     @Override
                     public void onDataClicked(int rowIndex, final ClienteModel clickedData) {
                         dialog.dismiss();
-                        nombre= clickedData.getCliente_Nombre();
-                        btn_agregar_cliente.setText(nombre);
+                        ticket_de_venta.setTic_nombre_cliente(clickedData.getCliente_Nombre());
+                        ticket_de_venta.setTic_id_cliente(clickedData.getCliente_usu_id());
+                        btn_agregar_cliente.setText(ticket_de_venta.getTic_nombre_cliente());
+                        AniadirClienteTicket();
 
                     }
                 };
@@ -392,24 +402,19 @@ public class Fragment_Ventas extends Fragment {
 
             }
         });
-
-        Buscar.setOnEditorActionListener(
-            new EditText.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                            actionId == EditorInfo.IME_ACTION_DONE ||
-                            event != null &&
-                                    event.getAction() == KeyEvent.ACTION_DOWN &&
-                                    event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                        if (event == null || !event.isShiftPressed()) {
-                            BuscarPorSKU(Buscar.getText().toString());
-                            return true;
-                        }
-                    }
-                    return false;
+        Buscar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                switch (actionId){
+                    case EditorInfo.IME_ACTION_DONE:
+                    case EditorInfo.IME_ACTION_NEXT:
+                    case EditorInfo.IME_ACTION_PREVIOUS:
+                        BuscarPorSKU(Buscar.getText().toString());
+                        return true;
                 }
-            });
+                return false;
+            }
+        });
 
 
     }
@@ -417,15 +422,16 @@ public class Fragment_Ventas extends Fragment {
     private void Aniadir_a_venta(String CBoSKULL, String Cantidad)
     {
         ArticulosVenta.clear();
+        ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
         JSONObject request = new JSONObject();
         try
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
-            request.put("tic_id_sucursal",SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
+            request.put("tic_id_sucursal",ticket_de_venta.getTic_id_sucursal());
             request.put("articulo",CBoSKULL);
             request.put("cantidad",Cantidad);
-            request.put("tic_id",TicketIDVenta);
+            request.put("tic_id",ticket_de_venta.getTic_id());
 
         }
         catch(Exception e)
@@ -462,10 +468,22 @@ public class Fragment_Ventas extends Fragment {
                         TicketIDVenta = TicketID.getString("uuid");
                         JSONObject TicketDesc = RespuestaNodoTicket.getJSONObject("tic_importe_descuentos");
                         TicketImporteDescuento = TicketDesc.getString("value");
-                        descuento.setText(TicketImporteDescuento);
                         JSONObject TicketTotal = RespuestaNodoTicket.getJSONObject("tic_importe_total");
                         TicketImporteTotal = TicketTotal.getString("value");
-                        total.setText(TicketImporteTotal);
+
+
+                        //Se modifican los datos del ticket de venta
+                        ticket_de_venta.setTic_id(TicketIDVenta);
+                        ticket_de_venta.setTic_importe_descuentos(TicketImporteDescuento);
+                        ticket_de_venta.setTic_importe_total(TicketImporteTotal);
+
+
+                        total.setText(ticket_de_venta.getTic_importe_total());
+                        descuento.setText(ticket_de_venta.getTic_importe_descuentos());
+
+
+
+
 
 
                         NodoTicketArticulos = Respuesta.getJSONArray("aDetalleTicket");
@@ -498,6 +516,7 @@ public class Fragment_Ventas extends Fragment {
                             ArticulosVenta.add(articulo);
                         }
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos);
+                        articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                     }
                     else
@@ -566,7 +585,6 @@ public class Fragment_Ventas extends Fragment {
 
                     if (status == 1)
                     {
-
                         Respuesta = response.getJSONArray("resultado");
 
                         for(int x = 0; x < Respuesta.length(); x++){
@@ -598,6 +616,7 @@ public class Fragment_Ventas extends Fragment {
                             ArticulosVenta.add(articulo);
                         }
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos);
+                        articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                     }
                     else
@@ -695,6 +714,7 @@ public class Fragment_Ventas extends Fragment {
                             ArticulosVenta.add(articulo);
                         }
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos);
+                        articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                     }
                     else
@@ -772,7 +792,7 @@ public class Fragment_Ventas extends Fragment {
                             ElementoUsuario =  elemento.getJSONObject("cli_id");
 
                             UUID = ElementoUsuario.getString( "uuid");
-                            nombre = elemento.getString("cli_nombre");
+                            nombreCliente = elemento.getString("cli_nombre");
                             correo_electronico = elemento.getString("cli_correo_electronico");
 
                             telefono = elemento.getString("cli_telefono");
@@ -823,7 +843,7 @@ public class Fragment_Ventas extends Fragment {
 
 
                             final ClienteModel cliente = new ClienteModel(UUID,
-                                    nombre,
+                                    nombreCliente,
                                     correo_electronico,
                                     telefono,
                                     usu_id,
@@ -888,14 +908,14 @@ public class Fragment_Ventas extends Fragment {
 
             String url = getString(R.string.Url);
 
-            String ApiPath = url + "/api/articulos/index_app/?usu_id=" + usu_id + "&esApp=1";
+            String ApiPath = url + "/api/inventario/obtener_existencias_articulos_app?usu_id=" + usu_id + "&esApp=1";
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            JSONArray RespuestaResultado = null;
+                            JSONObject RespuestaResultado = null;
                             JSONArray RespuestaImagenes = null;
                             JSONObject RespuestaUUID = null;
                             JSONObject RespuestaPrecio=null;
@@ -913,12 +933,11 @@ public class Fragment_Ventas extends Fragment {
 
                                 if (EstatusApi == 1) {
 
-                                    RespuestaResultado = response.getJSONArray("resultado");
+                                    RespuestaResultado = response.getJSONObject("resultado");
+                                    JSONArray NodoArticulos = RespuestaResultado.getJSONArray("aArticulos");
 
-                                    // sacar la ruta de las imagenes y mandarlo en el modelo
-
-                                    for (int x = 0; x < RespuestaResultado.length(); x++) {
-                                        JSONObject elemento = RespuestaResultado.getJSONObject(x);
+                                    for (int x = 0; x < NodoArticulos.length(); x++) {
+                                        JSONObject elemento = NodoArticulos.getJSONObject(x);
 
                                         RespuestaUUID = elemento.getJSONObject("art_id");
                                         String UUID = RespuestaUUID.getString( "uuid");
@@ -1006,10 +1025,81 @@ public class Fragment_Ventas extends Fragment {
         }
     }
 
+    private void AniadirClienteTicket()
+    {
+        ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
+        ArticulosVenta.clear();
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("tic_id",ticket_de_venta.getTic_id());
+            request.put("tic_id_sucursal",ticket_de_venta.getTic_id_sucursal());
+            request.put("tic_id_cliente", ticket_de_venta.getTic_id_cliente());
+            request.put("tic_nombre_cliente", ticket_de_venta.getTic_nombre_cliente());
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/tickets/store-cliente";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray Respuesta = null;
+                JSONObject RespuestaNodoTicket= null;
+                JSONObject TicketID=null;
+                JSONArray NodoTicketArticulos=null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1)
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
     private void BuscarPorSKU(String SKU)
     {
         dialog.setContentView(R.layout.pop_up_ventas_verificar_articulo);
-        dialog.show();
         final TextView art_nombre = dialog.findViewById(R.id.art_name_articulo);
         final TextView art_categoria =  dialog.findViewById(R.id.art_name_categoria);
         final TextView art_decription = dialog.findViewById(R.id.art_descripcion);
@@ -1114,11 +1204,25 @@ public class Fragment_Ventas extends Fragment {
                                     art_decription.setText(Descripcion);
                                     String ruta = "http://192.168.100.192:8010"+RutaImagen1;
                                     imageLoader.displayImage( ruta, imagenArticulo );
+
+                                    if(NombreCompleto.equals(""))
+                                    {
+                                        Toast toast1 =
+                                                Toast.makeText(getContext(),
+                                                        "No se encontró ningún artículo", Toast.LENGTH_LONG);
+                                        toast1.show();
+                                    }
+                                    else
+                                    {
+                                        dialog.show();
+                                    }
+
+
                                     Button Aniadir = dialog.findViewById(R.id.Aniadir_articulo);
                                     Aniadir.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Aniadir_a_venta(SKU,art_cantidad.getNumber());
+                                            Aniadir_a_venta(Buscar.getText().toString(),art_cantidad.getNumber());
                                             dialog.dismiss();
                                         }
                                     });
@@ -1311,6 +1415,53 @@ public class Fragment_Ventas extends Fragment {
 
         tabla_venta_articulos.addDataClickListener(VentaArticuloTablaListener);
 
+    }
+
+
+    private void InstanciarModeloTicket()
+    {
+        ticket_de_venta = new TicketModel(
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+
+        );
     }
 
 }
