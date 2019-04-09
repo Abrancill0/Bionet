@@ -1,5 +1,4 @@
 package com.Danthop.bionet.Tables;
-
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -25,17 +24,17 @@ public class SortableArticulosTable extends SortableTableView<ArticuloModel> {
     public SortableArticulosTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Artículo", "Precio");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Artículo", "Precio", "Existencias");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(2);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(3);
         tableColumnWeightModel.setColumnWeight(0, 4);
         tableColumnWeightModel.setColumnWeight(1, 3);
+        tableColumnWeightModel.setColumnWeight(2, 3);
         setColumnModel(tableColumnWeightModel);
 
         setColumnComparator(0, ComparatorArticulo.getArticuloComparator());
-
     }
 
 }

@@ -158,8 +158,7 @@ public class Fragment_clientes extends Fragment {
 
         String ApiPath = url + "/api/clientes/index_app";
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-        {
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
@@ -175,7 +174,6 @@ public class Fragment_clientes extends Fragment {
 
                     if (status == 1)
                     {
-
                         Respuesta = response.getJSONObject("resultado");
 
                         RespuestaNodoClientes = Respuesta.getJSONArray("aClientes");

@@ -1,6 +1,4 @@
 package com.Danthop.bionet;
-
-
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -96,8 +94,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.pop_up_ecommerce_nuevo_producto,container, false);
 
         Bundle bundle = getArguments();
@@ -135,9 +132,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                 TextGarantia = (EditText) v.findViewById( R.id.text_garantia );
 
                 TextCantidad.setNumber( String.valueOf(1) );
-
                 textCategoriaSeleccionada = (TextView) v.findViewById( R.id.textCategoriaSeleccionada );
-
                 TextNombreArticulo.setText(nombre);
                 TextDescripcionArticulo.setText(descripcion);
                 TextprecioArticulo.setText(precio);
@@ -148,36 +143,27 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                 RadioUsado.setChecked(true);
 
                 SpinnerTipoPublicacion=(Spinner) v.findViewById( R.id.Spinner_Tipo_Publicacion );
-
                 BtnGuardaArticulo = (Button) v.findViewById( R.id.Guardar_articulo );
                 Categoria = (TextView) v.findViewById( R.id.Categoria );
 
                 Categoria.setText(nombre_categoria);
                 CargaPublicaciones();
 
-
         BtnGuardaArticulo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Guarda();
-
             }
         });
-
             return v;
-
             }
 
+
     public void CargaPublicaciones(){
-
-
-        final String url = "http://187.189.192.150:8010/api/ecomerce/create_app/access_token=" + AccesToken  + "&expires_in=21600&user_id=" + UserML + "&domains=localhost"+ "&?usu_id=" + usu_id + "&esApp=1";
+        final String url = "http://187.189.192.150:8010/api/ecommerce/create_app/access_token=" + AccesToken  + "&user_id=" + UserML + "&?usu_id=" + usu_id + "&esApp=1";
 
         // prepare the Request
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>()
-                {
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         // display response
@@ -207,19 +193,11 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                                     TipoPublicacionID.add(idpublicacion);
                                     TipoPublicacionName.add(publicacion);
                                 }
-
-
                                 SpinnerTipoPublicacion.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,TipoPublicacionName));
-
                             }
-
-
-
                         }
                         catch (JSONException e)
                         {   e.printStackTrace();    }
-
-
                     }
                 },
                 new Response.ErrorListener()
@@ -232,8 +210,8 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         );
 
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
-
     }
+
 
     private void CargaCategorias(){
         final String url = "http://187.189.192.150:8010/api/ecomerce/create_app/access_token=" + AccesToken  + "&expires_in=21600&user_id=" + UserML + "&domains=localhost";
@@ -355,8 +333,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         }
         final String requestBody = jsonBodyObj.toString();
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
-                url, null, new Response.Listener<JSONObject>(){
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>(){
             @Override    public void onResponse(JSONObject response) {
 
             Toast.makeText(getContext(), "Se Agrego correctamente el producto", Toast.LENGTH_LONG).show();

@@ -1,6 +1,4 @@
 package com.Danthop.bionet;
-
-
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -237,8 +235,7 @@ public class Fragment_ecomerce extends Fragment {
                             final String url = "https://api.mercadolibre.com/shipments/" + Envio + "?access_token=" + Token;
 
                             // prepare the Request
-                            JsonObjectRequest getRequest = new JsonObjectRequest( Request.Method.GET, url, null,
-                                    new Response.Listener<JSONObject>() {
+                            JsonObjectRequest getRequest = new JsonObjectRequest( Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                                         @Override
                                         public void onResponse(JSONObject response) {
 

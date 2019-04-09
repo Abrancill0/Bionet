@@ -39,7 +39,9 @@ public class ArticuloAdapter extends LongPressAwareTableDataAdapter<ArticuloMode
             case 1:
                 renderedView = renderPrecio(Articulo);
                 break;
-
+            case 2:
+                 renderedView = renderExistencia(Articulo);
+                 break;
         }
         return renderedView;
     }
@@ -85,7 +87,10 @@ public class ArticuloAdapter extends LongPressAwareTableDataAdapter<ArticuloMode
         textView.setTextSize(TEXT_SIZE);
 
         return textView;
+    }
 
+    private View renderExistencia(final ArticuloModel articulo) {
+        return renderString(articulo. getArticulo_cantidad());
     }
 
     private View renderString(final String value) {
