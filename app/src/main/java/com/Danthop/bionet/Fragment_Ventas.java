@@ -103,6 +103,7 @@ public class Fragment_Ventas extends Fragment {
     private SortableClientesTable tabla_clientes;
     private SortableSeleccionarArticuloTable tabla_selecciona_articulo;
     private SortableVentaArticulos tabla_venta_articulos;
+    private String SKUarticulo;
 
     private String IDCliente;
     private String NombreCli;
@@ -544,6 +545,7 @@ public class Fragment_Ventas extends Fragment {
                     }
                 }
         );
+        postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
     }
@@ -919,8 +921,6 @@ public class Fragment_Ventas extends Fragment {
                             JSONArray RespuestaImagenes = null;
                             JSONObject RespuestaUUID = null;
                             JSONObject RespuestaPrecio=null;
-                            JSONObject RespuestaPrecioModificador=null;
-                            JSONArray RespuestaModificadores = null;
 
                             String RutaImagen1="";
                             String RutaImagen2="";
@@ -971,33 +971,34 @@ public class Fragment_Ventas extends Fragment {
 
                                         }
 
-                                        if (Modificadores == "true"){
-                                            RespuestaModificadores = elemento.getJSONArray( "modificadores");
+                                        String Sucursal = elemento.getString("suc_nombre");
+                                        if(Sucursal.equals(SpinnerSucursal.getSelectedItem()))
+                                        {
+                                            if (Modificadores == "true"){
+                                                NombreModificador = elemento.getString( "mod_nombre");
 
-                                            for (int i = 0; i < RespuestaModificadores.length(); i++) {
+                                                Precio = elemento.getString("amo_precio_lista");
 
-                                                JSONObject elemento2 = RespuestaModificadores.getJSONObject(i);
-                                                NombreModificador = elemento2.getString( "mod_nombre");
-                                                RespuestaPrecioModificador = elemento2.getJSONObject( "amo_precio");
-
-                                                Precio = RespuestaPrecioModificador.getString( "value");
-
+                                                System.out.println(NombreVariante);
                                                 NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
+
+                                                SKU = elemento.getString("amo_sku");
 
                                                 final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
                                                         RutaImagen2,SKU,Categoria,"","");
                                                 Articulos.add(Articulo);
                                             }
+                                            else
+                                            {
+                                                NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
-                                        }
-                                        else
-                                        {
-                                            NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
-                                            final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
-                                                    RutaImagen2,SKU,Categoria,"","");
-                                            Articulos.add(Articulo);
+                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
+                                                        RutaImagen2,SKU,Categoria,"","");
+                                                Articulos.add(Articulo);
+                                            }
                                         }
+
                                     }
                                     final SeleccionarArticuloVentaAdapter ArticuloAdapter = new SeleccionarArticuloVentaAdapter(getContext(), Articulos, tabla_selecciona_articulo);
                                     tabla_selecciona_articulo.setDataAdapter(ArticuloAdapter);
@@ -1019,6 +1020,8 @@ public class Fragment_Ventas extends Fragment {
                         }
                     }
             );
+            getRequest.setShouldCache(false);
+
             VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
         } catch (Error e) {
             e.printStackTrace();
@@ -1148,7 +1151,7 @@ public class Fragment_Ventas extends Fragment {
                                     String NombreVariante = RespuestaResultado.getString( "ava_nombre");
                                     String Descripcion = RespuestaResultado.getString( "art_descripcion");
                                     String Categoria = RespuestaResultado.getString("cat_nombre");
-                                    final String SKU = RespuestaResultado.getString("ava_sku");
+                                    SKUarticulo = RespuestaResultado.getString("ava_sku");
 
                                     String NombreModificador="";
                                     String Modificadores = RespuestaResultado.getString( "ava_tiene_modificadores");
@@ -1170,22 +1173,17 @@ public class Fragment_Ventas extends Fragment {
                                     }
 
                                     if (Modificadores == "true"){
-                                        RespuestaModificadores = RespuestaResultado.getJSONArray( "modificadores");
-
-                                        for (int i = 0; i < RespuestaModificadores.length(); i++) {
-
-                                            JSONObject elemento2 = RespuestaModificadores.getJSONObject(i);
-                                            NombreModificador = elemento2.getString( "mod_nombre");
-                                            RespuestaPrecioModificador = elemento2.getJSONObject( "amo_precio");
+                                            NombreModificador = RespuestaResultado.getString( "mod_nombre");
+                                            RespuestaPrecioModificador = RespuestaResultado.getJSONObject( "amo_precio");
 
                                             Precio = RespuestaPrecioModificador.getString( "value");
 
                                             NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
+                                            SKUarticulo = RespuestaResultado.getString("amo_sku");
 
                                             final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
-                                                    RutaImagen2,SKU,Categoria,"","");
+                                                    RutaImagen2,SKUarticulo,Categoria,"","");
                                             Articulos.add(Articulo);
-                                        }
 
                                     }
                                     else
@@ -1193,7 +1191,7 @@ public class Fragment_Ventas extends Fragment {
                                         NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
                                         final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
-                                                RutaImagen2,SKU,Categoria,"","");
+                                                RutaImagen2,SKUarticulo,Categoria,"","");
                                         Articulos.add(Articulo);
                                     }
 
@@ -1222,7 +1220,7 @@ public class Fragment_Ventas extends Fragment {
                                     Aniadir.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Aniadir_a_venta(Buscar.getText().toString(),art_cantidad.getNumber());
+                                            Aniadir_a_venta(SKUarticulo,art_cantidad.getNumber());
                                             dialog.dismiss();
                                         }
                                     });
@@ -1246,6 +1244,8 @@ public class Fragment_Ventas extends Fragment {
                         }
                     }
             );
+
+            getRequest.setShouldCache(false);
             VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
         } catch (Error e) {
             e.printStackTrace();
