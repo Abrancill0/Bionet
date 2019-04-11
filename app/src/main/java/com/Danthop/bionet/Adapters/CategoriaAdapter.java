@@ -1,5 +1,4 @@
 package com.Danthop.bionet.Adapters;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.Danthop.bionet.Fragment_ecommerce_Sincronizar_Articulos;
 import com.Danthop.bionet.Fragment_ecommerce_Sincronizar_Nuevo_Prod;
 import com.Danthop.bionet.R;
@@ -24,13 +22,10 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-
 
 public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
 
@@ -74,7 +69,6 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
         fr = fg;
         atras = back;
         id_viejo1=id_viejo;
-
     }
 
     @NonNull
@@ -108,11 +102,10 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
 
 
                         try {
-                            final String url = "http://187.189.192.150:8010/api/ecomerce/obtenerSubcategoriasMercadoLibre?sIdCategoria=" + id + "&usu_id=" + usu_id + "&esApp=1";
+                            final String url = "http://187.189.192.150:8010/api/ecommerce/obtenerSubcategoriasMercadoLibre?sIdCategoria=" + id + "&usu_id=" + usu_id + "&esApp=1";
 
                             // prepare the Request
-                            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                                    new Response.Listener<JSONObject>() {
+                            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                                         @Override
                                         public void onResponse(JSONObject response) {
                                             // display response
@@ -120,16 +113,13 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
                                             JSONArray RespuestaCategoria = null;
 
                                             try {
-
                                                 int EstatusApi = Integer.parseInt(response.getString("estatus"));
 
                                                 if (EstatusApi == 1) {
 
                                                     RespuestaCategoria = response.getJSONArray("resultado");
 
-                                                    if(RespuestaCategoria.length()!=0)
-
-                                                    {
+                                                    if(RespuestaCategoria.length()!=0) {
                                                         ArrayList arrayList = new ArrayList<>();
                                                         for (int x = 0; x < RespuestaCategoria.length(); x++) {
                                                             JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(x);
@@ -137,21 +127,11 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
                                                             String categoria = jsonObject1.getString("name");
 
                                                             CategoriaModel cat = new CategoriaModel(idcategoria, categoria);
-
-
-
                                                             arrayList.add(cat);//add the hashmap into arrayList
-
-
                                                         }
 
                                                         CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria, arrayList,ListaCategoria,bundle1,fr,atras,id);
-
-
-
                                                         ListaCategoria.setAdapter(adapter);//sets the adapter for listView
-
-
                                                     }
                                                     else
                                                     {
@@ -163,21 +143,14 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
                                                         bundle1.putString( "image1" , Imagen1);
                                                         bundle1.putString( "image2" , Imagen2);
 
-
                                                         Fragment_ecommerce_Sincronizar_Nuevo_Prod secondFragment = new Fragment_ecommerce_Sincronizar_Nuevo_Prod();
                                                         secondFragment.setArguments(bundle1);
                                                         fr.replace(R.id.fragment_container,secondFragment).commit();
                                                     }
-
-
                                                 }
-
-
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
-
-
                                         }
                                     },
                                     new Response.ErrorListener() {
@@ -189,16 +162,12 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
                             );
 
                             VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
-
-
                         } catch (Error e) {
                             e.printStackTrace();
                         }
-
-
             }});
 
-        atras.setOnClickListener(new View.OnClickListener() {
+       /*atras.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences sharedPref = getContext().getSharedPreferences( "DatosPersistentes", getContext().MODE_PRIVATE );
@@ -251,7 +220,6 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
 
                                         }
 
-
                                     }
                                     catch (JSONException e)
                                     {   e.printStackTrace();    }
@@ -272,11 +240,9 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
                 }
 
             }
-        });
-
+        });*/
         return convertView;
         }
-
 
 }
 

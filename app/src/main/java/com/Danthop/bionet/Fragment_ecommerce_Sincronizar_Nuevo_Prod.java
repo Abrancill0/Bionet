@@ -54,7 +54,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private ElegantNumberButton TextCantidad;
     private EditText TextGarantia;
     private View v;
-
     private String UserML;
     private String AccesToken;
     private String TokenLife;
@@ -63,11 +62,9 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private String Imagen2;
     private RadioButton RadioUsado;
     private RadioButton RadioNuevo;
-
     private ImageView FotoArticulo1;
     private ImageView FotoArticulo2;
-
-    private Button BtnGuardaArticulo;
+    private Button Guardar_articulo;
     private TextView Categoria;
     private ArrayList<String> TipoPublicacionName;
     private ArrayList<String> TipoPublicacionID;
@@ -78,9 +75,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private List<ArticuloModel> Articulos;
     private String[][] ArticuloModel;
     private String id_categoria;
-
     ProgressDialog progreso;
-
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private ImageLoader imageLoader2 = ImageLoader.getInstance();
 
@@ -99,6 +94,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
         Bundle bundle = getArguments();
 
+//datos alta de articulos en mercado libre
         String nombre = bundle.getString( "nombre");
         String descripcion = bundle.getString( "descripcion");
         String precio = bundle.getString( "precio");
@@ -110,7 +106,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
        // System.out.println(nombre_categoria);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getActivity().MODE_PRIVATE );
-
         UserML = sharedPref.getString( "UserIdML", "" );
         AccesToken = sharedPref.getString( "AccessToken", "" );
         TokenLife = sharedPref.getString( "TokenLifetime", "" );
@@ -118,7 +113,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
         FotoArticulo1 = (ImageView) v.findViewById(R.id.foto_articulo1);
         FotoArticulo2 = (ImageView) v.findViewById(R.id.foto_articulo2);
-
         imageLoader.displayImage(Imagen1,FotoArticulo1);
         imageLoader2.displayImage(Imagen2,FotoArticulo2);
 
@@ -130,26 +124,24 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                 TextprecioArticulo = (EditText) v.findViewById( R.id.text_precio_articulo );
                 TextCantidad = (ElegantNumberButton) v.findViewById( R.id.text_cantidad );
                 TextGarantia = (EditText) v.findViewById( R.id.text_garantia );
-
-                TextCantidad.setNumber( String.valueOf(1) );
+                TextCantidad.setNumber(String.valueOf(1) );
                 textCategoriaSeleccionada = (TextView) v.findViewById( R.id.textCategoriaSeleccionada );
                 TextNombreArticulo.setText(nombre);
                 TextDescripcionArticulo.setText(descripcion);
                 TextprecioArticulo.setText(precio);
-
                 RadioUsado = (RadioButton) v.findViewById( R.id.radioButton_Usado );
                 RadioNuevo = (RadioButton) v.findViewById( R.id.radioButton_Nuevo );
 
                 RadioUsado.setChecked(true);
 
                 SpinnerTipoPublicacion=(Spinner) v.findViewById( R.id.Spinner_Tipo_Publicacion );
-                BtnGuardaArticulo = (Button) v.findViewById( R.id.Guardar_articulo );
+                Guardar_articulo = (Button) v.findViewById( R.id.Guardar_articulo );
                 Categoria = (TextView) v.findViewById( R.id.Categoria );
 
                 Categoria.setText(nombre_categoria);
                 CargaPublicaciones();
 
-        BtnGuardaArticulo.setOnClickListener(new View.OnClickListener() {
+        Guardar_articulo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Guarda();
@@ -158,9 +150,8 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
             return v;
             }
 
-
     public void CargaPublicaciones(){
-        final String url = "http://187.189.192.150:8010/api/ecommerce/create_app/access_token=" + AccesToken  + "&user_id=" + UserML + "&?usu_id=" + usu_id + "&esApp=1";
+        final String url = "http://187.189.192.150:8010/api/ecommerce/create_app?access_token=" + AccesToken  + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
 
         // prepare the Request
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -178,9 +169,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
                                 TipoPublicacionID=new ArrayList<>();
                                 TipoPublicacionName = new ArrayList<>();
-
                                 categorias = new ArrayList<CategoriaModel>();
-
                                 RespuestaTiposPublicacion = response.getJSONArray("aListaTiposPublicacion");
 
                                // RespuestaCategoria = response.getJSONArray("aCategorias");
@@ -208,7 +197,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                     }
                 }
         );
-
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
     }
 
@@ -217,20 +205,15 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         final String url = "http://187.189.192.150:8010/api/ecomerce/create_app/access_token=" + AccesToken  + "&expires_in=21600&user_id=" + UserML + "&domains=localhost";
 
         // prepare the Request
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>()
-                {
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         // display response
                         JSONArray RespuestaTiposPublicacion = null;
                         JSONArray RespuestaCategoria = null;
 
-                        try
-                        {
-
+                        try {
                             int EstatusApi = Integer.parseInt( response.getString("estatus") );
-
                             if (EstatusApi == 1) {
 
                                 RespuestaCategoria = response.getJSONArray("aCategorias");
@@ -243,37 +226,25 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                                     String categoria = jsonObject1.getString("name");
 
                                     CategoriaModel cat = new CategoriaModel(idcategoria, categoria );
-
                                     arrayList.add(cat);//add the hashmap into arrayList
-
                                 }
-
                                 //CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria,arrayList,pop_up_categoria1 );
-
                                 //listacategoria1.setAdapter(adapter);//sets the adapter for listView
-
-
                             }
-
-
                         }
-                        catch (JSONException e)
-                        {   e.printStackTrace();    }
-
-
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
-                new Response.ErrorListener()
-                {
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error.Response", String.valueOf(error));
                     }
                 }
         );
-
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
-
     }
 
     public void Guarda() {
@@ -363,11 +334,8 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                     return null;
                 }
             }
-
         };
-
         requestQueue.add(jsonObjectRequest);
-
     }
 
     }

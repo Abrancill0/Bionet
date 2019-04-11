@@ -45,8 +45,7 @@ public class Fragment_selecciona_categoria extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_selecciona_categoria,container, false);
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getActivity().MODE_PRIVATE );
 
@@ -70,7 +69,7 @@ public class Fragment_selecciona_categoria extends Fragment {
 
     public void cargaCategorias(){
         {
-            final String url = "http://187.189.192.150:8010/api/ecommerce/create_app/accesstoken=" + AccesToken  + "&user_id_mercado_libre=" + UserML + "&?usu_id=" + usu_id + "&esApp=1";
+            final String url = "http://187.189.192.150:8010/api/ecommerce/create_app?accesstoken=" + AccesToken  + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {

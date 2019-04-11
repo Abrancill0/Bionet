@@ -37,7 +37,6 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
     private Spinner SpinnerTipoPublicacion;
     private String usu_id;
     private String AccesToken;
-    private String TokenLife;
     private String UserIdML;
     private Button atras;
     private List<com.Danthop.bionet.model.ArticuloModel> Articulos;
@@ -58,7 +57,6 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
         UserIdML = sharedPref.getString("UserIdML", "");
 
         tb = v.findViewById(R.id.tablaArticulos);
-
         CargaArticulos();
 
         final TableDataClickListener<ArticuloModel> ArticuloListener = new TableDataClickListener<ArticuloModel>() {
@@ -85,7 +83,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
-                Fragment_selecciona_categoria secondFragment = new Fragment_selecciona_categoria();
+                Fragment_selecciona_tipo_publicacion secondFragment = new Fragment_selecciona_tipo_publicacion();
                 secondFragment.setArguments(bundle);
 
                 fragmentTransaction.replace(R.id.fragment_container, secondFragment);
@@ -100,7 +98,6 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
     private void CargaArticulos() {
 
         try {
-
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/ecommerce/inicio_app?accesstoken=" + AccesToken + "&user_id_mercado_libre=" + UserIdML + "&usu_id=" + usu_id + "&esApp=1";
 
@@ -166,21 +163,20 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                                 }
 
                                 if (Modificadores == "true"){
-                                    RespuestaModificadores = elemento.getJSONArray( "modificadores");
+                                    //RespuestaModificadores = elemento.getJSONArray( "modificadores");
 
-                                    for (int i = 0; i < RespuestaModificadores.length(); i++) {
-                                        JSONObject elemento2 = RespuestaModificadores.getJSONObject(i);
+                                   // for (int i = 0; i < RespuestaModificadores.length(); i++) {
+                                       // JSONObject elemento2 = RespuestaModificadores.getJSONObject(i);
 
-                                        NombreModificador = elemento2.getString( "mod_nombre");
-                                        RespuestaPrecioModificador = elemento2.getJSONObject( "amo_precio");
-
+                                        NombreModificador = elemento.getString( "mod_nombre");
+                                        RespuestaPrecioModificador = elemento.getJSONObject( "amo_precio");
                                         Precio = RespuestaPrecioModificador.getString( "value");
 
                                         NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
                                         final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,RutaImagen2,"","",cantidad,"");
                                         Articulos.add(Articulo);
-                                    }
+                                    //}
                                 }else
                                 {
                                     NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
@@ -188,7 +184,6 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                                     final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,RutaImagen2,"","",cantidad,"");
                                     Articulos.add(Articulo);
                                 }
-
                             }
                             final ArticuloAdapter ArticuloAdapter = new ArticuloAdapter(getContext(), Articulos, tb);
                             tb.setDataAdapter(ArticuloAdapter);
@@ -210,7 +205,6 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                     }
             );
             VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
-
     } catch (Error e) {
         e.printStackTrace();
     }

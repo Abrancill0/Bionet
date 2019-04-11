@@ -1,6 +1,4 @@
 package com.Danthop.bionet;
-
-
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -87,27 +85,22 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
         v = inflater.inflate(R.layout.fragment_ecommerce_sincronizar, container, false);
 
         FichaTecnica = new Dialog(getContext());
-
         Sincronizaciones = new ArrayList<>();
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", getActivity().MODE_PRIVATE);
-
         UserML = sharedPref.getString("UserIdML", "");
         AccesToken = sharedPref.getString("AccessToken", "");
         TokenLife = sharedPref.getString("TokenLifetime", "");
         usu_id = sharedPref.getString("usu_id", "");
 
         Bundle bundle = getArguments();
-
         int resultado = 0;
 
         if (bundle == null) {
             resultado = LoadTable();
         } else {
             String json = bundle.getString("Resultado");
-
             RespuestaTodo = bundle.getString("Resultado");
-
             try {
                 JSONObject obj = new JSONObject(json);
                 CargaDatos(obj);
@@ -122,6 +115,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
         LoadButtons();
         LoadSpinners();
         // LoadTable();
+        //Inventario_Ecommerce();
 
         tabla_sincronizar.setSwipeToRefreshEnabled(true);
         tabla_sincronizar.setSwipeToRefreshListener(new SwipeToRefreshListener() {
@@ -137,7 +131,6 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                 }, 2000);
             }
         });
-
 
         tabla_sincronizar.addDataClickListener(new TableDataClickListener<SincronizarModel>() {
             @Override
@@ -306,7 +299,6 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                 RespuestaDatos = Datos.getJSONArray("aDatos");
 
                 int numeroregistro = RespuestaDatos.length();
-
                 SincornizarModel = new String[numeroregistro][4];
 
                 for (int x = 0; x < RespuestaDatos.length(); x++) {
@@ -315,7 +307,6 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                     Respuestaespecificaciones = elemento.getJSONObject("especificaciones");
                     RespuestaDescripcion = elemento.getJSONObject("descripcion");
-
                     DescripcionLarga = RespuestaDescripcion.getString("plain_text");
 
                     IDPublicacion = Respuestaespecificaciones.getString("id");
@@ -328,9 +319,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                     for (int k = 0; k < Respuestapicture.length(); k++) {
                         JSONObject elemento2 = Respuestapicture.getJSONObject(k);
-
                         Imagen = elemento2.getString("url");
-
                         break;
                     }
 
@@ -349,7 +338,6 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                     final SincronizarModel sincronizar = new SincronizarModel(Titulo, Disponibilidad, Envio, Precio, Imagen, Categoria, Estatus, DescripcionLarga, IDPublicacion);
                     Sincronizaciones.add(sincronizar);
                 }
-
 
                 final SincronizarAdapter sincronizarAdapter = new SincronizarAdapter(getContext(), Sincronizaciones, tabla_sincronizar);
                 tabla_sincronizar.setDataAdapter(sincronizarAdapter);
@@ -912,6 +900,48 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
         requestQueue.add(jsonObjectRequest);
     }
 
+    /*private void Inventario_Ecommerce() {
+        try {
+            RespuestaTodoJSON.put("usu_id", usu_id);
+            RespuestaTodoJSON.put("esApp", 1);
+            RespuestaTodoJSON.put("accesstoken", accesstoken);
+            RespuestaTodoJSON.put("user_id_mercado_libre", user_id_mercado_libre);
 
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String url = getString(R.string.Url);
+        String ApiPath = url + "/api/ecommerce/inicio_app";
+
+        JsonObjectRequest postRequets = new JsonObjectRequest(Request.Method.GET, ApiPath, RespuestaTodoJSON, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                try {
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+
+
+
+                }catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+            },
+                    new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+        );
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequets);
+}*/
 
 }
