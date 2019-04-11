@@ -47,6 +47,12 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
             case 3:
                 renderedView = renderPrecio(Articulo);
                 break;
+            case 4:
+                renderedView = renderDescuento(Articulo);
+                break;
+            case 5:
+                renderedView = renderImporte(Articulo);
+                break;
 
         }
         return renderedView;
@@ -76,11 +82,35 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     }
     private View renderCantidad(final ArticuloModel articulo) {
         return renderString(articulo.getArticulo_cantidad());
+    }
+    private View renderDescuento(final ArticuloModel articulo) {
+        return renderString(articulo.getArticulo_descuento());
+    }
+    private View renderImporte(final ArticuloModel articulo) {
+        double Importe = Double.parseDouble( articulo.getArticulo_importe() );
 
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+        final TextView textView = new TextView( getContext() );
+        textView.setText( formatter.format( Importe ) );
+        textView.setPadding( 20, 10, 20, 10 );
+        textView.setTextSize( TEXT_SIZE );
+
+        return textView;
     }
 
+
     private View renderPrecio(final ArticuloModel articulo) {
-        return renderString(articulo.getarticulo_Precio());
+        double Precio = Double.parseDouble( articulo.getarticulo_Precio() );
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+        final TextView textView = new TextView( getContext() );
+        textView.setText( formatter.format( Precio ) );
+        textView.setPadding( 20, 10, 20, 10 );
+        textView.setTextSize( TEXT_SIZE );
+
+        return textView;
 
     }
 

@@ -50,6 +50,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,8 +124,10 @@ public class Fragment_Ventas extends Fragment {
     private CarouselView carouselView;
 
     private String TicketIDVenta;
+    private int TicketSubtotal;
     private String TicketImporteDescuento;
-    private String TicketImporteTotal;
+    private String TicketIVA;
+    private int TicketImporteTotal =0;
 
     private TableDataClickListener<ArticuloModel> VentaArticuloTablaListener;
 
@@ -467,20 +470,36 @@ public class Fragment_Ventas extends Fragment {
                         RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
                         TicketID = RespuestaNodoTicket.getJSONObject("tic_id");
                         TicketIDVenta = TicketID.getString("uuid");
-                        JSONObject TicketDesc = RespuestaNodoTicket.getJSONObject("tic_importe_descuentos");
+
+                        JSONObject RespuestaNodoTicketArticulo = Respuesta.getJSONObject("aTicketArticulo");
+                        JSONObject TicketDesc = RespuestaNodoTicketArticulo.getJSONObject("tar_importe_descuento");
                         TicketImporteDescuento = TicketDesc.getString("value");
-                        JSONObject TicketTotal = RespuestaNodoTicket.getJSONObject("tic_importe_total");
-                        TicketImporteTotal = TicketTotal.getString("value");
+                        JSONObject TicketTotal = RespuestaNodoTicketArticulo.getJSONObject("tar_importe_total");
+                        int importesum = Integer.parseInt(TicketTotal.getString("value"));
+
+                        TicketImporteTotal = importesum + TicketImporteTotal;
 
 
                         //Se modifican los datos del ticket de venta
+
+
+
                         ticket_de_venta.setTic_id(TicketIDVenta);
                         ticket_de_venta.setTic_importe_descuentos(TicketImporteDescuento);
-                        ticket_de_venta.setTic_importe_total(TicketImporteTotal);
+                        ticket_de_venta.setTic_importe_total(String.valueOf(TicketImporteTotal));
 
 
-                        total.setText(ticket_de_venta.getTic_importe_total());
-                        descuento.setText(ticket_de_venta.getTic_importe_descuentos());
+
+                        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+                        double Price = Double.parseDouble( ticket_de_venta.getTic_importe_total() );
+                        total.setText( formatter.format( Price ) );
+
+
+                        double desc = Double.parseDouble( ticket_de_venta.getTic_importe_descuentos() );
+                        descuento.setText( formatter.format( desc ) );
+
+
 
 
 
@@ -498,6 +517,10 @@ public class Fragment_Ventas extends Fragment {
                             String cantidad = cantidadNodo.getString("value");
                             JSONObject TicketArtPrecio = elemento.getJSONObject("tar_precio_articulo");
                             String precio = TicketArtPrecio.getString("value");
+                            JSONObject nodoDescuento = elemento.getJSONObject("tar_importe_descuento");
+                            String descuento = nodoDescuento.getString("value");
+                            JSONObject nodoImporte = elemento.getJSONObject("tar_importe_total");
+                            String importe = nodoImporte.getString("value");
 
 
 
@@ -512,7 +535,10 @@ public class Fragment_Ventas extends Fragment {
                                     SKUArticulo,
                                     "",
                                     cantidad,
-                                    tar_id
+                                    tar_id,
+                                    descuento,
+                                    "",
+                                    importe
                             );
                             ArticulosVenta.add(articulo);
                         }
@@ -599,6 +625,10 @@ public class Fragment_Ventas extends Fragment {
                             String cantidad = cantidadNodo.getString("value");
                             JSONObject TicketArtPrecio = elemento.getJSONObject("tar_precio_articulo");
                             String precio = TicketArtPrecio.getString("value");
+                            JSONObject nodoDescuento = elemento.getJSONObject("tar_importe_descuento");
+                            String descuento = nodoDescuento.getString("value");
+                            JSONObject nodoImporte = elemento.getJSONObject("tar_importe_total");
+                            String importe = nodoImporte.getString("value");
 
 
 
@@ -613,7 +643,10 @@ public class Fragment_Ventas extends Fragment {
                                     SKUArticulo,
                                     "",
                                     cantidad,
-                                    tar_id
+                                    tar_id,
+                                    descuento,
+                                    "",
+                                    importe
                             );
                             ArticulosVenta.add(articulo);
                         }
@@ -700,6 +733,10 @@ public class Fragment_Ventas extends Fragment {
                             String cantidad = cantidadNodo.getString("value");
                             JSONObject TicketArtPrecio = elemento.getJSONObject("tar_precio_articulo");
                             String precio = TicketArtPrecio.getString("value");
+                            JSONObject nodoDescuento = elemento.getJSONObject("tar_importe_descuento");
+                            String descuento = nodoDescuento.getString("value");
+                            JSONObject nodoImporte = elemento.getJSONObject("tar_importe_total");
+                            String importe = nodoImporte.getString("value");
 
 
                             final ArticuloModel articulo = new ArticuloModel("",
@@ -711,7 +748,10 @@ public class Fragment_Ventas extends Fragment {
                                     SKUArticulo,
                                     "",
                                     cantidad,
-                                    tar_id
+                                    tar_id,
+                                    descuento,
+                                    "",
+                                    importe
                             );
                             ArticulosVenta.add(articulo);
                         }
@@ -985,7 +1025,8 @@ public class Fragment_Ventas extends Fragment {
                                                 SKU = elemento.getString("amo_sku");
 
                                                 final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
-                                                        RutaImagen2,SKU,Categoria,"","");
+                                                        RutaImagen2,SKU,Categoria,"","","","",
+                                                        "");
                                                 Articulos.add(Articulo);
                                             }
                                             else
@@ -994,7 +1035,8 @@ public class Fragment_Ventas extends Fragment {
 
 
                                                 final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
-                                                        RutaImagen2,SKU,Categoria,"","");
+                                                        RutaImagen2,SKU,Categoria,"","","","",
+                                                        "");
                                                 Articulos.add(Articulo);
                                             }
                                         }
@@ -1182,7 +1224,8 @@ public class Fragment_Ventas extends Fragment {
                                             SKUarticulo = RespuestaResultado.getString("amo_sku");
 
                                             final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
-                                                    RutaImagen2,SKUarticulo,Categoria,"","");
+                                                    RutaImagen2,SKUarticulo,Categoria,"","",
+                                                    "","","");
                                             Articulos.add(Articulo);
 
                                     }
@@ -1191,7 +1234,8 @@ public class Fragment_Ventas extends Fragment {
                                         NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
                                         final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
-                                                RutaImagen2,SKUarticulo,Categoria,"","");
+                                                RutaImagen2,SKUarticulo,Categoria,"","",
+                                                "","","");
                                         Articulos.add(Articulo);
                                     }
 
@@ -1330,33 +1374,30 @@ public class Fragment_Ventas extends Fragment {
 
                                                 }
 
-                                                if (Modificadores == "true"){
-                                                    RespuestaModificadores = RespuestaResultado.getJSONArray( "modificadores");
+                                            if (Modificadores == "true"){
+                                                NombreModificador = RespuestaResultado.getString( "mod_nombre");
+                                                RespuestaPrecioModificador = RespuestaResultado.getJSONObject( "amo_precio");
 
-                                                    for (int i = 0; i < RespuestaModificadores.length(); i++) {
+                                                Precio = RespuestaPrecioModificador.getString( "value");
 
-                                                        JSONObject elemento2 = RespuestaModificadores.getJSONObject(i);
-                                                        NombreModificador = elemento2.getString( "mod_nombre");
-                                                        RespuestaPrecioModificador = elemento2.getJSONObject( "amo_precio");
+                                                NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
+                                                SKUarticulo = RespuestaResultado.getString("amo_sku");
 
-                                                        Precio = RespuestaPrecioModificador.getString( "value");
+                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
+                                                        RutaImagen2,SKUarticulo,Categoria,"","","","",
+                                                        "");
+                                                Articulos.add(Articulo);
 
-                                                        NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
+                                            }
+                                            else
+                                            {
+                                                NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
-                                                        final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
-                                                                RutaImagen2,SKU,Categoria,"","");
-                                                        Articulos.add(Articulo);
-                                                    }
-
-                                                }
-                                                else
-                                                {
-                                                    NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
-
-                                                    final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
-                                                            RutaImagen2,SKU,Categoria,"","");
-                                                    Articulos.add(Articulo);
-                                                }
+                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
+                                                        RutaImagen2,SKUarticulo,Categoria,"","","",""
+                                                        ,"");
+                                                Articulos.add(Articulo);
+                                            }
 
 
                                                 art_cantidad.setNumber(clickedData.getArticulo_cantidad());

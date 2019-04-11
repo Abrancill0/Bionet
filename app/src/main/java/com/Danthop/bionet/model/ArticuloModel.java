@@ -11,10 +11,14 @@ public class ArticuloModel {
     private String articulo_categoria;
     private String articulo_cantidad;
     private String articulo_tarID;
+    private String articulo_descuento;
+    private String articulo_iva;
+    private String articulo_importe;
 
 
     public ArticuloModel(String articulo_UUID,String articulo_Nombre,String articulo_Descripcion ,String articulo_Precio,String articulo_Imagen1,
-                         String articulo_Imagen2, String articulo_SKU, String articulo_Categoria,String articulo_Cantidad,String articulo_TarID) {
+                         String articulo_Imagen2, String articulo_SKU, String articulo_Categoria,String articulo_Cantidad,String articulo_TarID,
+                         String articulo_Descuento, String articulo_IVA, String articulo_Importe) {
         this.articulo_UUID = articulo_UUID;
         this.articulo_Nombre = articulo_Nombre;
         this.articulo_Descripcion = articulo_Descripcion;
@@ -26,6 +30,9 @@ public class ArticuloModel {
         this.articulo_categoria = articulo_Categoria;
         this.articulo_cantidad = articulo_Cantidad;
         this.articulo_tarID = articulo_TarID;
+        this.articulo_descuento = articulo_Descuento;
+        this.articulo_importe = articulo_Importe;
+        this.articulo_iva = articulo_IVA;
     }
 
     public String getarticulo_UUID() {
@@ -107,5 +114,29 @@ public class ArticuloModel {
 
     public void setArticulo_tarID(String articulo_tarID) {
         this.articulo_tarID = articulo_tarID;
+    }
+
+    public String getArticulo_descuento() {
+        return articulo_descuento;
+    }
+
+    public void setArticulo_descuento(String articulo_descuento) {
+        this.articulo_descuento = articulo_descuento;
+    }
+
+    public String getArticulo_iva() {
+        return articulo_iva;
+    }
+
+    public void setArticulo_iva(String articulo_iva) {
+        this.articulo_iva = articulo_iva;
+    }
+
+    public String getArticulo_importe() {
+        return articulo_importe;
+    }
+
+    public void setArticulo_importe(String articulo_importe) {
+        this.articulo_importe = articulo_importe;
     }
 }
