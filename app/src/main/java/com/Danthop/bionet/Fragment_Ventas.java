@@ -72,8 +72,8 @@ public class Fragment_Ventas extends Fragment {
     private Dialog dialog;
     private TextView descuento;
     private TextView total;
-    private Spinner vendedores;
-    private ArrayList<String> VendedorName;
+    private TextView impuesto;
+    private TextView subtotal;
 
     private String usu_id;
     private String nombreCliente;
@@ -121,13 +121,20 @@ public class Fragment_Ventas extends Fragment {
     private ArrayList<String> SucursalName;
     private ArrayList<String> SucursalID;
 
+    private Spinner SpinnerVendedor;
+    private ArrayList<String> VendedorName;
+    private ArrayList<String> VendedorID;
+
+
+
+
     private CarouselView carouselView;
 
     private String TicketIDVenta;
     private int TicketSubtotal;
     private String TicketImporteDescuento;
-    private String TicketIVA;
-    private int TicketImporteTotal =0;
+    private float TicketIVA;
+
 
     private TableDataClickListener<ArticuloModel> VentaArticuloTablaListener;
 
@@ -165,7 +172,10 @@ public class Fragment_Ventas extends Fragment {
         Buscar = v.findViewById(R.id.buscarXSKU);
         descuento = v.findViewById(R.id.descuento_text);
         total = v.findViewById(R.id.total_text);
+        subtotal = v.findViewById(R.id.subtotal_text);
+        impuesto = v.findViewById(R.id.iva_text);
         VendedorName=new ArrayList<>();
+        VendedorID=new ArrayList<>();
 
         SucursalName=new ArrayList<>();
         SucursalID = new ArrayList<>();
@@ -276,6 +286,93 @@ public class Fragment_Ventas extends Fragment {
 
     }
 
+    public void LoadVendedores()
+    {
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/usuarios/index_app";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray Respuesta = null;
+                JSONObject RespuestaNodoID = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+                    if (status == 1)
+                    {
+
+                        Respuesta = response.getJSONArray("resultado");
+
+                        for(int x = 0; x < Respuesta.length(); x++){
+                            JSONObject jsonObject1=Respuesta.getJSONObject(x);
+                            String vendedor=jsonObject1.getString("usu_nombre");
+                            VendedorName.add(vendedor);
+                            RespuestaNodoID = jsonObject1.getJSONObject("usu_id");
+                            String id=RespuestaNodoID.getString("uuid");
+                            VendedorID.add(id);
+                        }
+                        SpinnerVendedor.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,VendedorName));
+
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+
+                } catch (JSONException e) {
+
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+
+                }
+
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+    }
+
     public void LoadImages()
     {
         final int[] sampleImages = {R.drawable.milk, R.drawable.bread, R.drawable.strawberrie, R.drawable.lake};
@@ -334,16 +431,15 @@ public class Fragment_Ventas extends Fragment {
             public void onClick(View v) {
                 dialog.setContentView(R.layout.pop_up_ventas_agregar_vendedor);
                 dialog.show();
-                VendedorName.add("Roberto Carrera");
-                VendedorName.add("Gerardo Rodríguez");
-                VendedorName.add("Ricardo Segura");
-                vendedores = dialog.findViewById(R.id.Combo_vendedores);
-                vendedores.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,VendedorName));
+                SpinnerVendedor = dialog.findViewById(R.id.Combo_vendedores);
+                LoadVendedores();
+                final ElegantNumberButton comision_button = dialog.findViewById(R.id.vend_comision);
                 aceptar_agregar_vendedor = (Button) dialog.findViewById(R.id.aceptar_agregar_vendedor);
                 aceptar_agregar_vendedor.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
+                        AniadirVendedorTicket(comision_button.getNumber());
                     }
                 });
 
@@ -471,22 +567,70 @@ public class Fragment_Ventas extends Fragment {
                         TicketID = RespuestaNodoTicket.getJSONObject("tic_id");
                         TicketIDVenta = TicketID.getString("uuid");
 
-                        JSONObject RespuestaNodoTicketArticulo = Respuesta.getJSONObject("aTicketArticulo");
-                        JSONObject TicketDesc = RespuestaNodoTicketArticulo.getJSONObject("tar_importe_descuento");
-                        TicketImporteDescuento = TicketDesc.getString("value");
-                        JSONObject TicketTotal = RespuestaNodoTicketArticulo.getJSONObject("tar_importe_total");
-                        int importesum = Integer.parseInt(TicketTotal.getString("value"));
+                        float Subtotal = 0;
+                        float ImpuestoTotal =0;
+                        float DescuentoTotal =0;
+                        float PrecioTotal =0;
 
-                        TicketImporteTotal = importesum + TicketImporteTotal;
+
+                        JSONArray NodoArticuloTicket = Respuesta.getJSONArray("aDetalleTicket");
+                        for(int j = 0; j < NodoArticuloTicket.length(); j++) {
+                            JSONObject nodo = NodoArticuloTicket.getJSONObject(j);
+
+                            JSONObject cant = nodo.getJSONObject("tar_cantidad");
+                            float numero_de_productos = Integer.parseInt(cant.getString("value"));
+
+                            float DescuentoTotalProducto=0;
+                            float ImpuestoTotalProducto=0;
+                            float PrecioSubTotalProducto=0;
+                            float PrecioTotalProducto=0;
+
+                            //Sumar descuentos
+                            float desc = Float.parseFloat(nodo.getString("art_importe_descuento"));
+                            DescuentoTotalProducto = DescuentoTotalProducto + desc;
+                            DescuentoTotalProducto = DescuentoTotalProducto * numero_de_productos;
+
+
+
+
+                            //Sumar Impuestos
+                            JSONArray TicketImpuest = nodo.getJSONArray("art_impuestos");
+                            float impuest = 0;
+                            for (int x = 0; x < TicketImpuest.length(); x++) {
+                                JSONObject elemento = TicketImpuest.getJSONObject(x);
+                                TicketIVA = Float.parseFloat(elemento.getString("valor"));
+                                impuest = impuest + TicketIVA;
+                            }
+                            ImpuestoTotalProducto = ImpuestoTotalProducto + impuest;
+                            ImpuestoTotalProducto = ImpuestoTotalProducto * numero_de_productos;
+
+                            //Sumar Subtotal
+                            float SubTot = Float.parseFloat(nodo.getString("art_precio_bruto"));
+                            PrecioSubTotalProducto = PrecioSubTotalProducto + SubTot;
+                            PrecioSubTotalProducto = PrecioSubTotalProducto * numero_de_productos;
+
+
+                            //Sumar Total
+                            JSONObject PrecioNodo = nodo.getJSONObject("tar_precio_articulo");
+                            float Tot = Float.parseFloat(PrecioNodo.getString("value"));
+                            PrecioTotalProducto = PrecioTotalProducto + Tot;
+                            PrecioTotalProducto = PrecioTotalProducto * numero_de_productos;
+
+                            DescuentoTotal = DescuentoTotal + DescuentoTotalProducto;
+                            ImpuestoTotal = ImpuestoTotal + ImpuestoTotalProducto;
+                            PrecioTotal = PrecioTotal + PrecioTotalProducto;
+                            Subtotal = Subtotal + PrecioSubTotalProducto;
+                        }
+
+
+
 
 
                         //Se modifican los datos del ticket de venta
-
-
-
                         ticket_de_venta.setTic_id(TicketIDVenta);
-                        ticket_de_venta.setTic_importe_descuentos(TicketImporteDescuento);
-                        ticket_de_venta.setTic_importe_total(String.valueOf(TicketImporteTotal));
+                        ticket_de_venta.setTic_importe_descuentos(String.valueOf(DescuentoTotal));
+                        ticket_de_venta.setTic_importe_total(String.valueOf(PrecioTotal));
+                        ticket_de_venta.setTic_impuestos(String.valueOf(ImpuestoTotal));
 
 
 
@@ -495,9 +639,14 @@ public class Fragment_Ventas extends Fragment {
                         double Price = Double.parseDouble( ticket_de_venta.getTic_importe_total() );
                         total.setText( formatter.format( Price ) );
 
+                        double descu = Double.parseDouble( ticket_de_venta.getTic_importe_descuentos() );
+                        descuento.setText( formatter.format( descu ) );
 
-                        double desc = Double.parseDouble( ticket_de_venta.getTic_importe_descuentos() );
-                        descuento.setText( formatter.format( desc ) );
+                        double Iva = Double.parseDouble( ticket_de_venta.getTic_impuestos() );
+                        impuesto.setText( formatter.format( Iva ) );
+
+                        double sub = Double.parseDouble(String.valueOf(Subtotal));
+                        subtotal.setText( formatter.format( sub ) );
 
 
 
@@ -517,8 +666,7 @@ public class Fragment_Ventas extends Fragment {
                             String cantidad = cantidadNodo.getString("value");
                             JSONObject TicketArtPrecio = elemento.getJSONObject("tar_precio_articulo");
                             String precio = TicketArtPrecio.getString("value");
-                            JSONObject nodoDescuento = elemento.getJSONObject("tar_importe_descuento");
-                            String descuento = nodoDescuento.getString("value");
+                            String descuento = elemento.getString("art_porcentaje_descuento");
                             JSONObject nodoImporte = elemento.getJSONObject("tar_importe_total");
                             String importe = nodoImporte.getString("value");
 
@@ -615,6 +763,89 @@ public class Fragment_Ventas extends Fragment {
                     {
                         Respuesta = response.getJSONArray("resultado");
 
+                        float Subtotal = 0;
+                        float ImpuestoTotal =0;
+                        float DescuentoTotal =0;
+                        float PrecioTotal =0;
+
+
+                        for(int j = 0; j < Respuesta.length(); j++) {
+                            JSONObject nodo = Respuesta.getJSONObject(j);
+
+                            JSONObject cant = nodo.getJSONObject("tar_cantidad");
+                            float numero_de_productos = Integer.parseInt(cant.getString("value"));
+
+                            float DescuentoTotalProducto=0;
+                            float ImpuestoTotalProducto=0;
+                            float PrecioSubTotalProducto=0;
+                            float PrecioTotalProducto=0;
+
+                            //Sumar descuentos
+                            float desc = Float.parseFloat(nodo.getString("art_importe_descuento"));
+                            DescuentoTotalProducto = DescuentoTotalProducto + desc;
+                            DescuentoTotalProducto = DescuentoTotalProducto * numero_de_productos;
+
+
+
+
+                            //Sumar Impuestos
+                            JSONArray TicketImpuest = nodo.getJSONArray("art_impuestos");
+                            float impuest = 0;
+                            for (int x = 0; x < TicketImpuest.length(); x++) {
+                                JSONObject elemento = TicketImpuest.getJSONObject(x);
+                                TicketIVA = Float.parseFloat(elemento.getString("valor"));
+                                impuest = impuest + TicketIVA;
+                            }
+                            ImpuestoTotalProducto = ImpuestoTotalProducto + impuest;
+                            ImpuestoTotalProducto = ImpuestoTotalProducto * numero_de_productos;
+
+                            //Sumar Subtotal
+                            float SubTot = Float.parseFloat(nodo.getString("art_precio_bruto"));
+                            PrecioSubTotalProducto = PrecioSubTotalProducto + SubTot;
+                            PrecioSubTotalProducto = PrecioSubTotalProducto * numero_de_productos;
+
+
+                            //Sumar Total
+                            JSONObject PrecioNodo = nodo.getJSONObject("tar_precio_articulo");
+                            float Tot = Float.parseFloat(PrecioNodo.getString("value"));
+                            PrecioTotalProducto = PrecioTotalProducto + Tot;
+                            PrecioTotalProducto = PrecioTotalProducto * numero_de_productos;
+
+                            DescuentoTotal = DescuentoTotal + DescuentoTotalProducto;
+                            ImpuestoTotal = ImpuestoTotal + ImpuestoTotalProducto;
+                            PrecioTotal = PrecioTotal + PrecioTotalProducto;
+                            Subtotal = Subtotal + PrecioSubTotalProducto;
+                        }
+
+
+
+
+
+                        //Se modifican los datos del ticket de venta
+                        ticket_de_venta.setTic_id(TicketIDVenta);
+                        ticket_de_venta.setTic_importe_descuentos(String.valueOf(DescuentoTotal));
+                        ticket_de_venta.setTic_importe_total(String.valueOf(PrecioTotal));
+                        ticket_de_venta.setTic_impuestos(String.valueOf(ImpuestoTotal));
+
+
+
+                        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+                        double Price = Double.parseDouble( ticket_de_venta.getTic_importe_total() );
+                        total.setText( formatter.format( Price ) );
+
+                        double descu = Double.parseDouble( ticket_de_venta.getTic_importe_descuentos() );
+                        descuento.setText( formatter.format( descu ) );
+
+                        double Iva = Double.parseDouble( ticket_de_venta.getTic_impuestos() );
+                        impuesto.setText( formatter.format( Iva ) );
+
+                        double sub = Double.parseDouble(String.valueOf(Subtotal));
+                        subtotal.setText( formatter.format( sub ) );
+
+
+
+
                         for(int x = 0; x < Respuesta.length(); x++){
                             JSONObject elemento = Respuesta.getJSONObject(x);
                             JSONObject NodoTarID = elemento.getJSONObject("tar_id");
@@ -625,8 +856,7 @@ public class Fragment_Ventas extends Fragment {
                             String cantidad = cantidadNodo.getString("value");
                             JSONObject TicketArtPrecio = elemento.getJSONObject("tar_precio_articulo");
                             String precio = TicketArtPrecio.getString("value");
-                            JSONObject nodoDescuento = elemento.getJSONObject("tar_importe_descuento");
-                            String descuento = nodoDescuento.getString("value");
+                            String descuento = elemento.getString("art_porcentaje_descuento");
                             JSONObject nodoImporte = elemento.getJSONObject("tar_importe_total");
                             String importe = nodoImporte.getString("value");
 
@@ -723,6 +953,87 @@ public class Fragment_Ventas extends Fragment {
 
                         Respuesta = response.getJSONArray("resultado");
 
+                        float Subtotal = 0;
+                        float ImpuestoTotal =0;
+                        float DescuentoTotal =0;
+                        float PrecioTotal =0;
+
+
+                        for(int j = 0; j < Respuesta.length(); j++) {
+                            JSONObject nodo = Respuesta.getJSONObject(j);
+
+                            JSONObject cant = nodo.getJSONObject("tar_cantidad");
+                            float numero_de_productos = Integer.parseInt(cant.getString("value"));
+
+                            float DescuentoTotalProducto=0;
+                            float ImpuestoTotalProducto=0;
+                            float PrecioSubTotalProducto=0;
+                            float PrecioTotalProducto=0;
+
+                            //Sumar descuentos
+                            float desc = Float.parseFloat(nodo.getString("art_importe_descuento"));
+                            DescuentoTotalProducto = DescuentoTotalProducto + desc;
+                            DescuentoTotalProducto = DescuentoTotalProducto * numero_de_productos;
+
+
+
+
+                            //Sumar Impuestos
+                            JSONArray TicketImpuest = nodo.getJSONArray("art_impuestos");
+                            float impuest = 0;
+                            for (int x = 0; x < TicketImpuest.length(); x++) {
+                                JSONObject elemento = TicketImpuest.getJSONObject(x);
+                                TicketIVA = Float.parseFloat(elemento.getString("valor"));
+                                impuest = impuest + TicketIVA;
+                            }
+                            ImpuestoTotalProducto = ImpuestoTotalProducto + impuest;
+                            ImpuestoTotalProducto = ImpuestoTotalProducto * numero_de_productos;
+
+                            //Sumar Subtotal
+                            float SubTot = Float.parseFloat(nodo.getString("art_precio_bruto"));
+                            PrecioSubTotalProducto = PrecioSubTotalProducto + SubTot;
+                            PrecioSubTotalProducto = PrecioSubTotalProducto * numero_de_productos;
+
+
+                            //Sumar Total
+                            JSONObject PrecioNodo = nodo.getJSONObject("tar_precio_articulo");
+                            float Tot = Float.parseFloat(PrecioNodo.getString("value"));
+                            PrecioTotalProducto = PrecioTotalProducto + Tot;
+                            PrecioTotalProducto = PrecioTotalProducto * numero_de_productos;
+
+                            DescuentoTotal = DescuentoTotal + DescuentoTotalProducto;
+                            ImpuestoTotal = ImpuestoTotal + ImpuestoTotalProducto;
+                            PrecioTotal = PrecioTotal + PrecioTotalProducto;
+                            Subtotal = Subtotal + PrecioSubTotalProducto;
+                        }
+
+
+
+
+
+                        //Se modifican los datos del ticket de venta
+                        ticket_de_venta.setTic_id(TicketIDVenta);
+                        ticket_de_venta.setTic_importe_descuentos(String.valueOf(DescuentoTotal));
+                        ticket_de_venta.setTic_importe_total(String.valueOf(PrecioTotal));
+                        ticket_de_venta.setTic_impuestos(String.valueOf(ImpuestoTotal));
+
+
+
+                        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+                        double Price = Double.parseDouble( ticket_de_venta.getTic_importe_total() );
+                        total.setText( formatter.format( Price ) );
+
+                        double descu = Double.parseDouble( ticket_de_venta.getTic_importe_descuentos() );
+                        descuento.setText( formatter.format( descu ) );
+
+                        double Iva = Double.parseDouble( ticket_de_venta.getTic_impuestos() );
+                        impuesto.setText( formatter.format( Iva ) );
+
+                        double sub = Double.parseDouble(String.valueOf(Subtotal));
+                        subtotal.setText( formatter.format( sub ) );
+
+
                         for(int x = 0; x < Respuesta.length(); x++){
                             JSONObject elemento = Respuesta.getJSONObject(x);
                             JSONObject NodoTarID = elemento.getJSONObject("tar_id");
@@ -733,8 +1044,7 @@ public class Fragment_Ventas extends Fragment {
                             String cantidad = cantidadNodo.getString("value");
                             JSONObject TicketArtPrecio = elemento.getJSONObject("tar_precio_articulo");
                             String precio = TicketArtPrecio.getString("value");
-                            JSONObject nodoDescuento = elemento.getJSONObject("tar_importe_descuento");
-                            String descuento = nodoDescuento.getString("value");
+                            String descuento = elemento.getString("art_porcentaje_descuento");
                             JSONObject nodoImporte = elemento.getJSONObject("tar_importe_total");
                             String importe = nodoImporte.getString("value");
 
@@ -1092,6 +1402,82 @@ public class Fragment_Ventas extends Fragment {
         String url = getString(R.string.Url);
 
         String ApiPath = url + "/api/ventas/tickets/store-cliente";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray Respuesta = null;
+                JSONObject RespuestaNodoTicket= null;
+                JSONObject TicketID=null;
+                JSONArray NodoTicketArticulos=null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1)
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
+    private void AniadirVendedorTicket(String Comision)
+    {
+        ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
+        ticket_de_venta.setTic_id_vendedor(VendedorID.get(SpinnerVendedor.getSelectedItemPosition()));
+        ticket_de_venta.setTic_nombre_vendedor(String.valueOf(SpinnerVendedor.getSelectedItem()));
+        ticket_de_venta.setTic_comision(Comision);
+        ArticulosVenta.clear();
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("tic_id",ticket_de_venta.getTic_id());
+            request.put("tic_id_sucursal",ticket_de_venta.getTic_id_sucursal());
+            request.put("tic_id_vendedor", ticket_de_venta.getTic_id_vendedor());
+            request.put("tic_nombre_vendedor", ticket_de_venta.getTic_nombre_vendedor());
+            request.put("tic_comision",ticket_de_venta.getTic_comision());
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/tickets/store-vendedor";
 
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
         {

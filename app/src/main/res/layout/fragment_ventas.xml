@@ -324,8 +324,8 @@
                         android:layout_width="75dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="20dp"
-                        android:text="IVA"
-                        android:textColor="@color/colorPrimaryDark"/>
+                        android:text="Impuestos"
+                        android:textColor="@color/colorPrimaryDark" />
 
                     <TextView
                         android:id="@+id/iva_text"
