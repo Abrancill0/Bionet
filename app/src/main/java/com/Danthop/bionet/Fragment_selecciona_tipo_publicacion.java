@@ -1,41 +1,76 @@
 package com.Danthop.bionet;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.Danthop.bionet.Adapters.CategoriaAdapter;
+import com.Danthop.bionet.Adapters.PublicacionAdapter;
+import com.Danthop.bionet.Class.MyFirebaseInstanceService;
+import com.Danthop.bionet.Tables.SortableArticulosTable;
+import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.CategoriaModel;
+import com.Danthop.bionet.model.PublicacionModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.google.gson.JsonArray;
+import com.imagpay.v;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.codecrafters.tableview.listeners.TableDataClickListener;
 
 public class Fragment_selecciona_tipo_publicacion extends Fragment {
     private String UserML;
     private String AccesToken;
     private String usu_id;
     private String remaining_listings;
+    private String exceptions_by_category;
+    private String category_id;
+    private String category_name;
     private String idpublicacion;
     private String publicacion;
+    private String nombre;
+    public String name;
+    private String Precio;
+    private String Imagen1;
+    private String Imagen2;
+    public String id;
+    public String IdConfiguration;
+    private String IdPublicacion;
+    private String descripcion;
+    private Bundle bundle;
     FragmentTransaction fr;
     private ArrayList<String> TipoPublicacionName;
     private ArrayList<String> TipoPublicacionID;
-    private ListView ListViewTipoPublicacion;
+    private ListView listacategoria;
+    private ListView ListaPublicacion;
+    private ImageView back;
+    private String idVacio;
     private TextView TextView;
+    SortableArticulosTable tb;
+    SortableArticulosTable tp;
 
     public Fragment_selecciona_tipo_publicacion() {
         // Required empty public constructor
@@ -44,56 +79,93 @@ public class Fragment_selecciona_tipo_publicacion extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_selecciona_tipo_publicacion, container, false);
-        SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getActivity().MODE_PRIVATE );
-        fr = getFragmentManager().beginTransaction();
-        UserML = sharedPref.getString( "UserIdML", "" );
-        AccesToken = sharedPref.getString( "AccessToken", "" );
-        usu_id = sharedPref.getString( "usu_id", "" );
 
-        ListViewTipoPublicacion=(ListView) v.findViewById( R.id.listView_selecciona_publicacion );
-        TextView = (TextView)v.findViewById(R.id.Textv);
+        SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", getActivity().MODE_PRIVATE);
+        fr = getFragmentManager().beginTransaction();
+        UserML = sharedPref.getString("UserIdML", "");
+        AccesToken = sharedPref.getString("AccessToken", "");
+        usu_id = sharedPref.getString("usu_id", "");
+
+        ListaPublicacion = (ListView) v.findViewById(R.id.listView_selecciona_publicacion);
+        tb = v.findViewById(R.id.tablaArticulos);
         TipoPublicacionID = new ArrayList<>();
         TipoPublicacionName = new ArrayList<>();
 
+        bundle = getArguments();
+        nombre = bundle.getString( "nombre");
+        descripcion = bundle.getString( "descripcion");
+
         CargaPublicaciones();
+
+        back = (ImageView) v.findViewById(R.id.atras);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container, new Fragment_ecommerce_Sincronizar_Articulos()).commit();
+            }
+        });
+
+
         return v;
     }
+//---------------------------------------------------------------------------------------------------
 
     public void CargaPublicaciones(){
         final String url = "http://187.189.192.150:8010/api/ecommerce/create_app?accesstoken=" + AccesToken  + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
-
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 JSONObject RespuestaTiposPublicacion = null;
                 JSONArray  Respuestaavailable = null;
+                JSONArray RespuestaCategoria = null;
+                JSONArray RespuestaConfiguracion = null;
+                JSONArray RespuestaExcepcionCategoria = null;
+
                 try {
                     int EstatusApi = Integer.parseInt( response.getString("estatus") );
                     if (EstatusApi == 1) {
-
-                        TipoPublicacionID=new ArrayList<>();
-                        TipoPublicacionName = new ArrayList<>();
+                        ArrayList arrayList = new ArrayList<>();
                         RespuestaTiposPublicacion = response.getJSONObject("aListaTiposPublicacion");
                         Respuestaavailable = RespuestaTiposPublicacion.getJSONArray("available");
 
+                        //REAMING LISTINGS
                         for(int x = 0; x < Respuestaavailable.length(); x++){
                             JSONObject elemento = Respuestaavailable.getJSONObject(x);
-
                             remaining_listings = elemento.getString("remaining_listings");
-                            //int remaining = Integer.parseInt(remaining_listings);
-
-                            if (remaining_listings !=null){
+                            if (remaining_listings  != ("null")){
                             idpublicacion = elemento.getString("id");
                             publicacion = elemento.getString("name");
 
-                            TipoPublicacionID.add(idpublicacion);
-                            TipoPublicacionName.add(publicacion);
-                           }
+                            //CONFIGURATION
+                            // entrar a nodo conf
+                                //hacer un for del nodo config
+                                //dentro del for hacer un if para solo entrar a la categoria q se esta recorriendo
+                                RespuestaConfiguracion =RespuestaTiposPublicacion.getJSONArray("configuration");
+                                for(int z = 0; z < RespuestaConfiguracion.length(); z++){
+                                    JSONObject elementito = RespuestaConfiguracion.getJSONObject(z);
 
-                        }ListViewTipoPublicacion.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,TipoPublicacionName));
+                                    IdConfiguration = elementito.getString("id");
+
+                                   if (idpublicacion == IdConfiguration ) {
+
+                                    RespuestaExcepcionCategoria = RespuestaConfiguracion.getJSONArray(Integer.parseInt("exceptions_by_category"));
+                                     for(int y = 0; y < RespuestaExcepcionCategoria.length(); y++){
+                                           JSONObject elemento3 = RespuestaExcepcionCategoria.getJSONObject(x);
+                                           category_id = elemento3.getString("category_id");
+                                           category_name = elemento3.getString("category_name");
+                                       }
+                                   }
+                                  // return;
+                                }
+                                PublicacionModel pub = new PublicacionModel(idpublicacion, publicacion );
+                                arrayList.add(pub);
+                           }
+                        }//ListViewTipoPublicacion.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,TipoPublicacionName));
+                        PublicacionAdapter adapter = new PublicacionAdapter(getContext(), R.layout.caja_publicaciones,arrayList,ListaPublicacion,bundle);
+                        ListaPublicacion.setAdapter(adapter);
                     }
-                }
-                catch (JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -107,4 +179,6 @@ public class Fragment_selecciona_tipo_publicacion extends Fragment {
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
     }
+//---------------------------------------------------------------------------------------------------
+
 }

@@ -350,16 +350,11 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
             }
 
         } catch (Error e) {
-
             Toast toast1 =
                     Toast.makeText(getContext(),
                             String.valueOf(e), Toast.LENGTH_LONG);
-
             progreso.hide();
-
         }
-
-
     }
 
     public int LoadTable() {
@@ -373,7 +368,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
             String url = getString(R.string.Url);
 
-            final String ApiPath = url + "/api/ecomerce/inicio_app/?accesstoken=" + AccesToken + "&user_id=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
+            final String ApiPath = url + "/api/ecommerce/inicio_app?accesstoken=" + AccesToken + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
 
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null, new Response.Listener<JSONObject>() {
                 @Override
@@ -399,17 +394,13 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                     String IDPublicacion;
 
                     try {
-
                         int EstatusApi = Integer.parseInt(response.getString("estatus"));
 
                         if (EstatusApi == 1) {
-
                             RespuestaTodoJSON = response;
-
                             RespuestaDatos = response.getJSONArray("aDatos");
 
                             int numeroregistro = RespuestaDatos.length();
-
                             SincornizarModel = new String[numeroregistro][4];
 
                             for (int x = 0; x < RespuestaDatos.length(); x++) {
@@ -420,7 +411,6 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                                 RespuestaDescripcion = elemento.getJSONObject("descripcion");
 
                                 DescripcionLarga = RespuestaDescripcion.getString("plain_text");
-
 
                                 IDPublicacion = Respuestaespecificaciones.getString("id");
                                 Titulo = Respuestaespecificaciones.getString("title");

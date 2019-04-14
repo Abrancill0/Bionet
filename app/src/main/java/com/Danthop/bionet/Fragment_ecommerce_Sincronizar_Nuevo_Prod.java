@@ -60,6 +60,9 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private String usu_id;
     private String Imagen1;
     private String Imagen2;
+    private String remaining_listings;
+    private String idpublicacion;
+    private String publicacion;
     private RadioButton RadioUsado;
     private RadioButton RadioNuevo;
     private ImageView FotoArticulo1;
@@ -103,8 +106,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         Imagen1 = "http://187.189.192.150:8010" + bundle.getString( "image1");
         Imagen2 = "http://187.189.192.150:8010" + bundle.getString( "image2");
 
-       // System.out.println(nombre_categoria);
-
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getActivity().MODE_PRIVATE );
         UserML = sharedPref.getString( "UserIdML", "" );
         AccesToken = sharedPref.getString( "AccessToken", "" );
@@ -116,68 +117,61 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         imageLoader.displayImage(Imagen1,FotoArticulo1);
         imageLoader2.displayImage(Imagen2,FotoArticulo2);
 
-        //FotoArticulo1.setImageURI(Uri.parse(  Imagen1 ) );
-        //FotoArticulo2.setImageURI(Uri.parse(  Imagen2 ) );
+        TextNombreArticulo = (EditText) v.findViewById( R.id.text_nombre_articulo );
+        TextDescripcionArticulo = (EditText) v.findViewById( R.id.text_descripcion_articulo );
+        TextprecioArticulo = (EditText) v.findViewById( R.id.text_precio_articulo );
+        TextCantidad = (ElegantNumberButton) v.findViewById( R.id.text_cantidad );
+        TextGarantia = (EditText) v.findViewById( R.id.text_garantia );
+        TextCantidad.setNumber(String.valueOf(1) );
+        textCategoriaSeleccionada = (TextView) v.findViewById( R.id.textCategoriaSeleccionada );
+        TextNombreArticulo.setText(nombre);
+        TextDescripcionArticulo.setText(descripcion);
+        TextprecioArticulo.setText(precio);
+        RadioUsado = (RadioButton) v.findViewById( R.id.radioButton_Usado );
+        RadioNuevo = (RadioButton) v.findViewById( R.id.radioButton_Nuevo );
+        SpinnerTipoPublicacion=(Spinner) v.findViewById( R.id.Spinner_Tipo_Publicacion );
+        Guardar_articulo = (Button) v.findViewById( R.id.Guardar_articulo );
+        Categoria = (TextView) v.findViewById( R.id.Categoria );
+        Categoria.setText(nombre_categoria);
+        RadioUsado.setChecked(true);
 
-                TextNombreArticulo = (EditText) v.findViewById( R.id.text_nombre_articulo );
-                TextDescripcionArticulo = (EditText) v.findViewById( R.id.text_descripcion_articulo );
-                TextprecioArticulo = (EditText) v.findViewById( R.id.text_precio_articulo );
-                TextCantidad = (ElegantNumberButton) v.findViewById( R.id.text_cantidad );
-                TextGarantia = (EditText) v.findViewById( R.id.text_garantia );
-                TextCantidad.setNumber(String.valueOf(1) );
-                textCategoriaSeleccionada = (TextView) v.findViewById( R.id.textCategoriaSeleccionada );
-                TextNombreArticulo.setText(nombre);
-                TextDescripcionArticulo.setText(descripcion);
-                TextprecioArticulo.setText(precio);
-                RadioUsado = (RadioButton) v.findViewById( R.id.radioButton_Usado );
-                RadioNuevo = (RadioButton) v.findViewById( R.id.radioButton_Nuevo );
-
-                RadioUsado.setChecked(true);
-
-                SpinnerTipoPublicacion=(Spinner) v.findViewById( R.id.Spinner_Tipo_Publicacion );
-                Guardar_articulo = (Button) v.findViewById( R.id.Guardar_articulo );
-                Categoria = (TextView) v.findViewById( R.id.Categoria );
-
-                Categoria.setText(nombre_categoria);
-                CargaPublicaciones();
+        SpinnerCargaPublicaciones();
 
         Guardar_articulo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Guarda();
+                CargaCategorias();
             }
         });
             return v;
-            }
+    }
 
-    public void CargaPublicaciones(){
-        final String url = "http://187.189.192.150:8010/api/ecommerce/create_app?access_token=" + AccesToken  + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
-
-        // prepare the Request
+//---------------------------------------------------------------------------------------------------
+    public void SpinnerCargaPublicaciones(){
+        final String url = "http://187.189.192.150:8010/api/ecommerce/create_app?accesstoken=" + AccesToken  + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // display response
-                        JSONArray RespuestaTiposPublicacion = null;
-                        JSONArray RespuestaCategoria = null;
+                        JSONObject RespuestaTiposPublicacion = null;
+                        JSONArray  Respuestaavailable = null;
 
                         try
                         {
                             int EstatusApi = Integer.parseInt( response.getString("estatus") );
-
                             if (EstatusApi == 1) {
 
                                 TipoPublicacionID=new ArrayList<>();
                                 TipoPublicacionName = new ArrayList<>();
-                                categorias = new ArrayList<CategoriaModel>();
-                                RespuestaTiposPublicacion = response.getJSONArray("aListaTiposPublicacion");
+                                RespuestaTiposPublicacion = response.getJSONObject("aListaTiposPublicacion");
+                                Respuestaavailable = RespuestaTiposPublicacion.getJSONArray("available");
 
-                               // RespuestaCategoria = response.getJSONArray("aCategorias");
+                                for(int x = 0; x < Respuestaavailable.length(); x++){
+                                    JSONObject elemento = Respuestaavailable.getJSONObject(x);
 
-                                for(int x = 0; x < RespuestaTiposPublicacion.length(); x++){
-                                    JSONObject jsonObject1 = RespuestaTiposPublicacion.getJSONObject(x);
-                                    String idpublicacion = jsonObject1.getString("id");
-                                    String publicacion = jsonObject1.getString("name");
+                                    remaining_listings = elemento.getString("remaining_listings");
+                                    idpublicacion = elemento.getString("id");
+                                    publicacion = elemento.getString("name");
 
                                     TipoPublicacionID.add(idpublicacion);
                                     TipoPublicacionName.add(publicacion);
@@ -199,16 +193,13 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
     }
-
+//---------------------------------------------------------------------------------------------------
 
     private void CargaCategorias(){
-        final String url = "http://187.189.192.150:8010/api/ecomerce/create_app/access_token=" + AccesToken  + "&expires_in=21600&user_id=" + UserML + "&domains=localhost";
-
-        // prepare the Request
+        final String url = "http://187.189.192.150:8010/api/ecommerce/create_app?accesstoken=" + AccesToken  + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // display response
                         JSONArray RespuestaTiposPublicacion = null;
                         JSONArray RespuestaCategoria = null;
 
@@ -217,7 +208,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                             if (EstatusApi == 1) {
 
                                 RespuestaCategoria = response.getJSONArray("aCategorias");
-
                                 ArrayList arrayList = new ArrayList<>();
 
                                 for(int x = 0; x < RespuestaCategoria.length(); x++){
@@ -226,7 +216,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                                     String categoria = jsonObject1.getString("name");
 
                                     CategoriaModel cat = new CategoriaModel(idcategoria, categoria );
-                                    arrayList.add(cat);//add the hashmap into arrayList
+                                    arrayList.add(cat);
                                 }
                                 //CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria,arrayList,pop_up_categoria1 );
                                 //listacategoria1.setAdapter(adapter);//sets the adapter for listView
@@ -246,6 +236,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
     }
+//---------------------------------------------------------------------------------------------------
 
     public void Guarda() {
 
@@ -337,6 +328,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         };
         requestQueue.add(jsonObjectRequest);
     }
-
-    }
+//---------------------------------------------------------------------------------------------------
+}
 

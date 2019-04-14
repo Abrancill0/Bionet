@@ -94,14 +94,12 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
         tb.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
         return v;
     }
-    //------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
     private void CargaArticulos() {
 
         try {
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/ecommerce/inicio_app?accesstoken=" + AccesToken + "&user_id_mercado_libre=" + UserIdML + "&usu_id=" + usu_id + "&esApp=1";
-
-            // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath,null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -155,19 +153,12 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
                                     if(RutaImagen1.equals("")) {
                                         RutaImagen1 = elemento3.getString( "aim_url");
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         RutaImagen2 = elemento3.getString( "aim_url");
                                     }
                                 }
 
                                 if (Modificadores == "true"){
-                                    //RespuestaModificadores = elemento.getJSONArray( "modificadores");
-
-                                   // for (int i = 0; i < RespuestaModificadores.length(); i++) {
-                                       // JSONObject elemento2 = RespuestaModificadores.getJSONObject(i);
-
                                         NombreModificador = elemento.getString( "mod_nombre");
                                         RespuestaPrecioModificador = elemento.getJSONObject( "amo_precio");
                                         Precio = RespuestaPrecioModificador.getString( "value");
@@ -177,9 +168,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                                         final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,RutaImagen2,"","",cantidad,""
                                         ,"","","");
                                         Articulos.add(Articulo);
-                                    //}
-                                }else
-                                {
+                                }else {
                                     NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
                                     final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,RutaImagen2,"","",cantidad,"",

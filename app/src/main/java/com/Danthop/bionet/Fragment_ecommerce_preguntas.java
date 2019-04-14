@@ -405,7 +405,7 @@ public class Fragment_ecommerce_preguntas extends Fragment {
 
         tabla_preguntas = (SortablePreguntasTable) v.findViewById( R.id.tabla_preguntas );
 
-        final String url = "http://187.189.192.150:8010/api/ecomerce/inicio_app/?accesstoken=" + AccesToken + "&user_id=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
+        final String url = "http://187.189.192.150:8010/api/ecommerce/inicio_app?accesstoken=" + AccesToken + "&user_id=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
 
         JsonObjectRequest getRequest = new JsonObjectRequest( Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {

@@ -5,9 +5,11 @@ import android.util.AttributeSet;
 
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.model.ArticuloModel;
+import com.Danthop.bionet.model.PublicacionModel;
 import com.Danthop.bionet.model.SincronizarModel;
 
 import de.codecrafters.tableview.SortableTableView;
+import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
