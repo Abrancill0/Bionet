@@ -756,7 +756,7 @@ public class Fragment_Ventas extends Fragment {
 
 
                         JSONArray NodoArticuloTicket = Respuesta.getJSONArray("aDetalleTicket");
-                        for(int j = 0; j < Respuesta.length(); j++) {
+                        for(int j = 0; j < NodoArticuloTicket.length(); j++) {
                             JSONObject nodo = NodoArticuloTicket.getJSONObject(j);
 
                             float numero_de_productos = Float.parseFloat((nodo.getString("tar_cantidad")));
@@ -831,7 +831,6 @@ public class Fragment_Ventas extends Fragment {
                             ArticulosVenta.add(articulo);
                         }
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos);
-                        articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                     }
                     else
@@ -916,7 +915,7 @@ public class Fragment_Ventas extends Fragment {
 
 
                         JSONArray NodoArticuloTicket = Respuesta.getJSONArray("aDetalleTicket");
-                        for(int j = 0; j < Respuesta.length(); j++) {
+                        for(int j = 0; j < NodoArticuloTicket.length(); j++) {
                             JSONObject nodo = NodoArticuloTicket.getJSONObject(j);
 
                             float numero_de_productos = Float.parseFloat((nodo.getString("tar_cantidad")));
@@ -991,7 +990,6 @@ public class Fragment_Ventas extends Fragment {
                             ArticulosVenta.add(articulo);
                         }
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos);
-                        articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                     }
                     else
