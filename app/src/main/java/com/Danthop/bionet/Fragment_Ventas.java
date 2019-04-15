@@ -2,6 +2,7 @@ package com.Danthop.bionet;
 
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -141,6 +142,9 @@ public class Fragment_Ventas extends Fragment {
     private EditText Buscar;
     private ImageLoader imageLoader = ImageLoader.getInstance();
 
+    private ProgressDialog progreso;
+
+
 
 
     public Fragment_Ventas() {
@@ -176,6 +180,8 @@ public class Fragment_Ventas extends Fragment {
         impuesto = v.findViewById(R.id.iva_text);
         VendedorName=new ArrayList<>();
         VendedorID=new ArrayList<>();
+        progreso = new ProgressDialog( getContext() );
+
 
         SucursalName=new ArrayList<>();
         SucursalID = new ArrayList<>();
@@ -465,6 +471,7 @@ public class Fragment_Ventas extends Fragment {
             public void onClick(View v) {
                 dialog.setContentView(R.layout.pop_up_ventas_seleccionar_articulo);
                 dialog.show();
+                progreso.show();
                 tabla_selecciona_articulo = dialog.findViewById(R.id.tabla_seleccionar_articulos);
                 tabla_selecciona_articulo.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
                 CargaArticulos();
@@ -577,8 +584,7 @@ public class Fragment_Ventas extends Fragment {
                         for(int j = 0; j < NodoArticuloTicket.length(); j++) {
                             JSONObject nodo = NodoArticuloTicket.getJSONObject(j);
 
-                            JSONObject cant = nodo.getJSONObject("tar_cantidad");
-                            float numero_de_productos = Integer.parseInt(cant.getString("value"));
+                            float numero_de_productos = Float.parseFloat((nodo.getString("tar_cantidad")));
 
                             float DescuentoTotalProducto=0;
                             float ImpuestoTotalProducto=0;
@@ -611,8 +617,7 @@ public class Fragment_Ventas extends Fragment {
 
 
                             //Sumar Total
-                            JSONObject PrecioNodo = nodo.getJSONObject("tar_precio_articulo");
-                            float Tot = Float.parseFloat(PrecioNodo.getString("value"));
+                            float Tot = Float.parseFloat(nodo.getString("tar_precio_articulo"));
                             PrecioTotalProducto = PrecioTotalProducto + Tot;
                             PrecioTotalProducto = PrecioTotalProducto * numero_de_productos;
 
@@ -662,13 +667,10 @@ public class Fragment_Ventas extends Fragment {
                             String tar_id = NodoTarID.getString("uuid");
                             String NombreArticulo =  elemento.getString("tar_nombre_articulo");
                             String SKUArticulo = elemento.getString("art_sku");
-                            JSONObject cantidadNodo = elemento.getJSONObject("tar_cantidad");
-                            String cantidad = cantidadNodo.getString("value");
-                            JSONObject TicketArtPrecio = elemento.getJSONObject("tar_precio_articulo");
-                            String precio = TicketArtPrecio.getString("value");
+                            String cantidad = elemento.getString("tar_cantidad");
+                            String precio = elemento.getString("tar_precio_articulo");
                             String descuento = elemento.getString("art_porcentaje_descuento");
-                            JSONObject nodoImporte = elemento.getJSONObject("tar_importe_total");
-                            String importe = nodoImporte.getString("value");
+                            String importe = elemento.getString("tar_importe_total");
 
 
 
@@ -772,8 +774,7 @@ public class Fragment_Ventas extends Fragment {
                         for(int j = 0; j < Respuesta.length(); j++) {
                             JSONObject nodo = Respuesta.getJSONObject(j);
 
-                            JSONObject cant = nodo.getJSONObject("tar_cantidad");
-                            float numero_de_productos = Integer.parseInt(cant.getString("value"));
+                            float numero_de_productos = Integer.parseInt(nodo.getString("tar_cantidad"));
 
                             float DescuentoTotalProducto=0;
                             float ImpuestoTotalProducto=0;
@@ -806,8 +807,7 @@ public class Fragment_Ventas extends Fragment {
 
 
                             //Sumar Total
-                            JSONObject PrecioNodo = nodo.getJSONObject("tar_precio_articulo");
-                            float Tot = Float.parseFloat(PrecioNodo.getString("value"));
+                            float Tot = Float.parseFloat(nodo.getString("tar_precio_articulo"));
                             PrecioTotalProducto = PrecioTotalProducto + Tot;
                             PrecioTotalProducto = PrecioTotalProducto * numero_de_productos;
 
@@ -852,15 +852,10 @@ public class Fragment_Ventas extends Fragment {
                             String tar_id = NodoTarID.getString("uuid");
                             String NombreArticulo =  elemento.getString("tar_nombre_articulo");
                             String SKUArticulo = elemento.getString("art_sku");
-                            JSONObject cantidadNodo = elemento.getJSONObject("tar_cantidad");
-                            String cantidad = cantidadNodo.getString("value");
-                            JSONObject TicketArtPrecio = elemento.getJSONObject("tar_precio_articulo");
-                            String precio = TicketArtPrecio.getString("value");
+                            String cantidad = elemento.getString("tar_cantidad");
+                            String precio = elemento.getString("tar_precio_articulo");
                             String descuento = elemento.getString("art_porcentaje_descuento");
-                            JSONObject nodoImporte = elemento.getJSONObject("tar_importe_total");
-                            String importe = nodoImporte.getString("value");
-
-
+                            String importe = elemento.getString("tar_importe_total");
 
 
 
@@ -962,8 +957,7 @@ public class Fragment_Ventas extends Fragment {
                         for(int j = 0; j < Respuesta.length(); j++) {
                             JSONObject nodo = Respuesta.getJSONObject(j);
 
-                            JSONObject cant = nodo.getJSONObject("tar_cantidad");
-                            float numero_de_productos = Integer.parseInt(cant.getString("value"));
+                            float numero_de_productos = Integer.parseInt(nodo.getString("tar_cantidad"));
 
                             float DescuentoTotalProducto=0;
                             float ImpuestoTotalProducto=0;
@@ -996,8 +990,7 @@ public class Fragment_Ventas extends Fragment {
 
 
                             //Sumar Total
-                            JSONObject PrecioNodo = nodo.getJSONObject("tar_precio_articulo");
-                            float Tot = Float.parseFloat(PrecioNodo.getString("value"));
+                            float Tot = Float.parseFloat(nodo.getString("tar_precio_articulo"));
                             PrecioTotalProducto = PrecioTotalProducto + Tot;
                             PrecioTotalProducto = PrecioTotalProducto * numero_de_productos;
 
@@ -1354,6 +1347,7 @@ public class Fragment_Ventas extends Fragment {
                                     }
                                     final SeleccionarArticuloVentaAdapter ArticuloAdapter = new SeleccionarArticuloVentaAdapter(getContext(), Articulos, tabla_selecciona_articulo);
                                     tabla_selecciona_articulo.setDataAdapter(ArticuloAdapter);
+                                    progreso.hide();
 
                                 }
                             } catch (JSONException e) {

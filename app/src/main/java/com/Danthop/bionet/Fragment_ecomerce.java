@@ -442,7 +442,7 @@ public class Fragment_ecomerce extends Fragment {
 
             String url = getString( R.string.Url );
 
-            final String ApiPath = url + "/api/ecomerce/inicio_app/?accesstoken=" + AccesToken + "&user_id=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
+            final String ApiPath = url + "/api/ecommerce/inicio_app/?accesstoken=" + AccesToken + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest( Request.Method.GET, ApiPath, null,

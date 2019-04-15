@@ -349,12 +349,14 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                 progreso.hide();
             }
 
+
         } catch (Error e) {
             Toast toast1 =
                     Toast.makeText(getContext(),
                             String.valueOf(e), Toast.LENGTH_LONG);
             progreso.hide();
         }
+
     }
 
     public int LoadTable() {
@@ -420,7 +422,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                                 Respuestapicture = Respuestaespecificaciones.getJSONArray("pictures");
 
-                                for (int k = 0; k < Respuestapicture.length(); k++) {
+                                for (int k = 0; k < Respuestapicture.length()-1; k++) {
                                     JSONObject elemento2 = Respuestapicture.getJSONObject(x);
 
                                     Imagen = elemento2.getString("url");
