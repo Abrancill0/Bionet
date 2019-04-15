@@ -574,10 +574,17 @@ public class Fragment_Ventas extends Fragment {
                         TicketID = RespuestaNodoTicket.getJSONObject("tic_id");
                         TicketIDVenta = TicketID.getString("uuid");
 
+
+                        float ImpuestoTotal=0;
                         float Subtotal = 0;
-                        float ImpuestoTotal =0;
-                        float DescuentoTotal =0;
-                        float PrecioTotal =0;
+                        JSONArray tic_impuestos = RespuestaNodoTicket.getJSONArray("tic_impuestos");
+                        for (int f=0; f<tic_impuestos.length();f++)
+                        {
+                            JSONObject nodo_impuestos = tic_impuestos.getJSONObject(f);
+                            ImpuestoTotal= Float.parseFloat(nodo_impuestos.getString("valor"));
+                        }
+                        float DescuentoTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_descuentos"));
+                        float PrecioTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_total"));
 
 
                         JSONArray NodoArticuloTicket = Respuesta.getJSONArray("aDetalleTicket");
@@ -586,44 +593,14 @@ public class Fragment_Ventas extends Fragment {
 
                             float numero_de_productos = Float.parseFloat((nodo.getString("tar_cantidad")));
 
-                            float DescuentoTotalProducto=0;
-                            float ImpuestoTotalProducto=0;
                             float PrecioSubTotalProducto=0;
-                            float PrecioTotalProducto=0;
 
-                            //Sumar descuentos
-                            float desc = Float.parseFloat(nodo.getString("art_importe_descuento"));
-                            DescuentoTotalProducto = DescuentoTotalProducto + desc;
-                            DescuentoTotalProducto = DescuentoTotalProducto * numero_de_productos;
-
-
-
-
-                            //Sumar Impuestos
-                            JSONArray TicketImpuest = nodo.getJSONArray("art_impuestos");
-                            float impuest = 0;
-                            for (int x = 0; x < TicketImpuest.length(); x++) {
-                                JSONObject elemento = TicketImpuest.getJSONObject(x);
-                                TicketIVA = Float.parseFloat(elemento.getString("valor"));
-                                impuest = impuest + TicketIVA;
-                            }
-                            ImpuestoTotalProducto = ImpuestoTotalProducto + impuest;
-                            ImpuestoTotalProducto = ImpuestoTotalProducto * numero_de_productos;
 
                             //Sumar Subtotal
                             float SubTot = Float.parseFloat(nodo.getString("art_precio_bruto"));
                             PrecioSubTotalProducto = PrecioSubTotalProducto + SubTot;
                             PrecioSubTotalProducto = PrecioSubTotalProducto * numero_de_productos;
 
-
-                            //Sumar Total
-                            float Tot = Float.parseFloat(nodo.getString("tar_precio_articulo"));
-                            PrecioTotalProducto = PrecioTotalProducto + Tot;
-                            PrecioTotalProducto = PrecioTotalProducto * numero_de_productos;
-
-                            DescuentoTotal = DescuentoTotal + DescuentoTotalProducto;
-                            ImpuestoTotal = ImpuestoTotal + ImpuestoTotalProducto;
-                            PrecioTotal = PrecioTotal + PrecioTotalProducto;
                             Subtotal = Subtotal + PrecioSubTotalProducto;
                         }
 
@@ -751,7 +728,7 @@ public class Fragment_Ventas extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
 
-                JSONArray Respuesta = null;
+                JSONObject Respuesta = null;
                 JSONObject RespuestaNodoTicket= null;
                 JSONObject TicketID=null;
                 JSONArray NodoTicketArticulos=null;
@@ -763,57 +740,35 @@ public class Fragment_Ventas extends Fragment {
 
                     if (status == 1)
                     {
-                        Respuesta = response.getJSONArray("resultado");
+                        Respuesta = response.getJSONObject("resultado");
+                        RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
 
+                        float ImpuestoTotal = 0;
                         float Subtotal = 0;
-                        float ImpuestoTotal =0;
-                        float DescuentoTotal =0;
-                        float PrecioTotal =0;
+                        JSONArray tic_impuestos = RespuestaNodoTicket.getJSONArray("tic_impuestos");
+                        for (int f=0; f<tic_impuestos.length();f++)
+                        {
+                            JSONObject nodo_impuestos = tic_impuestos.getJSONObject(f);
+                            ImpuestoTotal= Float.parseFloat(nodo_impuestos.getString("valor"));
+                        }
+                        float DescuentoTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_descuentos"));
+                        float PrecioTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_total"));
 
 
+                        JSONArray NodoArticuloTicket = Respuesta.getJSONArray("aDetalleTicket");
                         for(int j = 0; j < Respuesta.length(); j++) {
-                            JSONObject nodo = Respuesta.getJSONObject(j);
+                            JSONObject nodo = NodoArticuloTicket.getJSONObject(j);
 
-                            float numero_de_productos = Integer.parseInt(nodo.getString("tar_cantidad"));
+                            float numero_de_productos = Float.parseFloat((nodo.getString("tar_cantidad")));
 
-                            float DescuentoTotalProducto=0;
-                            float ImpuestoTotalProducto=0;
                             float PrecioSubTotalProducto=0;
-                            float PrecioTotalProducto=0;
 
-                            //Sumar descuentos
-                            float desc = Float.parseFloat(nodo.getString("art_importe_descuento"));
-                            DescuentoTotalProducto = DescuentoTotalProducto + desc;
-                            DescuentoTotalProducto = DescuentoTotalProducto * numero_de_productos;
-
-
-
-
-                            //Sumar Impuestos
-                            JSONArray TicketImpuest = nodo.getJSONArray("art_impuestos");
-                            float impuest = 0;
-                            for (int x = 0; x < TicketImpuest.length(); x++) {
-                                JSONObject elemento = TicketImpuest.getJSONObject(x);
-                                TicketIVA = Float.parseFloat(elemento.getString("valor"));
-                                impuest = impuest + TicketIVA;
-                            }
-                            ImpuestoTotalProducto = ImpuestoTotalProducto + impuest;
-                            ImpuestoTotalProducto = ImpuestoTotalProducto * numero_de_productos;
 
                             //Sumar Subtotal
                             float SubTot = Float.parseFloat(nodo.getString("art_precio_bruto"));
                             PrecioSubTotalProducto = PrecioSubTotalProducto + SubTot;
                             PrecioSubTotalProducto = PrecioSubTotalProducto * numero_de_productos;
 
-
-                            //Sumar Total
-                            float Tot = Float.parseFloat(nodo.getString("tar_precio_articulo"));
-                            PrecioTotalProducto = PrecioTotalProducto + Tot;
-                            PrecioTotalProducto = PrecioTotalProducto * numero_de_productos;
-
-                            DescuentoTotal = DescuentoTotal + DescuentoTotalProducto;
-                            ImpuestoTotal = ImpuestoTotal + ImpuestoTotalProducto;
-                            PrecioTotal = PrecioTotal + PrecioTotalProducto;
                             Subtotal = Subtotal + PrecioSubTotalProducto;
                         }
 
@@ -846,8 +801,8 @@ public class Fragment_Ventas extends Fragment {
 
 
 
-                        for(int x = 0; x < Respuesta.length(); x++){
-                            JSONObject elemento = Respuesta.getJSONObject(x);
+                        for(int x = 0; x < NodoArticuloTicket.length(); x++){
+                            JSONObject elemento = NodoArticuloTicket.getJSONObject(x);
                             JSONObject NodoTarID = elemento.getJSONObject("tar_id");
                             String tar_id = NodoTarID.getString("uuid");
                             String NombreArticulo =  elemento.getString("tar_nombre_articulo");
@@ -933,7 +888,7 @@ public class Fragment_Ventas extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
 
-                JSONArray Respuesta = null;
+                JSONObject Respuesta = null;
                 JSONObject RespuestaNodoTicket= null;
                 JSONObject TicketID=null;
                 JSONArray NodoTicketArticulos=null;
@@ -945,58 +900,35 @@ public class Fragment_Ventas extends Fragment {
 
                     if (status == 1)
                     {
-
-                        Respuesta = response.getJSONArray("resultado");
+                        Respuesta = response.getJSONObject("resultado");
+                        RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
 
                         float Subtotal = 0;
-                        float ImpuestoTotal =0;
-                        float DescuentoTotal =0;
-                        float PrecioTotal =0;
+                        float ImpuestoTotal = 0;
+                        JSONArray tic_impuestos = RespuestaNodoTicket.getJSONArray("tic_impuestos");
+                        for (int f=0; f<tic_impuestos.length();f++)
+                        {
+                            JSONObject nodo_impuestos = tic_impuestos.getJSONObject(f);
+                            ImpuestoTotal= Float.parseFloat(nodo_impuestos.getString("valor"));
+                        }
+                        float DescuentoTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_descuentos"));
+                        float PrecioTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_total"));
 
 
+                        JSONArray NodoArticuloTicket = Respuesta.getJSONArray("aDetalleTicket");
                         for(int j = 0; j < Respuesta.length(); j++) {
-                            JSONObject nodo = Respuesta.getJSONObject(j);
+                            JSONObject nodo = NodoArticuloTicket.getJSONObject(j);
 
-                            float numero_de_productos = Integer.parseInt(nodo.getString("tar_cantidad"));
+                            float numero_de_productos = Float.parseFloat((nodo.getString("tar_cantidad")));
 
-                            float DescuentoTotalProducto=0;
-                            float ImpuestoTotalProducto=0;
                             float PrecioSubTotalProducto=0;
-                            float PrecioTotalProducto=0;
 
-                            //Sumar descuentos
-                            float desc = Float.parseFloat(nodo.getString("art_importe_descuento"));
-                            DescuentoTotalProducto = DescuentoTotalProducto + desc;
-                            DescuentoTotalProducto = DescuentoTotalProducto * numero_de_productos;
-
-
-
-
-                            //Sumar Impuestos
-                            JSONArray TicketImpuest = nodo.getJSONArray("art_impuestos");
-                            float impuest = 0;
-                            for (int x = 0; x < TicketImpuest.length(); x++) {
-                                JSONObject elemento = TicketImpuest.getJSONObject(x);
-                                TicketIVA = Float.parseFloat(elemento.getString("valor"));
-                                impuest = impuest + TicketIVA;
-                            }
-                            ImpuestoTotalProducto = ImpuestoTotalProducto + impuest;
-                            ImpuestoTotalProducto = ImpuestoTotalProducto * numero_de_productos;
 
                             //Sumar Subtotal
                             float SubTot = Float.parseFloat(nodo.getString("art_precio_bruto"));
                             PrecioSubTotalProducto = PrecioSubTotalProducto + SubTot;
                             PrecioSubTotalProducto = PrecioSubTotalProducto * numero_de_productos;
 
-
-                            //Sumar Total
-                            float Tot = Float.parseFloat(nodo.getString("tar_precio_articulo"));
-                            PrecioTotalProducto = PrecioTotalProducto + Tot;
-                            PrecioTotalProducto = PrecioTotalProducto * numero_de_productos;
-
-                            DescuentoTotal = DescuentoTotal + DescuentoTotalProducto;
-                            ImpuestoTotal = ImpuestoTotal + ImpuestoTotalProducto;
-                            PrecioTotal = PrecioTotal + PrecioTotalProducto;
                             Subtotal = Subtotal + PrecioSubTotalProducto;
                         }
 
@@ -1027,19 +959,19 @@ public class Fragment_Ventas extends Fragment {
                         subtotal.setText( formatter.format( sub ) );
 
 
-                        for(int x = 0; x < Respuesta.length(); x++){
-                            JSONObject elemento = Respuesta.getJSONObject(x);
+
+
+                        for(int x = 0; x < NodoArticuloTicket.length(); x++){
+                            JSONObject elemento = NodoArticuloTicket.getJSONObject(x);
                             JSONObject NodoTarID = elemento.getJSONObject("tar_id");
                             String tar_id = NodoTarID.getString("uuid");
                             String NombreArticulo =  elemento.getString("tar_nombre_articulo");
                             String SKUArticulo = elemento.getString("art_sku");
-                            JSONObject cantidadNodo = elemento.getJSONObject("tar_cantidad");
-                            String cantidad = cantidadNodo.getString("value");
-                            JSONObject TicketArtPrecio = elemento.getJSONObject("tar_precio_articulo");
-                            String precio = TicketArtPrecio.getString("value");
+                            String cantidad = elemento.getString("tar_cantidad");
+                            String precio = elemento.getString("tar_precio_articulo");
                             String descuento = elemento.getString("art_porcentaje_descuento");
-                            JSONObject nodoImporte = elemento.getJSONObject("tar_importe_total");
-                            String importe = nodoImporte.getString("value");
+                            String importe = elemento.getString("tar_importe_total");
+
 
 
                             final ArticuloModel articulo = new ArticuloModel("",
