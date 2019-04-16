@@ -23,6 +23,8 @@ public class InventarioModel {
     private String his_cantidad;
     private String his_observaciones;
     private String his_fecha_hora_creo;
+    private String codigoBarras;
+    private String almacen;
 
 
 
@@ -45,7 +47,9 @@ public class InventarioModel {
                            String his_tipo,
                            String his_cantidad,
                            String his_observaciones,
-                           String his_fecha_hora_creo)
+                           String his_fecha_hora_creo,
+                           String codigoBarras,
+                           String almacen)
     {
 
         this.sku = sku;
@@ -68,11 +72,11 @@ public class InventarioModel {
         this.his_cantidad = his_cantidad;
         this.his_observaciones = his_observaciones;
         this.his_fecha_hora_creo = his_fecha_hora_creo;
+        this.codigoBarras = codigoBarras;
+        this.almacen = almacen;
     }
 
-    public String getSku() {
-        return sku;
-    }
+    public String getSku() { return sku; }
     public void setSku(String sku) {
         this.sku = sku;
     }
@@ -116,9 +120,7 @@ public class InventarioModel {
     }
     public void setArt_descripcion(String art_descripcion) { this.art_descripcion = art_descripcion; }
 
-    public String getArt_tipo() {
-        return art_tipo;
-    }
+    public String getArt_tipo() { return art_tipo; }
     public void setArt_tipo(String art_tipo) {
         this.art_tipo = art_tipo;
     }
@@ -182,5 +184,10 @@ public class InventarioModel {
     public String gethis_fecha_hora_creo() {return his_fecha_hora_creo; }
     public void sethis_fecha_hora_creo(String his_fecha_hora_creo) { this.his_fecha_hora_creo = his_fecha_hora_creo; }
 
+    public String getcodigoBarras() {return codigoBarras; }
+    public void setcodigoBarras(String codigoBarras) { this.codigoBarras = codigoBarras; }
+
+    public String getalmacen() {return almacen; }
+    public void setalmacen(String almacen) { this.almacen = almacen; }
 
 }

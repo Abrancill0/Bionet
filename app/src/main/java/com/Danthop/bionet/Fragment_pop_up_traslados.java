@@ -12,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.model.VolleySingleton;
@@ -41,6 +43,11 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     private ArrayList<String> SucursalName;
     private Spinner SpinnerSucursal;
     private Spinner SpinnerSucursal2;
+    private EditText Sku;
+    private EditText Producto;
+    private EditText Cantidad;
+    private TextView SucOrigen;
+    private TextView SucDestino;
 
     public Fragment_pop_up_traslados() {
         // Required empty public constructor
@@ -56,6 +63,12 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         SucursalName = new ArrayList<>();
         SpinnerSucursal=(Spinner)v.findViewById(R.id.Sucursal_Origen);
         SpinnerSucursal2=(Spinner)v.findViewById(R.id.Sucursal_Destino);
+        Sku=(EditText)v.findViewById(R.id.SKU);
+        Producto=(EditText)v.findViewById(R.id.Producto);
+        Cantidad=(EditText)v.findViewById(R.id.Cantidad);
+        SucOrigen=(TextView) v.findViewById(R.id.SucOrigen);
+        SucDestino=(TextView) v.findViewById(R.id.SucDestino);
+
 
         Button trasladar = (Button) v.findViewById(R.id.ImgAceptar);
         trasladar.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +92,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         SpinnerSucursales();
         return v;
     }
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
     private void SpinnerSucursales() {
         JSONObject request = new JSONObject();
         try {
@@ -149,6 +162,6 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 }

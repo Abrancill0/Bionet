@@ -35,10 +35,10 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
                 renderedView = renderSKU(Invetario);
                 break;
             case 1:
-                renderedView = renderproducto(Invetario);
+                renderedView = renderarticulo(Invetario);
                 break;
             case 2:
-                renderedView = renderexistencia(Invetario);
+                renderedView = rendercodigoBarras(Invetario);
                 break;
             case 3:
                 renderedView = rendercategoria(Invetario);
@@ -46,6 +46,13 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
             case 4:
                 renderedView = rendersucursal(Invetario);
                 break;
+            case 5:
+                renderedView = renderalmacen(Invetario);
+                break;
+            case 6:
+                renderedView = renderexistencia(Invetario);
+                break;
+
         }
         return renderedView;
     }
@@ -80,7 +87,7 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
         return renderString(Inventario.getSku());
     }
 
-    private View renderproducto(final InventarioModel Inventario) {
+    private View renderarticulo(final InventarioModel Inventario) {
         return renderString(Inventario.getProducto());
     }
 
@@ -96,6 +103,13 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
         return renderString(Inventario.getNombre_sucursal());
     }
 
+    private View rendercodigoBarras(final InventarioModel Inventario) {
+        return renderString(Inventario.getcodigoBarras());
+    }
+
+    private View renderalmacen(final InventarioModel Inventario) {
+        return renderString(Inventario.getalmacen());
+    }
 
 
     private View renderString(final String value) {
