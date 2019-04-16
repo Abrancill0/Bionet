@@ -17,10 +17,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +49,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
+import com.synnapps.carouselview.ViewListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -126,6 +130,10 @@ public class Fragment_Ventas extends Fragment {
     private ArrayList<String> VendedorName;
     private ArrayList<String> VendedorID;
 
+    private ArrayList<String> ArticulosName;
+
+    private ArrayList<String> Imagenes;
+
 
 
 
@@ -139,7 +147,7 @@ public class Fragment_Ventas extends Fragment {
 
     private TableDataClickListener<ArticuloModel> VentaArticuloTablaListener;
 
-    private EditText Buscar;
+    private AutoCompleteTextView Buscar;
     private ImageLoader imageLoader = ImageLoader.getInstance();
 
     private ProgressDialog progreso;
@@ -187,18 +195,120 @@ public class Fragment_Ventas extends Fragment {
         SucursalID = new ArrayList<>();
         SpinnerSucursal=(Spinner)v.findViewById(R.id.sucursal);
 
+        ArticulosName = new ArrayList<>();
+        Imagenes = new ArrayList<>();
+
         tabla_venta_articulos=v.findViewById(R.id.tabla_venta_articulos);
         tabla_venta_articulos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
 
 
         InstanciarModeloTicket();
         LoadSucursales();
-        LoadImages();
+        LoadAutocomplete();
         LoadListener();
         LoadButtons();
 
 
         return v;
+    }
+
+    public void LoadAutocomplete(){
+        try {
+
+            String url = getString(R.string.Url);
+
+            String ApiPath = url + "/api/inventario/obtener_existencias_articulos_app?usu_id=" + usu_id + "&esApp=1";
+
+            // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            JSONObject RespuestaResultado = null;
+                            JSONArray RespuestaImagenes = null;
+                            JSONObject RespuestaUUID = null;
+                            JSONObject RespuestaPrecio=null;
+
+                            String RutaImagen1="";
+                            String RutaImagen2="";
+
+                            try {
+
+                                int EstatusApi = Integer.parseInt(response.getString("estatus"));
+
+                                Articulos = new ArrayList<>();
+
+                                if (EstatusApi == 1) {
+
+                                    RespuestaResultado = response.getJSONObject("resultado");
+                                    JSONArray NodoArticulos = RespuestaResultado.getJSONArray("aArticulos");
+
+                                    for (int x = 0; x < NodoArticulos.length(); x++) {
+                                        JSONObject elemento = NodoArticulos.getJSONObject(x);
+
+                                        RespuestaUUID = elemento.getJSONObject("art_id");
+                                        String UUID = RespuestaUUID.getString( "uuid");
+
+                                        RespuestaPrecio =  elemento.getJSONObject( "ava_precio");
+                                        String Precio = RespuestaPrecio.getString( "value");
+                                        //VERIFICAR MODIFICADORES
+                                        String NombreCompleto="";
+                                        String NombreArticulo = elemento.getString("art_nombre");
+                                        String NombreVariante = elemento.getString( "ava_nombre");
+                                        String Descripcion = elemento.getString( "art_descripcion");
+                                        String Categoria = elemento.getString("cat_nombre");
+                                        String SKU = elemento.getString("ava_sku");
+
+                                        String NombreModificador="";
+                                        String Modificadores = elemento.getString( "ava_tiene_modificadores");
+
+                                        String Sucursal = elemento.getString("suc_nombre");
+                                        if(Sucursal.equals(SpinnerSucursal.getSelectedItem()))
+                                        {
+                                            if (Modificadores == "true"){
+                                                NombreModificador = elemento.getString( "mod_nombre");
+
+                                                NombreCompleto = NombreArticulo + "/" + NombreVariante + "/" + NombreModificador;
+
+
+                                                ArticulosName.add(NombreCompleto);
+                                            }
+                                            else
+                                            {
+                                                NombreCompleto = NombreArticulo + "/" + NombreVariante + "/" + NombreModificador;
+                                                ArticulosName.add(NombreCompleto);
+                                            }
+                                        }
+
+                                    }
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.articulo_autocomplete_list, R.id.text_view_list_item, ArticulosName);
+                                    Buscar.setAdapter(adapter);
+                                    progreso.hide();
+
+                                }
+                            } catch (JSONException e) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(e), Toast.LENGTH_LONG);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf(error), Toast.LENGTH_LONG);
+                        }
+                    }
+            );
+            getRequest.setShouldCache(false);
+
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+        } catch (Error e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void LoadSucursales()
@@ -379,18 +489,26 @@ public class Fragment_Ventas extends Fragment {
 
     }
 
-    public void LoadImages()
-    {
-        final int[] sampleImages = {R.drawable.milk, R.drawable.bread, R.drawable.strawberrie, R.drawable.lake};
-        carouselView.setPageCount(sampleImages.length);
-        carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+    public void LoadImages() {
+
         ImageListener imageListener = new ImageListener() {
             @Override
             public void setImageForPosition(int position, ImageView imageView) {
-                imageView.setImageResource(sampleImages[position]);
+                Picasso.with(getContext())
+                        .load(Imagenes.get(position))
+                        .centerCrop()
+                        .placeholder(R.drawable.circle_background)
+                        .into(imageView);
             }
         };
-        carouselView.setImageListener(imageListener);
+
+        carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+        if (carouselView != null) {
+            carouselView.setPageCount(Imagenes.size());
+            carouselView.setImageListener(imageListener);
+        }
+
+
     }
 
     public void LoadButtons()
@@ -439,13 +557,13 @@ public class Fragment_Ventas extends Fragment {
                 dialog.show();
                 SpinnerVendedor = dialog.findViewById(R.id.Combo_vendedores);
                 LoadVendedores();
-                final ElegantNumberButton comision_button = dialog.findViewById(R.id.vend_comision);
                 aceptar_agregar_vendedor = (Button) dialog.findViewById(R.id.aceptar_agregar_vendedor);
                 aceptar_agregar_vendedor.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
-                        AniadirVendedorTicket(comision_button.getNumber());
+                        AniadirVendedorTicket("1");
+                        btn_agregar_vendedor.setText(ticket_de_venta.getTic_nombre_vendedor());
                     }
                 });
 
@@ -488,6 +606,17 @@ public class Fragment_Ventas extends Fragment {
             }
         });
 
+        Buscar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View arg1, int pos,
+                                    long id) {
+                Aniadir_a_venta(String.valueOf(Buscar.getText()),"1");
+                Buscar.setText("");
+
+            }
+        });
+
         btn_feenicia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -509,19 +638,9 @@ public class Fragment_Ventas extends Fragment {
 
             }
         });
-        Buscar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                switch (actionId){
-                    case EditorInfo.IME_ACTION_DONE:
-                    case EditorInfo.IME_ACTION_NEXT:
-                    case EditorInfo.IME_ACTION_PREVIOUS:
-                        BuscarPorSKU(Buscar.getText().toString());
-                        return true;
-                }
-                return false;
-            }
-        });
+
+
+               // BuscarPorSKU(Buscar.getCompletionHint().toString());
 
 
     }
@@ -632,11 +751,6 @@ public class Fragment_Ventas extends Fragment {
 
 
 
-
-
-
-
-
                         NodoTicketArticulos = Respuesta.getJSONArray("aDetalleTicket");
                         for(int x = 0; x < NodoTicketArticulos.length(); x++){
                             JSONObject elemento = NodoTicketArticulos.getJSONObject(x);
@@ -649,7 +763,13 @@ public class Fragment_Ventas extends Fragment {
                             String descuento = elemento.getString("art_porcentaje_descuento");
                             String importe = elemento.getString("tar_importe_total");
 
+                            JSONArray RespuestaImagenes = elemento.getJSONArray( "art_imagenes");
+                            for (int z = 0; z < RespuestaImagenes.length(); z++) {
+                                    String RutaImagen = RespuestaImagenes.getString( z);
+                                    Imagenes.add(RutaImagen);
 
+
+                            }
 
 
 
@@ -672,6 +792,7 @@ public class Fragment_Ventas extends Fragment {
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos);
                         articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
+                        LoadImages();
                     }
                     else
                     {
@@ -1303,6 +1424,7 @@ public class Fragment_Ventas extends Fragment {
             e.printStackTrace();
         }
     }
+
 
     private void AniadirClienteTicket()
     {

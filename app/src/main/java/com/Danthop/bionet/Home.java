@@ -78,7 +78,6 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     private String url;
     private String img_ruta_servidor;
     private ImageView imgProfile;
-    private ImageView img_pantalla_principal;
     private ImageView Logo_empresa;
     LoginModel Resultado = new LoginModel();
 
@@ -177,7 +176,6 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         navigationView.setNavigationItemSelectedListener(this);
         View headView = navigationView.getHeaderView(0);
 
-        img_pantalla_principal = findViewById(R.id.foto_perfil);
         imgProfile = headView.findViewById(R.id.foto_perfil_hamburguesa);
         Logo_empresa = findViewById(R.id.logo_empresa);
 
@@ -435,9 +433,9 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                         try {
                             jObj = new JSONObject(response);
                             img_ruta_servidor = jObj.getString("resultado");
-                            System.out.println(img_ruta_servidor);
+                            /*System.out.println(img_ruta_servidor);
                             Picasso.with(getApplicationContext()).load(img_ruta_servidor).into(imgProfile);
-                            //Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( img_pantalla_principal);
+                            //Picasso.with( getApplicationContext() ).load( img_ruta_servidor ).into( img_pantalla_principal);*/
 
                             SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPref.edit();
@@ -541,17 +539,6 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
             switch (wifiStateExtra){
                 case WifiManager.WIFI_STATE_ENABLED:
-                    networkstatus = NetworkUtils.isOnlineNet();
-                    if(networkstatus == false)
-                    {
-                        Internet.setVisibility(View.VISIBLE);
-                        textInternet.setText("La red no se encuentra disponible");
-                        while (networkstatus!=true)
-                        {
-                            networkstatus= NetworkUtils.isOnlineNet();
-                        }
-                        Internet.setVisibility(View.GONE);
-                    }
 
                     break;
                 case WifiManager.WIFI_STATE_DISABLED:

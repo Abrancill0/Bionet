@@ -1,164 +1,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:table="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:table="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".5"
-        android:orientation="vertical">
+        android:layout_weight=".6"
+        android:orientation="vertical"
+        android:padding="20dp">
 
-        <LinearLayout
+        <com.synnapps.carouselview.CarouselView
+            android:id="@+id/carouselView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".6"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:layout_weight=".8"
-                android:gravity="center_vertical|center_horizontal"
-                android:orientation="vertical"
-                android:paddingHorizontal="5dp"
-                android:padding="20dp">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/foto_perfil"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_centerHorizontal="true"
-                    android:paddingTop="10dp"
-                    android:src="@drawable/imagen_profile"
-                    app:civ_border_color="@color/colorPrimary"
-                    app:civ_border_width="1dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:layout_weight=".3"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/TextNombrePerfil"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_marginHorizontal="10dp"
-                    android:text="Nombre de usuario"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight=".6"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Artículos más vendidos"
-                android:textColor="@color/colorPrimaryDark"
-                android:layout_marginBottom="10dp"
-                android:textSize="18sp"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/gray2"
-                android:orientation="horizontal"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginBottom="10dp">
-
-            </LinearLayout>
-
-                <de.codecrafters.tableview.TableView
-                    android:id="@+id/tablaProductos_sucursales"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="20dp"
-                    table:tableView_columnCount="2" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight=".6"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView31"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Centro de Mensajes"
-                android:textColor="@color/colorPrimaryDark"
-                android:layout_marginBottom="10dp"
-                android:textSize="18sp"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/gray2"
-                android:orientation="horizontal"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginBottom="10dp">
-            </LinearLayout>
-
-            <de.codecrafters.tableview.TableView
-                android:id="@+id/tablaNotificaciones"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="20dp"
-                table:tableView_columnCount="1" />
-
-        </LinearLayout>
-
-
+            app:fillColor="@color/colorPrimaryDark"
+            app:indicatorMarginVertical="0dp"
+            app:pageColor="@color/white"
+            app:radius="4dp"
+            app:slideInterval="3000"
+            app:strokeColor="#FF777777"
+            app:strokeWidth="1dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".5"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="495dp"
-            android:layout_marginBottom="5dp"
-            android:layout_weight=".6"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <com.synnapps.carouselview.CarouselView
-                android:id="@+id/carouselView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:fillColor="@color/colorPrimaryDark"
-                app:indicatorMarginVertical="0dp"
-                app:pageColor="@color/white"
-                app:radius="4dp"
-                app:slideInterval="3000"
-                app:strokeColor="#FF777777"
-                app:strokeWidth="1dp" />
-        </LinearLayout>
+        android:layout_weight=".4"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -174,31 +48,31 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textViewProd"
+                    android:id="@+id/textView17"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pocas existencias"
-                    android:textColor="@color/colorPrimaryDark"
                     android:layout_marginBottom="10dp"
-                    android:textSize="18sp"/>
+                    android:text="Artículos más vendidos"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray2"
-                    android:orientation="horizontal"
-                    android:layout_marginRight="20dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/gray2"
+                    android:orientation="horizontal">
 
                 </LinearLayout>
 
-                    <de.codecrafters.tableview.TableView
-                        android:id="@+id/tablaPocas_Existencias"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="20dp"
-                        table:tableView_columnCount="2" />
-
+                <de.codecrafters.tableview.TableView
+                    android:id="@+id/tablaProductos_sucursales"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="20dp"
+                    table:tableView_columnCount="2" />
 
             </LinearLayout>
 
@@ -210,34 +84,122 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView32"
+                    android:id="@+id/textView31"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Clientes frecuentes"
-                    android:textColor="@color/colorPrimaryDark"
                     android:layout_marginBottom="10dp"
-                    android:textSize="18sp"/>
+                    android:text="Centro de Mensajes"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray2"
-                    android:orientation="horizontal"
-                    android:layout_marginRight="20dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginBottom="10dp">
-                </LinearLayout>
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/gray2"
+                    android:orientation="horizontal"></LinearLayout>
 
                 <de.codecrafters.tableview.TableView
-                    android:id="@+id/tablaClientesFrecuentes"
+                    android:id="@+id/tablaNotificaciones"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="20dp"
                     table:tableView_columnCount="1" />
 
             </LinearLayout>
+
+
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
+            android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".6"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewProd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="Pocas existencias"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/gray2"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                    <de.codecrafters.tableview.TableView
+                        android:id="@+id/tablaPocas_Existencias"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="20dp"
+                        table:tableView_columnCount="2" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".6"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView32"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="Clientes frecuentes"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/gray2"
+                        android:orientation="horizontal"></LinearLayout>
+
+                    <de.codecrafters.tableview.TableView
+                        android:id="@+id/tablaClientesFrecuentes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="20dp"
+                        table:tableView_columnCount="1" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </LinearLayout>
 
     </LinearLayout>
+
 </LinearLayout>

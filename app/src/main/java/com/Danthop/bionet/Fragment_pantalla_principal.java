@@ -34,8 +34,6 @@ import lecho.lib.hellocharts.view.PieChartView;
  */
 public class Fragment_pantalla_principal extends Fragment{
 
-    private ImageView Foto_perfil;
-    private TextView Text_nombre;
     private long backPressedTime;
     private Toast backToast;
     MediaPlayer mp = new MediaPlayer();
@@ -53,18 +51,6 @@ public class Fragment_pantalla_principal extends Fragment{
         String ImagenPerfil = sharedPref.getString( "usu_imagen_perfil", "" );
         String Apellido = sharedPref.getString("usu_apellidos", "");
         String Nombre = sharedPref.getString("usu_nombre", "");
-        Text_nombre = v.findViewById(R.id.TextNombrePerfil);
-        Text_nombre.setText(Nombre+" "+Apellido);
-
-        Foto_perfil = v.findViewById(R.id.foto_perfil);
-
-        if(ImagenPerfil.equals(""))
-        {
-
-        }
-        else{
-            Picasso.with( getContext() ).load( ImagenPerfil ).into( Foto_perfil );
-        }
 
         //=====Programación de las tablas=====
         String[][] DATA_TO_SHOW = { { "Producto 1", "Sucursal 1"},
@@ -135,7 +121,7 @@ public class Fragment_pantalla_principal extends Fragment{
         tablaClientesFrecuentes.setDataAdapter(simpleTableDataAdapter4);
 
         //=====Programación del carrousel=====
-        final int[] sampleImages = {R.drawable.milk, R.drawable.bread, R.drawable.strawberrie, R.drawable.lake};
+        final int[] sampleImages = {R.drawable.store2, R.drawable.store, R.drawable.museum_store, R.drawable.store3};
         CarouselView carouselView;
         carouselView = (CarouselView) v.findViewById(R.id.carouselView);
         carouselView.setPageCount(sampleImages.length);
