@@ -25,6 +25,9 @@ public class InventarioModel {
     private String his_fecha_hora_creo;
     private String codigoBarras;
     private String almacen;
+    private String RecibidasOrigen;
+    private String RecibidasDestino;
+    private String tra_nombre_estatus;
 
 
 
@@ -49,7 +52,10 @@ public class InventarioModel {
                            String his_observaciones,
                            String his_fecha_hora_creo,
                            String codigoBarras,
-                           String almacen)
+                           String almacen,
+                           String RecibidasOrigen,
+                           String RecibidasDestino,
+                           String tra_nombre_estatus)
     {
 
         this.sku = sku;
@@ -74,6 +80,9 @@ public class InventarioModel {
         this.his_fecha_hora_creo = his_fecha_hora_creo;
         this.codigoBarras = codigoBarras;
         this.almacen = almacen;
+        this.RecibidasOrigen = RecibidasOrigen;
+        this.RecibidasDestino = RecibidasDestino;
+        this.tra_nombre_estatus = tra_nombre_estatus;
     }
 
     public String getSku() { return sku; }
@@ -189,5 +198,14 @@ public class InventarioModel {
 
     public String getalmacen() {return almacen; }
     public void setalmacen(String almacen) { this.almacen = almacen; }
+
+    public String getRecibidasOrigen() {return RecibidasOrigen; }
+    public void setRecibidasOrigen(String RecibidasOrigen) { this.almacen = RecibidasOrigen; }
+
+    public String getRecibidasDestino() {return RecibidasDestino; }
+    public void setRecibidasDestino(String RecibidasDestino) { this.RecibidasDestino = RecibidasDestino; }
+
+    public String gettra_nombre_estatus() {return tra_nombre_estatus; }
+    public void settra_nombre_estatus(String tra_nombre_estatus) { this.tra_nombre_estatus = tra_nombre_estatus; }
 
 }
