@@ -23,6 +23,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ArticuloAdapter;
 import com.Danthop.bionet.Adapters.ClienteAdapter;
+import com.Danthop.bionet.Adapters.MetodoPagoAdapter;
 import com.Danthop.bionet.Adapters.SeleccionarArticuloVentaAdapter;
 import com.Danthop.bionet.Adapters.VentaArticuloAdapter;
 import com.Danthop.bionet.Tables.SortableArticulosTable;
@@ -38,6 +40,7 @@ import com.Danthop.bionet.Tables.SortableSeleccionarArticuloTable;
 import com.Danthop.bionet.Tables.SortableVentaArticulos;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
+import com.Danthop.bionet.model.PagoModel;
 import com.Danthop.bionet.model.TicketModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -71,6 +74,7 @@ public class Fragment_Ventas extends Fragment {
     private Button btn_agregar_articulo;
     private Button btn_feenicia;
     private Button btn_reporte;
+    private Button btn_finalizar;
     private Button crear_cliente;
     private Button aceptar_agregar_vendedor;
     private Button Corte_Caja;
@@ -134,6 +138,9 @@ public class Fragment_Ventas extends Fragment {
 
     private ArrayList<String> Imagenes;
 
+    private ArrayList<PagoModel> ListaDePagos;
+
+
 
 
 
@@ -179,6 +186,7 @@ public class Fragment_Ventas extends Fragment {
         btn_agregar_vendedor = v.findViewById(R.id.btn_agregar_vendedor);
         btn_agregar_articulo = v.findViewById(R.id.btn_agregar_articulo);
         btn_feenicia = v.findViewById(R.id.btn_feenicia);
+        btn_finalizar = v.findViewById(R.id.btn_finalizar);
         btn_reporte = v.findViewById(R.id.btn_reporte);
         Corte_Caja = v.findViewById(R.id.CorteCaja);
         Buscar = v.findViewById(R.id.buscarXSKU);
@@ -197,9 +205,11 @@ public class Fragment_Ventas extends Fragment {
 
         ArticulosName = new ArrayList<>();
         Imagenes = new ArrayList<>();
+        ListaDePagos = new ArrayList<>();
 
         tabla_venta_articulos=v.findViewById(R.id.tabla_venta_articulos);
         tabla_venta_articulos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
+
 
 
         InstanciarModeloTicket();
@@ -275,7 +285,7 @@ public class Fragment_Ventas extends Fragment {
                                             }
                                             else
                                             {
-                                                NombreCompleto = NombreArticulo + "/" + NombreVariante + "/" + NombreModificador;
+                                                NombreCompleto = NombreArticulo + "/" + NombreVariante;
                                                 ArticulosName.add(NombreCompleto);
                                             }
                                         }
@@ -491,22 +501,21 @@ public class Fragment_Ventas extends Fragment {
 
     public void LoadImages() {
 
-        ImageListener imageListener = new ImageListener() {
+        ViewListener viewListener = new ViewListener() {
+
             @Override
-            public void setImageForPosition(int position, ImageView imageView) {
-                Picasso.with(getContext())
-                        .load(Imagenes.get(position))
-                        .centerCrop()
-                        .placeholder(R.drawable.circle_background)
-                        .into(imageView);
+            public View setViewForPosition(int position) {
+                View customView = getLayoutInflater().inflate(R.layout.image_view, null);
+                ImageView myImageView = customView.findViewById(R.id.imageViewParaCarousel);
+                Picasso.with(getContext()).load(Imagenes.get(position)).into(myImageView );
+
+                return customView;
             }
         };
 
-        carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
-        if (carouselView != null) {
+            carouselView.setViewListener(viewListener);
             carouselView.setPageCount(Imagenes.size());
-            carouselView.setImageListener(imageListener);
-        }
+
 
 
     }
@@ -617,6 +626,90 @@ public class Fragment_Ventas extends Fragment {
             }
         });
 
+        btn_finalizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println(Articulos.size());
+                if(ArticulosVenta.isEmpty())
+                {
+                    dialog.setContentView(R.layout.pop_up_venta_finalizar_sin_articulos);
+                    dialog.show();
+                    Button aceptar = dialog.findViewById(R.id.Aceptar);
+                    aceptar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                }
+                else if(false==ArticulosVenta.isEmpty())
+                {
+                    dialog.setContentView(R.layout.pop_up_ventas_facturar);
+                    dialog.show();
+                    Button si_facturar = dialog.findViewById(R.id.si_facturar);
+                    si_facturar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ticket_de_venta.setTic_facturar("True");
+                            dialog.dismiss();
+                            dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
+                            dialog.show();
+                            ListView listaPagos = dialog.findViewById(R.id.lista_de_pagos);
+                            CargaMetodosPago(listaPagos);
+
+                            Button realizarPago = dialog.findViewById(R.id.realizar_Pago);
+                            realizarPago.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                    dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
+                                    dialog.show();
+                                    Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                                    aceptar.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                }
+                            });
+                        }
+                    });
+                    Button no_facturar = dialog.findViewById(R.id.no_facturar);
+                    no_facturar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ticket_de_venta.setTic_facturar("False");
+                            dialog.dismiss();
+                            dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
+                            dialog.show();
+                            ListView listaPagos = dialog.findViewById(R.id.lista_de_pagos);
+                            CargaMetodosPago(listaPagos);
+
+                            Button realizarPago = dialog.findViewById(R.id.realizar_Pago);
+                            realizarPago.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                    dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
+                                    dialog.show();
+                                    Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                                    aceptar.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                }
+                            });
+
+                        }
+                    });
+                }
+            }
+        });
+
         btn_feenicia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -688,7 +781,7 @@ public class Fragment_Ventas extends Fragment {
                     {
 
                         Respuesta = response.getJSONObject("resultado");
-
+                        Imagenes.clear();
                         RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
                         TicketID = RespuestaNodoTicket.getJSONObject("tic_id");
                         TicketIDVenta = TicketID.getString("uuid");
@@ -765,7 +858,7 @@ public class Fragment_Ventas extends Fragment {
 
                             JSONArray RespuestaImagenes = elemento.getJSONArray( "art_imagenes");
                             for (int z = 0; z < RespuestaImagenes.length(); z++) {
-                                    String RutaImagen = RespuestaImagenes.getString( z);
+                                    String RutaImagen = "http://192.168.100.192:8010"+RespuestaImagenes.getString(z);
                                     Imagenes.add(RutaImagen);
 
 
@@ -863,6 +956,7 @@ public class Fragment_Ventas extends Fragment {
                     {
                         Respuesta = response.getJSONObject("resultado");
                         RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
+                        Imagenes.clear();
 
                         float ImpuestoTotal = 0;
                         float Subtotal = 0;
@@ -933,6 +1027,12 @@ public class Fragment_Ventas extends Fragment {
                             String descuento = elemento.getString("art_porcentaje_descuento");
                             String importe = elemento.getString("tar_importe_total");
 
+                            JSONArray RespuestaImagenes = elemento.getJSONArray( "art_imagenes");
+                            for (int z = 0; z < RespuestaImagenes.length(); z++) {
+                                String RutaImagen = "http://192.168.100.192:8010"+RespuestaImagenes.getString(z);
+                                Imagenes.add(RutaImagen);
+                            }
+
 
 
                             final ArticuloModel articulo = new ArticuloModel("",
@@ -953,6 +1053,7 @@ public class Fragment_Ventas extends Fragment {
                         }
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos);
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
+                        LoadImages();
                     }
                     else
                     {
@@ -1425,6 +1526,95 @@ public class Fragment_Ventas extends Fragment {
         }
     }
 
+    private void CargaMetodosPago(final ListView Listview){
+
+        ListaDePagos.clear();
+        ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("tic_id_sucursal",ticket_de_venta.getTic_id_sucursal());
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/tickets/select-formas-pago";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray Respuesta = null;
+                JSONObject RespuestaNodoTicket= null;
+                JSONObject TicketID=null;
+                JSONArray NodoTicketArticulos=null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1)
+                    {
+
+                        Respuesta = response.getJSONArray("resultado");
+
+                        for(int x = 0; x < Respuesta.length(); x++){
+                            JSONObject elemento = Respuesta.getJSONObject(x);
+                            String id = elemento.getString("fpa_id");
+                            String nombre = elemento.getString("fpa_nombre");
+
+
+                            final PagoModel pago = new PagoModel(
+                                    nombre,
+                                    id,
+                                    ""
+                            );
+                            ListaDePagos.add(pago);
+                        }
+                        final MetodoPagoAdapter pagoAdapter = new MetodoPagoAdapter(getContext(), R.layout.caja_metodo_pago, ListaDePagos,Listview);
+                        pagoAdapter.notifyDataSetChanged();
+                        Listview.setAdapter(pagoAdapter);
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+
+    }
+
 
     private void AniadirClienteTicket()
     {
@@ -1672,8 +1862,13 @@ public class Fragment_Ventas extends Fragment {
                                     }
 
 
+                                    //Cambiar dato de precio a formato de dinero.
+                                    double PrecioConDecimal = Double.parseDouble(Precio);
+                                    NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+
                                     art_nombre.setText(NombreCompleto);
-                                    art_precio.setText(Precio);
+                                    art_precio.setText( formatter.format( PrecioConDecimal ) );
                                     art_categoria.setText(Categoria);
                                     art_decription.setText(Descripcion);
                                     String ruta = "http://192.168.100.192:8010"+RutaImagen1;
