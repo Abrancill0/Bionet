@@ -79,6 +79,9 @@ public class Fragment_inventarios extends Fragment {
     private String his_cantidad;
     private String his_observaciones;
     private String his_fecha_hora_creo;
+    private String RecibidasOrigen;
+    private String RecibidasDestino;
+    private String tra_nombre_estatus;
 
     public Fragment_inventarios() {
         // Required empty public constructor
@@ -192,17 +195,12 @@ public class Fragment_inventarios extends Fragment {
                         Articulo = Resultado.getJSONArray("aArticulosExistencias");
                         inventarioModel = new String[Articulo.length()][4];
 
-                        for (int x = 0; x < Articulo.length(); x++) {
+                        for (int x = 0; x < Articulo.length(); x++) { //aqui
                             JSONObject elemento = Articulo.getJSONObject(x);
 
                             RespuestaUUID = elemento.getJSONObject("art_id");
                             String UUID = RespuestaUUID.getString("uuid");
 
-                            //Sku
-                           Boolean Disponible_Modificador = Boolean.valueOf(elemento.getString("ava_tiene_modificadores"));
-                            if (Disponible_Modificador == true){
-                               sku = elemento.getString("amo_sku");
-                           }
                             producto = elemento.getString("art_nombre");
                             categoria = elemento.getString("cat_nombre");
                             articulo_descripcion = elemento.getString("art_descripcion");
@@ -246,20 +244,39 @@ public class Fragment_inventarios extends Fragment {
                             JSONObject elemento3 = imagenes.getJSONObject(0);
                             aim_url = getString(R.string.Url) + elemento3.getString("aim_url");
 
-                            //Variantes_Modificadores
-                          /*String NombreVariante = elemento.getString("ava_nombre");
-                            Boolean Modificadores = Boolean.valueOf(elemento.getString("amo_activo"));
-                            String NombreCompleto;
+                            //Variantes_Modificadores_SKU
+                            Boolean Disponible_Variante = Boolean.valueOf(elemento.getString("art_tiene_variantes"));
+                            if (Disponible_Variante == true) {
+                                String NombreVariante = elemento.getString("ava_nombre");
 
-                            if (Modificadores == true) {
-                                String NombreModificador = elemento.getString("mod_nombre");
-                                NombreCompleto = producto + " " + NombreVariante + " " + NombreModificador;
-                                producto = NombreCompleto;
+                                Boolean Disponible_Modificador = Boolean.valueOf(elemento.getString("ava_tiene_modificadores"));
+                                String NombreCompleto;
+                                if (Disponible_Modificador == true) {
+                                    sku = elemento.getString("amo_sku");
+                                    String NombreModificador = elemento.getString("mod_nombre");
+                                    NombreCompleto = producto + " " + NombreVariante + " " + NombreModificador;
+                                    producto = NombreCompleto;
 
-                            } else {
-                                NombreCompleto = producto + " " + NombreVariante;
-                                producto = NombreCompleto;
-                            }*/
+                                } else {
+                                    NombreCompleto = producto + " " + NombreVariante;
+                                    producto = NombreCompleto;
+                                }
+                            }else {
+                                String NombreVariante = elemento.getString("ava_nombre");
+
+                                Boolean Disponible_Modificador = Boolean.valueOf(elemento.getString("ava_tiene_modificadores"));
+                                String NombreCompleto;
+                                if (Disponible_Modificador == true) {
+                                    sku = elemento.getString("amo_sku");
+                                    String NombreModificador = elemento.getString("mod_nombre");
+                                    NombreCompleto = producto + " " + NombreVariante + " " + NombreModificador;
+                                    producto = NombreCompleto;
+
+                                } else {
+                                    NombreCompleto = producto + " " + NombreVariante;
+                                    producto = NombreCompleto;
+                                }
+                            }
 
                            /* Sucursales = elemento.getJSONArray("sucursales");
                             for (int z = 0; z < Sucursales.length(); z++) {
@@ -292,14 +309,17 @@ public class Fragment_inventarios extends Fragment {
                                             his_observaciones,
                                             his_fecha_hora_creo,
                                             codigoBarras,
-                                            almacen);
+                                            almacen,
+                                            RecibidasOrigen,
+                                            RecibidasDestino,
+                                            tra_nombre_estatus);
                                     inventarios.add(inventario);
                                // }
                            // }
 
                         }final InventarioAdapter InventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario);
                         tabla_inventario.setDataAdapter(InventarioAdapter);
-                    }
+                    }//aqui
                 } catch (JSONException e) {
                     Toast toast1 =
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);

@@ -145,8 +145,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_gray"
+                    android:layout_marginVertical="10dp"
                     android:fontFamily="@font/muli"
                     android:text="Solicitar Traslado"
+                    android:textAllCaps="false"
+                    android:textColor="@color/gray" />
+
+                <Button
+                    android:id="@+id/traslados_recibidos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:background="@drawable/shape_gray"
+                    android:fontFamily="@font/muli"
+                    android:text="Recibidos"
+                    android:textAllCaps="false"
+                    android:textColor="@color/gray" />
+
+                <Button
+                    android:id="@+id/traslados_enviados"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_gray"
+                    android:fontFamily="@font/muli"
+                    android:text="Enviados"
                     android:textAllCaps="false"
                     android:textColor="@color/gray" />
             </LinearLayout>
@@ -161,12 +183,15 @@
             android:background="@drawable/pestanas_desplegables"
             android:padding="20dp">
 
-            <de.codecrafters.tableview.TableView
-                android:id="@+id/tabla_inventario"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <com.Danthop.bionet.Tables.SortableTrasladosTable
+                android:id="@+id/tabla_traslados"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".7"
+                android:visibility="visible"
                 app:tableView_headerColor="@color/white"
-                table:tableView_columnCount="5" />
+                table:tableView_columnCount="4">
+            </com.Danthop.bionet.Tables.SortableTrasladosTable>
 
         </LinearLayout>
     </LinearLayout>

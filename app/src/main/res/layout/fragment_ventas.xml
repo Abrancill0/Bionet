@@ -164,7 +164,7 @@
                     android:layout_weight=".5"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="10dp">
+                    android:padding="5dp">
 
                     <AutoCompleteTextView
                         android:id="@+id/buscarXSKU"
@@ -177,8 +177,7 @@
                         android:queryHint="Buscar"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:padding="5dp"
-                        android:layout_margin="5dp"/>
+                        android:padding="5dp"/>
 
                 </LinearLayout>
 
@@ -188,14 +187,13 @@
                     android:layout_weight=".7"
                     android:gravity="center_vertical|end"
                     android:orientation="horizontal"
-                    android:padding="10dp">
+                    android:padding="5dp">
 
                     <Spinner
                         android:id="@+id/sucursal"
                         style="@style/SpinnerTheme"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="5dp"></Spinner>
+                        android:layout_height="match_parent"></Spinner>
                 </LinearLayout>
             </LinearLayout>
 
@@ -261,11 +259,9 @@
                     android:layout_margin="20dp"
                     app:fillColor="@color/colorPrimaryDark"
                     app:indicatorMarginVertical="0dp"
-                    app:pageColor="@color/white"
-                    app:radius="4dp"
-                    app:slideInterval="3000"
-                    app:strokeColor="#FF777777"
-                    app:strokeWidth="1dp" />
+                    app:pageColor="@color/colorPrimaryDark"
+                    app:slideInterval="2000"
+                    app:indicatorVisibility="gone"/>
             </LinearLayout>
 
             <LinearLayout
@@ -360,17 +356,6 @@
                         android:layout_marginHorizontal="20dp"
                         android:text="$0.00" />
                 </LinearLayout>
-
-                <CheckBox
-                    android:id="@+id/checkBox2"
-                    style="@style/Widget.AppCompat.CompoundButton.CheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="20dp"
-                    android:layout_marginHorizontal="10dp"
-                    android:drawablePadding="15dp"
-                    android:text="Factura" />
 
             </LinearLayout>
 

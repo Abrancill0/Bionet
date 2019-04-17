@@ -46,6 +46,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import com.mercadolibre.android.sdk.Identity;
 import com.mercadolibre.android.sdk.Meli;
@@ -95,6 +96,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     private TextView textInternet;
     private Handler handler1;
     private Boolean networkstatus;
+    private View layoutCerrar;
 
     private WifiManager wifiManager;
 
@@ -142,6 +144,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
         wifiManager = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        layoutCerrar = findViewById(R.id.layout_cerrar_ecommerce);
 
         handler1 = new Handler();
         Internet = findViewById(R.id.internet);
@@ -291,14 +294,17 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     }
 
     public void notificaciones() {
+        layoutCerrar.setVisibility(View.GONE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_notificaciones()).addToBackStack(null).commit();
     }
 
     public void ventas() {
+        layoutCerrar.setVisibility(View.GONE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_Ventas()).addToBackStack(null).commit();
     }
 
     public void clientes() {
+        layoutCerrar.setVisibility(View.GONE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_clientes()).addToBackStack(null).commit();
     }
 
@@ -351,6 +357,14 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
             if (TokenLifeLong > elapsedSeconds) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_ecomerce()).addToBackStack(null).commit();
+                layoutCerrar.setVisibility(View.VISIBLE);
+                final TextView btn_cerrar_ecommerce = findViewById(R.id.btn_cerrar_ecommerce);
+                btn_cerrar_ecommerce.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
             }
             else
             {
@@ -370,15 +384,17 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     }
 
     public void home() {
-
+        layoutCerrar.setVisibility(View.GONE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_pantalla_principal()).addToBackStack(null).commit();
     }
 
     public void inventario() {
+        layoutCerrar.setVisibility(View.GONE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_inventarios()).addToBackStack(null).commit();
     }
 
     public void lealtad() {
+        layoutCerrar.setVisibility(View.GONE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentLealtad()).addToBackStack(null).commit();
     }
 

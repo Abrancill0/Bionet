@@ -19,8 +19,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,7 +47,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.pop_up_seleccionarticulos, container, false);
+        v = inflater.inflate(R.layout.fragment_ecommerce_seleccionarticulos, container, false);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", getActivity().MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
