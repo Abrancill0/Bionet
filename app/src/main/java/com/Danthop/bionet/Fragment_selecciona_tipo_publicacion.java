@@ -23,6 +23,7 @@ import com.Danthop.bionet.Tables.SortableArticulosTable;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.CategoriaModel;
 import com.Danthop.bionet.model.PublicacionModel;
+import com.Danthop.bionet.model.CategoriaExcepcionModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -126,6 +127,7 @@ public class Fragment_selecciona_tipo_publicacion extends Fragment {
                     int EstatusApi = Integer.parseInt( response.getString("estatus") );
                     if (EstatusApi == 1) {
                         ArrayList arrayList = new ArrayList<>();
+                        ArrayList arrayList2 = new ArrayList<>();
                         RespuestaTiposPublicacion = response.getJSONObject("aListaTiposPublicacion");
                         Respuestaavailable = RespuestaTiposPublicacion.getJSONArray("available");
 
@@ -141,28 +143,34 @@ public class Fragment_selecciona_tipo_publicacion extends Fragment {
                             // entrar a nodo conf
                                 //hacer un for del nodo config
                                 //dentro del for hacer un if para solo entrar a la categoria q se esta recorriendo
-                                RespuestaConfiguracion =RespuestaTiposPublicacion.getJSONArray("configuration");
+                                RespuestaConfiguracion = RespuestaTiposPublicacion.getJSONArray("configuration");
                                 for(int z = 0; z < RespuestaConfiguracion.length(); z++){
                                     JSONObject elementito = RespuestaConfiguracion.getJSONObject(z);
 
                                     IdConfiguration = elementito.getString("id");
 
-                                   if (idpublicacion == IdConfiguration ) {
-
-                                    RespuestaExcepcionCategoria = RespuestaConfiguracion.getJSONArray(Integer.parseInt("exceptions_by_category"));
+                                   if (idpublicacion.equals(IdConfiguration))
+                                    {
+                                    RespuestaExcepcionCategoria = elementito.getJSONArray("exceptions_by_category");
                                      for(int y = 0; y < RespuestaExcepcionCategoria.length(); y++){
-                                           JSONObject elemento3 = RespuestaExcepcionCategoria.getJSONObject(x);
+                                           JSONObject elemento3 = RespuestaExcepcionCategoria.getJSONObject(y);
                                            category_id = elemento3.getString("category_id");
                                            category_name = elemento3.getString("category_name");
-                                       }
+
+
+                                         CategoriaExcepcionModel cat = new CategoriaExcepcionModel(category_id, category_name,idpublicacion );
+                                         arrayList2.add(cat);
+                                     }
                                    }
                                   // return;
                                 }
-                                PublicacionModel pub = new PublicacionModel(idpublicacion, publicacion );
+
+                                PublicacionModel pub = new PublicacionModel(idpublicacion, publicacion,arrayList2);
                                 arrayList.add(pub);
+
                            }
                         }//ListViewTipoPublicacion.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,TipoPublicacionName));
-                        PublicacionAdapter adapter = new PublicacionAdapter(getContext(), R.layout.caja_publicaciones,arrayList,ListaPublicacion,bundle);
+                        PublicacionAdapter adapter = new PublicacionAdapter(getContext(), R.layout.caja_publicaciones,arrayList,ListaPublicacion,fr,bundle);
                         ListaPublicacion.setAdapter(adapter);
                     }
                 } catch (JSONException e) {

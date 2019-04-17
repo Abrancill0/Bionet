@@ -39,6 +39,7 @@ public class PublicacionAdapter extends ArrayAdapter<PublicacionModel> {
     private TextView nombre;
     public String name;
     public String id;
+    public ArrayList ex;
     private TextView NombreDialog;
     private String AccesToken;
     private String UserML;
@@ -64,13 +65,14 @@ public class PublicacionAdapter extends ArrayAdapter<PublicacionModel> {
     }
 
 
-    public PublicacionAdapter(Context context, int resource, ArrayList<PublicacionModel> objects, ListView ListsPublicaciones, Bundle bundle) {
+    public PublicacionAdapter(Context context, int resource, ArrayList<PublicacionModel> objects, ListView ListsPublicaciones,FragmentTransaction fg, Bundle bundle) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
         pop_up_tipo_publicacion = new Dialog(getContext());
         ListaPublicaciones = ListsPublicaciones;
         bundle1 = bundle;
+        fr = fg;
     }
 
     @NonNull
@@ -78,6 +80,7 @@ public class PublicacionAdapter extends ArrayAdapter<PublicacionModel> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         name = getItem(position).getName();
         id = getItem(position).getId();
+        ex  = getItem( position ).getExceptionsCategory();
 
         Nombre = bundle1.getString("nombre");
         Descripcion = bundle1.getString("descripcion");
@@ -86,7 +89,7 @@ public class PublicacionAdapter extends ArrayAdapter<PublicacionModel> {
         Imagen1 = bundle1.getString("image1");
         Imagen2 = bundle1.getString("image2");
 
-        PublicacionModel publicacion = new PublicacionModel(name, id);
+        PublicacionModel publicacion = new PublicacionModel(name, id,ex);
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResource, parent, false);
@@ -94,12 +97,21 @@ public class PublicacionAdapter extends ArrayAdapter<PublicacionModel> {
         nombre = convertView.findViewById(R.id.TextPublicacion);
         nombre.setText(name);
 
+        bundle1.putString("name", name);
+        bundle1.putString("id", id);
+        bundle1.putStringArrayList("ex",  ex );
+
         nombre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 name = getItem(position).getName();
                 id = getItem(position).getId();
+                ex  = getItem( position ).getExceptionsCategory();
 
+
+                Fragment_selecciona_categoria secondFragment = new Fragment_selecciona_categoria();
+                secondFragment.setArguments(bundle1);
+                fr.replace(R.id.fragment_container, secondFragment).commit();
             }
         });
 

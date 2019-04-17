@@ -83,7 +83,8 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
-                Fragment_selecciona_categoria secondFragment = new Fragment_selecciona_categoria();
+                Fragment_selecciona_tipo_publicacion secondFragment = new Fragment_selecciona_tipo_publicacion();
+                //Fragment_selecciona_categoria secondFragment = new Fragment_selecciona_categoria();
                 secondFragment.setArguments(bundle);
 
                 fragmentTransaction.replace(R.id.fragment_container, secondFragment);

@@ -11,7 +11,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import com.Danthop.bionet.Adapters.CategoriaAdapter;
+import com.Danthop.bionet.model.CategoriaExcepcionModel;
 import com.Danthop.bionet.model.CategoriaModel;
+import com.Danthop.bionet.model.PublicacionModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -38,7 +40,7 @@ public class Fragment_selecciona_categoria extends Fragment {
     FragmentTransaction fr;
     private ImageView back;
     private String idVacio;
-
+    public ArrayList ex;
     public Fragment_selecciona_categoria() {
         // Required empty public constructor
     }
@@ -57,6 +59,7 @@ public class Fragment_selecciona_categoria extends Fragment {
         bundle = getArguments();
         nombre = bundle.getString( "nombre");
         descripcion = bundle.getString( "descripcion");
+        ex = bundle.getStringArrayList( "ex");
 
         listacategoria = (ListView) v.findViewById(R.id.listView_selecciona);
         cargaCategorias();
@@ -85,16 +88,27 @@ public class Fragment_selecciona_categoria extends Fragment {
                             try {
                                 int EstatusApi = Integer.parseInt( response.getString("estatus") );
                                 if (EstatusApi == 1) {
+
                                     RespuestaCategoria = response.getJSONArray("aCategorias");
                                     ArrayList arrayList = new ArrayList<>();
 
                                     for(int x = 0; x < RespuestaCategoria.length(); x++){
+
                                         JSONObject jsonObject1 = RespuestaCategoria.getJSONObject(x);
+
                                         String idcategoria = jsonObject1.getString("id");
                                         String categoria = jsonObject1.getString("name");
 
+                                     //   for (int i=0;i<ex.size();i++){
+                                     //       for(int j=0;j<ex.get(0).;j++){
+                                     //           System.out.println(ex[i][j]);
+                                     //       }
+                                     //   }
+
+
                                         CategoriaModel cat = new CategoriaModel(idcategoria, categoria );
                                         arrayList.add(cat);
+
                                     }
                                     CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria,arrayList,listacategoria,bundle,fr,back,idVacio);
                                     listacategoria.setAdapter(adapter);

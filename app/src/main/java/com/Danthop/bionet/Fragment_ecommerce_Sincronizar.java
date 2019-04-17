@@ -307,6 +307,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                     Respuestaespecificaciones = elemento.getJSONObject("especificaciones");
                     RespuestaDescripcion = elemento.getJSONObject("descripcion");
+
                     DescripcionLarga = RespuestaDescripcion.getString("plain_text");
 
                     IDPublicacion = Respuestaespecificaciones.getString("id");

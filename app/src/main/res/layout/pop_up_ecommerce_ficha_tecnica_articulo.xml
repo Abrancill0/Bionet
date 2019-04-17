@@ -256,7 +256,8 @@
                         android:text="Actualizar inventario"
                         android:textAllCaps="false"
                         android:textColor="#fff"
-                        android:textSize="12dp" />
+                        android:textSize="12dp"
+                        android:visibility="gone"/>
                 </LinearLayout>
             </LinearLayout>
 

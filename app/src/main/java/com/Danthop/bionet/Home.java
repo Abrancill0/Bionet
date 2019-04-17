@@ -328,9 +328,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
             Date date1 = null;
             Date date2 = null;
 
-
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-
 
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             String date = df.format(Calendar.getInstance().getTime());
