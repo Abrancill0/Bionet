@@ -24,6 +24,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -40,6 +42,7 @@ public class Fragment_selecciona_categoria extends Fragment {
     FragmentTransaction fr;
     private ImageView back;
     private String idVacio;
+    private String idpub;
     public ArrayList ex;
     public Fragment_selecciona_categoria() {
         // Required empty public constructor
@@ -60,6 +63,8 @@ public class Fragment_selecciona_categoria extends Fragment {
         nombre = bundle.getString( "nombre");
         descripcion = bundle.getString( "descripcion");
         ex = bundle.getStringArrayList( "ex");
+
+        idpub = bundle.getString("id");
 
         listacategoria = (ListView) v.findViewById(R.id.listView_selecciona);
         cargaCategorias();
@@ -99,15 +104,35 @@ public class Fragment_selecciona_categoria extends Fragment {
                                         String idcategoria = jsonObject1.getString("id");
                                         String categoria = jsonObject1.getString("name");
 
-                                     //   for (int i=0;i<ex.size();i++){
-                                     //       for(int j=0;j<ex.get(0).;j++){
-                                     //           System.out.println(ex[i][j]);
-                                     //       }
-                                     //   }
+                                        boolean QuitaCategoria = false;
+
+                                        Iterator<CategoriaExcepcionModel> itrcat = ex.iterator();
+                                        while(itrcat.hasNext()){
+                                            CategoriaExcepcionModel Cat = itrcat.next();
+
+                                            String idcat = Cat.getCategoriaID();
+                                            String tipopublicacion = Cat.getipopublicacion();
+
+                                            if (idcategoria.equals(idcat)  && idpub.equals(tipopublicacion))
+                                            {
+                                                QuitaCategoria = true;
+
+                                                break;
+                                            }
+
+                                        }
 
 
-                                        CategoriaModel cat = new CategoriaModel(idcategoria, categoria );
-                                        arrayList.add(cat);
+                                        if (QuitaCategoria ==  false)
+                                        {
+                                            CategoriaModel cat = new CategoriaModel(idcategoria, categoria );
+                                            arrayList.add(cat);
+                                        }
+                                        else
+                                        {
+                                            QuitaCategoria =  false;
+                                        }
+
 
                                     }
                                     CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria,arrayList,listacategoria,bundle,fr,back,idVacio);

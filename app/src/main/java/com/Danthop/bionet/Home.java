@@ -27,14 +27,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.Danthop.bionet.Adapters.LealtadInscribirAdapter;
 import com.Danthop.bionet.model.LoginModel;
 
 import com.android.volley.Request;
@@ -46,12 +44,9 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import com.mercadolibre.android.sdk.Identity;
 import com.mercadolibre.android.sdk.Meli;
-import com.mercadolibre.android.sdk.MeliLogger;
-import com.mercadolibre.android.sdk.internal.RequestRunnable;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.picasso.Picasso;
@@ -63,7 +58,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import android.provider.Settings.Secure;
 
 
 public class Home extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener, Fragment_pop_up_ProfilePhoto.OnPhotoSelectedListener {
@@ -363,6 +357,27 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                     @Override
                     public void onClick(View v) {
 
+                        SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", getApplicationContext().MODE_PRIVATE);
+
+                        SharedPreferences.Editor editor =  sharedPref.edit();
+
+                        editor.putString("UserIdML", null);
+                        editor.putString("AccessToken", null);
+                        editor.putString("TokenLifetime", null);
+                        editor.putString("FechaCreacionToken", null);
+                        editor.apply();
+
+
+                        SharedPreferences sharedPref2 = getSharedPreferences(getApplicationContext().getPackageName() + ".identity", Context.MODE_PRIVATE);
+
+                        SharedPreferences.Editor editor1 =  sharedPref2.edit();
+
+                        editor1.putString("user_id", null);
+                        editor1.apply();
+
+
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_pantalla_principal()).addToBackStack(null).commit();
+
                     }
                 });
             }
@@ -386,6 +401,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     public void home() {
         layoutCerrar.setVisibility(View.GONE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_pantalla_principal()).addToBackStack(null).commit();
+
     }
 
     public void inventario() {

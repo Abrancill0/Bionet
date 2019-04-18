@@ -165,7 +165,7 @@ public class Fragment_selecciona_tipo_publicacion extends Fragment {
                                   // return;
                                 }
 
-                                PublicacionModel pub = new PublicacionModel(idpublicacion, publicacion,arrayList2);
+                                PublicacionModel pub = new PublicacionModel(idpublicacion, publicacion,arrayList2,remaining_listings);
                                 arrayList.add(pub);
 
                            }

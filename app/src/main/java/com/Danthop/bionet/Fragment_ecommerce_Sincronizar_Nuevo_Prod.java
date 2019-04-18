@@ -69,8 +69,9 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private ImageView FotoArticulo2;
     private Button Guardar_articulo;
     private TextView Categoria;
-    private ArrayList<String> TipoPublicacionName;
-    private ArrayList<String> TipoPublicacionID;
+    private TextView  Publicaciones;
+    private String IDTipoPublicacion;
+
     private Spinner SpinnerTipoPublicacion;
     private List<CategoriaModel> categorias;
     private ListView listacategoria1;
@@ -81,6 +82,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     ProgressDialog progreso;
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private ImageLoader imageLoader2 = ImageLoader.getInstance();
+    private String Remaining_listings;
 
     public Fragment_ecommerce_Sincronizar_Nuevo_Prod() {
         // Required empty public constructor
@@ -102,7 +104,13 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         String descripcion = bundle.getString( "descripcion");
         String precio = bundle.getString( "precio");
         String nombre_categoria = bundle.getString("categoria");
+        String TipoPublicacionName = bundle.getString("name");
+        String Cantidadinventario = bundle.getString("cantidad");
+        IDTipoPublicacion = bundle.getString("id");
         id_categoria = bundle.getString("id_categoria");
+
+        Remaining_listings = bundle.getString("Remaining_listings");
+
         Imagen1 = "http://187.189.192.150:8010" + bundle.getString( "image1");
         Imagen2 = "http://187.189.192.150:8010" + bundle.getString( "image2");
 
@@ -122,20 +130,39 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         TextprecioArticulo = (EditText) v.findViewById( R.id.text_precio_articulo );
         TextCantidad = (ElegantNumberButton) v.findViewById( R.id.text_cantidad );
         TextGarantia = (EditText) v.findViewById( R.id.text_garantia );
-        TextCantidad.setNumber(String.valueOf(1) );
+
+        if (Integer.parseInt(Cantidadinventario) > Integer.parseInt(Remaining_listings))
+        {
+            TextCantidad.setNumber(String.valueOf(Remaining_listings) );
+
+            TextCantidad.setRange( 1, Integer.valueOf( Remaining_listings ) );
+        }
+        else
+        {
+            TextCantidad.setNumber(String.valueOf(Cantidadinventario) );
+            TextCantidad.setRange( 1, Integer.valueOf( Cantidadinventario ) );
+        }
+
+
+
+
         textCategoriaSeleccionada = (TextView) v.findViewById( R.id.textCategoriaSeleccionada );
         TextNombreArticulo.setText(nombre);
         TextDescripcionArticulo.setText(descripcion);
         TextprecioArticulo.setText(precio);
         RadioUsado = (RadioButton) v.findViewById( R.id.radioButton_Usado );
         RadioNuevo = (RadioButton) v.findViewById( R.id.radioButton_Nuevo );
-        SpinnerTipoPublicacion=(Spinner) v.findViewById( R.id.Spinner_Tipo_Publicacion );
+        //SpinnerTipoPublicacion=(Spinner) v.findViewById( R.id.Spinner_Tipo_Publicacion );
+
+        Publicaciones= (TextView) v.findViewById( R.id.TextPublicaciones );
+        Publicaciones.setText(TipoPublicacionName);
+
         Guardar_articulo = (Button) v.findViewById( R.id.Guardar_articulo );
         Categoria = (TextView) v.findViewById( R.id.Categoria );
         Categoria.setText(nombre_categoria);
         RadioUsado.setChecked(true);
 
-        SpinnerCargaPublicaciones();
+        //SpinnerCargaPublicaciones();
 
         Guardar_articulo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,51 +175,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     }
 
 //---------------------------------------------------------------------------------------------------
-    public void SpinnerCargaPublicaciones(){
-        final String url = "http://187.189.192.150:8010/api/ecommerce/create_app?accesstoken=" + AccesToken  + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        JSONObject RespuestaTiposPublicacion = null;
-                        JSONArray  Respuestaavailable = null;
 
-                        try
-                        {
-                            int EstatusApi = Integer.parseInt( response.getString("estatus") );
-                            if (EstatusApi == 1) {
-
-                                TipoPublicacionID=new ArrayList<>();
-                                TipoPublicacionName = new ArrayList<>();
-                                RespuestaTiposPublicacion = response.getJSONObject("aListaTiposPublicacion");
-                                Respuestaavailable = RespuestaTiposPublicacion.getJSONArray("available");
-
-                                for(int x = 0; x < Respuestaavailable.length(); x++){
-                                    JSONObject elemento = Respuestaavailable.getJSONObject(x);
-
-                                    remaining_listings = elemento.getString("remaining_listings");
-                                    idpublicacion = elemento.getString("id");
-                                    publicacion = elemento.getString("name");
-
-                                    TipoPublicacionID.add(idpublicacion);
-                                    TipoPublicacionName.add(publicacion);
-                                }
-                                SpinnerTipoPublicacion.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,TipoPublicacionName));
-                            }
-                        }
-                        catch (JSONException e)
-                        {   e.printStackTrace();    }
-                    }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("Error.Response", String.valueOf(error));
-                    }
-                }
-        );
-        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
-    }
 //---------------------------------------------------------------------------------------------------
 
     private void CargaCategorias(){
@@ -248,6 +231,14 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
         String Condiciones="";
 
+        if(TextDescripcionArticulo.getText().length()==0) {
+
+            Toast.makeText(getContext(), "Campo descripcion obligatorio", Toast.LENGTH_LONG).show();
+            progreso.hide();
+            return;
+        }
+
+
         if (RadioNuevo.isChecked()==true)
         {
             Condiciones = "new";
@@ -257,9 +248,6 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
             Condiciones = "used";
         }
 
-        String TipoPublicacion;
-
-         TipoPublicacion = TipoPublicacionID.get(SpinnerTipoPublicacion.getSelectedItemPosition());
 
         JSONObject json1= new JSONObject();
 
@@ -286,7 +274,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
             jsonBodyObj.put("condition", Condiciones);
             jsonBodyObj.put("buying_mode", "buy_it_now");
             jsonBodyObj.put("warranty", String.valueOf(TextGarantia.getText()));
-            jsonBodyObj.put("listing_type_id", TipoPublicacion);
+            jsonBodyObj.put("listing_type_id", IDTipoPublicacion);
             jsonBodyObj.put("description", String.valueOf(TextDescripcionArticulo.getText()));
             jsonBodyObj.put("pictures",  jsonArray);
 

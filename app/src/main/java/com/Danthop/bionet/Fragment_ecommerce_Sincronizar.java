@@ -424,7 +424,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                                 Respuestapicture = Respuestaespecificaciones.getJSONArray("pictures");
 
                                 for (int k = 0; k < Respuestapicture.length()-1; k++) {
-                                    JSONObject elemento2 = Respuestapicture.getJSONObject(x);
+                                    JSONObject elemento2 = Respuestapicture.getJSONObject(k);
 
                                     Imagen = elemento2.getString("url");
 

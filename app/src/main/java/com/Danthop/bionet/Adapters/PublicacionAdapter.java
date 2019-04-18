@@ -59,6 +59,7 @@ public class PublicacionAdapter extends ArrayAdapter<PublicacionModel> {
     FragmentTransaction fr;
     private Button atras;
     private String idcategoria;
+    private String Remaining_listings;
 
     public interface NameCategoriaSelcted {
         void sendInput(String input);
@@ -81,6 +82,7 @@ public class PublicacionAdapter extends ArrayAdapter<PublicacionModel> {
         name = getItem(position).getName();
         id = getItem(position).getId();
         ex  = getItem( position ).getExceptionsCategory();
+        Remaining_listings = getItem( position ).getRemaining_listings();
 
         Nombre = bundle1.getString("nombre");
         Descripcion = bundle1.getString("descripcion");
@@ -89,7 +91,7 @@ public class PublicacionAdapter extends ArrayAdapter<PublicacionModel> {
         Imagen1 = bundle1.getString("image1");
         Imagen2 = bundle1.getString("image2");
 
-        PublicacionModel publicacion = new PublicacionModel(name, id,ex);
+        PublicacionModel publicacion = new PublicacionModel(name, id,ex,Remaining_listings);
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResource, parent, false);
@@ -100,6 +102,7 @@ public class PublicacionAdapter extends ArrayAdapter<PublicacionModel> {
         bundle1.putString("name", name);
         bundle1.putString("id", id);
         bundle1.putStringArrayList("ex",  ex );
+        bundle1.putString("Remaining_listings", Remaining_listings );
 
         nombre.setOnClickListener(new View.OnClickListener() {
             @Override

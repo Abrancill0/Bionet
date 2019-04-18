@@ -243,10 +243,14 @@
                         android:textColor="@color/colorPrimary"
                         android:textSize="18sp" />
 
-                    <Spinner android:id="@+id/Spinner_Tipo_Publicacion"
+                    <TextView
+                        android:id="@+id/TextPublicaciones"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="14sp"></Spinner>
+                        android:padding="1dp"
+                        android:text=""
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="10sp" />
 
                     <TextView
                         android:id="@+id/textVi22221212"
