@@ -28,6 +28,10 @@ public class InventarioModel {
     private String RecibidasOrigen;
     private String RecibidasDestino;
     private String tra_nombre_estatus;
+    private String suc_numero_sucursal_destino;
+    private String suc_numero_sucursal_origen;
+    private String fechaSolicitud;
+    private String tra_motivo;
 
 
 
@@ -55,7 +59,11 @@ public class InventarioModel {
                            String almacen,
                            String RecibidasOrigen,
                            String RecibidasDestino,
-                           String tra_nombre_estatus)
+                           String tra_nombre_estatus,
+                           String suc_numero_sucursal_destino,
+                           String suc_numero_sucursal_origen,
+                           String fechaSolicitud,
+                           String tra_motivo)
     {
 
         this.sku = sku;
@@ -83,6 +91,10 @@ public class InventarioModel {
         this.RecibidasOrigen = RecibidasOrigen;
         this.RecibidasDestino = RecibidasDestino;
         this.tra_nombre_estatus = tra_nombre_estatus;
+        this.suc_numero_sucursal_destino = suc_numero_sucursal_destino;
+        this.suc_numero_sucursal_origen = suc_numero_sucursal_origen;
+        this.fechaSolicitud = fechaSolicitud;
+        this.tra_motivo = tra_motivo;
     }
 
     public String getSku() { return sku; }
@@ -208,4 +220,15 @@ public class InventarioModel {
     public String gettra_nombre_estatus() {return tra_nombre_estatus; }
     public void settra_nombre_estatus(String tra_nombre_estatus) { this.tra_nombre_estatus = tra_nombre_estatus; }
 
+    public String getsuc_numero_sucursal_destino() {return suc_numero_sucursal_destino; }
+    public void setsuc_numero_sucursal_destino(String suc_numero_sucursal_destino) { this.suc_numero_sucursal_destino = suc_numero_sucursal_destino; }
+
+    public String getsuc_numero_sucursal_origen() {return suc_numero_sucursal_origen; }
+    public void setsuc_numero_sucursal_origen(String suc_numero_sucursal_origen) { this.suc_numero_sucursal_origen = suc_numero_sucursal_origen; }
+
+    public String getfechaSolicitud() {return fechaSolicitud; }
+    public void setfechaSolicitud(String fechaSolicitud) { this.fechaSolicitud = fechaSolicitud; }
+
+    public String gettra_motivo() {return tra_motivo; }
+    public void settra_motivo(String tra_motivo) { this.tra_motivo = tra_motivo; }
 }

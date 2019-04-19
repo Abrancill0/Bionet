@@ -136,6 +136,7 @@
                     android:layout_marginVertical="10dp"
                     android:background="@drawable/shape_gray"
                     android:fontFamily="@font/muli"
+                    android:textStyle="bold"
                     android:text="Agregar Productos"
                     android:textAllCaps="false"
                     android:textColor="@color/gray" />
@@ -147,30 +148,39 @@
                     android:background="@drawable/shape_gray"
                     android:layout_marginVertical="10dp"
                     android:fontFamily="@font/muli"
+                    android:textStyle="bold"
                     android:text="Solicitar Traslado"
                     android:textAllCaps="false"
                     android:textColor="@color/gray" />
 
                 <Button
                     android:id="@+id/traslados_recibidos"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="110dp"
+                    android:layout_height="30dp"
                     android:layout_marginVertical="10dp"
                     android:background="@drawable/shape_gray"
                     android:fontFamily="@font/muli"
+                    android:textStyle="bold"
                     android:text="Recibidos"
                     android:textAllCaps="false"
-                    android:textColor="@color/gray" />
+                    android:textColor="@color/gray"
+                    android:drawableLeft="@drawable/recibidos"
+                    android:layout_gravity="center"
+                    />
 
                 <Button
                     android:id="@+id/traslados_enviados"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="110dp"
+                    android:layout_height="30dp"
                     android:background="@drawable/shape_gray"
                     android:fontFamily="@font/muli"
+                    android:textStyle="bold"
                     android:text="Enviados"
                     android:textAllCaps="false"
-                    android:textColor="@color/gray" />
+                    android:textColor="@color/gray"
+                    android:drawableLeft="@drawable/iconsenviados"
+                    android:layout_gravity="center"
+                  />
             </LinearLayout>
 
         </LinearLayout>

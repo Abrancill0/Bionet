@@ -14,7 +14,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 
-import com.Danthop.bionet.Adapters.InventarioAdapter;
 import com.Danthop.bionet.Adapters.TrasladoAdapter;
 import com.Danthop.bionet.Tables.SortableTrasladosTable;
 import com.Danthop.bionet.model.InventarioModel;
@@ -24,7 +23,6 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,6 +67,9 @@ public class Fragment_pestania_traslado extends Fragment {
     private String RecibidasOrigen = "";
     private String RecibidasDestino = "";
     private String tra_nombre_estatus = "";
+    private String suc_numero_sucursal_destino = "";
+    private String suc_numero_sucursal_origen = "";
+    private String fechaSolicitud = "";
 
     public Fragment_pestania_traslado() {
         // Required empty public constructor
@@ -120,14 +121,15 @@ public class Fragment_pestania_traslado extends Fragment {
         traslados = new ArrayList<>();
 
         tabla_traslados = (SortableTrasladosTable) v.findViewById(R.id.tabla_traslados);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Origen", "Destino", "Estatus", "Fecha de solicitud");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Origen", "Destino", "Estatus", "Motivo", "Fecha de solicitud");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
-        tableColumnWeightModel.setColumnWeight(0, 2);
-        tableColumnWeightModel.setColumnWeight(1, 2);
-        tableColumnWeightModel.setColumnWeight(2, 2);
-        tableColumnWeightModel.setColumnWeight(3, 2);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
+        tableColumnWeightModel.setColumnWeight(0, 1);
+        tableColumnWeightModel.setColumnWeight(1, 1);
+        tableColumnWeightModel.setColumnWeight(2, 1);
+        tableColumnWeightModel.setColumnWeight(3, 1);
+        tableColumnWeightModel.setColumnWeight(3, 1);
 
         tabla_traslados.setHeaderAdapter(simpleHeader);
         tabla_traslados.setColumnModel(tableColumnWeightModel);
@@ -148,11 +150,13 @@ public class Fragment_pestania_traslado extends Fragment {
         adapter3.setDropDownViewResource(android.R.layout.simple_spinner_item);
         spinner3.setAdapter(adapter3);
 
-        Button SolicitudesRecibidas = v.findViewById(R.id.traslados_recibidos);
+
+        Button SolicitudesRecibidas = (Button) v.findViewById(R.id.traslados_recibidos);
         SolicitudesRecibidas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             //
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container, new Fragment_pestania_traslado_recibidos()).commit();
             }
         });
 
@@ -160,110 +164,13 @@ public class Fragment_pestania_traslado extends Fragment {
         SolicitudesEnviadas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             //
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container, new Fragment_pestania_traslado_enviados()).commit();
             }
         });
 
-        Traslados_Recibidas();
-        Traslados_Enviados();
         return v;
     }
 
-//--------------------------------------------------------------------------------------------------
-    public  void Traslados_Recibidas(){
-        JSONObject request = new JSONObject();
-        try {
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String url = getString(R.string.Url);
-        String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1";
-
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-                JSONObject Resultado = null;
-                JSONObject RespuestaTraslados = null;
-                JSONArray RespuestaSolicitudesRecibidas = null;
-                JsonArray RespuestaSolicitudEnviadas = null;
-                JSONObject RespuestaUUID = null;
-
-                try {
-                    int status = Integer.parseInt(response.getString("estatus"));
-                    String Mensaje = response.getString("mensaje");
-
-                    if (status == 1) {
-                        Resultado = response.getJSONObject("resultado");
-                        RespuestaTraslados = Resultado.getJSONObject("aTraslados");
-                        RespuestaSolicitudesRecibidas = RespuestaTraslados.getJSONArray("aSolicitudesRecibidas");
-
-                        trasladoModel = new String[RespuestaSolicitudesRecibidas.length()][4];
-                        for (int x = 0; x < RespuestaSolicitudesRecibidas.length(); x++) {
-                            JSONObject elemento = RespuestaSolicitudesRecibidas.getJSONObject(x);
-
-                            RespuestaUUID = elemento.getJSONObject("tra_id");
-                            String UUID = RespuestaUUID.getString("uuid");
-
-                            RecibidasOrigen = elemento.getString("suc_nombre_sucursal_origen");
-                            RecibidasDestino = elemento.getString("suc_nombre_sucursal_destino");
-                            tra_nombre_estatus = elemento.getString("tra_nombre_estatus");
-
-
-
-                            final InventarioModel traslado = new InventarioModel(
-                                    sku,
-                                    producto,
-                                    existencia,
-                                    categoria,
-                                    modificadores,
-                                    nombre_sucursal,
-                                    suc_id,
-                                    articulo_descripcion,
-                                    art_tipo,
-                                    art_disponible_venta,
-                                    art_disponible_compra,
-                                    ava_aplica_apartados,
-                                    ava_aplica_cambio_devolucion,
-                                    aim_url,
-                                    art_nombre,
-                                    cat_nombre,
-                                    his_tipo,
-                                    his_cantidad,
-                                    his_observaciones,
-                                    his_fecha_hora_creo,
-                                    codigoBarras,
-                                    almacen,
-                                    RecibidasOrigen,
-                                    RecibidasDestino,
-                                    tra_nombre_estatus);
-                            traslados.add(traslado);
-
-                        }final TrasladoAdapter trasladoAdapter = new TrasladoAdapter(getContext(), traslados, tabla_traslados);
-                        tabla_traslados.setDataAdapter(trasladoAdapter);
-                    }
-                } catch (JSONException e) {
-                    Toast toast1 =
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
-                    toast1.show();
-                }
-            }
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast toast1 =
-                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
-                        toast1.show();
-                    }
-                }
-        );
-        getRequest.setShouldCache(false);
-        VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
-    }
-//--------------------------------------------------------------------------------------------------
-
-    public  void Traslados_Enviados(){
-
-    }
+//-------------------------------------------------------------------------------------------------
 }

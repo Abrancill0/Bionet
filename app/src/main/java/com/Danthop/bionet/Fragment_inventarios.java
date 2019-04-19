@@ -77,12 +77,15 @@ public class Fragment_inventarios extends Fragment {
     private String cat_nombre;
     private String his_tipo;
     private String his_cantidad;
+    private String fechaSolicitud;
     private String his_observaciones;
     private String his_fecha_hora_creo;
     private String RecibidasOrigen;
     private String RecibidasDestino;
     private String tra_nombre_estatus;
-
+    private String suc_numero_sucursal_destino;
+    private String suc_numero_sucursal_origen;
+    private String tra_motivo;
     public Fragment_inventarios() {
         // Required empty public constructor
     }
@@ -123,7 +126,7 @@ public class Fragment_inventarios extends Fragment {
         tabla_inventario.setHeaderAdapter(simpleHeader);
         tabla_inventario.setColumnModel(tableColumnWeightModel);
 
-        Button btnTraslados = (Button) v.findViewById(R.id.btn_traslados);
+       Button btnTraslados = (Button) v.findViewById(R.id.btn_traslados);
         btnTraslados.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -312,7 +315,11 @@ public class Fragment_inventarios extends Fragment {
                                             almacen,
                                             RecibidasOrigen,
                                             RecibidasDestino,
-                                            tra_nombre_estatus);
+                                            tra_nombre_estatus,
+                                            suc_numero_sucursal_destino,
+                                            suc_numero_sucursal_origen,
+                                            fechaSolicitud,
+                                            tra_motivo);
                                     inventarios.add(inventario);
                                // }
                            // }

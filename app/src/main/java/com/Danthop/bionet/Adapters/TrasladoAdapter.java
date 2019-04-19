@@ -35,6 +35,10 @@ public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioMo
             case 2:
                 renderedView = rendertra_nombre_estatus(Invetario);
                 break;
+            case 3:
+                renderedView = rendertra_motivo(Invetario);
+                break;
+
 
 
         }
@@ -79,7 +83,9 @@ public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioMo
         return renderString(Inventario.gettra_nombre_estatus());
     }
 
-
+    private View rendertra_motivo(final InventarioModel Inventario) {
+        return renderString(Inventario.gettra_motivo());
+    }
 
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
