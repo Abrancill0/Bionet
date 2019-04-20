@@ -40,7 +40,6 @@ public class Fragment_pestania_historico extends Fragment {
     private TableDataClickListener<HistoricoModel> tablaListener;
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private FragmentTransaction fr;
-
     private String suc_id;
     private String modificadores;
     private String existencia;
@@ -61,12 +60,12 @@ public class Fragment_pestania_historico extends Fragment {
     private String his_tipo;
     private String his_cantidad;
     private String his_observaciones;
+    private String observacion;
     private String his_fecha_hora_creo;
 
     public Fragment_pestania_historico() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -99,23 +98,24 @@ public class Fragment_pestania_historico extends Fragment {
         historico = new ArrayList<>();
 
         tabla_historico = (SortableHistoricoTable) v.findViewById(R.id.tabla_historico);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Movimiento", "Cantidad", "Observaciones");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Movimiento", "Cantidad", "Observaciones", "Fecha y hora");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
         tableColumnWeightModel.setColumnWeight(0, 2);
-        tableColumnWeightModel.setColumnWeight(1, 2);
+        tableColumnWeightModel.setColumnWeight(1, 1);
         tableColumnWeightModel.setColumnWeight(2, 2);
-        tableColumnWeightModel.setColumnWeight(3, 2);
-        tableColumnWeightModel.setColumnWeight(4, 3);
+        tableColumnWeightModel.setColumnWeight(3, 1);
+        tableColumnWeightModel.setColumnWeight(4, 1);
+        tableColumnWeightModel.setColumnWeight(5, 1);
 
         tabla_historico.setHeaderAdapter(simpleHeader);
         tabla_historico.setColumnModel(tableColumnWeightModel);
 
         Muestra_historico();
-        LoadListenerTable();
+       // LoadListenerTable();
 
-        tabla_historico.setSwipeToRefreshEnabled(true);
+        /*tabla_historico.setSwipeToRefreshEnabled(true);
         tabla_historico.setSwipeToRefreshListener(new SwipeToRefreshListener() {
             @Override
             public void onRefresh(final RefreshIndicator refreshIndicator) {
@@ -131,29 +131,24 @@ public class Fragment_pestania_historico extends Fragment {
         });
 
         tabla_historico.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
-        tabla_historico.addDataClickListener(tablaListener);
+        tabla_historico.addDataClickListener(tablaListener);*/
         return v;
     }
 
     public void Muestra_historico() {
         JSONObject request = new JSONObject();
         try {
-            request.put("usu_id", usu_id);
-            request.put("esApp", "1");
         } catch (Exception e) {
             e.printStackTrace();
         }
         String url = getString(R.string.Url);
-        String ApiPath = url + "/api/inventario/index_app";
+        String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1";
 
-        JsonObjectRequest postRequets = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 JSONObject Resultado = null;
-                JSONObject RespuestaFecha = null;
-                JSONArray Historicos = null;
-                JSONArray imagenes = null;
-                JSONArray Articulo = null;
+                JSONArray aHistoricos = null;
                 JSONObject RespuestaUUID = null;
 
                 try {
@@ -162,71 +157,27 @@ public class Fragment_pestania_historico extends Fragment {
 
                     if (status == 1) {
                         Resultado = response.getJSONObject("resultado");
-
 //---------------------------------------------------------------------------------------
-                        Articulo = Resultado.getJSONArray("Articulos");
-                        HistoricoModel = new String[Articulo.length()][4];
+                        aHistoricos = Resultado.getJSONArray("aHistoricos");
+                        HistoricoModel = new String[aHistoricos.length()][4];
 
-                        for (int x = 0; x < Articulo.length(); x++) {
-                            JSONObject elemento = Articulo.getJSONObject(x);
+                        for (int x = 0; x < aHistoricos.length(); x++) {
+                            JSONObject elemento = aHistoricos.getJSONObject(x);
 
-                            RespuestaUUID = elemento.getJSONObject("art_id");
+                            RespuestaUUID = elemento.getJSONObject("his_id");
                             String UUID = RespuestaUUID.getString("uuid");
 
-                            sku = elemento.getString("ava_sku");
-                            producto = elemento.getString("art_nombre");
-                            categoria = elemento.getString("cat_nombre");
-                            articulo_descripcion = elemento.getString("art_descripcion");
-                            art_tipo = elemento.getString("art_tipo");
+                            art_nombre = elemento.getString("art_nombre");
+                            cat_nombre = elemento.getString("cat_nombre");
+                            his_tipo = elemento.getString("his_tipo");
+                            his_cantidad = elemento.getString("his_cantidad");
 
-                            Boolean Disponible_venta = Boolean.valueOf(elemento.getString("art_disponible_venta"));
-                            if (Disponible_venta == true) {
-                                art_disponible_venta = "si";
-                            } else {
-                                art_disponible_venta = "no";
+                            String var = elemento.getString("his_observaciones");
+                            if (var == "null"){
+                                observacion = "Sin observaciones";
+                            }else {
+                                observacion = elemento.getString("his_observaciones");
                             }
-
-                            Boolean Disponible_compra = Boolean.valueOf(elemento.getString("art_disponible_compra"));
-                            if (Disponible_compra == true) {
-                                art_disponible_compra = "si";
-                            } else {
-                                art_disponible_compra = "no";
-                            }
-
-                            Boolean Disponible_apartados = Boolean.valueOf(elemento.getString("ava_aplica_apartados"));
-                            if (Disponible_apartados == true) {
-                                ava_aplica_apartados = "si";
-                            } else {
-                                ava_aplica_apartados = "no";
-                            }
-
-                            Boolean Disponible_devoluciones = Boolean.valueOf(elemento.getString("ava_aplica_cambio_devolucion"));
-                            if (Disponible_devoluciones == true) {
-                                ava_aplica_cambio_devolucion = "si";
-                            } else {
-                                ava_aplica_cambio_devolucion = "no";
-                            }
-
-                            imagenes = elemento.getJSONArray("imagenes");
-                            JSONObject elemento3 = imagenes.getJSONObject(0);
-                            aim_url = getString(R.string.Url) + elemento3.getString("aim_url");
-                        }
-//---------------------------------------------------------------------------------------
-
-                        Historicos = Resultado.getJSONArray("Historicos");
-                        //inventarioModel = new String[Historicos.length()][4];
-
-                        for (int y = 0; y < Historicos.length(); y++) {
-                            JSONObject elementos = Historicos.getJSONObject(y);
-
-                            art_nombre = elementos.getString("art_nombre");
-                            cat_nombre = elementos.getString("cat_nombre");
-                            his_tipo = elementos.getString("his_tipo");
-                            his_cantidad = elementos.getString("his_cantidad");
-                            his_observaciones = elementos.getString("his_observaciones");
-
-                            /*RespuestaFecha = elementos.getJSONObject("his_fecha_hora_creo");
-                            String Fecha = RespuestaFecha.getString("");*/
 
                             final HistoricoModel historicos = new HistoricoModel(
                                     sku,
@@ -247,7 +198,7 @@ public class Fragment_pestania_historico extends Fragment {
                                     cat_nombre,
                                     his_tipo,
                                     his_cantidad,
-                                    his_observaciones,
+                                    observacion,
                                     his_fecha_hora_creo);
                             historico.add(historicos);
                         }
@@ -270,10 +221,10 @@ public class Fragment_pestania_historico extends Fragment {
                     }
                 }
         );
-        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequets);
+        VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
     }
-
-    private void LoadListenerTable(){
+//----------------------------------------------------------------------------------------------------------------------------------------
+   /* private void LoadListenerTable(){
         tablaListener = new TableDataClickListener<HistoricoModel>() {
             @Override
             public void onDataClicked(int rowIndex, final HistoricoModel clickedData) {
@@ -305,5 +256,5 @@ public class Fragment_pestania_historico extends Fragment {
                 imageLoader.displayImage(String.valueOf(clickedData.getaim_url()),FotoArticulo);
             }
         };
-    }
+    }*/
 }

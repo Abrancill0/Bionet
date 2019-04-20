@@ -70,6 +70,7 @@ public class Fragment_pestania_traslado extends Fragment {
     private String suc_numero_sucursal_destino = "";
     private String suc_numero_sucursal_origen = "";
     private String fechaSolicitud = "";
+    private String tra_motivo = "";
 
     public Fragment_pestania_traslado() {
         // Required empty public constructor
@@ -168,9 +169,122 @@ public class Fragment_pestania_traslado extends Fragment {
                 fr.replace(R.id.fragment_container, new Fragment_pestania_traslado_enviados()).commit();
             }
         });
-
+        Traslados_Recibidas();
         return v;
     }
 
 //-------------------------------------------------------------------------------------------------
+public  void Traslados_Recibidas(){
+    JSONObject request = new JSONObject();
+    try {
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    String url = getString(R.string.Url);
+    String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1";
+
+    JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null, new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject response) {
+
+            JSONObject Resultado = null;
+            JSONObject RespuestaTraslados = null;
+            JSONArray RespuestaSolicitudesRecibidas = null;
+            JsonArray RespuestaSolicitudEnviadas = null;
+            JSONObject RespuestaUUID = null;
+            JSONObject RespuestaFecha = null;
+            JSONObject TypoFecha = null;
+
+            try {
+                int status = Integer.parseInt(response.getString("estatus"));
+                String Mensaje = response.getString("mensaje");
+
+                if (status == 1) {
+                    Resultado = response.getJSONObject("resultado");
+                    RespuestaTraslados = Resultado.getJSONObject("aTraslados");
+                    RespuestaSolicitudesRecibidas = RespuestaTraslados.getJSONArray("aSolicitudesRecibidas");
+
+                    trasladoModel = new String[RespuestaSolicitudesRecibidas.length()][4];
+                    for (int x = 0; x < RespuestaSolicitudesRecibidas.length(); x++) {
+                        JSONObject elemento = RespuestaSolicitudesRecibidas.getJSONObject(x);
+
+                        RespuestaUUID = elemento.getJSONObject("tra_id");
+                        String UUID = RespuestaUUID.getString("uuid");
+
+                        RespuestaFecha = elemento.getJSONObject("tra_fecha_hora_creo");
+                        fechaSolicitud = RespuestaFecha.getString("seconds");
+                        TypoFecha = RespuestaFecha.getJSONObject("type");
+                        //fechaSolicitud =  TypoFecha.getString("name");
+
+                        RecibidasOrigen = elemento.getString("suc_nombre_sucursal_origen");
+                        suc_numero_sucursal_origen = elemento.getString("suc_numero_sucursal_origen");
+                        RecibidasDestino = elemento.getString("suc_nombre_sucursal_destino");
+                        suc_numero_sucursal_destino = elemento.getString("suc_numero_sucursal_destino");
+                        tra_nombre_estatus = elemento.getString("tra_nombre_estatus");
+                        tra_motivo = elemento.getString("tra_motivo");
+
+
+                        String SucursalCodigoOrigen;
+                        String SucursalCodigoDestino;
+
+                        SucursalCodigoOrigen = RecibidasOrigen + " " + suc_numero_sucursal_origen;
+                        RecibidasOrigen = SucursalCodigoOrigen;
+                        SucursalCodigoDestino = RecibidasDestino + " " + suc_numero_sucursal_destino;
+                        RecibidasDestino = SucursalCodigoDestino;
+
+
+                        final InventarioModel traslado = new InventarioModel(
+                                sku,
+                                producto,
+                                existencia,
+                                categoria,
+                                modificadores,
+                                nombre_sucursal,
+                                suc_id,
+                                articulo_descripcion,
+                                art_tipo,
+                                art_disponible_venta,
+                                art_disponible_compra,
+                                ava_aplica_apartados,
+                                ava_aplica_cambio_devolucion,
+                                aim_url,
+                                art_nombre,
+                                cat_nombre,
+                                his_tipo,
+                                his_cantidad,
+                                his_observaciones,
+                                his_fecha_hora_creo,
+                                codigoBarras,
+                                almacen,
+                                RecibidasOrigen,
+                                RecibidasDestino,
+                                tra_nombre_estatus,
+                                suc_numero_sucursal_destino,
+                                suc_numero_sucursal_origen,
+                                fechaSolicitud,
+                                tra_motivo);
+                        traslados.add(traslado);
+
+                    }final TrasladoAdapter trasladoAdapter = new TrasladoAdapter(getContext(), traslados, tabla_traslados);
+                    tabla_traslados.setDataAdapter(trasladoAdapter);
+                }
+            } catch (JSONException e) {
+                Toast toast1 =
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                toast1.show();
+            }
+        }
+    },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+    );
+    getRequest.setShouldCache(false);
+    VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
+}
 }

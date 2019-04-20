@@ -154,7 +154,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         RadioNuevo = (RadioButton) v.findViewById( R.id.radioButton_Nuevo );
         //SpinnerTipoPublicacion=(Spinner) v.findViewById( R.id.Spinner_Tipo_Publicacion );
 
-        Publicaciones= (TextView) v.findViewById( R.id.TextPublicaciones );
+        //Publicaciones= (TextView) v.findViewById( R.id.TextPublicaciones );
         Publicaciones.setText(TipoPublicacionName);
 
         Guardar_articulo = (Button) v.findViewById( R.id.Guardar_articulo );
