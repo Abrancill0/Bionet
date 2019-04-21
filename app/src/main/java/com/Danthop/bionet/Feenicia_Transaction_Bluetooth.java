@@ -38,6 +38,7 @@ import com.Danthop.bionet.SppHandlerConnection;
 import com.Danthop.bionet.core.dto.ResponseCode;
 import com.Danthop.bionet.core.dto.SendReceiptResponse;
 
+import com.Danthop.bionet.core.models.FeeniciaCredentials;
 import com.imagpay.Settings;
 import com.imagpay.spp.BTReceiver;
 import com.imagpay.spp.SppHandler;
@@ -82,7 +83,10 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
 
     SaleConfiguration sale = new SaleConfiguration();
 
+    FeeniciaCredentials credentials = new FeeniciaCredentials();
 
+    public static String user;  // USER LOGIN
+    public static String pwd;   // PASSWORD LOGIN
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -136,9 +140,16 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         }
 
         ///// LIBRERIA FEENICIA_BT //////////
-        // 01.- Inicializar Configuraciones Terminal
+
+        user = "Black_Orange";
+        pwd = "Black*2019";
+
+        // 01.- Generar Login para obtener credenciales
         sppHandlerConnection = new SppHandlerConnection();
-        handlerEVM = sppHandlerConnection.initialize(handlerEVM, settings, ui, getApplicationContext());
+        sppHandlerConnection.generateLogin(user,pwd);   // (Username,Password)
+
+
+        handlerEVM = sppHandlerConnection.initialize(handlerEVM, settings, ui, getApplicationContext(),credentials);
 
         // 02.- Inicializar Conexión BT
         bTReceiverConnection = new BTReceiverConnection();
@@ -412,8 +423,18 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                         if (response.getResponseCode().equals("00")) {
                             /*** OPCIONAL ***/
                             /// ENVIAMOS EL RECIBO DE COMPRA /////
-                            /****** sendReceipt(receiptId,correoDeseado) *******/
-                            SppHandlerConnection.sendReceipt(response.getTransaction().getReceiptId(),"feenicia@yopmail.com");
+
+                            /**** DESCOMENTAR PARA ENVIAR RECIBO *****/
+                            /*final SppHandlerConnection sppHandlerConnection = new SppHandlerConnection();
+                            sppHandlerConnection.generateLogin(user,pwd);   // (Username,Password)
+
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    sppHandlerConnection.sendReceipt(response.getTransaction().getReceiptId(),"feenicia@yopmail.com");
+                                }
+                            }, 3000);*/
                         }
                     }
 
