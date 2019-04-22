@@ -254,6 +254,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         try {
             json1.put("source",Imagen1);
             json1.put("source",Imagen2);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -262,7 +263,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         jsonArray.put(json1);
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-
+//
         JSONObject jsonBodyObj = new JSONObject();
         String url = "https://api.mercadolibre.com/items?access_token=" + AccesToken;
         try{

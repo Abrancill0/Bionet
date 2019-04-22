@@ -1,6 +1,4 @@
 package com.Danthop.bionet;
-
-
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -52,13 +50,10 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class Fragment_crear_cliente extends DialogFragment {
-
-
     private CheckBox Mismo_email_personal;
     private CheckBox Mismo_direccion_personal;
     private EditText TextNombre;
@@ -102,7 +97,6 @@ public class Fragment_crear_cliente extends DialogFragment {
     private ArrayList<String> SucursalName;
     private ArrayList<String> SucursalID;
     private ArrayList<String> ColoniaName;
-
     private ArrayList<String> EstadoNameFiscal;
     private ArrayList<Integer> EstadoIDFiscal;
     private ArrayList<String> ColoniaNameFiscal;
@@ -117,8 +111,6 @@ public class Fragment_crear_cliente extends DialogFragment {
     private String valor;
 
     private final static String[] opciones = { "N/A", "Email de Facturación", "Dirección Fiscal", "Ambas"};
-
-
     public Fragment_crear_cliente() {
         // Required empty public constructor
     }
@@ -174,12 +166,10 @@ public class Fragment_crear_cliente extends DialogFragment {
         SpinnerOpcion.setAdapter(adapter);
 
         SpinnerOpcion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 VerificarOpcion();
             }
-            public void onNothingSelected(AdapterView<?> parent)
-            {
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
@@ -263,7 +253,7 @@ public class Fragment_crear_cliente extends DialogFragment {
 
     }
 
-
+//-----------------------------------------------------------------------------------------------------------
     private void GuardarCliente(){
 
         progreso = new ProgressDialog(getContext());
@@ -288,8 +278,7 @@ public class Fragment_crear_cliente extends DialogFragment {
 
         String Seleccion;
         Seleccion = SpinnerOpcion.getSelectedItem().toString();
-        if(Seleccion.equals("N/A"))
-        {
+        if(Seleccion.equals("N/A")) {
              FactuacionEmail = String.valueOf(TextEmail.getText());
              FacturacionCalle = String.valueOf(TextCalle.getText());
              FacturacionNumInt = String.valueOf(TextNumInterior.getText());
@@ -301,11 +290,9 @@ public class Fragment_crear_cliente extends DialogFragment {
              CorreoIgual= "true";
              DireccionIgual = "true";
         }
-        else if(Seleccion.equals("Email de Facturación"))
-        {
+        else if(Seleccion.equals("Email de Facturación")) {
 
             FactuacionEmail = String.valueOf( TextFacturacionEmail.getText() );
-
 
             FacturacionCalle = String.valueOf(TextCalle.getText());
             FacturacionNumInt = String.valueOf(TextNumInterior.getText());
@@ -315,13 +302,11 @@ public class Fragment_crear_cliente extends DialogFragment {
             FacturacionCp = String.valueOf(TextCp.getText());
             FacturacionEstado = String.valueOf(SpinnerEstado.getSelectedItem());
 
-
             CorreoIgual= "false";
             DireccionIgual = "true";
 
         }
-        else if(Seleccion.equals("Dirección Fiscal"))
-        {
+        else if(Seleccion.equals("Dirección Fiscal")) {
             FactuacionEmail = String.valueOf(TextEmail.getText());
 
             FacturacionCalle = String.valueOf(TextFacturacionCalle.getText());
@@ -333,13 +318,11 @@ public class Fragment_crear_cliente extends DialogFragment {
             Suc_DatosFisc = EstadoIDFiscal.get(SpinnerSucursal.getSelectedItemPosition());
             FacturacionEstado = String.valueOf(TextFacturacionEstado.getSelectedItem());
 
-
             CorreoIgual= "true";
             DireccionIgual = "false";
 
         }
-        else if(Seleccion.equals("Ambas"))
-        {
+        else if(Seleccion.equals("Ambas")) {
             FactuacionEmail = String.valueOf( TextFacturacionEmail.getText() );
             FacturacionCalle = String.valueOf(TextFacturacionCalle.getText());
             FacturacionNumInt = String.valueOf(TextFacturacionNumInt.getText());
@@ -350,16 +333,12 @@ public class Fragment_crear_cliente extends DialogFragment {
             Suc_DatosFisc = EstadoIDFiscal.get(SpinnerSucursal.getSelectedItemPosition());
             FacturacionEstado = String.valueOf(TextFacturacionEstado.getSelectedItem());
 
-
             CorreoIgual= "false";
             DireccionIgual = "false";
-
         }
 
-
         JSONObject request = new JSONObject();
-        try
-        {
+        try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
             request.put("cli_sucursales",Sucursal_id);
@@ -399,19 +378,15 @@ public class Fragment_crear_cliente extends DialogFragment {
         }
 
         String url = getString(R.string.Url);
-
         String ApiPath = url + "/api/clientes/store";
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-        {
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_clientes()).commit();
-
                 progreso.hide();
-
 
                 String estatus = "0";
                 String mensaje = "";
@@ -426,40 +401,24 @@ public class Fragment_crear_cliente extends DialogFragment {
 
                 if (status == 1)
                 {
-                    Toast toast1 =
-                            Toast.makeText(getContext(),
-                                    mensaje, Toast.LENGTH_SHORT);
-
+                    Toast toast1 = Toast.makeText(getContext(), mensaje, Toast.LENGTH_SHORT);
                     toast1.show();
-
                 }
-
                 //  Respuesta = response.getJSONObject("resultado");
-
             }
-
         },
-                new Response.ErrorListener()
-                {
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // error
-
                         progreso.hide();
-
-                        Toast toast1 =
-                                Toast.makeText(getContext(),
-                                        "Error de conexion", Toast.LENGTH_SHORT);
-
+                        Toast toast1 = Toast.makeText(getContext(), "Error de conexion", Toast.LENGTH_SHORT);
                         toast1.show();
-
                     }
                 }
         );
-
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
-
+//---------------------------------------------------------------------------------------------------------------------------------------
 
     private void LoadSpinnerEstado(){
 
@@ -479,8 +438,7 @@ public class Fragment_crear_cliente extends DialogFragment {
 
         String ApiPath = url + "/api/configuracion/sucursales/select_estados";
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-        {
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 

@@ -155,7 +155,6 @@ public class Fragment_ecomerce extends Fragment {
                     public void onClick(View v) {
                         pop_up1.hide();
                     }
-
                 } );
 
                 Button pago = pop_up1.findViewById(R.id.pago);
@@ -210,7 +209,6 @@ public class Fragment_ecomerce extends Fragment {
                         Button BtnCerrarGuia = pop_up2.findViewById( R.id.btguianordnecerrar );
 
                         final TextView Celular = pop_up2.findViewById( R.id.text_guia_celular );
-
                         final TextView Direccion = pop_up2.findViewById( R.id.text_guia_direccion );
                         final TextView Fecha = pop_up2.findViewById( R.id.text_guia_fecha_creacion );
 

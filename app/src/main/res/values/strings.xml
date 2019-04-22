@@ -8,6 +8,11 @@
         <item>Industria Alimentaria</item>
     </string-array>
 
+    <string-array name="traslados">
+        <item>Traslado definitivo</item>
+        <item>Traslado temporal</item>
+    </string-array>
+
     <string-array name="SKU">
         <item>SKU</item>
     </string-array>
