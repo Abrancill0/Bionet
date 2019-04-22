@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
     private Button atras;
     private List<com.Danthop.bionet.model.ArticuloModel> Articulos;
     private String[][] ArticuloModel;
+    private FragmentTransaction fr;
     SortableArticulosTable tb;
 
     public Fragment_ecommerce_Sincronizar_Articulos() {
@@ -53,9 +55,19 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
         usu_id = sharedPref.getString("usu_id", "");
         AccesToken = sharedPref.getString("AccessToken", "");
         UserIdML = sharedPref.getString("UserIdML", "");
+        fr = getFragmentManager().beginTransaction();
 
         tb = v.findViewById(R.id.tablaArticulos);
         CargaArticulos();
+
+        ImageView regresar = v.findViewById(R.id.atras);
+        regresar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar()).commit();
+            }
+        });
 
         final TableDataClickListener<ArticuloModel> ArticuloListener = new TableDataClickListener<ArticuloModel>() {
             @Override

@@ -29,6 +29,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,21 +77,14 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     private ImageView Logo_empresa;
     LoginModel Resultado = new LoginModel();
 
-    private ImageView op_home;
-    private ImageView op_notificaciones;
-    private ImageView op_ventas;
-    private ImageView op_clientes;
-    private ImageView op_lealtad;
-    private ImageView op_ecommerce;
-    private ImageView op_inventario;
-    private ImageView op_bio;
-    private ImageView op_salir;
     private String android_id;
     private View Internet;
     private TextView textInternet;
     private Handler handler1;
     private Boolean networkstatus;
     private View layoutCerrar;
+    private TextView btn_cerrar_ecommerce;
+    private Dialog cerrar_sesion_ecommerce;
 
     private WifiManager wifiManager;
 
@@ -352,31 +346,52 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
             if (TokenLifeLong > elapsedSeconds) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_ecomerce()).addToBackStack(null).commit();
                 layoutCerrar.setVisibility(View.VISIBLE);
-                final TextView btn_cerrar_ecommerce = findViewById(R.id.btn_cerrar_ecommerce);
+                btn_cerrar_ecommerce = findViewById(R.id.btn_cerrar_ecommerce);
                 btn_cerrar_ecommerce.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", getApplicationContext().MODE_PRIVATE);
+                        cerrar.setContentView(R.layout.pop_up_cerrarsesion_ecommerce);
+                        cerrar.show();
+                        Button btn_aceptar = cerrar.findViewById(R.id.Aceptar);
+                        btn_aceptar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-                        SharedPreferences.Editor editor =  sharedPref.edit();
+                                SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", getApplicationContext().MODE_PRIVATE);
 
-                        editor.putString("UserIdML", null);
-                        editor.putString("AccessToken", null);
-                        editor.putString("TokenLifetime", null);
-                        editor.putString("FechaCreacionToken", null);
-                        editor.apply();
+                                SharedPreferences.Editor editor =  sharedPref.edit();
 
-
-                        SharedPreferences sharedPref2 = getSharedPreferences(getApplicationContext().getPackageName() + ".identity", Context.MODE_PRIVATE);
-
-                        SharedPreferences.Editor editor1 =  sharedPref2.edit();
-
-                        editor1.putString("user_id", null);
-                        editor1.apply();
+                                editor.putString("UserIdML", null);
+                                editor.putString("AccessToken", null);
+                                editor.putString("TokenLifetime", null);
+                                editor.putString("FechaCreacionToken", null);
+                                editor.apply();
 
 
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_pantalla_principal()).addToBackStack(null).commit();
+                                SharedPreferences sharedPref2 = getSharedPreferences(getApplicationContext().getPackageName() + ".identity", Context.MODE_PRIVATE);
+
+                                SharedPreferences.Editor editor1 =  sharedPref2.edit();
+
+                                editor1.putString("user_id", null);
+                                editor1.apply();
+
+
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_pantalla_principal()).addToBackStack(null).commit();
+                                layoutCerrar.setVisibility(View.GONE);
+                                cerrar.dismiss();
+
+                            }
+                        });
+                        Button btn_cancelar = cerrar.findViewById(R.id.Cancelar);
+                        btn_cancelar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                cerrar.dismiss();
+                            }
+                        });
+
+
 
                     }
                 });
@@ -539,6 +554,8 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new Fragment_ecomerce()).addToBackStack(null).commit();
+            layoutCerrar.setVisibility(View.VISIBLE);
+
 
         }
     }

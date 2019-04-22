@@ -79,9 +79,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".3"
-            android:orientation="vertical"
+            android:layout_weight=".25"
             android:background="@drawable/pestanas_desplegables"
+            android:orientation="vertical"
             android:padding="20dp">
 
             <LinearLayout
@@ -154,9 +154,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
                 android:layout_weight=".9"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -171,13 +171,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/shape_gray"
+                        android:ems="10"
                         android:hint="Busqueda"
                         android:iconifiedByDefault="false"
-                        android:orientation="horizontal"
-                        android:queryHint="Buscar"
-                        android:ems="10"
                         android:inputType="textPersonName"
-                        android:padding="5dp"/>
+                        android:orientation="horizontal"
+                        android:padding="5dp"
+                        android:queryHint="Buscar" />
 
                 </LinearLayout>
 
@@ -237,12 +237,12 @@
             </LinearLayout>
 
 
-
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".8"
+            android:layout_weight=".75"
             android:background="#F8F9F9"
             android:orientation="vertical">
 
@@ -259,9 +259,9 @@
                     android:layout_margin="20dp"
                     app:fillColor="@color/colorPrimaryDark"
                     app:indicatorMarginVertical="0dp"
+                    app:indicatorVisibility="gone"
                     app:pageColor="@color/colorPrimaryDark"
-                    app:slideInterval="2000"
-                    app:indicatorVisibility="gone"/>
+                    app:slideInterval="2000" />
             </LinearLayout>
 
             <LinearLayout

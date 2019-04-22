@@ -853,7 +853,7 @@ public class Fragment_Ventas extends Fragment {
                             String SKUArticulo = elemento.getString("art_sku");
                             String cantidad = elemento.getString("tar_cantidad");
                             String precio = elemento.getString("tar_precio_articulo");
-                            String descuento = elemento.getString("art_porcentaje_descuento");
+                            String descuento = elemento.getString("art_importe_descuento");
                             String importe = elemento.getString("tar_importe_total");
 
                             JSONArray RespuestaImagenes = elemento.getJSONArray( "art_imagenes");
@@ -882,7 +882,9 @@ public class Fragment_Ventas extends Fragment {
                             );
                             ArticulosVenta.add(articulo);
                         }
-                        final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos);
+                        final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos,ticket_de_venta,usu_id,
+                                total,descuento,impuesto,subtotal,
+                                carouselView,Imagenes);
                         articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                         LoadImages();
@@ -1024,7 +1026,7 @@ public class Fragment_Ventas extends Fragment {
                             String SKUArticulo = elemento.getString("art_sku");
                             String cantidad = elemento.getString("tar_cantidad");
                             String precio = elemento.getString("tar_precio_articulo");
-                            String descuento = elemento.getString("art_porcentaje_descuento");
+                            String descuento = elemento.getString("art_importe_descuento");
                             String importe = elemento.getString("tar_importe_total");
 
                             JSONArray RespuestaImagenes = elemento.getJSONArray( "art_imagenes");
@@ -1051,7 +1053,9 @@ public class Fragment_Ventas extends Fragment {
                             );
                             ArticulosVenta.add(articulo);
                         }
-                        final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos);
+                        final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos,ticket_de_venta,usu_id,
+                                total,descuento,impuesto,subtotal,
+                                carouselView,Imagenes);
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                         LoadImages();
                     }
@@ -1111,7 +1115,6 @@ public class Fragment_Ventas extends Fragment {
 
                 JSONObject Respuesta = null;
                 JSONObject RespuestaNodoTicket= null;
-                JSONObject TicketID=null;
                 JSONArray NodoTicketArticulos=null;
 
                 try {
@@ -1158,7 +1161,6 @@ public class Fragment_Ventas extends Fragment {
 
 
                         //Se modifican los datos del ticket de venta
-                        ticket_de_venta.setTic_id(TicketIDVenta);
                         ticket_de_venta.setTic_importe_descuentos(String.valueOf(DescuentoTotal));
                         ticket_de_venta.setTic_importe_total(String.valueOf(PrecioTotal));
                         ticket_de_venta.setTic_impuestos(String.valueOf(ImpuestoTotal));
@@ -1190,7 +1192,7 @@ public class Fragment_Ventas extends Fragment {
                             String SKUArticulo = elemento.getString("art_sku");
                             String cantidad = elemento.getString("tar_cantidad");
                             String precio = elemento.getString("tar_precio_articulo");
-                            String descuento = elemento.getString("art_porcentaje_descuento");
+                            String descuento = elemento.getString("art_importe_descuento");
                             String importe = elemento.getString("tar_importe_total");
 
 
@@ -1211,7 +1213,9 @@ public class Fragment_Ventas extends Fragment {
                             );
                             ArticulosVenta.add(articulo);
                         }
-                        final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos);
+                        final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos,ticket_de_venta,usu_id,
+                                total,descuento,impuesto,subtotal,
+                                carouselView,Imagenes);
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                     }
                     else
