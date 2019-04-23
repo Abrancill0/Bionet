@@ -1,4 +1,5 @@
 package com.Danthop.bionet.Adapters;
+
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -6,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.Danthop.bionet.Tables.SortableInventariosTable;
-import com.Danthop.bionet.Tables.SortableTrasladosTable;
 import com.Danthop.bionet.model.InventarioModel;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioModel> {
     int TEXT_SIZE = 12;
 
-    public TrasladoAdapter(final Context context, final List<InventarioModel> data, final SortableTrasladosTable tableView) {
+    public TrasladoAdapter(final Context context, final List<InventarioModel> data, final SortableInventariosTable tableView) {
         super(context, data, tableView);
     }
     @Override
@@ -27,19 +28,17 @@ public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioMo
 
         switch (columnIndex) {
             case 0:
-                renderedView = renderRecibidasOrigen(Invetario);
+                renderedView = renderarticulo(Invetario);
                 break;
             case 1:
-                renderedView = renderRecibidasDestino(Invetario);
+                renderedView = rendercategoria(Invetario);
                 break;
             case 2:
-                renderedView = rendertra_nombre_estatus(Invetario);
+                renderedView = rendersucursal(Invetario);
                 break;
             case 3:
-                renderedView = rendertra_motivo(Invetario);
+                renderedView = renderexistencia(Invetario);
                 break;
-
-
 
         }
         return renderedView;
@@ -71,21 +70,24 @@ public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioMo
         return editText;
     }
 
-    private View renderRecibidasOrigen(final InventarioModel Inventario) {
-        return renderString(Inventario.getRecibidasOrigen());
+
+    private View renderarticulo(final InventarioModel Inventario) {
+        return renderString(Inventario.getProducto());
     }
 
-    private View renderRecibidasDestino(final InventarioModel Inventario) {
-        return renderString(Inventario.getRecibidasDestino());
+    private View renderexistencia(final InventarioModel Inventario) {
+        return renderString(Inventario.getExistencia());
     }
 
-    private View rendertra_nombre_estatus(final InventarioModel Inventario) {
-        return renderString(Inventario.gettra_nombre_estatus());
+    private View rendercategoria(final InventarioModel Inventario) {
+        return renderString(Inventario.getCategoria());
     }
 
-    private View rendertra_motivo(final InventarioModel Inventario) {
-        return renderString(Inventario.gettra_motivo());
+    private View rendersucursal(final InventarioModel Inventario) {
+        return renderString(Inventario.getNombre_sucursal());
     }
+
+
 
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());

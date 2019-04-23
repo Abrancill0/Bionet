@@ -3,7 +3,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -14,8 +13,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-
-import com.Danthop.bionet.Adapters.TrasladoAdapter;
 import com.Danthop.bionet.Tables.SortableTrasladosTable;
 import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.VolleySingleton;
@@ -102,9 +99,11 @@ public class Fragment_pestania_traslado extends Fragment {
         trasladar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment_pop_up_traslados dialog = new Fragment_pop_up_traslados();
-                dialog.setTargetFragment(Fragment_pestania_traslado.this, 1);
-                dialog.show(getFragmentManager(), "MyCustomDialog");
+                //Fragment_pop_up_traslados dialog = new Fragment_pop_up_traslados();
+                //dialog.setTargetFragment(Fragment_pestania_traslado.this, 1);
+                //dialog.show(getFragmentManager(), "MyCustomDialog");
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_pop_up_traslados()).commit();
             }
         });
 
@@ -233,7 +232,6 @@ public  void Traslados_Recibidas(){
                         SucursalCodigoDestino = RecibidasDestino + " " + suc_numero_sucursal_destino;
                         RecibidasDestino = SucursalCodigoDestino;
 
-
                         final InventarioModel traslado = new InventarioModel(
                                 sku,
                                 producto,
@@ -266,8 +264,9 @@ public  void Traslados_Recibidas(){
                                 tra_motivo);
                         traslados.add(traslado);
 
-                    }final TrasladoAdapter trasladoAdapter = new TrasladoAdapter(getContext(), traslados, tabla_traslados);
-                    tabla_traslados.setDataAdapter(trasladoAdapter);
+                    }
+                    //final TrasladoAdapter trasladoAdapter = new TrasladoAdapter(getContext(), traslados, tabla_traslados);
+                    //tabla_traslados.setDataAdapter(trasladoAdapter);
                 }
             } catch (JSONException e) {
                 Toast toast1 =

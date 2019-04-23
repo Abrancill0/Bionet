@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.Danthop.bionet.Adapters.TrasladoAdapter;
 import com.Danthop.bionet.Tables.SortableTrasladosTable;
 import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.VolleySingleton;
@@ -260,8 +259,9 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
                                     tra_motivo);
                             traslados.add(traslado);
 
-                        }final TrasladoAdapter trasladoAdapter = new TrasladoAdapter(getContext(), traslados, tabla_traslados);
-                        tabla_traslados.setDataAdapter(trasladoAdapter);
+                        }
+                        //final TrasladoAdapter trasladoAdapter = new TrasladoAdapter(getContext(), traslados, tabla_traslados);
+                        //tabla_traslados.setDataAdapter(trasladoAdapter);
                     }
                 } catch (JSONException e) {
                     Toast toast1 =

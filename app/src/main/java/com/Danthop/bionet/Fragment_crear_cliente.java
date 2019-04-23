@@ -797,15 +797,13 @@ public class Fragment_crear_cliente extends DialogFragment {
 
                     }else {
                         Toast toast1 =
-                                Toast.makeText( getContext(),
-                                        "El RFC ingresado es inválido, no se encuentra en la lista de RFCs inscritos y no cancelados del SAT", Toast.LENGTH_LONG );
+                                Toast.makeText( getContext(), "El RFC ingresado es inválido, no se encuentra en la lista de RFCs inscritos y no cancelados del SAT", Toast.LENGTH_LONG );
                                 toast1.show();
                         return ;
                     }
 
                 }catch (JSONException e) {
-                    Toast toast1 =
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    Toast toast1 = Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                     toast1.show();
                 }
             }

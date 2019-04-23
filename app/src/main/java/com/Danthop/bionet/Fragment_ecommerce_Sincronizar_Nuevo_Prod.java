@@ -154,7 +154,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         RadioNuevo = (RadioButton) v.findViewById( R.id.radioButton_Nuevo );
         //SpinnerTipoPublicacion=(Spinner) v.findViewById( R.id.Spinner_Tipo_Publicacion );
 
-        Publicaciones= (TextView) v.findViewById( R.id.TextPublicaciones );
+        //Publicaciones= (TextView) v.findViewById( R.id.TextPublicaciones );
         Publicaciones.setText(TipoPublicacionName);
 
         Guardar_articulo = (Button) v.findViewById( R.id.Guardar_articulo );
@@ -232,25 +232,19 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         String Condiciones="";
 
         if(TextDescripcionArticulo.getText().length()==0) {
-
             Toast.makeText(getContext(), "Campo descripcion obligatorio", Toast.LENGTH_LONG).show();
             progreso.hide();
             return;
         }
 
-
-        if (RadioNuevo.isChecked()==true)
-        {
+        if (RadioNuevo.isChecked()==true) {
             Condiciones = "new";
         }
-        else if (RadioUsado.isChecked()==true)
-        {
+        else if (RadioUsado.isChecked()==true) {
             Condiciones = "used";
         }
 
-
         JSONObject json1= new JSONObject();
-
         try {
             json1.put("source",Imagen1);
             json1.put("source",Imagen2);

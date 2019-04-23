@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".9"
+        android:layout_weight=".85"
         android:background="@color/fondo_azul"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal">
@@ -49,31 +49,34 @@
         android:layout_height="match_parent"
         android:layout_weight=".9"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/color_margin_bottom"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/SucOrigen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textStyle="bold"
-                android:textSize="15dp"
                 android:gravity="center"
                 android:text="Sucursal Origen"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/SucDestino"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textStyle="bold"
-                android:textSize="15dp"
                 android:gravity="center"
                 android:text="Sucursal Destino"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="15dp"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 
@@ -171,6 +174,7 @@
     </LinearLayout>
             //
     <LinearLayout
+        android:id="@+id/Layoutfecha"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight=".9"
@@ -204,17 +208,34 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/Layouttabla"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".3"
+        android:layout_weight=".9"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal"
+        android:background="@drawable/color_margin_bottom">
+
+        <com.Danthop.bionet.Tables.SortableSeleccionarArticulosTable
+            android:id="@+id/tabla_inventario"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:visibility="visible"
+            app:tableView_headerColor="@color/white"
+            table:tableView_columnCount="5">
+        </com.Danthop.bionet.Tables.SortableSeleccionarArticulosTable>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@drawable/pestanas_desplegables"
-        android:padding="20dp">
+        android:background="@drawable/pestanas_desplegables">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginHorizontal="20dp"
+            android:layout_marginHorizontal="10dp"
             android:orientation="horizontal">
             <Button
                 android:id="@+id/btnaceptar"
@@ -228,22 +249,7 @@
                 android:text="Aceptar"
                 android:textColor="#ffffff"
                 android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/CancelarTraslado"
-                style="@android:style/Widget.Holo.Light.Button"
-                android:layout_width="150dp"
-                android:layout_height="27dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:background="@color/red"
-                android:padding="5dp"
-                android:text="Cancelar"
-                android:textColor="#ffffff"
-                android:textSize="14sp" />
         </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>

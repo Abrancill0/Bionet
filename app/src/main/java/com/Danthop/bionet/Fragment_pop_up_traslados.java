@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,14 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.sql.Timestamp;
+import java.util.Date;
 
+import com.Danthop.bionet.Adapters.InventarioAdapter;
+import com.Danthop.bionet.Adapters.TrasladoAdapter;
+import com.Danthop.bionet.Tables.SortableInventariosTable;
+import com.Danthop.bionet.Tables.SortableSeleccionarArticulosTable;
+import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -32,10 +40,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import de.codecrafters.tableview.model.TableColumnWeightModel;
+import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 /**
  * A simple {@link Fragment} subclass.
  */
 public class Fragment_pop_up_traslados extends DialogFragment {
+    private String[][] inventarioModel;
     private String usu_id;
     private Integer id;
     private String suc_nombre;
@@ -45,6 +58,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     private Spinner SpinnerSucursal2;
     private Spinner SpinnerTipoTraslado;
     private EditText observaciones;
+    private EditText CantidadSolicitada;
     private EditText Producto;
     private EditText Cantidad;
     private TextView SucOrigen;
@@ -61,11 +75,21 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     ProgressDialog progreso;
     private String SucursalOrigen;
     private String SucursalDestino;
+    private String TipoTraslado;
     private String UUIDexistencias;
     private String UUIDarticulo;
     private String UUIDvariante;
     private String UUIDmodificador;
-    private float CantidadSolicitada;
+    //private float CantidadSolicitada;
+    private LinearLayout LayoutFecha;
+    private LinearLayout LayoutelegirArticulos;
+    private String existencia = "";
+    private String nombre_sucursal = "";
+    private String producto = "";
+    private String sku = "";
+    private String categoria;
+    private SortableInventariosTable tabla_inventario;
+    private List<InventarioModel> inventarios;
 
     public Fragment_pop_up_traslados() {
         // Required empty public constructor
@@ -73,15 +97,34 @@ public class Fragment_pop_up_traslados extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.pop_up_traslados, container, false);
-
+        View v = inflater.inflate(R.layout.fragment_traslado_completo, container, false);
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
 
+        tabla_inventario = (SortableInventariosTable) v.findViewById(R.id.tabla_articulos);
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Sucursal", "Existencias");
+        simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
+        tableColumnWeightModel.setColumnWeight(0, 2);
+        tableColumnWeightModel.setColumnWeight(1, 2);
+        tableColumnWeightModel.setColumnWeight(2, 3);
+        tableColumnWeightModel.setColumnWeight(3, 2);
+        inventarios = new ArrayList<>();
+        tabla_inventario.setHeaderAdapter(simpleHeader);
+        tabla_inventario.setColumnModel(tableColumnWeightModel);
+
+        atras = (ImageView)v.findViewById(R.id.atras);
+        atras.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_pestania_traslado()).commit();
+            }
+        });
         SucursalID = new ArrayList<>();
         SucursalName = new ArrayList<>();
 
-        //atras=(ImageView)v.findViewById(R.id.atras);
         text1=(TextView)v.findViewById(R.id.text1);
         text2=(TextView)v.findViewById(R.id.text2);
         SucOrigen=(TextView)v.findViewById(R.id.SucOrigen);
@@ -90,13 +133,15 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         SpinnerSucursal2=(Spinner)v.findViewById(R.id.Sucursal_Destino);
         text3=(TextView)v.findViewById(R.id.text3);
         observaciones=(EditText)v.findViewById(R.id.editObservaciones);
+        CantidadSolicitada=(EditText)v.findViewById(R.id.CantidadSolicitada);
         textfecha=(TextView)v.findViewById(R.id.textfecha);
         SpinnerFecha=(Spinner)v.findViewById(R.id.SpinnerFecha);
-        //text4=(TextView)v.findViewById(R.id.text4);
-        //articulos = (TextView)v.findViewById(R.id.articulos);
+        LayoutFecha = v.findViewById(R.id.Layoutfecha);
+        LayoutFecha.setVisibility(View.GONE);
+        LayoutelegirArticulos = v.findViewById(R.id.LayoutelegirArticulos);
+        //LayoutelegirArticulos.setVisibility(View.GONE);
 
         SpinnerTipoTraslado = (Spinner) v.findViewById(R.id.tipos_traslados);
-
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.traslados, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         SpinnerTipoTraslado.setAdapter(adapter);
@@ -110,96 +155,188 @@ public class Fragment_pop_up_traslados extends DialogFragment {
             }
         });
 
-       Button aceptar = (Button) v.findViewById(R.id.btnaceptar);
-        aceptar.setOnClickListener(new View.OnClickListener() {
+       Button Solicitar = (Button) v.findViewById(R.id.btnaceptar);
+        Solicitar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment_pop_up_table_solicitartraslado dialog = new Fragment_pop_up_table_solicitartraslado();
-                dialog.setTargetFragment(Fragment_pop_up_traslados.this, 1);
-                dialog.show(getFragmentManager(), "MyCustomDialog");
-                onDestroyView();
+            SolicitarTraslado();
             }
         });
 
-        Button cancelarTraslado = v.findViewById(R.id.CancelarTraslado);
-        cancelarTraslado.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onDestroyView();
-            }
-        });
-
-        SolicitarTraslado();
+        MuestraArticulos();
+        VerificarTipoTraslado();
         SpinnerSucursales();
+
+
         return v;
     }
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    private void VerificarTipoTraslado (){
-        String Opcion;
-        //Opcion = SpinnerTipoTraslado.getSelectedItemId().toString();
-
+private void MuestraArticulos(){
+    JSONObject request = new JSONObject();
+    try {
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    String url = getString(R.string.Url);
+    String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1";
+    JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null, new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject response) {
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+            JSONObject Resultado = null;
+            JSONArray Articulo = null;
+            JSONObject RespuestaUUID = null;
+            JSONObject RespuestaExistencias= null;
+
+            try {
+                int status = Integer.parseInt(response.getString("estatus"));
+                String Mensaje = response.getString("mensaje");
+
+                if (status == 1) {
+                    Resultado = response.getJSONObject("resultado");
+
+                    Articulo = Resultado.getJSONArray("aArticulosExistencias");
+                    inventarioModel = new String[Articulo.length()][4];
+
+                    for (int x = 0; x < Articulo.length(); x++) {
+                        JSONObject elemento = Articulo.getJSONObject(x);
+
+                        RespuestaUUID = elemento.getJSONObject("art_id");
+                        String UUID = RespuestaUUID.getString("uuid");
+
+                        producto = elemento.getString("art_nombre");
+                        categoria = elemento.getString("cat_nombre");
+                        nombre_sucursal = elemento.getString("suc_nombre");
+
+                        RespuestaExistencias = elemento.getJSONObject("exi_cantidad");
+                        existencia = RespuestaExistencias.getString("value");
+
+                        //Variantes_Modificadores_SKU
+                        Boolean Disponible_Variante = Boolean.valueOf(elemento.getString("art_tiene_variantes"));
+                        if (Disponible_Variante == true) {
+                            String NombreVariante = elemento.getString("ava_nombre");
+                            Boolean Disponible_Modificador = Boolean.valueOf(elemento.getString("ava_tiene_modificadores"));
+                            String NombreCompleto;
+                            if (Disponible_Modificador == true) {
+                                sku = elemento.getString("amo_sku");
+                                String NombreModificador = elemento.getString("mod_nombre");
+                                NombreCompleto = producto + " " + NombreVariante + " " + NombreModificador;
+                                producto = NombreCompleto;
+                            } else {
+                                NombreCompleto = producto + " " + NombreVariante;
+                                producto = NombreCompleto;
+                            }
+                        }else {
+                            String NombreVariante = elemento.getString("ava_nombre");
+
+                            Boolean Disponible_Modificador = Boolean.valueOf(elemento.getString("ava_tiene_modificadores"));
+                            String NombreCompleto;
+                            if (Disponible_Modificador == true) {
+                                sku = elemento.getString("amo_sku");
+                                String NombreModificador = elemento.getString("mod_nombre");
+                                NombreCompleto = producto + " " + NombreVariante + " " + NombreModificador;
+                                producto = NombreCompleto;
+
+                            } else {
+                                NombreCompleto = producto + " " + NombreVariante;
+                                producto = NombreCompleto;
+                            }
+                        }
+
+                        final InventarioModel inventario = new InventarioModel(
+                                sku, producto, existencia, categoria, "", nombre_sucursal,
+                                "","","","","",
+                                "","", "","","",
+                                "","","", "","","",
+                                "","", "","","",
+                                "", "");
+                        inventarios.add(inventario);
+                    }final TrasladoAdapter TrasladoAdapter = new TrasladoAdapter(getContext(), inventarios,tabla_inventario);
+                    tabla_inventario.setDataAdapter(TrasladoAdapter);
+                }
+            } catch (JSONException e) {
+                Toast toast1 =
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                toast1.show();
+            }
+        }
+    },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+    );
+    VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
+}
+
+//--------------------------------------------------------------------------------------------------
+  private void VerificarTipoTraslado (){
+        String opcion;
+        opcion = SpinnerTipoTraslado.getSelectedItem().toString();
+        if(opcion.equals("Traslado temporal")) {
+            LayoutFecha.setVisibility(View.VISIBLE);
+            TipoTraslado = "True";
+        }else {
+            LayoutFecha.setVisibility(View.GONE);
+            TipoTraslado = "false";
+        }
+    }
+//--------------------------------------------------------------------------------------------------
    private void  SolicitarTraslado(){
         progreso = new ProgressDialog(getContext());
-        progreso.setMessage("Procesando...");
+        progreso.setMessage("Solicitando...");
         progreso.show();
-        //SucursalOrigen = SucursalName.get(SpinnerSucursal.getSelectedItemPosition());
-        //SucursalDestino = SucursalID.get(SpinnerSucursal2.getSelectedItemPosition());
+       SucursalOrigen = SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+       SucursalDestino = SucursalID.get(SpinnerSucursal2.getSelectedItemPosition());
 
 
+       String url = getString(R.string.Url);
+       String ApiPath = url + "/api/inventario/store_solicitud_traslado";
         JSONObject request = new JSONObject();
-        try
-        {
-            request.put("usu_id", usu_id);
-            request.put("esApp", "1");
-            request.put("suc_origen",SpinnerSucursal.getSelectedItem().toString());
-            request.put("suc_destino",SpinnerSucursal2.getSelectedItem().toString());
-            request.put("observaciones",observaciones.getText());
+        try {
             request.put( "tat_id_existencias_origen", UUIDexistencias);
             request.put( "tat_id_articulo", UUIDarticulo);
             request.put( "tat_id_variante",UUIDvariante);
             request.put( "tat_id_modificador",UUIDmodificador );
-            request.put( "tat_cantidad", CantidadSolicitada);
+            request.put( "tat_cantidad", CantidadSolicitada.getText());
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
-       JSONArray ArrayArticulos = new JSONArray();
-       ArrayArticulos.put(request);
-
-       RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+       JSONArray Arrayarticulos = new JSONArray();
+       Arrayarticulos.put(request);
 
        JSONObject jsonBodyrequest = new JSONObject();
-       String url = getString(R.string.Url);
-       String ApiPath = url + "/api/inventario/store_solicitud_traslado";
+       String url2 = getString(R.string.Url);
+       String ApiPath2 = url + "/api/inventario/store_solicitud_traslado";
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>() {
+       try {
+           jsonBodyrequest.put("usu_id", usu_id);
+           jsonBodyrequest.put("esApp", "1");
+           jsonBodyrequest.put("tra_id_sucursal_origen",SucursalOrigen);
+           jsonBodyrequest.put("tra_id_sucursal_destino",SucursalDestino);
+           jsonBodyrequest.put("tra_traslado_temporal",TipoTraslado);
+           jsonBodyrequest.put("tra_motivo",observaciones.getText());
+           jsonBodyrequest.put("articulos",Arrayarticulos);
+
+       }catch (JSONException e){
+           e.printStackTrace();
+       }
+
+       JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
+                Toast.makeText(getContext(), "Solicitud enviada", Toast.LENGTH_LONG).show();
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_traslado()).commit();
                 progreso.hide();
-
-                String estatus = "0";
-                String mensaje = "";
-                try {
-                    estatus = response.getString("estatus");
-                    mensaje = response.getString("mensaje");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                int status = Integer.parseInt(estatus);
-
-                if (status == 1) {
-                    Toast toast1 = Toast.makeText(getContext(), mensaje, Toast.LENGTH_SHORT);
-                    toast1.show();
-                }
-            }
+           }
         },
                 new Response.ErrorListener() {
                     @Override
@@ -212,7 +349,8 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------------------
    private void SpinnerSucursales() {
         JSONObject request = new JSONObject();
         try {
@@ -276,6 +414,5 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+//--------------------------------------------------------------------------------------------------
 }

@@ -234,7 +234,8 @@
                                 android:id="@+id/Text_cliente_estado"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="5dp"></Spinner>
+                                android:layout_marginHorizontal="5dp">
+                            </Spinner>
 
                         </LinearLayout>
 
@@ -386,7 +387,8 @@
                                 android:id="@+id/Text_cliente_sucursal"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="5dp"></Spinner>
+                                android:layout_marginHorizontal="5dp">
+                            </Spinner>
 
                         </LinearLayout>
                     </LinearLayout>
