@@ -140,6 +140,8 @@ public class Fragment_Ventas extends Fragment {
 
     private ArrayList<PagoModel> ListaDePagos;
 
+    private MetodoPagoAdapter pagoAdapter;
+
 
 
 
@@ -1584,7 +1586,8 @@ public class Fragment_Ventas extends Fragment {
                             );
                             ListaDePagos.add(pago);
                         }
-                        final MetodoPagoAdapter pagoAdapter = new MetodoPagoAdapter(getContext(), R.layout.caja_metodo_pago, ListaDePagos,Listview);
+                        pagoAdapter = new MetodoPagoAdapter(getContext(), R.layout.caja_metodo_pago, ListaDePagos,Listview,
+                                ticket_de_venta);
                         pagoAdapter.notifyDataSetChanged();
                         Listview.setAdapter(pagoAdapter);
                     }

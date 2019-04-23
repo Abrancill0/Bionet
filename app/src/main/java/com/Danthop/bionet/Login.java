@@ -39,6 +39,8 @@ public class Login extends Activity {
     EditText TextUsuario,TextPassword;
     ProgressDialog progreso;
 
+    private String macAddress;
+
     LoginModel Resultado = new LoginModel();
 
     private static final int REQUEST_CODE = 999;
@@ -58,7 +60,7 @@ public class Login extends Activity {
         //-------------;)----------------------
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wInfo = wifiManager.getConnectionInfo();
-        String macAddress = wInfo.getMacAddress();
+        macAddress = wInfo.getMacAddress();
         System.out.println(macAddress);
         //------------:)----------------------
 
@@ -98,6 +100,7 @@ public class Login extends Activity {
         {
             request.put("usu_correo_electronico", TextUsuario.getText());
             request.put("usu_contrasenia", TextPassword.getText());
+            request.put("dis_mac",macAddress);
         }
         catch(Exception e)
         {

@@ -3,6 +3,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.strictmode.WebViewMethodCalledOnWrongThreadViolation;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -20,6 +21,7 @@ import com.Danthop.bionet.Fragment_ecommerce_Sincronizar_Nuevo_Prod;
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.model.CategoriaModel;
 import com.Danthop.bionet.model.PagoModel;
+import com.Danthop.bionet.model.TicketModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -29,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MetodoPagoAdapter extends ArrayAdapter<PagoModel> {
 
@@ -42,15 +45,20 @@ public class MetodoPagoAdapter extends ArrayAdapter<PagoModel> {
 
     private TextView NombrePago;
     private EditText CantidadDinero;
+    private TicketModel Ticket;
+    private List<PagoModel> MetodosDePago = new ArrayList<>();
+    ;
+
     public interface NameMetodoSelected {
         void sendInput(String input);
     }
 
-    public MetodoPagoAdapter(Context context, int resource, ArrayList<PagoModel> objects, ListView ListMetodos) {
+    public MetodoPagoAdapter(Context context, int resource, ArrayList<PagoModel> objects, ListView ListMetodos, TicketModel tick) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
         ListaMetodos = ListMetodos;
+        Ticket = tick;
     }
 
     @NonNull
@@ -59,6 +67,8 @@ public class MetodoPagoAdapter extends ArrayAdapter<PagoModel> {
         id_pago = getItem(position).getId();
         cantidad = getItem(position).getCantidad();
         nombre = getItem(position).getNombre();
+
+
 
         PagoModel pago = new PagoModel(id_pago, cantidad,nombre);
 
@@ -70,6 +80,16 @@ public class MetodoPagoAdapter extends ArrayAdapter<PagoModel> {
 
         CantidadDinero = convertView.findViewById(R.id.TextCantidad);
 
+
         return convertView;
+    }
+
+    public String obtenerCantidad(int position)
+    {
+        getItem(position).setCantidad(String.valueOf(CantidadDinero.getText()));
+
+        String Cantidad = getItem(position).getCantidad();
+
+        return Cantidad;
     }
 }
