@@ -380,6 +380,38 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     }
 
 
+
+    public static void resultLoginResponse(final ResponseCode response){
+
+        try {
+
+            Log.i("LOGIN_RESULT: ", response.toString());
+
+            FEENICIA_TRANSACCION.runOnUiThread(new Runnable() {
+                public void run() {
+                    String setValue = "ERROR AL INICIALIZAR TERMINAL\nVERIFIQUE CREDENCIALES";
+
+                    /* SI LA RESPUESTA DEL SERVICIO FUE 00 */
+                    if(response.getResponseCode() != null) {
+                        if (!response.getResponseCode().equals("00")) {
+                            textView_resultTx.setVisibility(View.VISIBLE);
+                            setTextTx(setValue);
+                        }
+                    }
+
+
+                    progressBar.setVisibility(View.GONE);
+
+                }
+            });
+
+        }catch (Exception e) {
+            Log.e("ERROR_TX", e.toString());
+        }
+
+    }
+
+
     public static void statusReaderCard(final String result){
         Log.i("RESULTADO_READ_CARD: " , result);
 

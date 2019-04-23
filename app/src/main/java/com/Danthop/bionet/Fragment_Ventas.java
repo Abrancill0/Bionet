@@ -650,6 +650,24 @@ public class Fragment_Ventas extends Fragment {
                     si_facturar.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
+                            //validar si existe cliente
+                            String cliente = "";
+
+                            cliente = (String) btn_agregar_cliente.getText();
+
+
+                            if (cliente.equals("Cliente"))
+                            {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(), "El cliente es obligatorio para poder facturar", Toast.LENGTH_LONG);
+                                toast1.show();
+
+                                dialog.dismiss();
+
+                                return;
+                            }
+
                             ticket_de_venta.setTic_facturar("True");
                             dialog.dismiss();
                             dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
