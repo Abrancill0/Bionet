@@ -44,7 +44,6 @@ public class Fragment_clientes extends Fragment {
     private String[][] clienteModel;
     private SortableClientesTable tabla_clientes;
     private ProgressDialog progreso;
-
     private String nombre;
     private String UUID;
     private String telefono;
@@ -68,11 +67,9 @@ public class Fragment_clientes extends Fragment {
     private String num_int_fiscal;
     private String direccion_fiscal;
     private String email_fiscal;
-
     private String correo_igual;
     private String direccion_igual;
     private String Estatus;
-
     private Dialog ver_cliente_dialog;
     private  FragmentTransaction fr;
     private TableDataClickListener<ClienteModel> tablaListener;

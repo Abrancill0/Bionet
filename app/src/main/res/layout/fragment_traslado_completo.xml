@@ -129,7 +129,7 @@
         <EditText
             android:id="@+id/editObservaciones"
             android:layout_width="20dp"
-            android:layout_height="35dp"
+            android:layout_height="45dp"
             android:background="@drawable/shape_gray"
             android:ems="80"
             android:padding="10dp"
@@ -183,14 +183,13 @@
         <EditText
             android:id="@+id/CantidadSolicitada"
             android:layout_width="20dp"
-            android:layout_height="25dp"
+            android:layout_height="45dp"
             android:layout_marginHorizontal="25dp"
             android:layout_weight="1"
             android:inputType="number"
             android:gravity="center"
             android:textColor="@color/colorPrimary" />
     </LinearLayout>
-
 
 
 

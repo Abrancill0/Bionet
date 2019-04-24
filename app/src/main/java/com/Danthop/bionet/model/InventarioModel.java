@@ -32,6 +32,10 @@ public class InventarioModel {
     private String suc_numero_sucursal_origen;
     private String fechaSolicitud;
     private String tra_motivo;
+    private String UUIDarticulo;
+    private String UUIDvariante;
+    private String UUIDmodificador;
+    private String UUIDexistencias;
 
 
 
@@ -63,7 +67,11 @@ public class InventarioModel {
                            String suc_numero_sucursal_destino,
                            String suc_numero_sucursal_origen,
                            String fechaSolicitud,
-                           String tra_motivo)
+                           String tra_motivo,
+                           String UUIDarticulo,
+                           String UUIDvariante,
+                           String UUIDmodificador,
+                           String UUIDexistencias)
     {
 
         this.sku = sku;
@@ -95,6 +103,10 @@ public class InventarioModel {
         this.suc_numero_sucursal_origen = suc_numero_sucursal_origen;
         this.fechaSolicitud = fechaSolicitud;
         this.tra_motivo = tra_motivo;
+        this.UUIDarticulo = UUIDarticulo;
+        this.UUIDvariante = UUIDvariante;
+        this.UUIDmodificador = UUIDmodificador;
+        this.UUIDexistencias = UUIDexistencias;
     }
 
     public String getSku() { return sku; }
@@ -231,4 +243,16 @@ public class InventarioModel {
 
     public String gettra_motivo() {return tra_motivo; }
     public void settra_motivo(String tra_motivo) { this.tra_motivo = tra_motivo; }
+
+    public String getUUIDarticulo() {return UUIDarticulo; }
+    public void setUUIDarticulo(String UUIDarticulo) { this.UUIDarticulo = UUIDarticulo; }
+
+    public String getUUIDvariante() {return UUIDvariante; }
+    public void setUUIDvariante(String UUIDvariante) { this.UUIDvariante = UUIDvariante; }
+
+    public String getUUIDmodificador() {return UUIDmodificador; }
+    public void setUUIDmodificador(String UUIDmodificador) { this.UUIDmodificador = UUIDmodificador; }
+
+    public String getUUIDexistencias() {return UUIDexistencias; }
+    public void setUUIDexistencias(String UUIDexistencias) { this.UUIDexistencias = UUIDexistencias; }
 }

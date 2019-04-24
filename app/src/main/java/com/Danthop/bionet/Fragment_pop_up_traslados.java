@@ -1,4 +1,5 @@
 package com.Danthop.bionet;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,29 +20,29 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.sql.Timestamp;
-import java.util.Date;
 
-import com.Danthop.bionet.Adapters.InventarioAdapter;
 import com.Danthop.bionet.Adapters.TrasladoAdapter;
 import com.Danthop.bionet.Tables.SortableInventariosTable;
-import com.Danthop.bionet.Tables.SortableSeleccionarArticulosTable;
 import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyLog;
+import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 /**
@@ -54,11 +55,19 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     private String suc_nombre;
     private ArrayList<String> SucursalID;
     private ArrayList<String> SucursalName;
+    private ArrayList<String> ArticuloID;
+    private ArrayList<String> VarianteID;
+    private ArrayList<String> ModificadorID;
+    private ArrayList<String> ExistenciasID;
     private Spinner SpinnerSucursal;
     private Spinner SpinnerSucursal2;
     private Spinner SpinnerTipoTraslado;
     private EditText observaciones;
     private EditText CantidadSolicitada;
+    private String UUIDexist;
+    private String UUIDart;
+    private String UUIDvar;
+    private String UUIDmod;
     private EditText Producto;
     private EditText Cantidad;
     private TextView SucOrigen;
@@ -80,7 +89,6 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     private String UUIDarticulo;
     private String UUIDvariante;
     private String UUIDmodificador;
-    //private float CantidadSolicitada;
     private LinearLayout LayoutFecha;
     private LinearLayout LayoutelegirArticulos;
     private String existencia = "";
@@ -89,6 +97,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     private String sku = "";
     private String categoria;
     private SortableInventariosTable tabla_inventario;
+    private TableDataClickListener<InventarioModel> tablaElegirArticuloListener;
     private List<InventarioModel> inventarios;
 
     public Fragment_pop_up_traslados() {
@@ -124,6 +133,10 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         });
         SucursalID = new ArrayList<>();
         SucursalName = new ArrayList<>();
+        ArticuloID = new ArrayList<>();
+        VarianteID = new ArrayList<>();
+        ModificadorID  = new ArrayList<>();
+        ExistenciasID = new ArrayList<>();
 
         text1=(TextView)v.findViewById(R.id.text1);
         text2=(TextView)v.findViewById(R.id.text2);
@@ -139,7 +152,6 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         LayoutFecha = v.findViewById(R.id.Layoutfecha);
         LayoutFecha.setVisibility(View.GONE);
         LayoutelegirArticulos = v.findViewById(R.id.LayoutelegirArticulos);
-        //LayoutelegirArticulos.setVisibility(View.GONE);
 
         SpinnerTipoTraslado = (Spinner) v.findViewById(R.id.tipos_traslados);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.traslados, android.R.layout.simple_spinner_item);
@@ -166,11 +178,15 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         MuestraArticulos();
         VerificarTipoTraslado();
         SpinnerSucursales();
+        LoadListenerTable();
+
+        tabla_inventario.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
+        tabla_inventario.addDataClickListener(tablaElegirArticuloListener);
 
 
         return v;
     }
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 private void MuestraArticulos(){
     JSONObject request = new JSONObject();
     try {
@@ -187,6 +203,9 @@ private void MuestraArticulos(){
             JSONArray Articulo = null;
             JSONObject RespuestaUUID = null;
             JSONObject RespuestaExistencias= null;
+            JSONObject RespuestaIDExis = null;
+            JSONObject RespuestaVariantes = null;
+            JSONObject RespuestaModificadores = null;
 
             try {
                 int status = Integer.parseInt(response.getString("estatus"));
@@ -202,7 +221,13 @@ private void MuestraArticulos(){
                         JSONObject elemento = Articulo.getJSONObject(x);
 
                         RespuestaUUID = elemento.getJSONObject("art_id");
-                        String UUID = RespuestaUUID.getString("uuid");
+                        UUIDarticulo = RespuestaUUID.getString("uuid");
+
+                        RespuestaVariantes = elemento.getJSONObject("ava_id");
+                        UUIDvariante = RespuestaVariantes.getString("uuid");
+
+                        RespuestaIDExis = elemento.getJSONObject("exi_id");
+                        UUIDexistencias = RespuestaIDExis.getString("uuid");
 
                         producto = elemento.getString("art_nombre");
                         categoria = elemento.getString("cat_nombre");
@@ -215,7 +240,11 @@ private void MuestraArticulos(){
                         Boolean Disponible_Variante = Boolean.valueOf(elemento.getString("art_tiene_variantes"));
                         if (Disponible_Variante == true) {
                             String NombreVariante = elemento.getString("ava_nombre");
+
+
                             Boolean Disponible_Modificador = Boolean.valueOf(elemento.getString("ava_tiene_modificadores"));
+                            RespuestaModificadores = elemento.getJSONObject("amo_id");
+                            UUIDmodificador = RespuestaModificadores.getString("uuid");
                             String NombreCompleto;
                             if (Disponible_Modificador == true) {
                                 sku = elemento.getString("amo_sku");
@@ -249,7 +278,7 @@ private void MuestraArticulos(){
                                 "","", "","","",
                                 "","","", "","","",
                                 "","", "","","",
-                                "", "");
+                                "", "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias);
                         inventarios.add(inventario);
                     }final TrasladoAdapter TrasladoAdapter = new TrasladoAdapter(getContext(), inventarios,tabla_inventario);
                     tabla_inventario.setDataAdapter(TrasladoAdapter);
@@ -279,12 +308,25 @@ private void MuestraArticulos(){
         opcion = SpinnerTipoTraslado.getSelectedItem().toString();
         if(opcion.equals("Traslado temporal")) {
             LayoutFecha.setVisibility(View.VISIBLE);
-            TipoTraslado = "True";
+            TipoTraslado = "true";
         }else {
             LayoutFecha.setVisibility(View.GONE);
             TipoTraslado = "false";
         }
     }
+//--------------------------------------------------------------------------------------------------
+private void LoadListenerTable() {
+    tablaElegirArticuloListener = new TableDataClickListener<InventarioModel>() {
+        @Override
+        public void onDataClicked(int rowIndex, final InventarioModel clickedData) {
+
+            UUIDart = clickedData.getUUIDarticulo();
+            UUIDvar = clickedData.getUUIDvariante();
+            UUIDmod = clickedData.getUUIDmodificador();
+            UUIDexist = clickedData.getUUIDexistencias();
+        }
+    };
+}
 //--------------------------------------------------------------------------------------------------
    private void  SolicitarTraslado(){
         progreso = new ProgressDialog(getContext());
@@ -293,34 +335,30 @@ private void MuestraArticulos(){
        SucursalOrigen = SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
        SucursalDestino = SucursalID.get(SpinnerSucursal2.getSelectedItemPosition());
 
-
        String url = getString(R.string.Url);
        String ApiPath = url + "/api/inventario/store_solicitud_traslado";
         JSONObject request = new JSONObject();
         try {
-            request.put( "tat_id_existencias_origen", UUIDexistencias);
-            request.put( "tat_id_articulo", UUIDarticulo);
-            request.put( "tat_id_variante",UUIDvariante);
-            request.put( "tat_id_modificador",UUIDmodificador );
+            request.put( "tat_id_existencias_origen", UUIDexist);
+            request.put( "tat_id_articulo", UUIDart);
+            request.put( "tat_id_variante",UUIDvar);
+            request.put( "tat_id_modificador","");
             request.put( "tat_cantidad", CantidadSolicitada.getText());
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             e.printStackTrace();
         }
        JSONArray Arrayarticulos = new JSONArray();
        Arrayarticulos.put(request);
 
        JSONObject jsonBodyrequest = new JSONObject();
-       String url2 = getString(R.string.Url);
-       String ApiPath2 = url + "/api/inventario/store_solicitud_traslado";
-
        try {
            jsonBodyrequest.put("usu_id", usu_id);
            jsonBodyrequest.put("esApp", "1");
            jsonBodyrequest.put("tra_id_sucursal_origen",SucursalOrigen);
            jsonBodyrequest.put("tra_id_sucursal_destino",SucursalDestino);
            jsonBodyrequest.put("tra_traslado_temporal",TipoTraslado);
+           jsonBodyrequest.put("tra_fecha_temporal","");
            jsonBodyrequest.put("tra_motivo",observaciones.getText());
            jsonBodyrequest.put("articulos",Arrayarticulos);
 
@@ -328,7 +366,7 @@ private void MuestraArticulos(){
            e.printStackTrace();
        }
 
-       JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>() {
+       JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,jsonBodyrequest, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
@@ -346,7 +384,7 @@ private void MuestraArticulos(){
                         toast1.show();
                     }
                 }
-        );
+       );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
