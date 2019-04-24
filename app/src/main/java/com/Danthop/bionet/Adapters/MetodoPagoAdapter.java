@@ -53,7 +53,7 @@ public class MetodoPagoAdapter extends ArrayAdapter<PagoModel> {
         void sendInput(String input);
     }
 
-    public MetodoPagoAdapter(Context context, int resource, ArrayList<PagoModel> objects, ListView ListMetodos, TicketModel tick) {
+    public MetodoPagoAdapter(Context context, int resource, List<PagoModel> objects, ListView ListMetodos, TicketModel tick) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;

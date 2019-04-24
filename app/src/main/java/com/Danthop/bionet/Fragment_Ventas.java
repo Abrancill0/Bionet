@@ -9,14 +9,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -24,17 +19,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.Danthop.bionet.Adapters.ArticuloAdapter;
 import com.Danthop.bionet.Adapters.ClienteAdapter;
 import com.Danthop.bionet.Adapters.MetodoPagoAdapter;
 import com.Danthop.bionet.Adapters.SeleccionarArticuloVentaAdapter;
 import com.Danthop.bionet.Adapters.VentaArticuloAdapter;
-import com.Danthop.bionet.Tables.SortableArticulosTable;
 import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.Tables.SortableSeleccionarArticuloTable;
 import com.Danthop.bionet.Tables.SortableVentaArticulos;
@@ -51,13 +43,13 @@ import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
-import com.synnapps.carouselview.ImageListener;
 import com.synnapps.carouselview.ViewListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,6 +114,9 @@ public class Fragment_Ventas extends Fragment {
     private List<ClienteModel> clientes;
     private List<ArticuloModel> Articulos;
     private List<ArticuloModel> ArticulosVenta;
+    private List<PagoModel> ListaDePagosDisponibles;
+    private List<PagoModel> ListaDePagos_a_utilizar;
+
     private TicketModel ticket_de_venta;
 
     private FragmentTransaction fr;
@@ -137,8 +132,8 @@ public class Fragment_Ventas extends Fragment {
     private ArrayList<String> ArticulosName;
 
     private ArrayList<String> Imagenes;
+    private String[][] LPAU;
 
-    private ArrayList<PagoModel> ListaDePagos;
 
     private MetodoPagoAdapter pagoAdapter;
 
@@ -203,7 +198,8 @@ public class Fragment_Ventas extends Fragment {
 
         ArticulosName = new ArrayList<>();
         Imagenes = new ArrayList<>();
-        ListaDePagos = new ArrayList<>();
+        ListaDePagosDisponibles = new ArrayList<>();
+        ListaDePagos_a_utilizar = new ArrayList<>();
 
         tabla_venta_articulos=v.findViewById(R.id.tabla_venta_articulos);
         tabla_venta_articulos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
@@ -680,14 +676,52 @@ public class Fragment_Ventas extends Fragment {
                                     dialog.dismiss();
                                     dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
                                     dialog.show();
+
+
+                                    TextView importe_venta = dialog.findViewById(R.id.importe_venta);
+                                    TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
+                                    TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
+
+                                    int count = listaPagos.getCount();
+
+                                    System.out.println(ListaDePagosDisponibles.size());
+                                    for(int i = 0; i < count; i++){
+
+                                        // Here's the critical part I was missing
+                                        View childView = listaPagos.getChildAt(i);
+                                        TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
+                                        EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
+
+                                        String label = (String) labeltext.getText();
+                                        String cantPago = String.valueOf( editText.getText());
+                                        if(cantPago.equals(""))
+                                        {
+                                            cantPago="0";
+                                        }
+                                        int valor = Integer.parseInt(cantPago);
+                                        if(valor<=0)
+                                        {
+                                            ListaDePagosDisponibles.remove(i);
+                                            count=count-1;
+                                        }
+                                        else
+                                        {
+                                            String idPago = ListaDePagosDisponibles.get(i).getId();
+                                            PagoModel pago = new PagoModel(ListaDePagosDisponibles.get(i).getNombre(),
+                                                    idPago,cantPago);
+                                            ListaDePagos_a_utilizar.add(pago);
+                                        }
+                                    }
+                                    FinalizarTicket(importe_cambio,importe_recibido,importe_venta);
+
+
+
+
+
                                     Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
                                     aceptar.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-
-                                          //  listaPagos.
-
-                                            int count = listaPagos.getCount();
 
 
 
@@ -717,29 +751,51 @@ public class Fragment_Ventas extends Fragment {
                                     dialog.dismiss();
                                     dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
                                     dialog.show();
+
+                                    TextView importe_venta = dialog.findViewById(R.id.importe_venta);
+                                    TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
+                                    TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
+
+                                    int count = listaPagos.getCount();
+
+                                    System.out.println(ListaDePagosDisponibles.size());
+                                    for(int i = 0; i < count; i++){
+
+                                        // Here's the critical part I was missing
+                                        View childView = listaPagos.getChildAt(i);
+                                        TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
+                                        EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
+
+                                        String label = (String) labeltext.getText();
+                                        String cantPago = String.valueOf( editText.getText());
+                                        if(cantPago.equals(""))
+                                        {
+                                            cantPago="0";
+                                        }
+                                        int valor = Integer.parseInt(cantPago);
+                                        if(valor<=0)
+                                        {
+                                            ListaDePagosDisponibles.remove(i);
+                                            count=count-1;
+                                        }
+                                        else
+                                        {
+                                            String idPago = ListaDePagosDisponibles.get(i).getId();
+                                            PagoModel pago = new PagoModel(ListaDePagosDisponibles.get(i).getNombre(),
+                                                    idPago,cantPago);
+                                            ListaDePagos_a_utilizar.add(pago);
+                                        }
+                                    }
+                                    FinalizarTicket(importe_cambio,importe_recibido,importe_venta);
+
+
+
+
+
                                     Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
                                     aceptar.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-
-                                            int count = listaPagos.getCount();
-
-                                            for(int i = 0; i < count; i++){
-
-                                                // Here's the critical part I was missing
-                                                View childView = listaPagos.getChildAt(i);
-                                                TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
-                                                EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
-
-                                                String label = (String) labeltext.getText();
-                                                String texto = String.valueOf( editText.getText() );
-
-                                            }
-
-
-
-                                            ////api/ventas/pagar-ticket
-
 
                                             dialog.dismiss();
                                         }
@@ -783,22 +839,21 @@ public class Fragment_Ventas extends Fragment {
     }
 
 
-    private void FinalizarTicket()
+    private void FinalizarTicket(final TextView importeCambio, final TextView importeRecibido, final TextView importeVenta)
     {
 
 
-        JSONObject json1= new JSONObject();
-
+        JSONArray arreglo = new JSONArray();
         try {
-            json1.put("source",Imagen1);
-            json1.put("source",Imagen2);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+            for(int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
+                JSONObject list1 = new JSONObject();
+                list1.put("fpa_id",ListaDePagos_a_utilizar.get(i).getId());
+                list1.put("valor",ListaDePagos_a_utilizar.get(i).getCantidad());
+                arreglo.put(list1);
+            }
+        } catch (JSONException e1) {
+            e1.printStackTrace();
         }
-
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.put(json1);
 
 
         JSONObject request = new JSONObject();
@@ -808,7 +863,7 @@ public class Fragment_Ventas extends Fragment {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
             request.put("tic_id",ticket_de_venta.getTic_id());
-            request.put("tic_importe_metodo_pago",ticket_de_venta.getTic_id_sucursal());
+            request.put("tic_importe_metodo_pago",arreglo);
 
         }
         catch(Exception e)
@@ -818,14 +873,13 @@ public class Fragment_Ventas extends Fragment {
 
         String url = getString(R.string.Url);
 
-        String ApiPath = url + "/api/ventas/pagar-ticket";
+        String ApiPath = url + "/api/ventas/tickets/pagar-ticket";
 
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
         {
             @Override
             public void onResponse(JSONObject response) {
 
-                JSONArray Respuesta = null;
 
                 try {
 
@@ -834,9 +888,36 @@ public class Fragment_Ventas extends Fragment {
 
                     if (status == 1)
                     {
-                        Toast toast1 =
-                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-                        toast1.show();
+
+                        JSONObject Respuesta = response.getJSONObject("resultado");
+                        JSONObject RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
+                        String tic_importe_total = RespuestaNodoTicket.getString("tic_importe_total");
+                        String tic_importe_recibido = RespuestaNodoTicket.getString("tic_importe_recibido");
+                        String tic_importe_cambio = RespuestaNodoTicket.getString("tic_importe_cambio");
+                        ticket_de_venta.setTic_importe_total(tic_importe_total);
+                        ticket_de_venta.setTic_importe_recibido(tic_importe_recibido);
+                        ticket_de_venta.setTic_importe_cambio(tic_importe_cambio);
+
+                        double CambioConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_cambio());
+                        double RecibidoConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_recibido());
+                        double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
+                        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+                        importeCambio.setText( formatter.format( CambioConDecimal));
+                        importeRecibido.setText( formatter.format( RecibidoConDecimal));
+                        importeVenta.setText( formatter.format( ImporteTotalConDecimal));
+
+                        ArticulosVenta.clear();
+                        Imagenes.clear();
+                        final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos,ticket_de_venta,usu_id,
+                                total,descuento,impuesto,subtotal,
+                                carouselView,Imagenes);
+                        articuloAdapter.notifyDataSetChanged();
+                        tabla_venta_articulos.setDataAdapter(articuloAdapter);
+                        LoadImages();
+
+
+
                     }
                     else
                     {
@@ -863,6 +944,7 @@ public class Fragment_Ventas extends Fragment {
                     }
                 }
         );
+        postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
@@ -1662,7 +1744,7 @@ public class Fragment_Ventas extends Fragment {
 
     private void CargaMetodosPago(final ListView Listview){
 
-        ListaDePagos.clear();
+        ListaDePagosDisponibles.clear();
         ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
         JSONObject request = new JSONObject();
         try
@@ -1712,9 +1794,9 @@ public class Fragment_Ventas extends Fragment {
                                     id,
                                     ""
                             );
-                            ListaDePagos.add(pago);
+                            ListaDePagosDisponibles.add(pago);
                         }
-                        pagoAdapter = new MetodoPagoAdapter(getContext(), R.layout.caja_metodo_pago, ListaDePagos,Listview,
+                        pagoAdapter = new MetodoPagoAdapter(getContext(), R.layout.caja_metodo_pago, ListaDePagosDisponibles,Listview,
                                 ticket_de_venta);
                         pagoAdapter.notifyDataSetChanged();
                         Listview.setAdapter(pagoAdapter);
