@@ -142,10 +142,6 @@ public class Fragment_Ventas extends Fragment {
 
     private MetodoPagoAdapter pagoAdapter;
 
-
-
-
-
     private CarouselView carouselView;
 
     private String TicketIDVenta;
@@ -674,7 +670,7 @@ public class Fragment_Ventas extends Fragment {
                             dialog.dismiss();
                             dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
                             dialog.show();
-                            ListView listaPagos = dialog.findViewById(R.id.lista_de_pagos);
+                            final ListView listaPagos = dialog.findViewById(R.id.lista_de_pagos);
                             CargaMetodosPago(listaPagos);
 
                             Button realizarPago = dialog.findViewById(R.id.realizar_Pago);
@@ -688,6 +684,13 @@ public class Fragment_Ventas extends Fragment {
                                     aceptar.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+
+                                          //  listaPagos.
+
+                                            int count = listaPagos.getCount();
+
+
+
                                             dialog.dismiss();
                                         }
                                     });
@@ -704,7 +707,7 @@ public class Fragment_Ventas extends Fragment {
                             dialog.dismiss();
                             dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
                             dialog.show();
-                            ListView listaPagos = dialog.findViewById(R.id.lista_de_pagos);
+                            final ListView listaPagos = dialog.findViewById(R.id.lista_de_pagos);
                             CargaMetodosPago(listaPagos);
 
                             Button realizarPago = dialog.findViewById(R.id.realizar_Pago);
@@ -718,6 +721,26 @@ public class Fragment_Ventas extends Fragment {
                                     aceptar.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+
+                                            int count = listaPagos.getCount();
+
+                                            for(int i = 0; i < count; i++){
+
+                                                // Here's the critical part I was missing
+                                                View childView = listaPagos.getChildAt(i);
+                                                TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
+                                                EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
+
+                                                String label = (String) labeltext.getText();
+                                                String texto = String.valueOf( editText.getText() );
+
+                                            }
+
+
+
+                                            ////api/ventas/pagar-ticket
+
+
                                             dialog.dismiss();
                                         }
                                     });
@@ -729,6 +752,7 @@ public class Fragment_Ventas extends Fragment {
                 }
             }
         });
+
 
         btn_feenicia.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -757,6 +781,92 @@ public class Fragment_Ventas extends Fragment {
 
 
     }
+
+
+    private void FinalizarTicket()
+    {
+
+
+        JSONObject json1= new JSONObject();
+
+        try {
+            json1.put("source",Imagen1);
+            json1.put("source",Imagen2);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(json1);
+
+
+        JSONObject request = new JSONObject();
+
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("tic_id",ticket_de_venta.getTic_id());
+            request.put("tic_importe_metodo_pago",ticket_de_venta.getTic_id_sucursal());
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/pagar-ticket";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray Respuesta = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1)
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
+
 
     private void Aniadir_a_venta(String CBoSKULL, String Cantidad)
     {
@@ -1644,7 +1754,7 @@ public class Fragment_Ventas extends Fragment {
     private void AniadirClienteTicket()
     {
         ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
-        ArticulosVenta.clear();
+        //ArticulosVenta.clear();
         JSONObject request = new JSONObject();
         try
         {
@@ -1719,7 +1829,7 @@ public class Fragment_Ventas extends Fragment {
         ticket_de_venta.setTic_id_vendedor(VendedorID.get(SpinnerVendedor.getSelectedItemPosition()));
         ticket_de_venta.setTic_nombre_vendedor(String.valueOf(SpinnerVendedor.getSelectedItem()));
         ticket_de_venta.setTic_comision(Comision);
-        ArticulosVenta.clear();
+        //ArticulosVenta.clear();
         JSONObject request = new JSONObject();
         try
         {

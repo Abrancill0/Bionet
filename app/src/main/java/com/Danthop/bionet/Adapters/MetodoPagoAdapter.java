@@ -68,8 +68,6 @@ public class MetodoPagoAdapter extends ArrayAdapter<PagoModel> {
         cantidad = getItem(position).getCantidad();
         nombre = getItem(position).getNombre();
 
-
-
         PagoModel pago = new PagoModel(id_pago, cantidad,nombre);
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -79,7 +77,6 @@ public class MetodoPagoAdapter extends ArrayAdapter<PagoModel> {
         NombrePago.setText(nombre);
 
         CantidadDinero = convertView.findViewById(R.id.TextCantidad);
-
 
         return convertView;
     }
