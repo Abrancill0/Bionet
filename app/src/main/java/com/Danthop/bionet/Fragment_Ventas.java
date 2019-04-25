@@ -153,8 +153,6 @@ public class Fragment_Ventas extends Fragment {
     private ProgressDialog progreso;
 
 
-
-
     public Fragment_Ventas() {
         // Required empty public constructor
     }
@@ -673,18 +671,61 @@ public class Fragment_Ventas extends Fragment {
                             realizarPago.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+
+                                    double totalsumaimportes = 0;
+
+                                    int count = listaPagos.getCount();
+
+                                    System.out.println(ListaDePagosDisponibles.size());
+
+                                    for(int i = 0; i < count; i++){
+
+                                        // Here's the critical part I was missing
+                                        View childView = listaPagos.getChildAt(i);
+                                        TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
+                                        EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
+
+                                        String label = (String) labeltext.getText();
+                                        String cantPago = String.valueOf( editText.getText());
+                                        if(cantPago.equals(""))
+                                        {
+                                            cantPago="0";
+                                        }
+
+                                        totalsumaimportes += Double.parseDouble( cantPago );
+
+                                    }
+
+                                    //Validar montos antes de pasar de pantallas
+                                    String TotalText = String.valueOf( total.getText() );
+                                    double TotalFormat=0;
+                                    String cleanString = TotalText.replaceAll("\\D", "");
+                                    try {
+                                        TotalFormat = Double.parseDouble(cleanString);
+                                        TotalFormat = TotalFormat/100;
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                    }
+
+
+                                    if (TotalFormat >  totalsumaimportes )
+                                    {
+                                        Toast toast1 =
+                                                Toast.makeText(getContext(), "El monto capturado es menor al total de la venta", Toast.LENGTH_LONG);
+                                        toast1.show();
+
+                                        return;
+                                    }
+
                                     dialog.dismiss();
                                     dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
                                     dialog.show();
-
 
                                     TextView importe_venta = dialog.findViewById(R.id.importe_venta);
                                     TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
                                     TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
 
-                                    int count = listaPagos.getCount();
 
-                                    System.out.println(ListaDePagosDisponibles.size());
                                     for(int i = 0; i < count; i++){
 
                                         // Here's the critical part I was missing
@@ -711,19 +752,16 @@ public class Fragment_Ventas extends Fragment {
                                                     idPago,cantPago);
                                             ListaDePagos_a_utilizar.add(pago);
                                         }
+
                                     }
+
                                     FinalizarTicket(importe_cambio,importe_recibido,importe_venta);
-
-
-
 
 
                                     Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
                                     aceptar.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-
-
 
                                             dialog.dismiss();
                                         }
@@ -748,6 +786,53 @@ public class Fragment_Ventas extends Fragment {
                             realizarPago.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+
+
+                                    double totalsumaimportes = 0;
+
+                                    int count = listaPagos.getCount();
+
+                                    System.out.println(ListaDePagosDisponibles.size());
+
+                                    for(int i = 0; i < count; i++){
+
+                                        // Here's the critical part I was missing
+                                        View childView = listaPagos.getChildAt(i);
+                                        TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
+                                        EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
+
+                                        String label = (String) labeltext.getText();
+                                        String cantPago = String.valueOf( editText.getText());
+                                        if(cantPago.equals(""))
+                                        {
+                                            cantPago="0";
+                                        }
+
+                                        totalsumaimportes += Double.parseDouble( cantPago );
+
+                                    }
+
+                                    //Validar montos antes de pasar de pantallas
+                                    String TotalText = String.valueOf( total.getText() );
+                                    double TotalFormat=0;
+                                    String cleanString = TotalText.replaceAll("\\D", "");
+                                    try {
+                                        TotalFormat = Double.parseDouble(cleanString);
+                                        TotalFormat = TotalFormat/100;
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                    }
+
+
+                                    if (TotalFormat >  totalsumaimportes )
+                                    {
+                                        Toast toast1 =
+                                                Toast.makeText(getContext(), "El monto capturado es menor al total de la venta", Toast.LENGTH_LONG);
+                                        toast1.show();
+
+                                        return;
+                                    }
+
                                     dialog.dismiss();
                                     dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
                                     dialog.show();
@@ -756,9 +841,7 @@ public class Fragment_Ventas extends Fragment {
                                     TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
                                     TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
 
-                                    int count = listaPagos.getCount();
 
-                                    System.out.println(ListaDePagosDisponibles.size());
                                     for(int i = 0; i < count; i++){
 
                                         // Here's the critical part I was missing
@@ -785,11 +868,10 @@ public class Fragment_Ventas extends Fragment {
                                                     idPago,cantPago);
                                             ListaDePagos_a_utilizar.add(pago);
                                         }
+
                                     }
-                                    FinalizarTicket(importe_cambio,importe_recibido,importe_venta);
 
-
-
+                                        FinalizarTicket(importe_cambio,importe_recibido,importe_venta);
 
 
                                     Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
@@ -917,6 +999,10 @@ public class Fragment_Ventas extends Fragment {
                         LoadImages();
 
 
+                        descuento.setText("$0.00");
+                        total.setText("$0.00");
+                        subtotal.setText("$0.00");
+                        impuesto.setText("$0.00");
 
                     }
                     else
@@ -1029,15 +1115,11 @@ public class Fragment_Ventas extends Fragment {
                         }
 
 
-
-
-
                         //Se modifican los datos del ticket de venta
                         ticket_de_venta.setTic_id(TicketIDVenta);
                         ticket_de_venta.setTic_importe_descuentos(String.valueOf(DescuentoTotal));
                         ticket_de_venta.setTic_importe_total(String.valueOf(PrecioTotal));
                         ticket_de_venta.setTic_impuestos(String.valueOf(ImpuestoTotal));
-
 
 
                         NumberFormat formatter = NumberFormat.getCurrencyInstance();
@@ -1053,7 +1135,6 @@ public class Fragment_Ventas extends Fragment {
 
                         double sub = Double.parseDouble(String.valueOf(Subtotal));
                         subtotal.setText( formatter.format( sub ) );
-
 
 
                         NodoTicketArticulos = Respuesta.getJSONArray("aDetalleTicket");
