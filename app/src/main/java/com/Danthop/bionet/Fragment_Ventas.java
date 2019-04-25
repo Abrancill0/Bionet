@@ -999,6 +999,8 @@ public class Fragment_Ventas extends Fragment {
                         LoadImages();
 
 
+                        InstanciarModeloTicket();
+
                         descuento.setText("$0.00");
                         total.setText("$0.00");
                         subtotal.setText("$0.00");
