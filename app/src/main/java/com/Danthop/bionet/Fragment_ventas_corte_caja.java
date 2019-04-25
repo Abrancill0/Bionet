@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,7 +46,7 @@ public class Fragment_ventas_corte_caja extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ventas_reporte_ventas()).commit();
+                fr.replace(R.id.fragment_container,new Fragment_ventas_transacciones()).commit();
             }
         });
     }

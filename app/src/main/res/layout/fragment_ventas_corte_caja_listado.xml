@@ -47,7 +47,7 @@
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
-                android:text="Reporte de Ventas"
+                android:text="Transacciones"
                 android:textAllCaps="false" />
         </LinearLayout>
 

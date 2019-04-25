@@ -98,7 +98,8 @@
         <activity
             android:name=".Feenicia_Transaction_Bluetooth"
             android:label="bio-Net"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:theme="@style/FeniciaTheme"/>
         <activity
             android:name="com.mercadolibre.android.sdk.MercadoLibreActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize"

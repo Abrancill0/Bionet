@@ -49,7 +49,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -574,7 +573,7 @@ public class Fragment_Ventas extends Fragment {
         btn_reporte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new Fragment_ventas_reporte_ventas()).commit();
+                fr.replace(R.id.fragment_container,new Fragment_ventas_transacciones()).commit();
             }
         });
 
@@ -666,6 +665,11 @@ public class Fragment_Ventas extends Fragment {
                             dialog.show();
                             final ListView listaPagos = dialog.findViewById(R.id.lista_de_pagos);
                             CargaMetodosPago(listaPagos);
+
+                            TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
+                            double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
+                            NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                            TotalAPagar.setText( formatter.format( ImporteTotalConDecimal));
 
                             Button realizarPago = dialog.findViewById(R.id.realizar_Pago);
                             realizarPago.setOnClickListener(new View.OnClickListener() {
@@ -781,6 +785,11 @@ public class Fragment_Ventas extends Fragment {
                             dialog.show();
                             final ListView listaPagos = dialog.findViewById(R.id.lista_de_pagos);
                             CargaMetodosPago(listaPagos);
+
+                            TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
+                            double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
+                            NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                            TotalAPagar.setText( formatter.format( ImporteTotalConDecimal));
 
                             Button realizarPago = dialog.findViewById(R.id.realizar_Pago);
                             realizarPago.setOnClickListener(new View.OnClickListener() {
@@ -1000,6 +1009,7 @@ public class Fragment_Ventas extends Fragment {
 
 
                         InstanciarModeloTicket();
+                        ListaDePagos_a_utilizar.clear();
 
                         descuento.setText("$0.00");
                         total.setText("$0.00");
