@@ -88,9 +88,7 @@ public class ArticuloModel {
 
     public void setArticulo_categoria(String articulo_categoria) { this.articulo_categoria = articulo_categoria; }
 
-    public String getArticulo_cantidad() {
-        return articulo_cantidad;
-    }
+    public String getArticulo_cantidad() { return articulo_cantidad; }
 
     public void setArticulo_cantidad(String articulo_cantidad) { this.articulo_cantidad = articulo_cantidad; }
 

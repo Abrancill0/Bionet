@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.TrasladoAdapter;
 import com.Danthop.bionet.Tables.SortableInventariosTable;
+import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -31,6 +32,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,21 +57,15 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     private String suc_nombre;
     private ArrayList<String> SucursalID;
     private ArrayList<String> SucursalName;
-    private ArrayList<String> ArticuloID;
-    private ArrayList<String> VarianteID;
-    private ArrayList<String> ModificadorID;
-    private ArrayList<String> ExistenciasID;
     private Spinner SpinnerSucursal;
     private Spinner SpinnerSucursal2;
     private Spinner SpinnerTipoTraslado;
     private EditText observaciones;
-    private EditText CantidadSolicitada;
+    private ElegantNumberButton CantidadSolicitada;
     private String UUIDexist;
     private String UUIDart;
     private String UUIDvar;
     private String UUIDmod;
-    private EditText Producto;
-    private EditText Cantidad;
     private TextView SucOrigen;
     private TextView SucDestino;
     private ImageView atras;
@@ -79,16 +75,18 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     private TextView text4;
     private TextView articulos;
     private TextView textViewObser;
-    private TextView textfecha;
+    private EditText Fecha;
     private Spinner SpinnerFecha;
     ProgressDialog progreso;
     private String SucursalOrigen;
     private String SucursalDestino;
+    private Dialog dialog;
     private String TipoTraslado;
     private String UUIDexistencias;
     private String UUIDarticulo;
     private String UUIDvariante;
     private String UUIDmodificador;
+    private Button btn_agregar_articulo;
     private LinearLayout LayoutFecha;
     private LinearLayout LayoutelegirArticulos;
     private String existencia = "";
@@ -96,6 +94,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     private String producto = "";
     private String sku = "";
     private String categoria;
+    private String cantidad;
     private SortableInventariosTable tabla_inventario;
     private TableDataClickListener<InventarioModel> tablaElegirArticuloListener;
     private List<InventarioModel> inventarios;
@@ -109,16 +108,21 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         View v = inflater.inflate(R.layout.fragment_traslado_completo, container, false);
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
+        dialog=new Dialog(getContext());
+        progreso = new ProgressDialog( getContext() );
 
         tabla_inventario = (SortableInventariosTable) v.findViewById(R.id.tabla_articulos);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Sucursal", "Existencias");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "", "Artículo", "Categoría", "Sucursal", "Existencias", "Cantidad");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
-        tableColumnWeightModel.setColumnWeight(0, 2);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
+        tableColumnWeightModel.setColumnWeight(0, 1);
         tableColumnWeightModel.setColumnWeight(1, 2);
         tableColumnWeightModel.setColumnWeight(2, 3);
         tableColumnWeightModel.setColumnWeight(3, 2);
+        tableColumnWeightModel.setColumnWeight(4, 2);
+        tableColumnWeightModel.setColumnWeight(4, 2);
+
         inventarios = new ArrayList<>();
         tabla_inventario.setHeaderAdapter(simpleHeader);
         tabla_inventario.setColumnModel(tableColumnWeightModel);
@@ -133,11 +137,6 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         });
         SucursalID = new ArrayList<>();
         SucursalName = new ArrayList<>();
-        ArticuloID = new ArrayList<>();
-        VarianteID = new ArrayList<>();
-        ModificadorID  = new ArrayList<>();
-        ExistenciasID = new ArrayList<>();
-
         text1=(TextView)v.findViewById(R.id.text1);
         text2=(TextView)v.findViewById(R.id.text2);
         SucOrigen=(TextView)v.findViewById(R.id.SucOrigen);
@@ -146,12 +145,13 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         SpinnerSucursal2=(Spinner)v.findViewById(R.id.Sucursal_Destino);
         text3=(TextView)v.findViewById(R.id.text3);
         observaciones=(EditText)v.findViewById(R.id.editObservaciones);
-        CantidadSolicitada=(EditText)v.findViewById(R.id.CantidadSolicitada);
-        textfecha=(TextView)v.findViewById(R.id.textfecha);
+        //CantidadSolicitada=(ElegantNumberButton)v.findViewById(R.id.art_cantidad);
+        Fecha=(EditText) v.findViewById(R.id.Fecha);
         SpinnerFecha=(Spinner)v.findViewById(R.id.SpinnerFecha);
         LayoutFecha = v.findViewById(R.id.Layoutfecha);
         LayoutFecha.setVisibility(View.GONE);
         LayoutelegirArticulos = v.findViewById(R.id.LayoutelegirArticulos);
+        btn_agregar_articulo = v.findViewById(R.id.btn_agregar_articulo);
 
         SpinnerTipoTraslado = (Spinner) v.findViewById(R.id.tipos_traslados);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.traslados, android.R.layout.simple_spinner_item);
@@ -175,20 +175,19 @@ public class Fragment_pop_up_traslados extends DialogFragment {
             }
         });
 
-        MuestraArticulos();
         VerificarTipoTraslado();
         SpinnerSucursales();
         LoadListenerTable();
+        MuestraArticulos();
 
         tabla_inventario.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
         tabla_inventario.addDataClickListener(tablaElegirArticuloListener);
 
-
         return v;
     }
+
 //--------------------------------------------------------------------------------------------------
 private void MuestraArticulos(){
-    JSONObject request = new JSONObject();
     try {
     } catch (Exception e) {
         e.printStackTrace();
@@ -214,7 +213,7 @@ private void MuestraArticulos(){
                 if (status == 1) {
                     Resultado = response.getJSONObject("resultado");
 
-                    Articulo = Resultado.getJSONArray("aArticulosExistencias");
+                    Articulo = Resultado.getJSONArray("aArticuloExistencias");
                     inventarioModel = new String[Articulo.length()][4];
 
                     for (int x = 0; x < Articulo.length(); x++) {
@@ -236,11 +235,13 @@ private void MuestraArticulos(){
                         RespuestaExistencias = elemento.getJSONObject("exi_cantidad");
                         existencia = RespuestaExistencias.getString("value");
 
+                        cantidad = "0";
+
+
                         //Variantes_Modificadores_SKU
                         Boolean Disponible_Variante = Boolean.valueOf(elemento.getString("art_tiene_variantes"));
                         if (Disponible_Variante == true) {
                             String NombreVariante = elemento.getString("ava_nombre");
-
 
                             Boolean Disponible_Modificador = Boolean.valueOf(elemento.getString("ava_tiene_modificadores"));
                             RespuestaModificadores = elemento.getJSONObject("amo_id");
@@ -273,12 +274,12 @@ private void MuestraArticulos(){
                         }
 
                         final InventarioModel inventario = new InventarioModel(
-                                sku, producto, existencia, categoria, "", nombre_sucursal,
+                                 sku, producto, existencia, categoria, "", nombre_sucursal,
                                 "","","","","",
                                 "","", "","","",
                                 "","","", "","","",
                                 "","", "","","",
-                                "", "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias);
+                                "", "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad);
                         inventarios.add(inventario);
                     }final TrasladoAdapter TrasladoAdapter = new TrasladoAdapter(getContext(), inventarios,tabla_inventario);
                     tabla_inventario.setDataAdapter(TrasladoAdapter);
@@ -319,7 +320,6 @@ private void LoadListenerTable() {
     tablaElegirArticuloListener = new TableDataClickListener<InventarioModel>() {
         @Override
         public void onDataClicked(int rowIndex, final InventarioModel clickedData) {
-
             UUIDart = clickedData.getUUIDarticulo();
             UUIDvar = clickedData.getUUIDvariante();
             UUIDmod = clickedData.getUUIDmodificador();
@@ -343,7 +343,7 @@ private void LoadListenerTable() {
             request.put( "tat_id_articulo", UUIDart);
             request.put( "tat_id_variante",UUIDvar);
             request.put( "tat_id_modificador","");
-            request.put( "tat_cantidad", CantidadSolicitada.getText());
+            request.put( "tat_cantidad", cantidad);
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -358,7 +358,7 @@ private void LoadListenerTable() {
            jsonBodyrequest.put("tra_id_sucursal_origen",SucursalOrigen);
            jsonBodyrequest.put("tra_id_sucursal_destino",SucursalDestino);
            jsonBodyrequest.put("tra_traslado_temporal",TipoTraslado);
-           jsonBodyrequest.put("tra_fecha_temporal","");
+           jsonBodyrequest.put("tra_fecha_temporal",Fecha.getText());
            jsonBodyrequest.put("tra_motivo",observaciones.getText());
            jsonBodyrequest.put("articulos",Arrayarticulos);
 
@@ -369,10 +369,10 @@ private void LoadListenerTable() {
        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,jsonBodyrequest, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
                 Toast.makeText(getContext(), "Solicitud enviada", Toast.LENGTH_LONG).show();
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_traslado()).commit();
+                Fragment_pop_up_traslado_exitoso dialog = new Fragment_pop_up_traslado_exitoso();
+                dialog.setTargetFragment(Fragment_pop_up_traslados.this, 1);
+                dialog.show(getFragmentManager(), "MyCustomDialog");
                 progreso.hide();
            }
         },
@@ -380,7 +380,7 @@ private void LoadListenerTable() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progreso.hide();
-                        Toast toast1 = Toast.makeText(getContext(), "Error de conexion", Toast.LENGTH_SHORT);
+                        Toast toast1 = Toast.makeText(getContext(), "Error al solicitar traslado", Toast.LENGTH_SHORT);
                         toast1.show();
                     }
                 }
@@ -397,7 +397,6 @@ private void LoadListenerTable() {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/configuracion/sucursales/index_app";
 

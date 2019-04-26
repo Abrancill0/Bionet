@@ -100,7 +100,6 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                 renderedView = renderEliminar(Articulo);
                 break;
 
-
         }
         return renderedView;
     }

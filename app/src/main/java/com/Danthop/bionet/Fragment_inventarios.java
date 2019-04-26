@@ -195,7 +195,7 @@ public class Fragment_inventarios extends Fragment {
                     if (status == 1) {
                         Resultado = response.getJSONObject("resultado");
 
-                        Articulo = Resultado.getJSONArray("aArticulosExistencias");
+                        Articulo = Resultado.getJSONArray("aArticuloExistencias");
                         inventarioModel = new String[Articulo.length()][4];
 
                         for (int x = 0; x < Articulo.length(); x++) { //aqui
@@ -266,7 +266,7 @@ public class Fragment_inventarios extends Fragment {
                                 }
                             }else {
                                 String NombreVariante = elemento.getString("ava_nombre");
-
+                                sku = elemento.getString("ava_sku");
                                 Boolean Disponible_Modificador = Boolean.valueOf(elemento.getString("ava_tiene_modificadores"));
                                 String NombreCompleto;
                                 if (Disponible_Modificador == true) {
@@ -276,20 +276,11 @@ public class Fragment_inventarios extends Fragment {
                                     producto = NombreCompleto;
 
                                 } else {
+                                    sku = elemento.getString("ava_sku");
                                     NombreCompleto = producto + " " + NombreVariante;
                                     producto = NombreCompleto;
                                 }
                             }
-
-                           /* Sucursales = elemento.getJSONArray("sucursales");
-                            for (int z = 0; z < Sucursales.length(); z++) {
-                                JSONObject elemento2 = Sucursales.getJSONObject(z);
-                                existencia = elemento2.getString("exi_cantidad");
-                                int exist = Integer.parseInt(existencia);
-                                if (exist >= 1) {
-                                    nombre_sucursal = elemento2.getString("suc_nombre");
-                                    suc_id = elemento2.getString("suc_id");*/
-
                                     final InventarioModel inventario = new InventarioModel(
                                             sku,
                                             producto,
@@ -319,14 +310,11 @@ public class Fragment_inventarios extends Fragment {
                                             suc_numero_sucursal_destino,
                                             suc_numero_sucursal_origen,
                                             fechaSolicitud,
-                                            tra_motivo,"","","","");
+                                            tra_motivo,"","","","","");
                                     inventarios.add(inventario);
-                               // }
-                           // }
-
                         }final InventarioAdapter InventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario);
                         tabla_inventario.setDataAdapter(InventarioAdapter);
-                    }//aqui
+                    }
                 } catch (JSONException e) {
                     Toast toast1 =
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);

@@ -59,7 +59,7 @@
                     android:layout_weight=".6"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="Inventario"
+                    android:text="Traslado"
                     android:textStyle="bold"
                     android:textColor="@color/gray"
                     android:textSize="24dp" />

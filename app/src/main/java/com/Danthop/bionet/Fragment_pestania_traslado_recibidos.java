@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.TrasladoenvioAdapter;
 import com.Danthop.bionet.Tables.SortableTrasladosTable;
 import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.VolleySingleton;
@@ -263,12 +264,12 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
                                     suc_numero_sucursal_destino,
                                     suc_numero_sucursal_origen,
                                     fechaSolicitud,
-                                    tra_motivo,"","","","");
+                                    tra_motivo,"","","","","");
                             traslados.add(traslado);
 
                         }
-                        //final TrasladoAdapter trasladoAdapter = new TrasladoAdapter(getContext(), traslados, tabla_traslados);
-                        //tabla_traslados.setDataAdapter(trasladoAdapter);
+                        final TrasladoenvioAdapter TrasladoAdapter = new TrasladoenvioAdapter(getContext(), traslados,tabla_traslados);
+                        tabla_traslados.setDataAdapter(TrasladoAdapter);
                     }
                 } catch (JSONException e) {
                     Toast toast1 =
