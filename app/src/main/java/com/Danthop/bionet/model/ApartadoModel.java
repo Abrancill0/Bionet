@@ -2,6 +2,7 @@ package com.Danthop.bionet.model;
 
 public class ApartadoModel {
 
+    String Cliente;
     String Articulo;
     String Articulo_id;
     String Articulo_id_variante;
@@ -21,7 +22,7 @@ public class ApartadoModel {
     String Fecha;
     String Vencimiento;
 
-    public ApartadoModel(String articulo, String articulo_id, String articulo_id_variante,
+    public ApartadoModel(String cliente,String articulo, String articulo_id, String articulo_id_variante,
                          String articulo_id_modificador, String importe_pagado, String importe_restante,
                          String nombre_articulo, String id_existencias_origen, String aplica_para_devolucion,
                          String importe_descuento, String importe_total, String impuestos, String porcentaje_descuento,
@@ -44,10 +45,19 @@ public class ApartadoModel {
         Sucursal = sucursal;
         Fecha = fecha;
         Vencimiento = vencimiento;
+        Cliente = cliente;
     }
 
     public String getArticulo() {
         return Articulo;
+    }
+
+    public String getCliente() {
+        return Cliente;
+    }
+
+    public void setCliente(String cliente) {
+        Cliente = cliente;
     }
 
     public void setArticulo(String articulo) {

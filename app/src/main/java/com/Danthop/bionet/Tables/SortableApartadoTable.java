@@ -27,16 +27,21 @@ public class SortableApartadoTable extends SortableTableView<ApartadoModel> {
     public SortableApartadoTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Artículo", "Cantidad");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Cliente", "Sucursal", "Fecha", "Monto Pagado",
+                "Monto Restante", "Vencimiento");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(2);
-        tableColumnWeightModel.setColumnWeight(0, 4);
-        tableColumnWeightModel.setColumnWeight(1, 3);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
+        tableColumnWeightModel.setColumnWeight(0, 2);
+        tableColumnWeightModel.setColumnWeight(1, 2);
+        tableColumnWeightModel.setColumnWeight(2, 2);
+        tableColumnWeightModel.setColumnWeight(3, 2);
+        tableColumnWeightModel.setColumnWeight(4, 2);
+        tableColumnWeightModel.setColumnWeight(5, 2);
         setColumnModel(tableColumnWeightModel);
 
-        setColumnComparator(0, ComparatorApartado.getArticuloComparator());
+        setColumnComparator(0, ComparatorApartado.getApartadoComparator());
     }
 
 }

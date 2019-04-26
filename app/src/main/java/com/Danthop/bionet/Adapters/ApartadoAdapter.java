@@ -36,10 +36,22 @@ public class ApartadoAdapter extends LongPressAwareTableDataAdapter<ApartadoMode
 
         switch (columnIndex) {
             case 0:
-                renderedView = renderArticulo(apartado);
+                renderedView = renderCliente(apartado);
                 break;
             case 1:
-                renderedView = renderCantidad(apartado);
+                renderedView = renderSucursal(apartado);
+                break;
+            case 2:
+                renderedView = renderFechaCreacion(apartado);
+                break;
+            case 3:
+                renderedView = renderMontoPagado(apartado);
+                break;
+            case 4:
+                renderedView = renderMontoRestante(apartado);
+                break;
+            case 5:
+                renderedView = renderFechaVencimiento(apartado);
                 break;
         }
         return renderedView;
@@ -53,12 +65,28 @@ public class ApartadoAdapter extends LongPressAwareTableDataAdapter<ApartadoMode
     }
 
 
-    private View renderArticulo(final ApartadoModel apartado) {
-        return renderString(apartado.getArticulo());
+    private View renderCliente(final ApartadoModel apartado) {
+        return renderString(apartado.getCliente());
     }
 
-    private View renderCantidad(final ApartadoModel apartado) {
-        return renderString(apartado.getCantidad());
+    private View renderSucursal(final ApartadoModel apartado) {
+        return renderString(apartado.getSucursal());
+    }
+
+    private View renderFechaCreacion(final ApartadoModel apartado) {
+        return renderString(apartado.getFecha());
+    }
+
+    private View renderMontoPagado(final ApartadoModel apartado) {
+        return renderString(apartado.getImporte_pagado());
+    }
+
+    private View renderMontoRestante(final ApartadoModel apartado) {
+        return renderString(apartado.getImporte_restante());
+    }
+
+    private View renderFechaVencimiento(final ApartadoModel apartado) {
+        return renderString(apartado.getVencimiento());
     }
 
     private View renderString ( final String value){

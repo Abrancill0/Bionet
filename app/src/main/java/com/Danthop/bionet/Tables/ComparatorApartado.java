@@ -12,7 +12,7 @@ public class ComparatorApartado {
 
     }
 
-    public static Comparator<ApartadoModel> getArticuloComparator() {
+    public static Comparator<ApartadoModel> getApartadoComparator() {
         return new ApartadoNameComparator();
     }
 

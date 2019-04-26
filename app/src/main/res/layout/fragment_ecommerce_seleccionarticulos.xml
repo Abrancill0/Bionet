@@ -60,7 +60,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
                     android:layout_weight=".5"
-                    android:text="Crear Cliente"
+                    android:text="Artículos"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -70,7 +70,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
                     android:layout_weight=".5"
-                    android:text="Llena los campos del cliente"
+                    android:text="Selecciona un artículo"
                     android:textSize="15sp" />
 
             </LinearLayout>

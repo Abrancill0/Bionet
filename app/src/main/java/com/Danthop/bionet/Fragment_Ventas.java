@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ import org.json.JSONObject;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import de.codecrafters.tableview.listeners.TableDataClickListener;
@@ -1124,6 +1126,33 @@ public class Fragment_Ventas extends Fragment {
                             PrecioSubTotalProducto = PrecioSubTotalProducto * numero_de_productos;
 
                             Subtotal = Subtotal + PrecioSubTotalProducto;
+
+                            String AplicaApartados = nodo.getString("art_aplica_apartados");
+
+                            if (AplicaApartados.equals("true"))
+                            {
+                                String ArticuloApartado = nodo.getString("tar_nombre_articulo");
+                                JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
+                                String ArticuloIDApartado = NodoIDApartado.getString("uuid");
+                                JSONObject NodoIDApartadoVariante = nodo.getJSONObject("tar_id_variante");
+                                String ArticuloIDApartadoVariante = NodoIDApartadoVariante.getString("uuid");
+                                String ArticuloIDApartadoModificador = nodo.getString("tar_id_modificador");
+                                String ArticuloApartadoImportePagado = nodo.getString("tar_importe_pagado");
+                                String ArticuloIDApartadoExistencia = nodo.getString("tar_id_existencia");
+                                String ArticuloApartadoAplicaDevolucion = nodo.getString("tar_aplica_para_devolucion");
+                                String ArticuloApartadoImporteDescuento = nodo.getString("tar_importe_descuento");
+                                String ArticuloApartadoTotal = nodo.getString("tar_importe_total");
+                                JSONObject nodoImpuestos = nodo.getJSONObject("tar_impuestos");
+                                Iterator keys = nodoImpuestos.keys();
+                                while (keys.hasNext()) {
+                                    Object key = keys.next();
+                                    JSONObject value = nodoImpuestos.getJSONObject((String) key);
+                                    String component = value.getString("component");
+                                    System.out.println(component);
+                                }
+
+
+                            }
                         }
 
 
@@ -2441,5 +2470,6 @@ public class Fragment_Ventas extends Fragment {
 
         );
     }
+
 
 }
