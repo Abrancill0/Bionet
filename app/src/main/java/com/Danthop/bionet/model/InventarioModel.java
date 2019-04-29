@@ -37,6 +37,7 @@ public class InventarioModel {
     private String UUIDmodificador;
     private String UUIDexistencias;
     private String cantidad;
+    private String nombre_cliente;
 
 
 
@@ -73,7 +74,8 @@ public class InventarioModel {
                            String UUIDvariante,
                            String UUIDmodificador,
                            String UUIDexistencias,
-                           String cantidad)
+                           String cantidad,
+                           String nombre_cliente)
     {
 
         this.sku = sku;
@@ -110,6 +112,7 @@ public class InventarioModel {
         this.UUIDmodificador = UUIDmodificador;
         this.UUIDexistencias = UUIDexistencias;
         this.cantidad = cantidad;
+        this.nombre_cliente = nombre_cliente;
     }
 
     public String getSku() { return sku; }
@@ -261,4 +264,9 @@ public class InventarioModel {
 
     public String getCantidad() {return cantidad; }
     public void setCantidad(String cantidad) { this.cantidad = cantidad; }
+
+    public String getnombre_cliente() {return nombre_cliente; }
+    public void setnombre_cliente(String nombre_cliente) { this.nombre_cliente = nombre_cliente; }
+
+
 }

@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableInventariosTable;
-import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.InventarioModel;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
@@ -19,10 +18,10 @@ import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioModel> {
+public class HomeExistenciasAdapter extends LongPressAwareTableDataAdapter<InventarioModel> {
     int TEXT_SIZE = 12;
 
-    public TrasladoAdapter(final Context context, final List<InventarioModel> data, final SortableInventariosTable tableView) {
+    public HomeExistenciasAdapter(final Context context, final List<InventarioModel> data, final SortableInventariosTable tableView) {
         super(context, data, tableView);
     }
     @Override
@@ -32,23 +31,15 @@ public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioMo
 
         switch (columnIndex) {
             case 0:
-                renderedView = renderCheck(Invetario);
-                break;
-            case 1:
                 renderedView = renderarticulo(Invetario);
                 break;
-            case 2:
-                renderedView = rendercategoria(Invetario);
-                break;
-            case 3:
+            case 1:
                 renderedView = rendersucursal(Invetario);
                 break;
-            case 4:
-                renderedView = renderexistencia(Invetario);
+            case 2:
+                renderedView = renderexistencias(Invetario);
                 break;
 
-            case 5:
-                renderedView = renderCantidad(Invetario);
         }
         return renderedView;
     }
@@ -75,44 +66,20 @@ public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioMo
         editText.setPadding(20, 10, 20, 10);
         editText.setTextSize(TEXT_SIZE);
         editText.setSingleLine();
-        editText.addTextChangedListener(new TrasladoAdapter.OrdenNameUpdater(Inventario));
+        editText.addTextChangedListener(new HomeExistenciasAdapter.OrdenNameUpdater(Inventario));
         return editText;
     }
 
-    private View renderCheck(final InventarioModel Inventario) {
-        final CheckBox check = new CheckBox(getContext());
-        check.setPadding(20, 10, 20, 10);
-        check.setBackgroundColor(getResources().getColor(R.color.white));
-        check.setDrawingCacheBackgroundColor(getResources().getColor(R.color.white));
-
-        return check;
-    }
 
     private View renderarticulo(final InventarioModel Inventario) {
         return renderString(Inventario.getProducto());
     }
-
-    private View renderexistencia(final InventarioModel Inventario) {
-        return renderString(Inventario.getExistencia());
-    }
-
-    private View rendercategoria(final InventarioModel Inventario) {
-        return renderString(Inventario.getCategoria());
-    }
-
     private View rendersucursal(final InventarioModel Inventario) {
         return renderString(Inventario.getNombre_sucursal());
     }
-
-    private View renderCantidad(final InventarioModel Inventario) {
-        final ElegantNumberButton cantidad = new ElegantNumberButton(getContext());
-        cantidad.setNumber(Inventario.getCantidad());
-        cantidad.setPadding(20, 10, 20, 10);
-        cantidad.setBackgroundColor(getResources().getColor(R.color.white));
-        cantidad.setDrawingCacheBackgroundColor(getResources().getColor(R.color.white));
-        return cantidad;
+    private View renderexistencias(final InventarioModel Inventario) {
+        return renderString(Inventario.getExistencia());
     }
-
 
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());

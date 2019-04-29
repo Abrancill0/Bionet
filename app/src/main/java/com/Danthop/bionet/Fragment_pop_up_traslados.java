@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -171,7 +172,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         Solicitar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            SolicitarTraslado();
+                SolicitarTraslado();
             }
         });
 
@@ -279,7 +280,7 @@ private void MuestraArticulos(){
                                 "","", "","","",
                                 "","","", "","","",
                                 "","", "","","",
-                                "", "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad);
+                                "", "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,"");
                         inventarios.add(inventario);
                     }final TrasladoAdapter TrasladoAdapter = new TrasladoAdapter(getContext(), inventarios,tabla_inventario);
                     tabla_inventario.setDataAdapter(TrasladoAdapter);

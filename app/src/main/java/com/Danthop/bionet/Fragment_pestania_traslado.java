@@ -262,7 +262,7 @@ public  void Traslados_Recibidas(){
                                 suc_numero_sucursal_destino,
                                 suc_numero_sucursal_origen,
                                 fechaSolicitud,
-                                tra_motivo,"","","","","");
+                                tra_motivo,"","","","","","");
                         traslados.add(traslado);
 
                     }
