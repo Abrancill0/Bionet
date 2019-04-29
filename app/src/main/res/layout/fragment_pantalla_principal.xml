@@ -152,12 +152,12 @@
 
                     </LinearLayout>
 
-                    <de.codecrafters.tableview.TableView
+                    <com.Danthop.bionet.Tables.SortableInventariosTable
                         android:id="@+id/tablaPocas_Existencias"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="20dp"
-                        table:tableView_columnCount="2" />
+                        table:tableView_columnCount="3" />
 
 
                 </LinearLayout>
@@ -187,7 +187,7 @@
                         android:background="@color/gray2"
                         android:orientation="horizontal"></LinearLayout>
 
-                    <de.codecrafters.tableview.TableView
+                    <com.Danthop.bionet.Tables.SortableClienteFrecuenteTable
                         android:id="@+id/tablaClientesFrecuentes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

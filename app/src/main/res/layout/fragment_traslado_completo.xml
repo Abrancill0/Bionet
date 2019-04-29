@@ -245,7 +245,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@color/white"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:focusable="false">
         <LinearLayout
             android:id="@+id/LayoutTabla"
             android:layout_width="500dp"
@@ -261,7 +262,8 @@
                 android:layout_weight=".7"
                 android:visibility="visible"
                 app:tableView_headerColor="@color/white"
-                table:tableView_columnCount="4">
+                table:tableView_columnCount="4"
+                android:focusable="false">
             </com.Danthop.bionet.Tables.SortableInventariosTable>
         </LinearLayout>
     </LinearLayout>
