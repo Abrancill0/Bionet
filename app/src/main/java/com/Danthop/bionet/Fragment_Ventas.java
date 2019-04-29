@@ -661,6 +661,9 @@ public class Fragment_Ventas extends Fragment {
 
                                     double totalsumaimportes = 0;
 
+                                    double TarjetaCredito = 0;
+                                    double TarjetaDebito = 0;
+
                                     int count = listaPagos.getCount();
 
                                     System.out.println(ListaDePagosDisponibles.size());
@@ -676,6 +679,16 @@ public class Fragment_Ventas extends Fragment {
                                         String cantPago = String.valueOf(editText.getText());
                                         if (cantPago.equals("")) {
                                             cantPago = "0";
+                                        }
+
+                                        if (labeltext.equals("Tarjeta de crédito"))
+                                        {
+                                            TarjetaCredito = Double.parseDouble(cantPago);
+                                        }
+
+                                        if (labeltext.equals("Tarjeta débito "))
+                                        {
+                                            TarjetaDebito = Double.parseDouble(cantPago);
                                         }
 
                                         totalsumaimportes += Double.parseDouble(cantPago);
@@ -736,7 +749,34 @@ public class Fragment_Ventas extends Fragment {
 
                                     }
 
-                                    FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
+                                    double valorTarjetas = 0;
+
+                                    valorTarjetas = TarjetaCredito + TarjetaDebito;
+
+                                    if (valorTarjetas > 0)
+                                    {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("nombre", "");
+                                        bundle.putString("descripcion", "");
+                                        bundle.putString("precio", "");
+
+
+                                       // FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                       // FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+                                       // Fragment_selecciona_tipo_publicacion secondFragment = new Fragment_selecciona_tipo_publicacion();
+                                       //  secondFragment.setArguments(bundle);
+
+                                      //  fragmentTransaction.replace(R.id.fragment_container, secondFragment);
+                                      //  fragmentTransaction.commit();
+
+                                        Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
+                                        getActivity().startActivity(myIntent);
+                                    }
+                                    else
+                                    {
+                                        FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
+                                    }
 
 
                                     Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
@@ -776,6 +816,9 @@ public class Fragment_Ventas extends Fragment {
 
                                     double totalsumaimportes = 0;
 
+                                    double TarjetaCredito = 0;
+                                    double TarjetaDebito = 0;
+
                                     int count = listaPagos.getCount();
 
                                     System.out.println(ListaDePagosDisponibles.size());
@@ -791,6 +834,16 @@ public class Fragment_Ventas extends Fragment {
                                         String cantPago = String.valueOf(editText.getText());
                                         if (cantPago.equals("")) {
                                             cantPago = "0";
+                                        }
+
+                                        if (labeltext.equals("Tarjeta de crédito"))
+                                        {
+                                            TarjetaCredito = Double.parseDouble(cantPago);
+                                        }
+
+                                        if (labeltext.equals("Tarjeta débito "))
+                                        {
+                                            TarjetaDebito = Double.parseDouble(cantPago);
                                         }
 
                                         totalsumaimportes += Double.parseDouble(cantPago);
@@ -851,7 +904,19 @@ public class Fragment_Ventas extends Fragment {
 
                                     }
 
-                                    FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
+                                    double valorTarjetas = 0;
+
+                                    valorTarjetas = TarjetaCredito + TarjetaDebito;
+
+                                    if (valorTarjetas > 0)
+                                    {
+                                        Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
+                                        getActivity().startActivity(myIntent);
+                                    }
+                                    else
+                                    {
+                                        FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
+                                    }
 
 
                                     Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
