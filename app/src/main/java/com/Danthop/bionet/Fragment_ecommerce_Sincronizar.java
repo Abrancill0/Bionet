@@ -186,6 +186,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                         if (Estatus.equals("paused")) {
                             ActivarPublicacion(clickedData.getIDPublicacion());
+                            FichaTecnica.dismiss();
                         } else {
                             Toast.makeText(getContext(), "La publicacion debe de estar en estatus pausa", Toast.LENGTH_LONG).show();
                         }
@@ -201,6 +202,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                         if (Estatus.equals("active") || Estatus.equals("paused")) {
                             CierraPublicacion(clickedData.getIDPublicacion());
+                            FichaTecnica.dismiss();
                         } else {
                             Toast.makeText(getContext(), "La publicacion debe de estar en estatus activo o pausa", Toast.LENGTH_LONG).show();
                         }
@@ -215,6 +217,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                         if (Estatus.equals("active")) {
                             PausarPublicacion(clickedData.getIDPublicacion());
+                            FichaTecnica.dismiss();
                         } else {
                             Toast.makeText(getContext(), "La publicacion debe de estar en estatus activo", Toast.LENGTH_LONG).show();
                         }
@@ -230,8 +233,10 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                         if (!Estatus.equals("closed")) {
                             EliminarPublicacion(clickedData.getIDPublicacion(), 0);
+                            FichaTecnica.dismiss();
                         } else {
                             EliminarPublicacion(clickedData.getIDPublicacion(), 1);
+                            FichaTecnica.dismiss();
                         }
                     }
                 });
@@ -303,41 +308,51 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                 for (int x = 0; x < RespuestaDatos.length(); x++) {
 
-                    JSONObject elemento = RespuestaDatos.getJSONObject(x);
+                    try{
 
-                    Respuestaespecificaciones = elemento.getJSONObject("especificaciones");
-                    RespuestaDescripcion = elemento.getJSONObject("descripcion");
+                        JSONObject elemento = RespuestaDatos.getJSONObject(x);
 
-                    DescripcionLarga = RespuestaDescripcion.getString("plain_text");
+                        Respuestaespecificaciones = elemento.getJSONObject("especificaciones");
+                        RespuestaDescripcion = elemento.getJSONObject("descripcion");
 
-                    IDPublicacion = Respuestaespecificaciones.getString("id");
-                    Titulo = Respuestaespecificaciones.getString("title");
-                    Disponibilidad = Respuestaespecificaciones.getString("available_quantity");
-                    Precio = Respuestaespecificaciones.getString("price");
-                    Estatus = Respuestaespecificaciones.getString("status");
+                        DescripcionLarga = RespuestaDescripcion.getString("plain_text");
 
-                    Respuestapicture = Respuestaespecificaciones.getJSONArray("pictures");
+                        IDPublicacion = Respuestaespecificaciones.getString("id");
+                        Titulo = Respuestaespecificaciones.getString("title");
+                        Disponibilidad = Respuestaespecificaciones.getString("available_quantity");
+                        Precio = Respuestaespecificaciones.getString("price");
+                        Estatus = Respuestaespecificaciones.getString("status");
 
-                    for (int k = 0; k < Respuestapicture.length(); k++) {
-                        JSONObject elemento2 = Respuestapicture.getJSONObject(k);
-                        Imagen = elemento2.getString("url");
-                        break;
+                        Respuestapicture = Respuestaespecificaciones.getJSONArray("pictures");
+
+                        for (int k = 0; k < Respuestapicture.length(); k++) {
+                            JSONObject elemento2 = Respuestapicture.getJSONObject(k);
+                            Imagen = elemento2.getString("url");
+                            break;
+                        }
+
+                        Respuestacategoria = elemento.getJSONObject("categoria");
+                        Categoria = Respuestacategoria.getString("name");
+
+                        Respuestashipping = Respuestaespecificaciones.getJSONObject("shipping");
+                        Envio = Respuestashipping.getString("free_shipping");
+
+                        if (Envio == "true") {
+                            Envio = "Si";
+                        } else {
+                            Envio = "No";
+                        }
+
+                        final SincronizarModel sincronizar = new SincronizarModel(Titulo, Disponibilidad, Envio, Precio, Imagen, Categoria, Estatus, DescripcionLarga, IDPublicacion);
+                        Sincronizaciones.add(sincronizar);
+                    }
+                    catch (Error e) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(),
+                                        String.valueOf(e), Toast.LENGTH_LONG);
                     }
 
-                    Respuestacategoria = elemento.getJSONObject("categoria");
-                    Categoria = Respuestacategoria.getString("name");
 
-                    Respuestashipping = Respuestaespecificaciones.getJSONObject("shipping");
-                    Envio = Respuestashipping.getString("free_shipping");
-
-                    if (Envio == "true") {
-                        Envio = "Si";
-                    } else {
-                        Envio = "No";
-                    }
-
-                    final SincronizarModel sincronizar = new SincronizarModel(Titulo, Disponibilidad, Envio, Precio, Imagen, Categoria, Estatus, DescripcionLarga, IDPublicacion);
-                    Sincronizaciones.add(sincronizar);
                 }
 
                 final SincronizarAdapter sincronizarAdapter = new SincronizarAdapter(getContext(), Sincronizaciones, tabla_sincronizar);
@@ -408,44 +423,57 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                             for (int x = 0; x < RespuestaDatos.length(); x++) {
 
-                                JSONObject elemento = RespuestaDatos.getJSONObject(x);
+                                try {
 
-                                Respuestaespecificaciones = elemento.getJSONObject("especificaciones");
-                                RespuestaDescripcion = elemento.getJSONObject("descripcion");
+                                    JSONObject elemento = RespuestaDatos.getJSONObject(x);
 
-                                DescripcionLarga = RespuestaDescripcion.getString("plain_text");
+                                    Respuestaespecificaciones = elemento.getJSONObject("especificaciones");
+                                    RespuestaDescripcion = elemento.getJSONObject("descripcion");
 
-                                IDPublicacion = Respuestaespecificaciones.getString("id");
-                                Titulo = Respuestaespecificaciones.getString("title");
-                                Disponibilidad = Respuestaespecificaciones.getString("available_quantity");
-                                Precio = Respuestaespecificaciones.getString("price");
-                                Estatus = Respuestaespecificaciones.getString("status");
+                                    DescripcionLarga = RespuestaDescripcion.getString("plain_text");
 
-                                Respuestapicture = Respuestaespecificaciones.getJSONArray("pictures");
+                                    IDPublicacion = Respuestaespecificaciones.getString("id");
+                                    Titulo = Respuestaespecificaciones.getString("title");
+                                    Disponibilidad = Respuestaespecificaciones.getString("available_quantity");
+                                    Precio = Respuestaespecificaciones.getString("price");
+                                    Estatus = Respuestaespecificaciones.getString("status");
 
-                                for (int k = 0; k < Respuestapicture.length()-1; k++) {
-                                    JSONObject elemento2 = Respuestapicture.getJSONObject(k);
+                                    Respuestapicture = Respuestaespecificaciones.getJSONArray("pictures");
 
-                                    Imagen = elemento2.getString("url");
+                                    for (int k = 0; k < Respuestapicture.length()-1; k++) {
+                                        JSONObject elemento2 = Respuestapicture.getJSONObject(k);
 
-                                    break;
+                                        Imagen = elemento2.getString("url");
+
+                                        break;
+                                    }
+
+                                    Respuestacategoria = elemento.getJSONObject("categoria");
+                                    Categoria = Respuestacategoria.getString("name");
+
+                                    Respuestashipping = Respuestaespecificaciones.getJSONObject("shipping");
+                                    Envio = Respuestashipping.getString("free_shipping");
+
+                                    if (Envio == "true") {
+                                        Envio = "Si";
+                                    } else {
+                                        Envio = "No";
+                                    }
+
+                                    final SincronizarModel sincronizar = new SincronizarModel(Titulo, Disponibilidad, Envio, Precio, Imagen, Categoria, Estatus, DescripcionLarga, IDPublicacion);
+
+                                    Sincronizaciones.add(sincronizar);
+
+
+                                }
+                                catch (Error e) {
+
+                                    Toast toast1 =
+                                            Toast.makeText(getContext(),
+                                                    e.toString(), Toast.LENGTH_LONG);
                                 }
 
-                                Respuestacategoria = elemento.getJSONObject("categoria");
-                                Categoria = Respuestacategoria.getString("name");
 
-                                Respuestashipping = Respuestaespecificaciones.getJSONObject("shipping");
-                                Envio = Respuestashipping.getString("free_shipping");
-
-                                if (Envio == "true") {
-                                    Envio = "Si";
-                                } else {
-                                    Envio = "No";
-                                }
-
-                                final SincronizarModel sincronizar = new SincronizarModel(Titulo, Disponibilidad, Envio, Precio, Imagen, Categoria, Estatus, DescripcionLarga, IDPublicacion);
-
-                                Sincronizaciones.add(sincronizar);
                             }
 
                         }
@@ -796,7 +824,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
         }
         final String requestBody = jsonBodyObj.toString();
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT,
                 url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

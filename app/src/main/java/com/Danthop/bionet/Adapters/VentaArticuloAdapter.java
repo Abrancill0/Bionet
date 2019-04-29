@@ -357,7 +357,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                     tar_id,
                                     descuento,
                                     "",
-                                    importe
+                                    importe,"","",""
                             );
                             Articulos.add(articulo);
                         }
@@ -489,8 +489,6 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                         subtotal.setText( formatter.format( sub ) );
 
 
-
-
                         for(int x = 0; x < NodoArticuloTicket.length(); x++){
                             JSONObject elemento = NodoArticuloTicket.getJSONObject(x);
                             JSONObject NodoTarID = elemento.getJSONObject("tar_id");
@@ -508,8 +506,6 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                 Imagenes.add(RutaImagen);
                             }
 
-
-
                             final ArticuloModel articulo = new ArticuloModel("",
                                     NombreArticulo,
                                     "",
@@ -522,7 +518,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                     tar_id,
                                     descuento,
                                     "",
-                                    importe
+                                    importe,"","",""
                             );
                             Articulos.add(articulo);
                         }

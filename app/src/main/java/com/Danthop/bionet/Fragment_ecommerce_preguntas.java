@@ -28,18 +28,25 @@ import com.Danthop.bionet.model.Preguntas_Model;
 import com.Danthop.bionet.model.SincronizarModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyLog;
+import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonArrayRequest;
 import com.android.volley.request.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
@@ -264,7 +271,6 @@ public class Fragment_ecommerce_preguntas extends Fragment {
         };
     }
 
-
     public void CargaDatos(JSONObject Datos) {
         try {
             progreso = new ProgressDialog( getContext() );
@@ -290,6 +296,7 @@ public class Fragment_ecommerce_preguntas extends Fragment {
             String id_pregunta = "";
             String comprador = "";
             int numeroregistro = 0;
+            String Estatus;
 
             RespuestaDatos = Datos.getJSONArray( "aDatos" );
 
@@ -317,56 +324,60 @@ public class Fragment_ecommerce_preguntas extends Fragment {
 
                 Respuestaespecificaciones = RespuestaObjeto.getJSONObject( "especificaciones" );
 
+                Estatus = Respuestaespecificaciones.getString("status");
+
                 Titulo = Respuestaespecificaciones.getString( "title" );
 
                 RespuestaQuestions = Respuestapreguntas.getJSONArray( "questions" );
 
-                for (int i = 0; i < RespuestaQuestions.length(); i++) {
+                if (Estatus.equals("active"))
+                {
+                    for (int i = 0; i < RespuestaQuestions.length(); i++) {
 
-                    JSONObject elemento = RespuestaQuestions.getJSONObject( i );
+                        JSONObject elemento = RespuestaQuestions.getJSONObject( i );
 
-                    preguntas = elemento.getString( "text" );
+                        preguntas = elemento.getString( "text" );
 
-                    id_pregunta = elemento.getString( "id" );
+                        id_pregunta = elemento.getString( "id" );
 
-                    idcomprador = elemento.getJSONObject( "from" ).getString( "id" );
+                        idcomprador = elemento.getJSONObject( "from" ).getString( "id" );
 
-                    RespuestaComprador = Datos.getJSONArray( "aUsuariosQuePregunta" );
+                        RespuestaComprador = Datos.getJSONArray( "aUsuariosQuePregunta" );
 
-                    String Status = elemento.getString( "status" );
+                        String Status = elemento.getString( "status" );
 
-                    if(Status.equals("UNANSWERED")){
+                        if(Status.equals("UNANSWERED")){
 
-                        for (int a = 0; a < RespuestaComprador.length(); a++) {
-                            JSONObject elemento2 = RespuestaComprador.getJSONObject( a );
+                            for (int a = 0; a < RespuestaComprador.length(); a++) {
+                                JSONObject elemento2 = RespuestaComprador.getJSONObject( a );
 
-                            String keyidcomp = elemento2.getString( "id_comprador" );
+                                String keyidcomp = elemento2.getString( "id_comprador" );
 
-                            String Valor1 = String.valueOf( idcomprador );
-                            String Valor2 = String.valueOf( keyidcomp );
+                                String Valor1 = String.valueOf( idcomprador );
+                                String Valor2 = String.valueOf( keyidcomp );
 
-                            if (Valor1.equals( Valor2 )) {
+                                if (Valor1.equals( Valor2 )) {
 
-                                comprador = elemento2.getString( "nickname" );
+                                    comprador = elemento2.getString( "nickname" );
 
-                                break;
+                                    break;
+                                }
+
                             }
 
+                            PreguntasModel[i][0] = preguntas;
+                            PreguntasModel[i][1] = comprador;
+                            PreguntasModel[i][2] = Titulo;
+                            PreguntasModel[i][3] = id_pregunta;
+                            PreguntasModel[i][4] = AccesToken;
+                            PreguntasModel[i][5] = UserML;
+                            PreguntasModel[i][6] = idcomprador;
+
+                            final Preguntas_Model pregunta = new Preguntas_Model( preguntas, comprador, Titulo, id_pregunta, AccesToken,UserML,idcomprador );
+                            Preguntas.add( pregunta );
                         }
-
-                        PreguntasModel[i][0] = preguntas;
-                        PreguntasModel[i][1] = comprador;
-                        PreguntasModel[i][2] = Titulo;
-                        PreguntasModel[i][3] = id_pregunta;
-                        PreguntasModel[i][4] = AccesToken;
-                        PreguntasModel[i][5] = UserML;
-                        PreguntasModel[i][6] = idcomprador;
-
-                        final Preguntas_Model pregunta = new Preguntas_Model( preguntas, comprador, Titulo, id_pregunta, AccesToken,UserML,idcomprador );
-                        Preguntas.add( pregunta );
                     }
                 }
-
 
             }
 
@@ -405,9 +416,14 @@ public class Fragment_ecommerce_preguntas extends Fragment {
 
         tabla_preguntas = (SortablePreguntasTable) v.findViewById( R.id.tabla_preguntas );
 
-        final String url = "http://187.189.192.150:8010/api/ecommerce/inicio_app?accesstoken=" + AccesToken + "&user_id=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
+        String url = getString(R.string.Url);
 
-        JsonObjectRequest getRequest = new JsonObjectRequest( Request.Method.GET, url, null,
+        final String ApiPath = url + "/api/ecommerce/inicio_app?accesstoken=" + AccesToken + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
+
+
+        //final String url = "http://187.189.192.150:8010/api/ecommerce/inicio_app?accesstoken=" + AccesToken + "&user_id=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
+
+        JsonObjectRequest getRequest = new JsonObjectRequest( Request.Method.GET, ApiPath, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -429,6 +445,7 @@ public class Fragment_ecommerce_preguntas extends Fragment {
                         String id_pregunta = "";
                         String comprador = "";
                         int numeroregistro = 0;
+                        String Estatus;
 
                         try {
 
@@ -464,56 +481,63 @@ public class Fragment_ecommerce_preguntas extends Fragment {
 
                                     Respuestaespecificaciones = RespuestaObjeto.getJSONObject( "especificaciones" );
 
+                                    Estatus = Respuestaespecificaciones.getString("status");
+
                                     Titulo = Respuestaespecificaciones.getString( "title" );
 
                                     RespuestaQuestions = Respuestapreguntas.getJSONArray( "questions" );
 
-                                    for (int i = 0; i < RespuestaQuestions.length(); i++) {
+                                    if (Estatus.equals("active"))
+                                    {
+                                        for (int i = 0; i < RespuestaQuestions.length(); i++) {
 
-                                        JSONObject elemento = RespuestaQuestions.getJSONObject( i );
+                                            JSONObject elemento = RespuestaQuestions.getJSONObject( i );
 
-                                        preguntas = elemento.getString( "text" );
+                                            preguntas = elemento.getString( "text" );
 
-                                        id_pregunta = elemento.getString( "id" );
+                                            id_pregunta = elemento.getString( "id" );
 
-                                        idcomprador = elemento.getJSONObject( "from" ).getString( "id" );
+                                            idcomprador = elemento.getJSONObject( "from" ).getString( "id" );
 
-                                        RespuestaComprador = response.getJSONArray( "aUsuariosQuePregunta" );
+                                            RespuestaComprador = response.getJSONArray( "aUsuariosQuePregunta" );
 
-                                        String Status = elemento.getString( "status" );
+                                            String Status = elemento.getString( "status" );
 
-                                        if(Status.equals("UNANSWERED"))
-                                       {
-                                           for (int a = 0; a < RespuestaComprador.length(); a++) {
-                                               JSONObject elemento2 = RespuestaComprador.getJSONObject( a );
+                                            if(Status.equals("UNANSWERED"))
+                                            {
+                                                for (int a = 0; a < RespuestaComprador.length(); a++) {
+                                                    JSONObject elemento2 = RespuestaComprador.getJSONObject( a );
 
-                                               String keyidcomp = elemento2.getString( "id_comprador" );
+                                                    String keyidcomp = elemento2.getString( "id_comprador" );
 
-                                               String Valor1 = String.valueOf( idcomprador );
-                                               String Valor2 = String.valueOf( keyidcomp );
+                                                    String Valor1 = String.valueOf( idcomprador );
+                                                    String Valor2 = String.valueOf( keyidcomp );
 
-                                               if (Valor1.equals( Valor2 )) {
+                                                    if (Valor1.equals( Valor2 )) {
 
-                                                   comprador = elemento2.getString( "nickname" );
+                                                        comprador = elemento2.getString( "nickname" );
 
-                                                   break;
-                                               }
+                                                        break;
+                                                    }
 
-                                           }
+                                                }
 
-                                           PreguntasModel[i][0] = preguntas;
-                                           PreguntasModel[i][1] = comprador;
-                                           PreguntasModel[i][2] = Titulo;
-                                           PreguntasModel[i][3] = id_pregunta;
-                                           PreguntasModel[i][4] = AccesToken;
-                                           PreguntasModel[i][5] = UserML;
-                                           PreguntasModel[i][6] = idcomprador;
+                                                PreguntasModel[i][0] = preguntas;
+                                                PreguntasModel[i][1] = comprador;
+                                                PreguntasModel[i][2] = Titulo;
+                                                PreguntasModel[i][3] = id_pregunta;
+                                                PreguntasModel[i][4] = AccesToken;
+                                                PreguntasModel[i][5] = UserML;
+                                                PreguntasModel[i][6] = idcomprador;
 
-                                           final Preguntas_Model pregunta = new Preguntas_Model( preguntas, comprador, Titulo, id_pregunta, AccesToken,UserML,idcomprador );
-                                           Preguntas.add( pregunta );
-                                       }
+                                                final Preguntas_Model pregunta = new Preguntas_Model( preguntas, comprador, Titulo, id_pregunta, AccesToken,UserML,idcomprador );
+                                                Preguntas.add( pregunta );
+                                            }
 
+                                        }
                                     }
+
+
 
                                 }
 
@@ -628,7 +652,6 @@ public class Fragment_ecommerce_preguntas extends Fragment {
 
     }
 
-
     private void Contestar(String itemid,String token,String Respuesta)
     {
         progreso = new ProgressDialog(getContext());
@@ -647,42 +670,59 @@ public class Fragment_ecommerce_preguntas extends Fragment {
             e.printStackTrace();
         }
 
-        String ApiPath = "https://api.mercadolibre.com/answers?access_token=" + token;
+       // String ApiPath = "https://api.mercadolibre.com/answers?access_token=" + token;
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-        {
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+
+        JSONObject jsonBodyObj = new JSONObject();
+        String url = "https://api.mercadolibre.com/answers?access_token=" + token;
+        try {
+            jsonBodyObj.put("question_id", itemid);
+            jsonBodyObj.put("text", Respuesta);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        final String requestBody = jsonBodyObj.toString();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
+                url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
-
-                Toast toast1 =
-                        Toast.makeText(getContext(),
-                                String.valueOf("Pregunta contestada correctamente"), Toast.LENGTH_LONG);
-
-                toast1.show();
+                Toast.makeText(getContext(), "Pregunta contestada correctamente", Toast.LENGTH_LONG).show();
 
                 progreso.hide();
             }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG).show();
+                progreso.hide();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
 
-        },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        Toast toast1 =
-                                Toast.makeText(getContext(),
-                                        "Error de conexion", Toast.LENGTH_SHORT);
-
-                        toast1.show();
-
-                        progreso.hide();
-
-                    }
+            @Override
+            public byte[] getBody() {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                            requestBody, "utf-8");
+                    return null;
                 }
-        );
+            }
 
-        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+        };
+
+        requestQueue.add(jsonObjectRequest);
+
 
     }
 

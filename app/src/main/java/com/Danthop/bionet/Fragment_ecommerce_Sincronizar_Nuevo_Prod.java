@@ -39,6 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Console;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,6 +85,10 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private ImageLoader imageLoader2 = ImageLoader.getInstance();
     private String Remaining_listings;
 
+    private String Sucursal;
+    private String Sucursal_UUID;
+    private String Exi_ID;
+
     public Fragment_ecommerce_Sincronizar_Nuevo_Prod() {
         // Required empty public constructor
     }
@@ -106,6 +111,10 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         String nombre_categoria = bundle.getString("categoria");
         String TipoPublicacionName = bundle.getString("name");
         String Cantidadinventario = bundle.getString("cantidad");
+        Sucursal = bundle.getString("Sucursal");
+        Sucursal_UUID = bundle.getString("Sucursal_UUID");
+        Exi_ID = bundle.getString("Exi_ID");
+
         IDTipoPublicacion = bundle.getString("id");
         id_categoria = bundle.getString("id_categoria");
 
@@ -154,7 +163,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         RadioNuevo = (RadioButton) v.findViewById( R.id.radioButton_Nuevo );
         //SpinnerTipoPublicacion=(Spinner) v.findViewById( R.id.Spinner_Tipo_Publicacion );
 
-        //Publicaciones= (TextView) v.findViewById( R.id.TextPublicaciones );
+        Publicaciones= (TextView) v.findViewById( R.id.TextPublicaciones );
         Publicaciones.setText(TipoPublicacionName);
 
         Guardar_articulo = (Button) v.findViewById( R.id.Guardar_articulo );
@@ -281,9 +290,15 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>(){
             @Override    public void onResponse(JSONObject response) {
 
+                ApartaInventario();
+
             Toast.makeText(getContext(), "Se Agrego correctamente el producto", Toast.LENGTH_LONG).show();
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_ecommerce_Sincronizar()).commit();
+
+
+                //api/inventario/apartar_mercado_libre
+
 
                 progreso.hide();
             }
@@ -310,6 +325,68 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
             }
         };
         requestQueue.add(jsonObjectRequest);
+    }
+
+    private void ApartaInventario(){
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+
+            request.put("exi_id", Exi_ID);
+            request.put("suc_id", Sucursal_UUID);
+            request.put("mar_cantidad", TextCantidad.getNumber());
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/inventario/apartar_mercado_libre";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1)
+                    {
+                        System.out.println(Mensaje);
+                    }
+                    else
+                    {
+                        System.out.println(Mensaje);
+
+                    }
+
+                } catch (JSONException e) {
+                    System.out.println(e);
+                }
+
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        System.out.println(error);
+
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
     }
 //---------------------------------------------------------------------------------------------------
 }

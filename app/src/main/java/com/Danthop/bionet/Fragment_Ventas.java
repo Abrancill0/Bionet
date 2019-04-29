@@ -1212,7 +1212,7 @@ public class Fragment_Ventas extends Fragment {
                                     tar_id,
                                     descuento,
                                     "",
-                                    importe
+                                    importe,"","",""
                             );
                             ArticulosVenta.add(articulo);
                         }
@@ -1383,7 +1383,7 @@ public class Fragment_Ventas extends Fragment {
                                     tar_id,
                                     descuento,
                                     "",
-                                    importe
+                                    importe,"","",""
                             );
                             ArticulosVenta.add(articulo);
                         }
@@ -1543,7 +1543,7 @@ public class Fragment_Ventas extends Fragment {
                                     tar_id,
                                     descuento,
                                     "",
-                                    importe
+                                    importe,"","",""
                             );
                             ArticulosVenta.add(articulo);
                         }
@@ -1819,7 +1819,7 @@ public class Fragment_Ventas extends Fragment {
 
                                                 final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
                                                         RutaImagen2,SKU,Categoria,"","","","",
-                                                        "");
+                                                        "","","","");
                                                 Articulos.add(Articulo);
                                             }
                                             else
@@ -1829,7 +1829,7 @@ public class Fragment_Ventas extends Fragment {
 
                                                 final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
                                                         RutaImagen2,SKU,Categoria,"","","","",
-                                                        "");
+                                                        "","","","");
                                                 Articulos.add(Articulo);
                                             }
                                         }
@@ -2186,7 +2186,7 @@ public class Fragment_Ventas extends Fragment {
 
                                             final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
                                                     RutaImagen2,SKUarticulo,Categoria,"","",
-                                                    "","","");
+                                                    "","","","","","");
                                             Articulos.add(Articulo);
 
                                     }
@@ -2196,7 +2196,7 @@ public class Fragment_Ventas extends Fragment {
 
                                         final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
                                                 RutaImagen2,SKUarticulo,Categoria,"","",
-                                                "","","");
+                                                "","","","","","");
                                         Articulos.add(Articulo);
                                     }
 
@@ -2351,7 +2351,7 @@ public class Fragment_Ventas extends Fragment {
 
                                                 final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
                                                         RutaImagen2,SKUarticulo,Categoria,"","","","",
-                                                        "");
+                                                        "","","","");
                                                 Articulos.add(Articulo);
 
                                             }
@@ -2361,7 +2361,7 @@ public class Fragment_Ventas extends Fragment {
 
                                                 final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
                                                         RutaImagen2,SKUarticulo,Categoria,"","","",""
-                                                        ,"");
+                                                        ,"","","","");
                                                 Articulos.add(Articulo);
                                             }
 
