@@ -81,6 +81,10 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                 String image2 = (clickedData.getArticulo_Imagen2());
                 String Cantidad = (clickedData.getArticulo_cantidad());
 
+                String Sucursal = (clickedData.getArticulo_sucursal());
+                String Sucursal_UUID = (clickedData.getArticulo_sucursal_uuid());
+                String Exi_ID = (clickedData.getArticulo_articulo_exi_id());
+
                 Bundle bundle = new Bundle();
                 bundle.putString("nombre", Nombre);
                 bundle.putString("descripcion", Descripcion);
@@ -89,6 +93,9 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                 bundle.putString("image1", image1);
                 bundle.putString("image2", image2);
                 bundle.putString("cantidad", Cantidad);
+                bundle.putString("Sucursal", Sucursal);
+                bundle.putString("Sucursal_UUID", Sucursal_UUID);
+                bundle.putString("Exi_ID", Exi_ID);
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -109,7 +116,8 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
     private void CargaArticulos() {
 
         try {
-        String url = getString(R.string.Url);
+
+       String url = getString(R.string.Url);
         String ApiPath = url + "/api/ecommerce/inicio_app?accesstoken=" + AccesToken + "&user_id_mercado_libre=" + UserIdML + "&usu_id=" + usu_id + "&esApp=1";
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath,null, new Response.Listener<JSONObject>() {
                 @Override
@@ -119,9 +127,10 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                     JSONObject RespuestaUUID = null;
                     JSONObject RespuestaPrecio = null;
                     JSONArray RespuestaImagenes = null;
-                    JSONArray RespuestaModificadores = null;
+
                     JSONObject RespuestaPrecioModificador = null;
                     JSONObject Respuesta_Cantidad = null;
+                    JSONObject Respuesta_exi_id = null;
 
                     String RutaImagen1="";
                     String RutaImagen2="";
@@ -146,6 +155,13 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                                 //EXISTENCIAS
                                 Respuesta_Cantidad = elemento.getJSONObject("exi_cantidad");
                                 String cantidad = Respuesta_Cantidad.getString("value");
+
+                                //exi_id
+                                Respuesta_exi_id = elemento.getJSONObject("exi_id");
+                                String exi_id = Respuesta_exi_id.getString("uuid");
+                                //Sucursal
+                                String Sucursal_id =elemento.getString( "suc_id");
+                                String Sucursal_nombre =elemento.getString( "suc_nombre");
 
                                 //VERIFICAR MODIFICADORES
                                 String NombreCompleto="";
@@ -177,13 +193,13 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
                                         NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
                                         final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,RutaImagen2,"","",cantidad,""
-                                        ,"","","");
+                                        ,"","","",Sucursal_nombre,Sucursal_id,exi_id);
                                         Articulos.add(Articulo);
                                 }else {
                                     NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
                                     final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,RutaImagen2,"","",cantidad,"",
-                                            "","","");
+                                            "","","",Sucursal_nombre,Sucursal_id,exi_id);
                                     Articulos.add(Articulo);
                                 }
                             }

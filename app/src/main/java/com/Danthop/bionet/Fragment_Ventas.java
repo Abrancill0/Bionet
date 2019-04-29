@@ -1200,7 +1200,7 @@ public class Fragment_Ventas extends Fragment {
                                     tar_id,
                                     descuento,
                                     "",
-                                    importe
+                                    importe,"","",""
                             );
                             ArticulosVenta.add(articulo);
                         }
@@ -1404,7 +1404,7 @@ public class Fragment_Ventas extends Fragment {
                                     tar_id,
                                     descuento,
                                     "",
-                                    importe
+                                    importe,"","",""
                             );
                             ArticulosVenta.add(articulo);
                         }
@@ -1597,7 +1597,7 @@ public class Fragment_Ventas extends Fragment {
                                     tar_id,
                                     descuento,
                                     "",
-                                    importe
+                                    importe,"","",""
                             );
                             ArticulosVenta.add(articulo);
                         }
@@ -1850,17 +1850,17 @@ public class Fragment_Ventas extends Fragment {
 
                                                 SKU = elemento.getString("amo_sku");
 
-                                                final ArticuloModel Articulo = new ArticuloModel(UUID, NombreCompleto, Descripcion, Precio, RutaImagen1,
-                                                        RutaImagen2, SKU, Categoria, "", "", "", "",
-                                                        "");
+                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
+                                                        RutaImagen2,SKU,Categoria,"","","","",
+                                                        "","","","");
                                                 Articulos.add(Articulo);
                                             } else {
                                                 NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
 
-                                                final ArticuloModel Articulo = new ArticuloModel(UUID, NombreCompleto, Descripcion, Precio, RutaImagen1,
-                                                        RutaImagen2, SKU, Categoria, "", "", "", "",
-                                                        "");
+                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
+                                                        RutaImagen2,SKU,Categoria,"","","","",
+                                                        "","","","");
                                                 Articulos.add(Articulo);
                                             }
                                         }
@@ -2186,17 +2186,17 @@ public class Fragment_Ventas extends Fragment {
                                         NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
                                         SKUarticulo = RespuestaResultado.getString("amo_sku");
 
-                                        final ArticuloModel Articulo = new ArticuloModel(UUID, NombreCompleto, Descripcion, Precio, RutaImagen1,
-                                                RutaImagen2, SKUarticulo, Categoria, "", "",
-                                                "", "", "");
-                                        Articulos.add(Articulo);
+                                            final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
+                                                    RutaImagen2,SKUarticulo,Categoria,"","",
+                                                    "","","","","","");
+                                            Articulos.add(Articulo);
 
                                     } else {
                                         NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
-                                        final ArticuloModel Articulo = new ArticuloModel(UUID, NombreCompleto, Descripcion, Precio, RutaImagen1,
-                                                RutaImagen2, SKUarticulo, Categoria, "", "",
-                                                "", "", "");
+                                        final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
+                                                RutaImagen2,SKUarticulo,Categoria,"","",
+                                                "","","","","","");
                                         Articulos.add(Articulo);
                                     }
 
@@ -2342,17 +2342,17 @@ public class Fragment_Ventas extends Fragment {
                                                 NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
                                                 SKUarticulo = RespuestaResultado.getString("amo_sku");
 
-                                                final ArticuloModel Articulo = new ArticuloModel(UUID, NombreCompleto, Descripcion, Precio, RutaImagen1,
-                                                        RutaImagen2, SKUarticulo, Categoria, "", "", "", "",
-                                                        "");
+                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
+                                                        RutaImagen2,SKUarticulo,Categoria,"","","","",
+                                                        "","","","");
                                                 Articulos.add(Articulo);
 
                                             } else {
                                                 NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
 
-                                                final ArticuloModel Articulo = new ArticuloModel(UUID, NombreCompleto, Descripcion, Precio, RutaImagen1,
-                                                        RutaImagen2, SKUarticulo, Categoria, "", "", "", ""
-                                                        , "");
+                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
+                                                        RutaImagen2,SKUarticulo,Categoria,"","","",""
+                                                        ,"","","","");
                                                 Articulos.add(Articulo);
                                             }
 

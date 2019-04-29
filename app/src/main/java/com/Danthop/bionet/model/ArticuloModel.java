@@ -14,11 +14,15 @@ public class ArticuloModel {
     private String articulo_descuento;
     private String articulo_iva;
     private String articulo_importe;
+    private String articulo_sucursal;
+    private String articulo_sucursal_uuid;
+    private String articulo_exi_id;
 
 
     public ArticuloModel(String articulo_UUID,String articulo_Nombre,String articulo_Descripcion ,String articulo_Precio,String articulo_Imagen1,
                          String articulo_Imagen2, String articulo_SKU, String articulo_Categoria,String articulo_Cantidad,String articulo_TarID,
-                         String articulo_Descuento, String articulo_IVA, String articulo_Importe) {
+                         String articulo_Descuento, String articulo_IVA, String articulo_Importe,String articulo_sucursal, String articulo_sucursal_uuid,
+                         String articulo_exi_id) {
 
         this.articulo_UUID = articulo_UUID;
         this.articulo_Nombre = articulo_Nombre;
@@ -33,6 +37,9 @@ public class ArticuloModel {
         this.articulo_descuento = articulo_Descuento;
         this.articulo_importe = articulo_Importe;
         this.articulo_iva = articulo_IVA;
+        this.articulo_sucursal = articulo_sucursal;
+        this.articulo_sucursal_uuid = articulo_sucursal_uuid;
+        this.articulo_exi_id = articulo_exi_id;
     }
 
     public String getarticulo_UUID() {
@@ -68,7 +75,6 @@ public class ArticuloModel {
     public String getArticulo_Imagen2() {
         return articulo_Imagen2;
     }
-
 
     public void setArticulo_Imagen1(String articulo_Imagen1) { this.articulo_Imagen1 = articulo_Imagen1; }
 
@@ -119,4 +125,24 @@ public class ArticuloModel {
     }
 
     public void setArticulo_importe(String articulo_importe) { this.articulo_importe = articulo_importe; }
+
+    public String getArticulo_sucursal() {
+        return articulo_sucursal;
+    }
+
+    public void setArticulo_sucursal(String articulo_sucursal) { this.articulo_sucursal = articulo_sucursal; }
+
+    public String getArticulo_sucursal_uuid() {
+        return articulo_sucursal_uuid;
+    }
+
+    public void setArticulo_sucursal_uuid(String articulo_sucursal_uuid) { this.articulo_sucursal_uuid = articulo_sucursal_uuid; }
+
+    public String getArticulo_articulo_exi_id() {
+        return articulo_exi_id;
+    }
+
+    public void setArticulo_articulo_exi_id(String articulo_exi_id) { this.articulo_exi_id = articulo_exi_id; }
+
+
 }
