@@ -24,16 +24,16 @@ public class SortableSeleccionaApartadoTable extends SortableTableView<ArticuloA
         super(context, attributes, styleAttributes);
 
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Articulo", "Cantidad", "Importe Total", "Monto a pagar",
-                " ");
+                "Apartar");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
         tableColumnWeightModel.setColumnWeight(0, 2);
-        tableColumnWeightModel.setColumnWeight(1, 2);
+        tableColumnWeightModel.setColumnWeight(1, 1);
         tableColumnWeightModel.setColumnWeight(2, 2);
         tableColumnWeightModel.setColumnWeight(3, 2);
-        tableColumnWeightModel.setColumnWeight(4, 2);
+        tableColumnWeightModel.setColumnWeight(4, 1);
         setColumnModel(tableColumnWeightModel);
 
         setColumnComparator(0, ComparatorArticulosApartados.getApartadoComparator());

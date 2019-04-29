@@ -83,104 +83,114 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
                 android:orientation="vertical"
                 android:paddingVertical="20dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
+                    android:text="Traslados."
                     android:textSize="17dp"
-                    android:text="Traslados."/>
+                    android:textStyle="bold" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textStyle="normal"
+                    android:text="Solicita y verifica los traslados."
                     android:textSize="15dp"
-                    android:text="Solicita y verifica los traslados."/>
+                    android:textStyle="normal" />
 
                 <Spinner
                     android:id="@+id/categoria_sku"
                     android:layout_width="match_parent"
                     android:layout_height="34dp"
                     android:layout_marginVertical="20dp"
-                    android:background="@drawable/spinner_giro"/>
+                    android:background="@drawable/spinner_giro" />
 
                 <Spinner
                     android:id="@+id/categoria_categoria"
                     android:layout_width="match_parent"
                     android:layout_height="34dp"
                     android:layout_marginVertical="20dp"
-                    android:background="@drawable/spinner_giro"/>
+                    android:background="@drawable/spinner_giro" />
 
                 <Spinner
                     android:id="@+id/categoria_producto"
                     android:layout_width="match_parent"
                     android:layout_height="34dp"
                     android:layout_marginVertical="20dp"
-                    android:background="@drawable/spinner_giro"/>
+                    android:background="@drawable/spinner_giro" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight=".5"
                 android:orientation="vertical"
                 android:padding="20dp">
 
                 <Button
                     android:id="@+id/btnAgregarProd"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginVertical="10dp"
+                    android:layout_weight=".25"
                     android:background="@drawable/shape_gray"
                     android:fontFamily="@font/muli"
-                    android:textStyle="bold"
                     android:text="Agregar Productos"
                     android:textAllCaps="false"
-                    android:textColor="@color/gray" />
+                    android:textColor="@color/gray"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/pop_up_traslados"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape_gray"
+                    android:layout_height="match_parent"
                     android:layout_marginVertical="10dp"
+                    android:layout_weight=".25"
+                    android:background="@drawable/shape_gray"
                     android:fontFamily="@font/muli"
-                    android:textStyle="bold"
                     android:text="Solicitar Traslado"
                     android:textAllCaps="false"
-                    android:textColor="@color/gray" />
+                    android:textColor="@color/gray"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/traslados_recibidos"
-                    android:layout_width="110dp"
-                    android:layout_height="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_marginVertical="10dp"
+                    android:layout_weight=".25"
                     android:background="@drawable/shape_gray"
+                    android:drawableLeft="@drawable/ic_recibidos"
+                    android:drawablePadding="5dp"
                     android:fontFamily="@font/muli"
-                    android:textStyle="bold"
+                    android:paddingHorizontal="10dp"
                     android:text="Recibidos"
                     android:textAllCaps="false"
                     android:textColor="@color/gray"
-                    android:drawableLeft="@drawable/recibidos"
-                    android:layout_gravity="center"
-                    />
+                    android:textStyle="bold" />
 
                 <Button
+                    android:layout_marginVertical="10dp"
                     android:id="@+id/traslados_enviados"
-                    android:layout_width="110dp"
-                    android:layout_height="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight=".25"
                     android:background="@drawable/shape_gray"
+                    android:drawableLeft="@drawable/ic_enviados"
+                    android:drawablePadding="5dp"
                     android:fontFamily="@font/muli"
-                    android:textStyle="bold"
+                    android:paddingHorizontal="10dp"
                     android:text="Enviados"
                     android:textAllCaps="false"
                     android:textColor="@color/gray"
-                    android:drawableLeft="@drawable/iconsenviados"
-                    android:layout_gravity="center"
-                  />
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </LinearLayout>

@@ -16,7 +16,9 @@ import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableArticulosTable;
 import com.Danthop.bionet.Tables.SortableSeleccionarArticuloTable;
 import com.Danthop.bionet.Tables.SortableVentaArticulos;
+import com.Danthop.bionet.model.ArticuloApartadoModel;
 import com.Danthop.bionet.model.ArticuloModel;
+import com.Danthop.bionet.model.ImpuestoDeArticuloApartadoModel;
 import com.Danthop.bionet.model.SucursalModel;
 import com.Danthop.bionet.model.TicketModel;
 import com.Danthop.bionet.model.VolleySingleton;
@@ -35,6 +37,7 @@ import org.json.JSONObject;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
@@ -55,10 +58,15 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     private CarouselView carouselView;
     private ArrayList<String> Imagenes;
 
+    private List<ImpuestoDeArticuloApartadoModel> ImpuestosDeArticuloApartado;
+    private List<ArticuloApartadoModel> ListaDeArticulosApartados;
+
 
     public VentaArticuloAdapter(final Context context, final List<ArticuloModel> data, final SortableVentaArticulos tableView, TicketModel Ticket, String usu_id,
                                 TextView Total, TextView Descuento, TextView Impuesto, TextView Subtotal,
-                                CarouselView Carousel, ArrayList<String> imagenes) {
+                                CarouselView Carousel, ArrayList<String> imagenes,
+                                List<ImpuestoDeArticuloApartadoModel> impuestosDeArticuloApartado,
+                                List<ArticuloApartadoModel> listaDeArticulosApartados) {
         super(context, data, tableView);
         Articulos = data;
         tabla_venta_articulos = tableView;
@@ -70,6 +78,8 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
         subtotal=Subtotal;
         carouselView = Carousel;
         Imagenes = imagenes;
+        ImpuestosDeArticuloApartado= impuestosDeArticuloApartado;
+        ListaDeArticulosApartados= listaDeArticulosApartados;
     }
 
     @Override
@@ -239,6 +249,8 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
     private void modificaCantidad(ArticuloModel articulo, String cantidad)
     {
+        ImpuestosDeArticuloApartado.clear();
+        ListaDeArticulosApartados.clear();
         Articulos.clear();
         JSONObject request = new JSONObject();
         try
@@ -302,6 +314,55 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                             PrecioSubTotalProducto = PrecioSubTotalProducto * numero_de_productos;
 
                             Subtotal = Subtotal + PrecioSubTotalProducto;
+
+                            String AplicaApartados = nodo.getString("art_aplica_apartados");
+
+                            if (AplicaApartados.equals("true")) {
+                                String ArticuloCantidad = nodo.getString("tar_cantidad");
+                                String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
+                                JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
+                                String ArticuloIDApartado = NodoIDApartado.getString("uuid");
+                                JSONObject NodoIDApartadoVariante = nodo.getJSONObject("tar_id_variante");
+                                String ArticuloIDApartadoVariante = NodoIDApartadoVariante.getString("uuid");
+                                String ArticuloIDApartadoModificador = nodo.getString("tar_id_modificador");
+                                String ArticuloApartadoImportePagado = nodo.getString("tar_importe_pagado");
+                                String ArticuloIDApartadoExistencia = nodo.getString("tar_id_existencia");
+                                String ArticuloApartadoAplicaDevolucion = nodo.getString("tar_aplica_para_devolucion");
+                                String ArticuloApartadoImporteDescuento = nodo.getString("tar_importe_descuento");
+                                String ArticuloApartadoTotal = nodo.getString("tar_importe_total");
+                                JSONObject nodoImpuestos = nodo.getJSONObject("tar_impuestos");
+                                Iterator keys = nodoImpuestos.keys();
+                                while (keys.hasNext()) {
+                                    Object key = keys.next();
+                                    String value = nodoImpuestos.getString((String) key);
+                                    ImpuestoDeArticuloApartadoModel Impuesto = new ImpuestoDeArticuloApartadoModel((String) key, value);
+                                    ImpuestosDeArticuloApartado.add(Impuesto);
+                                }
+                                String ArticuloApartadoPorcentajeDescuento = nodo.getString("tar_porcentaje_descuento");
+                                String ArticuloApartadoPrecio = nodo.getString("tar_precio_articulo");
+
+
+                                int importePagado = Integer.parseInt(ArticuloApartadoImportePagado);
+                                int importeTotal = Integer.parseInt(ArticuloApartadoTotal);
+                                int importeRestante = importeTotal - importePagado;
+
+                                ArticuloApartadoModel ArticuloApartado = new ArticuloApartadoModel(
+                                        ArticuloCantidad,
+                                        ArticuloIDApartado,
+                                        ArticuloIDApartadoVariante,
+                                        ArticuloIDApartadoModificador,
+                                        ArticuloApartadoImportePagado,
+                                        String.valueOf(importeRestante),
+                                        NombreArticuloApartado,
+                                        ArticuloIDApartadoExistencia,
+                                        ArticuloApartadoAplicaDevolucion,
+                                        ArticuloApartadoImporteDescuento,
+                                        ArticuloApartadoTotal,
+                                        ImpuestosDeArticuloApartado,
+                                        ArticuloApartadoPorcentajeDescuento,
+                                        ArticuloApartadoPrecio);
+                                ListaDeArticulosApartados.add(ArticuloApartado);
+                            }
                         }
 
 
@@ -363,7 +424,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                         }
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), Articulos, tabla_venta_articulos,TicketVenta,Usu_id,
                                 total,descuento,impuesto,subtotal,
-                                carouselView,Imagenes);
+                                carouselView,Imagenes,ImpuestosDeArticuloApartado,ListaDeArticulosApartados);
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                     }
                     else
@@ -396,6 +457,8 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
     private void EliminarArticulo(ArticuloModel articulo)
     {
+        ImpuestosDeArticuloApartado.clear();
+        ListaDeArticulosApartados.clear();
         Articulos.clear();
         JSONObject request = new JSONObject();
         try
@@ -461,6 +524,55 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                             PrecioSubTotalProducto = PrecioSubTotalProducto * numero_de_productos;
 
                             Subtotal = Subtotal + PrecioSubTotalProducto;
+
+                            String AplicaApartados = nodo.getString("art_aplica_apartados");
+
+                            if (AplicaApartados.equals("true")) {
+                                String ArticuloCantidad = nodo.getString("tar_cantidad");
+                                String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
+                                JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
+                                String ArticuloIDApartado = NodoIDApartado.getString("uuid");
+                                JSONObject NodoIDApartadoVariante = nodo.getJSONObject("tar_id_variante");
+                                String ArticuloIDApartadoVariante = NodoIDApartadoVariante.getString("uuid");
+                                String ArticuloIDApartadoModificador = nodo.getString("tar_id_modificador");
+                                String ArticuloApartadoImportePagado = nodo.getString("tar_importe_pagado");
+                                String ArticuloIDApartadoExistencia = nodo.getString("tar_id_existencia");
+                                String ArticuloApartadoAplicaDevolucion = nodo.getString("tar_aplica_para_devolucion");
+                                String ArticuloApartadoImporteDescuento = nodo.getString("tar_importe_descuento");
+                                String ArticuloApartadoTotal = nodo.getString("tar_importe_total");
+                                JSONObject nodoImpuestos = nodo.getJSONObject("tar_impuestos");
+                                Iterator keys = nodoImpuestos.keys();
+                                while (keys.hasNext()) {
+                                    Object key = keys.next();
+                                    String value = nodoImpuestos.getString((String) key);
+                                    ImpuestoDeArticuloApartadoModel Impuesto = new ImpuestoDeArticuloApartadoModel((String) key, value);
+                                    ImpuestosDeArticuloApartado.add(Impuesto);
+                                }
+                                String ArticuloApartadoPorcentajeDescuento = nodo.getString("tar_porcentaje_descuento");
+                                String ArticuloApartadoPrecio = nodo.getString("tar_precio_articulo");
+
+
+                                int importePagado = Integer.parseInt(ArticuloApartadoImportePagado);
+                                int importeTotal = Integer.parseInt(ArticuloApartadoTotal);
+                                int importeRestante = importeTotal - importePagado;
+
+                                ArticuloApartadoModel ArticuloApartado = new ArticuloApartadoModel(
+                                        ArticuloCantidad,
+                                        ArticuloIDApartado,
+                                        ArticuloIDApartadoVariante,
+                                        ArticuloIDApartadoModificador,
+                                        ArticuloApartadoImportePagado,
+                                        String.valueOf(importeRestante),
+                                        NombreArticuloApartado,
+                                        ArticuloIDApartadoExistencia,
+                                        ArticuloApartadoAplicaDevolucion,
+                                        ArticuloApartadoImporteDescuento,
+                                        ArticuloApartadoTotal,
+                                        ImpuestosDeArticuloApartado,
+                                        ArticuloApartadoPorcentajeDescuento,
+                                        ArticuloApartadoPrecio);
+                                ListaDeArticulosApartados.add(ArticuloApartado);
+                            }
                         }
 
 
@@ -524,7 +636,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                         }
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), Articulos, tabla_venta_articulos,TicketVenta,Usu_id,
                                 total,descuento,impuesto,subtotal,
-                                carouselView,Imagenes);
+                                carouselView,Imagenes,ImpuestosDeArticuloApartado,ListaDeArticulosApartados);
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                         LoadImages();
                     }

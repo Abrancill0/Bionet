@@ -15,8 +15,10 @@ import com.Danthop.bionet.Tables.SortableSeleccionaApartadoTable;
 import com.Danthop.bionet.model.ApartadoModel;
 import com.Danthop.bionet.model.ArticuloApartadoModel;
 import com.Danthop.bionet.model.ClienteModel;
+import com.Danthop.bionet.model.TicketModel;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
@@ -25,10 +27,15 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
 
     int TEXT_SIZE = 12;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
+    private List<ArticuloApartadoModel> ArticulosApartados;
+    private TicketModel Ticket;
 
 
-    public SeleccionaApartadoAdapter(final Context context, final List<ArticuloApartadoModel> data, final SortableSeleccionaApartadoTable tableView) {
+    public SeleccionaApartadoAdapter(final Context context, final List<ArticuloApartadoModel> data, final SortableSeleccionaApartadoTable tableView,
+                                     TicketModel ticket, List<ArticuloApartadoModel> articulosApartados) {
         super(context, data, tableView);
+        Ticket = ticket;
+        ArticulosApartados = articulosApartados;
     }
 
     @Override
@@ -83,24 +90,37 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
     }
 
     private View renderSeleccionar(final ArticuloApartadoModel apartado) {
-        final CheckBox Aniadir = new CheckBox(getContext());
-        Aniadir.setGravity(Gravity.CENTER);
+        final CheckBox seleccionar = new CheckBox(getContext());
+        seleccionar.setGravity(Gravity.CENTER);
 
-        Aniadir.setOnClickListener(new View.OnClickListener() {
+        seleccionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Aniadir.isChecked())
+                if (seleccionar.isChecked())
                 {
+
+                    ArticuloApartadoModel apartadoNuevo = new ArticuloApartadoModel(apartado.getCantidad(), apartado.getArticulo_id(),apartado.getArticulo_id_variante(),apartado.getArticulo_id_modificador(),
+                            apartado.getImporte_pagado(),apartado.getImporte_restante(),apartado.getNombre_articulo(),apartado.getId_existencias_origen(),apartado.getAplica_para_devolucion(),
+                            apartado.getImporte_descuento(),apartado.getImporte_total(),apartado.getImpuestos(),
+                            apartado.getPorcentaje_descuento(),apartado.getPrecio_articulo()
+                            );
+                    ArticulosApartados.add(apartadoNuevo);
 
                 }else
                 {
-
+                    for(int i=0;i<=ArticulosApartados.size();i++)
+                    {
+                        if(apartado.getArticulo_id().equals(ArticulosApartados.get(i).getArticulo_id()))
+                        {
+                            ArticulosApartados.remove(i);
+                        }
+                    }
                 }
 
             }
         });
 
-        return Aniadir;
+        return seleccionar;
     }
 
     private View renderString ( final String value){

@@ -88,7 +88,6 @@ public class LealtadAniadirClienteAdapter extends LongPressAwareTableDataAdapter
                         }
                     }
                 }
-                System.out.println(clientes_id);
             }
         });
 
