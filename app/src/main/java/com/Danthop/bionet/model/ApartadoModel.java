@@ -1,202 +1,109 @@
 package com.Danthop.bionet.model;
 
+import java.util.List;
+
 public class ApartadoModel {
+    String Apartado_ticket_id;
+    String Apartado_cliente_id;
+    String Apartado_nombre_cliente;
+    String Apartado_sucursal_id;
+    String Apartado_nombre_sucursal;
+    String Apartado_importe_pagado;
+    String Apartado_importe_restante;
+    String Fecha_vencimiento;
+    String Fecha_creacion;
+    List<ArticuloApartadoModel> ArticulosApartados;
 
-    String Cliente;
-    String Articulo;
-    String Articulo_id;
-    String Articulo_id_variante;
-    String Articulo_id_modificador;
-    String Importe_pagado;
-    String Importe_restante;
-    String Nombre_articulo;
-    String Id_existencias_origen;
-    String Aplica_para_devolucion;
-    String Importe_descuento;
-    String Importe_total;
-    String Impuestos;
-    String Porcentaje_descuento;
-    String Precio_articulo;
-    String Cantidad;
-    String Sucursal;
-    String Fecha;
-    String Vencimiento;
-
-    public ApartadoModel(String cliente,String articulo, String articulo_id, String articulo_id_variante,
-                         String articulo_id_modificador, String importe_pagado, String importe_restante,
-                         String nombre_articulo, String id_existencias_origen, String aplica_para_devolucion,
-                         String importe_descuento, String importe_total, String impuestos, String porcentaje_descuento,
-                         String precio_articulo, String cantidad, String sucursal, String fecha, String vencimiento) {
-        Articulo = articulo;
-        Articulo_id = articulo_id;
-        Articulo_id_variante = articulo_id_variante;
-        Articulo_id_modificador = articulo_id_modificador;
-        Importe_pagado = importe_pagado;
-        Importe_restante = importe_restante;
-        Nombre_articulo = nombre_articulo;
-        Id_existencias_origen = id_existencias_origen;
-        Aplica_para_devolucion = aplica_para_devolucion;
-        Importe_descuento = importe_descuento;
-        Importe_total = importe_total;
-        Impuestos = impuestos;
-        Porcentaje_descuento = porcentaje_descuento;
-        Precio_articulo = precio_articulo;
-        Cantidad = cantidad;
-        Sucursal = sucursal;
-        Fecha = fecha;
-        Vencimiento = vencimiento;
-        Cliente = cliente;
+    public ApartadoModel(String apartado_ticket_id, String apartado_cliente_id, String apartado_nombre_cliente, String apartado_sucursal_id, String apartado_nombre_sucursal,String apartado_importe_pagado, String apartado_importe_restante, String fecha_vencimiento,String fecha_creacion, List<ArticuloApartadoModel> articulosApartados) {
+        Apartado_ticket_id = apartado_ticket_id;
+        Apartado_cliente_id = apartado_cliente_id;
+        Apartado_nombre_cliente = apartado_nombre_cliente;
+        Apartado_sucursal_id = apartado_sucursal_id;
+        Apartado_nombre_sucursal = apartado_nombre_sucursal;
+        Apartado_importe_pagado = apartado_importe_pagado;
+        Apartado_importe_restante = apartado_importe_restante;
+        Fecha_vencimiento = fecha_vencimiento;
+        Fecha_creacion = fecha_creacion;
+        ArticulosApartados = articulosApartados;
     }
 
-    public String getArticulo() {
-        return Articulo;
+    public String getApartado_ticket_id() {
+        return Apartado_ticket_id;
     }
 
-    public String getCliente() {
-        return Cliente;
+    public void setApartado_ticket_id(String apartado_ticket_id) {
+        Apartado_ticket_id = apartado_ticket_id;
     }
 
-    public void setCliente(String cliente) {
-        Cliente = cliente;
+    public String getApartado_cliente_id() {
+        return Apartado_cliente_id;
     }
 
-    public void setArticulo(String articulo) {
-        Articulo = articulo;
+    public void setApartado_cliente_id(String apartado_cliente_id) {
+        Apartado_cliente_id = apartado_cliente_id;
     }
 
-    public String getArticulo_id() {
-        return Articulo_id;
+    public String getApartado_sucursal_id() {
+        return Apartado_sucursal_id;
     }
 
-    public void setArticulo_id(String articulo_id) {
-        Articulo_id = articulo_id;
+    public void setApartado_sucursal_id(String apartado_sucursal_id) {
+        Apartado_sucursal_id = apartado_sucursal_id;
     }
 
-    public String getArticulo_id_variante() {
-        return Articulo_id_variante;
+    public String getApartado_importe_pagado() {
+        return Apartado_importe_pagado;
     }
 
-    public void setArticulo_id_variante(String articulo_id_variante) {
-        Articulo_id_variante = articulo_id_variante;
+    public void setApartado_importe_pagado(String apartado_importe_pagado) {
+        Apartado_importe_pagado = apartado_importe_pagado;
     }
 
-    public String getArticulo_id_modificador() {
-        return Articulo_id_modificador;
+    public String getApartado_importe_restante() {
+        return Apartado_importe_restante;
     }
 
-    public void setArticulo_id_modificador(String articulo_id_modificador) {
-        Articulo_id_modificador = articulo_id_modificador;
+    public void setApartado_importe_restante(String apartado_importe_restante) {
+        Apartado_importe_restante = apartado_importe_restante;
     }
 
-    public String getImporte_pagado() {
-        return Importe_pagado;
+    public String getFecha_vencimiento() {
+        return Fecha_vencimiento;
     }
 
-    public void setImporte_pagado(String importe_pagado) {
-        Importe_pagado = importe_pagado;
+    public void setFecha_vencimiento(String fecha_vencimiento) {
+        Fecha_vencimiento = fecha_vencimiento;
     }
 
-    public String getImporte_restante() {
-        return Importe_restante;
+    public List<ArticuloApartadoModel> getArticulosApartados() {
+        return ArticulosApartados;
     }
 
-    public void setImporte_restante(String importe_restante) {
-        Importe_restante = importe_restante;
+    public void setArticulosApartados(List<ArticuloApartadoModel> articulosApartados) {
+        ArticulosApartados = articulosApartados;
     }
 
-    public String getNombre_articulo() {
-        return Nombre_articulo;
+    public String getApartado_nombre_cliente() {
+        return Apartado_nombre_cliente;
     }
 
-    public void setNombre_articulo(String nombre_articulo) {
-        Nombre_articulo = nombre_articulo;
+    public void setApartado_nombre_cliente(String apartado_nombre_cliente) {
+        Apartado_nombre_cliente = apartado_nombre_cliente;
     }
 
-    public String getId_existencias_origen() {
-        return Id_existencias_origen;
+    public String getApartado_nombre_sucursal() {
+        return Apartado_nombre_sucursal;
     }
 
-    public void setId_existencias_origen(String id_existencias_origen) {
-        Id_existencias_origen = id_existencias_origen;
+    public void setApartado_nombre_sucursal(String apartado_nombre_sucursal) {
+        Apartado_nombre_sucursal = apartado_nombre_sucursal;
     }
 
-    public String getAplica_para_devolucion() {
-        return Aplica_para_devolucion;
+    public String getFecha_creacion() {
+        return Fecha_creacion;
     }
 
-    public void setAplica_para_devolucion(String aplica_para_devolucion) {
-        Aplica_para_devolucion = aplica_para_devolucion;
-    }
-
-    public String getImporte_descuento() {
-        return Importe_descuento;
-    }
-
-    public void setImporte_descuento(String importe_descuento) {
-        Importe_descuento = importe_descuento;
-    }
-
-    public String getImporte_total() {
-        return Importe_total;
-    }
-
-    public void setImporte_total(String importe_total) {
-        Importe_total = importe_total;
-    }
-
-    public String getImpuestos() {
-        return Impuestos;
-    }
-
-    public void setImpuestos(String impuestos) {
-        Impuestos = impuestos;
-    }
-
-    public String getPorcentaje_descuento() {
-        return Porcentaje_descuento;
-    }
-
-    public void setPorcentaje_descuento(String porcentaje_descuento) {
-        Porcentaje_descuento = porcentaje_descuento;
-    }
-
-    public String getPrecio_articulo() {
-        return Precio_articulo;
-    }
-
-    public void setPrecio_articulo(String precio_articulo) {
-        Precio_articulo = precio_articulo;
-    }
-
-    public String getCantidad() {
-        return Cantidad;
-    }
-
-    public void setCantidad(String cantidad) {
-        Cantidad = cantidad;
-    }
-
-    public String getSucursal() {
-        return Sucursal;
-    }
-
-    public void setSucursal(String sucursal) {
-        Sucursal = sucursal;
-    }
-
-    public String getFecha() {
-        return Fecha;
-    }
-
-    public void setFecha(String fecha) {
-        Fecha = fecha;
-    }
-
-    public String getVencimiento() {
-        return Vencimiento;
-    }
-
-    public void setVencimiento(String vencimiento) {
-        Vencimiento = vencimiento;
+    public void setFecha_creacion(String fecha_creacion) {
+        Fecha_creacion = fecha_creacion;
     }
 }

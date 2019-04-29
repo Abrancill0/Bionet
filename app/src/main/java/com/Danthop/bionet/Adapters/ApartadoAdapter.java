@@ -5,14 +5,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.Danthop.bionet.Tables.SortableApartadoTable;
-import com.Danthop.bionet.Tables.SortableArticulosTable;
 import com.Danthop.bionet.model.ApartadoModel;
-import com.Danthop.bionet.model.ArticuloModel;
-import com.Danthop.bionet.model.SucursalModel;
+import com.Danthop.bionet.model.ArticuloApartadoModel;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -45,12 +42,6 @@ public class ApartadoAdapter extends LongPressAwareTableDataAdapter<ApartadoMode
                 renderedView = renderFechaCreacion(apartado);
                 break;
             case 3:
-                renderedView = renderMontoPagado(apartado);
-                break;
-            case 4:
-                renderedView = renderMontoRestante(apartado);
-                break;
-            case 5:
                 renderedView = renderFechaVencimiento(apartado);
                 break;
         }
@@ -66,27 +57,19 @@ public class ApartadoAdapter extends LongPressAwareTableDataAdapter<ApartadoMode
 
 
     private View renderCliente(final ApartadoModel apartado) {
-        return renderString(apartado.getCliente());
+        return renderString(apartado.getApartado_nombre_cliente());
     }
 
     private View renderSucursal(final ApartadoModel apartado) {
-        return renderString(apartado.getSucursal());
+        return renderString(apartado.getApartado_nombre_sucursal());
     }
 
     private View renderFechaCreacion(final ApartadoModel apartado) {
-        return renderString(apartado.getFecha());
-    }
-
-    private View renderMontoPagado(final ApartadoModel apartado) {
-        return renderString(apartado.getImporte_pagado());
-    }
-
-    private View renderMontoRestante(final ApartadoModel apartado) {
-        return renderString(apartado.getImporte_restante());
+        return renderString(apartado.getFecha_creacion());
     }
 
     private View renderFechaVencimiento(final ApartadoModel apartado) {
-        return renderString(apartado.getVencimiento());
+        return renderString(apartado.getFecha_vencimiento());
     }
 
     private View renderString ( final String value){
@@ -99,9 +82,9 @@ public class ApartadoAdapter extends LongPressAwareTableDataAdapter<ApartadoMode
 
     private static class OrdenNameUpdater implements TextWatcher {
 
-            private ApartadoModel ordenToUpdate;
+            private ArticuloApartadoModel ordenToUpdate;
 
-            public OrdenNameUpdater(ApartadoModel ordenToUpdate) {
+            public OrdenNameUpdater(ArticuloApartadoModel ordenToUpdate) {
                 this.ordenToUpdate = ordenToUpdate;
             }
 
@@ -117,7 +100,7 @@ public class ApartadoAdapter extends LongPressAwareTableDataAdapter<ApartadoMode
 
             @Override
             public void afterTextChanged(Editable s) {
-                ordenToUpdate.getArticulo();
+                ordenToUpdate.getNombre_articulo();
             }
     }
 }

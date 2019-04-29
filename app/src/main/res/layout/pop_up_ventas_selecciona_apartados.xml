@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:table="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="770dp"
+    android:layout_height="520dp"
+    android:layout_gravity="center"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".1"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".15"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".85"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView29"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".6"
+                    android:gravity="center"
+                    android:text="Seleccionar Artículo"
+                    android:textColor="@color/gray"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/textView37"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".4"
+                    android:padding="15dp"
+                    android:text="Selecciona los artículos a apartar y coloca los montos a cubrir. Solo aparecerán los artículos que estén disponibles para apartados. El monto sugerido para apartar, se coloca según la regla de configuración de apartado, si no existe una regla de apartado, aparecerá en cero y no se podrá apartar hasta que exista una regla de apartado." />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".4"
+                android:orientation="vertical">
+
+                <com.Danthop.bionet.Tables.SortableSeleccionaApartadoTable
+                    android:id="@+id/tabla_seleccionar_apartados"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".7"
+                    android:visibility="visible"
+                    app:tableView_headerColor="@color/white"
+                    table:tableView_columnCount="4">
+
+                </com.Danthop.bionet.Tables.SortableSeleccionaApartadoTable>
+
+                <LinearLayout
+                    android:id="@+id/Tabla_vacia"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".3"
+                    android:background="@color/gray2"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="No existen datos"
+                        android:textColor="@color/gray" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".85"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/apartar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/btn"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Apartar"
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textSize="22dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
