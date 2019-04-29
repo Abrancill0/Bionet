@@ -966,19 +966,111 @@ public class Fragment_Ventas extends Fragment {
             public void onClick(View v) {
                 dialog.setContentView(R.layout.pop_up_ventas_selecciona_apartados);
                 dialog.show();
+                ArticulosApartados.clear();
                 tabla_apartados_disponibles = dialog.findViewById(R.id.tabla_seleccionar_apartados);
                 tabla_apartados_disponibles.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
-                final SeleccionaApartadoAdapter articuloAdapter = new SeleccionaApartadoAdapter(getContext(), ListaDeArticulosApartados, tabla_apartados_disponibles,ticket_de_venta,ArticulosApartados);
+                final SeleccionaApartadoAdapter articuloAdapter = new SeleccionaApartadoAdapter(getContext(), ListaDeArticulosApartados, tabla_apartados_disponibles,ticket_de_venta,ArticulosApartados,
+                        usu_id,SpinnerSucursal,SucursalID);
                 articuloAdapter.notifyDataSetChanged();
                 tabla_apartados_disponibles.setDataAdapter(articuloAdapter);
+
+                Button btn_apartar_articulos = dialog.findViewById(R.id.btn_apartar_articulos);
+                btn_apartar_articulos.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+                    }
+                });
 
             }
         });
 
 
-        // BuscarPorSKU(Buscar.getCompletionHint().toString());
+
+    }
 
 
+    private void ApartarArticulosSeleccionados(final TextView importePagado) {
+
+
+        JSONArray arreglo = new JSONArray();
+        try {
+            //esto es ejemplo
+            for (int i = 0; i < ArticulosApartados.size(); i++) {
+                JSONObject list1 = new JSONObject();
+                list1.put("aar_id_cantidad", ArticulosApartados.get(i).getCantidad());
+                list1.put("aar_id_articulo", ArticulosApartados.get(i).getArticulo_id());
+                list1.put("aar_id_variante", ArticulosApartados.get(i).getArticulo_id_variante());
+                list1.put("aar_id_modificador", ArticulosApartados.get(i).getArticulo_id_modificador());
+                list1.put("aar_importe_pagado", ArticulosApartados.get(i).getImporte_pagado());
+                list1.put("aar_importe_restante", ArticulosApartados.get(i).getImporte_restante());
+                list1.put("aar_nombre_articulo", ArticulosApartados.get(i).getNombre_articulo());
+                list1.put("aar_id_existencias_origen", ArticulosApartados.get(i).getId_existencias_origen());
+                list1.put("aar_aplica_para_devolucion", ArticulosApartados.get(i).getAplica_para_devolucion());
+                list1.put("aar_importe_descuento", ArticulosApartados.get(i).getImporte_descuento());
+                list1.put("aar_importe_total", ArticulosApartados.get(i).getImporte_total());
+                list1.put("aar_impuestos", ArticulosApartados.get(i).getImpuestos());
+                list1.put("aar_aplica_para_devolucion", ArticulosApartados.get(i).getAplica_para_devolucion());
+                arreglo.put(list1);
+            }
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+
+
+        JSONObject request = new JSONObject();
+
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/apartados/store_apartado";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+
+
+                    } else {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
 

@@ -101,7 +101,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/apartar"
+                android:id="@+id/btn_apartar_articulos"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
