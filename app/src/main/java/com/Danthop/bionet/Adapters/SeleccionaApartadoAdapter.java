@@ -54,6 +54,9 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
     String ValorTipo;
     String TipoPorcentajeOMonto;
 
+    private EditText MontoAApartar = new EditText(getContext());
+
+
     String Desde;
     String Hasta;
 
@@ -89,7 +92,7 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
                 renderedView = renderMontoAApartar(apartado);
                 break;
             case 4:
-                renderedView = renderSeleccionar(apartado);
+                renderedView = renderSeleccionar(apartado,MontoAApartar);
                 break;
         }
         return renderedView;
@@ -122,14 +125,13 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
     }
 
     private View renderMontoAApartar(final ArticuloApartadoModel apartado) {
-        EditText MontoAApartar = new EditText(getContext());
+
         LoadConfiguracionesApartados(MontoAApartar,apartado);
-
-
         return MontoAApartar;
+
     }
 
-    private View renderSeleccionar(final ArticuloApartadoModel apartado) {
+    private View renderSeleccionar(final ArticuloApartadoModel apartado, final EditText Monto) {
         final CheckBox seleccionar = new CheckBox(getContext());
         seleccionar.setGravity(Gravity.CENTER);
         seleccionar.setPadding(10,10,10,10);
@@ -139,9 +141,9 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
             public void onClick(View v) {
                 if (seleccionar.isChecked())
                 {
-
+                    Monto.setEnabled(false);
                     ArticuloApartadoModel apartadoNuevo = new ArticuloApartadoModel(apartado.getCantidad(), apartado.getArticulo_id(),apartado.getArticulo_id_variante(),apartado.getArticulo_id_modificador(),
-                            apartado.getImporte_pagado(),apartado.getImporte_restante(),apartado.getNombre_articulo(),apartado.getId_existencias_origen(),apartado.getAplica_para_devolucion(),
+                            String.valueOf(Monto.getText()),apartado.getImporte_restante(),apartado.getNombre_articulo(),apartado.getId_existencias_origen(),apartado.getAplica_para_devolucion(),
                             apartado.getImporte_descuento(),apartado.getImporte_total(),apartado.getImpuestos(),
                             apartado.getPorcentaje_descuento(),apartado.getPrecio_articulo()
                             );
@@ -149,6 +151,7 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
 
                 }else
                 {
+                    Monto.setEnabled(true);
                     for(int i=0;i<ArticulosApartados.size();i++)
                     {
                         if(apartado.getArticulo_id().equals(ArticulosApartados.get(i).getArticulo_id()))

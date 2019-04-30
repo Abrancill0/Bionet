@@ -978,8 +978,8 @@ public class Fragment_Ventas extends Fragment {
                 btn_apartar_articulos.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-
+                        ApartarArticulosSeleccionados();
+                        dialog.dismiss();
                     }
                 });
 
@@ -991,12 +991,13 @@ public class Fragment_Ventas extends Fragment {
     }
 
 
-    private void ApartarArticulosSeleccionados(final TextView importePagado) {
+    private void ApartarArticulosSeleccionados() {
 
-
+        float PagoTotal=0;
+        float ImporteTotal=0;
         JSONArray arreglo = new JSONArray();
         try {
-            //esto es ejemplo
+
             for (int i = 0; i < ArticulosApartados.size(); i++) {
                 JSONObject list1 = new JSONObject();
                 list1.put("aar_id_cantidad", ArticulosApartados.get(i).getCantidad());
@@ -1004,13 +1005,33 @@ public class Fragment_Ventas extends Fragment {
                 list1.put("aar_id_variante", ArticulosApartados.get(i).getArticulo_id_variante());
                 list1.put("aar_id_modificador", ArticulosApartados.get(i).getArticulo_id_modificador());
                 list1.put("aar_importe_pagado", ArticulosApartados.get(i).getImporte_pagado());
-                list1.put("aar_importe_restante", ArticulosApartados.get(i).getImporte_restante());
+                list1.put("aar_importe_total", ArticulosApartados.get(i).getImporte_total());
+
+                    float Pagado = Float.parseFloat((ArticulosApartados.get(i).getImporte_pagado()).replaceAll("\\D+",""));
+                    PagoTotal = PagoTotal + Pagado;
+                    float Total = Float.parseFloat((ArticulosApartados.get(i).getImporte_total()).replaceAll("\\D+",""));
+                    ImporteTotal = ImporteTotal + Total;
+                    float Restante = Total - Pagado;
+
+                list1.put("aar_importe_restante", String.valueOf(Restante));
                 list1.put("aar_nombre_articulo", ArticulosApartados.get(i).getNombre_articulo());
                 list1.put("aar_id_existencias_origen", ArticulosApartados.get(i).getId_existencias_origen());
                 list1.put("aar_aplica_para_devolucion", ArticulosApartados.get(i).getAplica_para_devolucion());
                 list1.put("aar_importe_descuento", ArticulosApartados.get(i).getImporte_descuento());
-                list1.put("aar_importe_total", ArticulosApartados.get(i).getImporte_total());
-                list1.put("aar_impuestos", ArticulosApartados.get(i).getImpuestos());
+
+                    JSONArray impuestos = new JSONArray();
+                    try{
+                        for (int j=0; j<ArticulosApartados.get(i).getImpuestos().size();j++)
+                        {
+                            JSONObject list2 = new JSONObject();
+                            list2.put(ArticulosApartados.get(i).getImpuestos().get(j).getImpuestosID(), ArticulosApartados.get(i).getImpuestos().get(j).getValorImpuesto());
+                            arreglo.put(list2);
+                        }
+                    } catch (JSONException e2) {
+                        e2.printStackTrace();
+                    }
+
+                list1.put("aar_impuestos", impuestos);
                 list1.put("aar_aplica_para_devolucion", ArticulosApartados.get(i).getAplica_para_devolucion());
                 arreglo.put(list1);
             }
@@ -1019,11 +1040,21 @@ public class Fragment_Ventas extends Fragment {
         }
 
 
-        JSONObject request = new JSONObject();
+        float RestanteTotal = ImporteTotal - PagoTotal;
 
+        JSONObject request = new JSONObject();
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("apa_id_ticket", ticket_de_venta.getTic_id());
+            request.put("apa_id_sucursal", ticket_de_venta.getTic_id_sucursal());
+            request.put("apa_id_cliente", ticket_de_venta.getTic_id_cliente());
+            request.put("apa_importe_pagado", PagoTotal);
+            request.put("apa_importe_restante", RestanteTotal);
+            request.put("dias_vencimiento", 30);
+            request.put("aArticulos", arreglo);
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

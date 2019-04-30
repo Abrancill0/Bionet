@@ -12,9 +12,10 @@ public class ApartadoModel {
     String Apartado_importe_restante;
     String Fecha_vencimiento;
     String Fecha_creacion;
+    String Apartado_estatus;
     List<ArticuloApartadoModel> ArticulosApartados;
 
-    public ApartadoModel(String apartado_ticket_id, String apartado_cliente_id, String apartado_nombre_cliente, String apartado_sucursal_id, String apartado_nombre_sucursal,String apartado_importe_pagado, String apartado_importe_restante, String fecha_vencimiento,String fecha_creacion, List<ArticuloApartadoModel> articulosApartados) {
+    public ApartadoModel(String apartado_ticket_id, String apartado_cliente_id, String apartado_nombre_cliente, String apartado_sucursal_id, String apartado_nombre_sucursal,String apartado_importe_pagado, String apartado_importe_restante, String fecha_vencimiento,String fecha_creacion,String apartado_estatus, List<ArticuloApartadoModel> articulosApartados) {
         Apartado_ticket_id = apartado_ticket_id;
         Apartado_cliente_id = apartado_cliente_id;
         Apartado_nombre_cliente = apartado_nombre_cliente;
@@ -25,6 +26,7 @@ public class ApartadoModel {
         Fecha_vencimiento = fecha_vencimiento;
         Fecha_creacion = fecha_creacion;
         ArticulosApartados = articulosApartados;
+        Apartado_estatus = apartado_estatus;
     }
 
     public String getApartado_ticket_id() {
@@ -105,5 +107,13 @@ public class ApartadoModel {
 
     public void setFecha_creacion(String fecha_creacion) {
         Fecha_creacion = fecha_creacion;
+    }
+
+    public String getApartado_estatus() {
+        return Apartado_estatus;
+    }
+
+    public void setApartado_estatus(String apartado_estatus) {
+        Apartado_estatus = apartado_estatus;
     }
 }

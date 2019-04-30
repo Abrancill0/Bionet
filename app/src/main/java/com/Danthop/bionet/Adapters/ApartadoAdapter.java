@@ -44,6 +44,9 @@ public class ApartadoAdapter extends LongPressAwareTableDataAdapter<ApartadoMode
             case 3:
                 renderedView = renderFechaVencimiento(apartado);
                 break;
+            case 4:
+                renderedView = renderEstatus(apartado);
+                break;
         }
         return renderedView;
     }
@@ -70,6 +73,10 @@ public class ApartadoAdapter extends LongPressAwareTableDataAdapter<ApartadoMode
 
     private View renderFechaVencimiento(final ApartadoModel apartado) {
         return renderString(apartado.getFecha_vencimiento());
+    }
+
+    private View renderEstatus(final ApartadoModel apartado) {
+        return renderString(apartado.getApartado_estatus());
     }
 
     private View renderString ( final String value){
