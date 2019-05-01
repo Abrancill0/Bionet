@@ -1,10 +1,10 @@
 package com.Danthop.bionet.model;
 
-public class ImpuestoDeArticuloApartadoModel {
+public class Impuestos {
         String ImpuestosID;
         String ValorImpuesto;
 
-        public ImpuestoDeArticuloApartadoModel(String impuestosID, String valorImpuesto) {
+        public Impuestos(String impuestosID, String valorImpuesto) {
             ImpuestosID = impuestosID;
             ValorImpuesto = valorImpuesto;
         }

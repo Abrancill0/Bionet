@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -19,13 +18,17 @@ import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ApartadoAdapter;
 import com.Danthop.bionet.Adapters.DetalleApartadoAdapter;
-import com.Danthop.bionet.Adapters.VentaArticuloAdapter;
+import com.Danthop.bionet.Adapters.DetalleOrdenEspecialAdapter;
+import com.Danthop.bionet.Adapters.OrdenEspecialAdapter;
 import com.Danthop.bionet.Tables.SortableApartadoDetalleTable;
 import com.Danthop.bionet.Tables.SortableApartadoTable;
+import com.Danthop.bionet.Tables.SortableOrdenEspecialDetalleTable;
+import com.Danthop.bionet.Tables.SortableOrdenEspecialTable;
 import com.Danthop.bionet.model.ApartadoModel;
 import com.Danthop.bionet.model.ArticuloApartadoModel;
-import com.Danthop.bionet.model.ArticuloModel;
-import com.Danthop.bionet.model.ImpuestoDeArticuloApartadoModel;
+import com.Danthop.bionet.model.ArticuloOrdenEspecialModel;
+import com.Danthop.bionet.model.Impuestos;
+import com.Danthop.bionet.model.OrdenEspecialModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -65,10 +68,10 @@ public class Fragment_ventas_transacciones extends Fragment {
 
     private List<ApartadoModel> Lista_de_apartados= new ArrayList<>();
 
-
-
+    private List<OrdenEspecialModel> Lista_de_ordenes= new ArrayList<>();
 
     private SortableApartadoTable TablaApartados;
+    private SortableOrdenEspecialTable TablaOrdenes;
 
     private String usu_id;
 
@@ -104,6 +107,9 @@ public class Fragment_ventas_transacciones extends Fragment {
         TablaApartados = v.findViewById(R.id.tabla_apartados);
         TablaApartados.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
 
+        TablaOrdenes = v.findViewById(R.id.tabla_ordenes);
+        TablaOrdenes.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia2));
+
         btn_ventas = v.findViewById(R.id.btn_ventas);
         btn_corte_caja = v.findViewById(R.id.btn_corte_caja);
 
@@ -111,6 +117,7 @@ public class Fragment_ventas_transacciones extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 LoadApartados();
+                LoadOrdenes();
             }
             public void onNothingSelected(AdapterView<?> parent)
             {
@@ -189,6 +196,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                     layout_movimientos.setVisibility(View.GONE);
                     layout_ordenes.setVisibility(View.VISIBLE);
                     layout_apartado.setVisibility(View.GONE);
+                    LoadOrdenes();
                 }
                 else
                 {
@@ -341,8 +349,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                             String ArticuloIDApartado = NodoID.getString("uuid");
                                             JSONObject NodoIDVariante = elemento2.getJSONObject("aar_id_variante");
                                             String ArticuloIDVariante = NodoIDVariante.getString("uuid");
-                                            JSONObject NodoIDModificador = elemento2.getJSONObject("aar_id_modificador");
-                                            String ArticuloIDModificador = NodoIDModificador.getString("uuid");
+                                            String ArticuloIDModificador = elemento2.getString("aar_id_modificador");
                                             String ArticuloImportePagado = elemento2.getString("aar_importe_pagado");
                                             String ArticuloImporteRestante = elemento2.getString("aar_importe_restante");
                                             String ArticuloNombreApartado = elemento2.getString("aar_nombre_articulo");
@@ -357,12 +364,12 @@ public class Fragment_ventas_transacciones extends Fragment {
                                             JSONObject NodoImpuestos = elemento2.getJSONObject("aar_impuestos");
                                             JSONArray NodoImpuestoID = NodoImpuestos.getJSONArray("keys");
                                             JSONArray NodoImpuestoValue = NodoImpuestos.getJSONArray("values");
-                                            List<ImpuestoDeArticuloApartadoModel> ListaDeImpuestos = new ArrayList<>();
+                                            List<Impuestos> ListaDeImpuestos = new ArrayList<>();
                                             for(int z=0;z<NodoImpuestoID.length();z++)
                                             {
                                                 String ImpuestoID = NodoImpuestoID.getString(z);
                                                 String ImpuestoValue = NodoImpuestoValue.getString(z);
-                                                ImpuestoDeArticuloApartadoModel Impuesto = new ImpuestoDeArticuloApartadoModel(ImpuestoID,ImpuestoValue);
+                                                Impuestos Impuesto = new Impuestos(ImpuestoID,ImpuestoValue);
                                                 ListaDeImpuestos.add(Impuesto);
                                             }
 
@@ -456,6 +463,173 @@ public class Fragment_ventas_transacciones extends Fragment {
             }
         };
         TablaApartados.addDataClickListener(tablaListener);
+
+
+    }
+
+    public void LoadOrdenes(){
+        Lista_de_ordenes.clear();
+        try {
+
+            String url = getString(R.string.Url);
+
+            String ApiPath = url + "/api/ventas/ordenes_especiales/index?usu_id=" + usu_id + "&esApp=1&suc_id="+ SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+
+            // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            try {
+
+                                int EstatusApi = Integer.parseInt(response.getString("estatus"));
+
+                                if (EstatusApi == 1) {
+
+                                    JSONObject RespuestaResultado = response.getJSONObject("resultado");
+
+                                    JSONArray InfoApartado = RespuestaResultado.getJSONArray("aOrdenesEspeciales");
+                                    for (int f=0; f<InfoApartado.length();f++)
+                                    {
+                                        JSONObject elemento = InfoApartado.getJSONObject(f);
+                                        JSONObject NodoIDTicket = elemento.getJSONObject("oes_id_ticket");
+                                        String IDTicket = NodoIDTicket.getString("uuid");
+                                        JSONObject NodoIDSucursal = elemento.getJSONObject("oes_id_sucursal");
+                                        String IDSucursal = NodoIDSucursal.getString("uuid");
+                                        JSONObject NodoIDCliente = elemento.getJSONObject("oes_id_cliente");
+                                        String IDCliente = NodoIDCliente.getString("uuid");
+                                        String Cliente = elemento.getString("cli_nombre");
+                                        String Sucursal = elemento.getString("suc_nombre");
+                                        String FechaDeApartado = elemento.getString("oes_fecha_hora_creo");
+                                        String MontoPagado = elemento.getString("oes_importe_pagado");
+                                        String MontoRestante = elemento.getString("oes_importe_restante");
+                                        String FechaDeVencimiento = elemento.getString("oes_fecha_hora_vencimiento");
+                                        String FechaDeCreacion = elemento.getString("oes_fecha_hora_creo");
+                                        String Estatus = elemento.getString("oes_estatus");
+
+                                        List<ArticuloOrdenEspecialModel> ListaDeArticulosOrdenados = new ArrayList<>();
+                                        JSONArray Articulos = elemento.getJSONArray("aArticulosOrdenados");
+                                        for(int i= 0; i<Articulos.length(); i++)
+                                        {
+                                            JSONObject elemento2 = Articulos.getJSONObject(i);
+                                            String CantidadApartada = elemento2.getString("oea_cantidad");
+                                            JSONObject NodoID = elemento2.getJSONObject("oea_id");
+                                            String ArticuloIDApartado = NodoID.getString("uuid");
+                                            JSONObject NodoIDVariante = elemento2.getJSONObject("oea_id_variante");
+                                            String ArticuloIDVariante = NodoIDVariante.getString("uuid");
+                                            String ArticuloIDModificador = elemento2.getString("oea_id_modificador");
+                                            String ArticuloImportePagado = elemento2.getString("oea_importe_pagado");
+                                            String ArticuloImporteRestante = elemento2.getString("oea_importe_restante");
+                                            String ArticuloNombreApartado = elemento2.getString("oea_nombre_articulo");
+                                            String ArticuloAplicaDevolucion = elemento2.getString("oea_aplica_para_devolucion");
+                                            JSONObject NodoImporteDescuento = elemento2.getJSONObject("oea_importe_descuento");
+                                            String ArticuloImporteDescuento = NodoImporteDescuento.getString("value");
+                                            JSONObject NodoImporteTotal = elemento2.getJSONObject("oea_importe_total");
+                                            String ArticuloImporteTotal = NodoImporteTotal.getString("value");
+
+                                            JSONObject NodoImpuestos = elemento2.getJSONObject("oea_impuestos");
+                                            JSONArray NodoImpuestoID = NodoImpuestos.getJSONArray("keys");
+                                            JSONArray NodoImpuestoValue = NodoImpuestos.getJSONArray("values");
+                                            List<Impuestos> ListaDeImpuestos = new ArrayList<>();
+                                            for(int z=0;z<NodoImpuestoID.length();z++)
+                                            {
+                                                String ImpuestoID = NodoImpuestoID.getString(z);
+                                                String ImpuestoValue = NodoImpuestoValue.getString(z);
+                                                Impuestos Impuesto = new Impuestos(ImpuestoID,ImpuestoValue);
+                                                ListaDeImpuestos.add(Impuesto);
+                                            }
+
+                                            JSONObject NodoPorcentajeDescuento = elemento2.getJSONObject("oea_porcentaje_descuento");
+                                            String ArticuloPorcentajeDescuento = NodoPorcentajeDescuento.getString("value");
+                                            JSONObject NodoPrecioArticulo = elemento2.getJSONObject("oea_precio_articulo");
+                                            String ArticuloPrecio = NodoPrecioArticulo.getString("value");
+
+                                            ArticuloOrdenEspecialModel ArticuloOrdenado = new ArticuloOrdenEspecialModel(
+                                                    CantidadApartada,
+                                                    ArticuloIDApartado,
+                                                    ArticuloIDVariante,
+                                                    ArticuloIDModificador,
+                                                    ArticuloImportePagado,
+                                                    ArticuloImporteRestante,
+                                                    ArticuloNombreApartado,
+                                                    "",
+                                                    ArticuloAplicaDevolucion,
+                                                    ArticuloImporteDescuento,
+                                                    ArticuloImporteTotal,
+                                                    ListaDeImpuestos,
+                                                    ArticuloPorcentajeDescuento,
+                                                    ArticuloPrecio
+                                            );
+                                            ListaDeArticulosOrdenados.add(ArticuloOrdenado);
+
+                                        }
+
+                                        OrdenEspecialModel Orden = new OrdenEspecialModel(
+                                                IDTicket,
+                                                IDCliente,
+                                                Cliente,
+                                                IDSucursal,
+                                                Sucursal,
+                                                MontoPagado,
+                                                MontoRestante,
+                                                FechaDeVencimiento,
+                                                FechaDeCreacion,
+                                                Estatus,
+                                                ListaDeArticulosOrdenados
+                                        );
+                                        Lista_de_ordenes.add(Orden);
+                                    }
+
+                                    final OrdenEspecialAdapter ordenAdapter = new OrdenEspecialAdapter(getContext(),Lista_de_ordenes,TablaOrdenes);
+                                    ordenAdapter.notifyDataSetChanged();
+                                    TablaOrdenes.setDataAdapter(ordenAdapter);
+
+
+                                }
+                            } catch (JSONException e) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(e), Toast.LENGTH_LONG);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf(error), Toast.LENGTH_LONG);
+                        }
+                    }
+            );
+            getRequest.setShouldCache(false);
+
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+        } catch (Error e) {
+            e.printStackTrace();
+        }
+        TableDataClickListener<OrdenEspecialModel> tablaListener = new TableDataClickListener<OrdenEspecialModel>() {
+            @Override
+            public void onDataClicked(int rowIndex, final OrdenEspecialModel clickedData) {
+                dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.pop_up_ventas_detalle_orden);
+                dialog.show();
+                SortableOrdenEspecialDetalleTable DetalleOrdenTable = dialog.findViewById(R.id.detalle_orden_table);
+                final DetalleOrdenEspecialAdapter detalleApartadoAdapter = new DetalleOrdenEspecialAdapter(getContext(),clickedData.getArticulosOrdenados(),DetalleOrdenTable);
+                DetalleOrdenTable.setDataAdapter(detalleApartadoAdapter);
+
+                Button aceptar = dialog.findViewById(R.id.btn_aceptar_cerrar);
+                aceptar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+            }
+        };
+        TablaOrdenes.addDataClickListener(tablaListener);
 
 
     }

@@ -6,20 +6,16 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.R;
-import com.Danthop.bionet.Tables.SortableArticulosTable;
-import com.Danthop.bionet.Tables.SortableSeleccionarArticuloTable;
 import com.Danthop.bionet.Tables.SortableVentaArticulos;
 import com.Danthop.bionet.model.ArticuloApartadoModel;
 import com.Danthop.bionet.model.ArticuloModel;
-import com.Danthop.bionet.model.ImpuestoDeArticuloApartadoModel;
-import com.Danthop.bionet.model.SucursalModel;
+import com.Danthop.bionet.model.Impuestos;
 import com.Danthop.bionet.model.TicketModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -58,14 +54,14 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     private CarouselView carouselView;
     private ArrayList<String> Imagenes;
 
-    private List<ImpuestoDeArticuloApartadoModel> ImpuestosDeArticuloApartado;
+    private List<Impuestos> ImpuestosDeArticuloApartado;
     private List<ArticuloApartadoModel> ListaDeArticulosApartados;
 
 
     public VentaArticuloAdapter(final Context context, final List<ArticuloModel> data, final SortableVentaArticulos tableView, TicketModel Ticket, String usu_id,
                                 TextView Total, TextView Descuento, TextView Impuesto, TextView Subtotal,
                                 CarouselView Carousel, ArrayList<String> imagenes,
-                                List<ImpuestoDeArticuloApartadoModel> impuestosDeArticuloApartado,
+                                List<Impuestos> impuestosDeArticuloApartado,
                                 List<ArticuloApartadoModel> listaDeArticulosApartados) {
         super(context, data, tableView);
         Articulos = data;
@@ -335,7 +331,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                 while (keys.hasNext()) {
                                     Object key = keys.next();
                                     String value = nodoImpuestos.getString((String) key);
-                                    ImpuestoDeArticuloApartadoModel Impuesto = new ImpuestoDeArticuloApartadoModel((String) key, value);
+                                    Impuestos Impuesto = new Impuestos((String) key, value);
                                     ImpuestosDeArticuloApartado.add(Impuesto);
                                 }
                                 String ArticuloApartadoPorcentajeDescuento = nodo.getString("tar_porcentaje_descuento");
@@ -545,7 +541,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                 while (keys.hasNext()) {
                                     Object key = keys.next();
                                     String value = nodoImpuestos.getString((String) key);
-                                    ImpuestoDeArticuloApartadoModel Impuesto = new ImpuestoDeArticuloApartadoModel((String) key, value);
+                                    Impuestos Impuesto = new Impuestos((String) key, value);
                                     ImpuestosDeArticuloApartado.add(Impuesto);
                                 }
                                 String ArticuloApartadoPorcentajeDescuento = nodo.getString("tar_porcentaje_descuento");
