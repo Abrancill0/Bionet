@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.codecrafters.tableview.SortableTableView;
+import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
@@ -99,6 +102,9 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     private SortableInventariosTable tabla_inventario;
     private TableDataClickListener<InventarioModel> tablaElegirArticuloListener;
     private List<InventarioModel> inventarios;
+    private TrasladoAdapter TrasladoAdapter;
+
+    private List<InventarioModel> ArticulosTraslados;
 
     public Fragment_pop_up_traslados() {
         // Required empty public constructor
@@ -172,7 +178,12 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         Solicitar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SolicitarTraslado();
+                //SolicitarTraslado();
+
+
+
+
+
             }
         });
 
@@ -237,7 +248,7 @@ private void MuestraArticulos(){
                         existencia = RespuestaExistencias.getString("value");
 
                         cantidad = "0";
-
+                        UUIDmodificador="";
 
                         //Variantes_Modificadores_SKU
                         Boolean Disponible_Variante = Boolean.valueOf(elemento.getString("art_tiene_variantes"));
@@ -282,8 +293,11 @@ private void MuestraArticulos(){
                                 "","", "","","",
                                 "", "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,"");
                         inventarios.add(inventario);
-                    }final TrasladoAdapter TrasladoAdapter = new TrasladoAdapter(getContext(), inventarios,tabla_inventario);
+                    }
+                    TrasladoAdapter = new TrasladoAdapter(getContext(), inventarios,tabla_inventario,ArticulosTraslados);
                     tabla_inventario.setDataAdapter(TrasladoAdapter);
+
+
                 }
             } catch (JSONException e) {
                 Toast toast1 =
@@ -303,9 +317,8 @@ private void MuestraArticulos(){
     );
     VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
 }
-
 //--------------------------------------------------------------------------------------------------
-  private void VerificarTipoTraslado (){
+private void VerificarTipoTraslado (){
         String opcion;
         opcion = SpinnerTipoTraslado.getSelectedItem().toString();
         if(opcion.equals("Traslado temporal")) {
@@ -329,28 +342,37 @@ private void LoadListenerTable() {
     };
 }
 //--------------------------------------------------------------------------------------------------
-   private void  SolicitarTraslado(){
+private void  SolicitarTraslado(){
         progreso = new ProgressDialog(getContext());
         progreso.setMessage("Solicitando...");
         progreso.show();
+
        SucursalOrigen = SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
        SucursalDestino = SucursalID.get(SpinnerSucursal2.getSelectedItemPosition());
 
        String url = getString(R.string.Url);
        String ApiPath = url + "/api/inventario/store_solicitud_traslado";
+
+       JSONArray Arrayarticulos = new JSONArray();
+
+    for(int i=0;i<ArticulosTraslados.size();i++)
+    {
         JSONObject request = new JSONObject();
         try {
-            request.put( "tat_id_existencias_origen", UUIDexist);
-            request.put( "tat_id_articulo", UUIDart);
-            request.put( "tat_id_variante",UUIDvar);
-            request.put( "tat_id_modificador","");
-            request.put( "tat_cantidad", cantidad);
+            request.put( "tat_id_existencias_origen", ArticulosTraslados.get(i).getUUIDexistencias());
+            request.put( "tat_id_articulo",ArticulosTraslados.get(i).getUUIDarticulo());
+            request.put( "tat_id_variante",ArticulosTraslados.get(i).getUUIDvariante());
+            request.put( "tat_id_modificador",ArticulosTraslados.get(i).getUUIDmodificador());
+            request.put( "tat_cantidad", ArticulosTraslados.get(i).getCantidad());
         }
         catch(Exception e) {
             e.printStackTrace();
         }
-       JSONArray Arrayarticulos = new JSONArray();
-       Arrayarticulos.put(request);
+
+        Arrayarticulos.put(request);
+    }
+
+
 
        JSONObject jsonBodyrequest = new JSONObject();
        try {
@@ -388,9 +410,8 @@ private void LoadListenerTable() {
        );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
-
 //--------------------------------------------------------------------------------------------------
-   private void SpinnerSucursales() {
+private void SpinnerSucursales() {
         JSONObject request = new JSONObject();
         try {
             request.put("usu_id", usu_id);
