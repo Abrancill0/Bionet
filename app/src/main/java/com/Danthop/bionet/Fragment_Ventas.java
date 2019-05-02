@@ -964,24 +964,30 @@ public class Fragment_Ventas extends Fragment {
         btn_apartar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.setContentView(R.layout.pop_up_ventas_selecciona_apartados);
-                dialog.show();
-                ArticulosApartados.clear();
-                tabla_apartados_disponibles = dialog.findViewById(R.id.tabla_seleccionar_apartados);
-                tabla_apartados_disponibles.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
-                final SeleccionaApartadoAdapter articuloAdapter = new SeleccionaApartadoAdapter(getContext(), ListaDeArticulosApartados, tabla_apartados_disponibles,ticket_de_venta,ArticulosApartados,
-                        usu_id,SpinnerSucursal,SucursalID);
-                articuloAdapter.notifyDataSetChanged();
-                tabla_apartados_disponibles.setDataAdapter(articuloAdapter);
+                if(ticket_de_venta.getTic_id_cliente().equals(""))
+                {
 
-                Button btn_apartar_articulos = dialog.findViewById(R.id.btn_apartar_articulos);
-                btn_apartar_articulos.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ApartarArticulosSeleccionados();
-                        dialog.dismiss();
-                    }
-                });
+                }
+                else {
+                    dialog.setContentView(R.layout.pop_up_ventas_selecciona_apartados);
+                    dialog.show();
+                    ArticulosApartados.clear();
+                    tabla_apartados_disponibles = dialog.findViewById(R.id.tabla_seleccionar_apartados);
+                    tabla_apartados_disponibles.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
+                    final SeleccionaApartadoAdapter articuloAdapter = new SeleccionaApartadoAdapter(getContext(), ListaDeArticulosApartados, tabla_apartados_disponibles, ticket_de_venta, ArticulosApartados,
+                            usu_id, SpinnerSucursal, SucursalID);
+                    articuloAdapter.notifyDataSetChanged();
+                    tabla_apartados_disponibles.setDataAdapter(articuloAdapter);
+
+                    Button btn_apartar_articulos = dialog.findViewById(R.id.btn_apartar_articulos);
+                    btn_apartar_articulos.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ApartarArticulosSeleccionados();
+                            dialog.dismiss();
+                        }
+                    });
+                }
 
             }
         });
@@ -1004,28 +1010,29 @@ public class Fragment_Ventas extends Fragment {
                 list1.put("aar_id_articulo", ArticulosApartados.get(i).getArticulo_id());
                 list1.put("aar_id_variante", ArticulosApartados.get(i).getArticulo_id_variante());
                 list1.put("aar_id_modificador", ArticulosApartados.get(i).getArticulo_id_modificador());
-                list1.put("aar_importe_pagado", ArticulosApartados.get(i).getImporte_pagado());
                 list1.put("aar_importe_total", ArticulosApartados.get(i).getImporte_total());
 
-                    float Pagado = Float.parseFloat((ArticulosApartados.get(i).getImporte_pagado()).replaceAll("\\D+",""));
+                    float Pagado = Float.parseFloat((ArticulosApartados.get(i).getImporte_pagado()).replaceAll("[^0-9.]", ""));
                     PagoTotal = PagoTotal + Pagado;
-                    float Total = Float.parseFloat((ArticulosApartados.get(i).getImporte_total()).replaceAll("\\D+",""));
+                    float Total = Float.parseFloat((ArticulosApartados.get(i).getImporte_total()).replaceAll("[^0-9.]", ""));
                     ImporteTotal = ImporteTotal + Total;
                     float Restante = Total - Pagado;
 
-                list1.put("aar_importe_restante", String.valueOf(Restante));
+                list1.put("aar_importe_pagado", Pagado);
+                list1.put("aar_importe_restante", String.format("%.2f", Restante));
                 list1.put("aar_nombre_articulo", ArticulosApartados.get(i).getNombre_articulo());
                 list1.put("aar_id_existencias_origen", ArticulosApartados.get(i).getId_existencias_origen());
                 list1.put("aar_aplica_para_devolucion", ArticulosApartados.get(i).getAplica_para_devolucion());
                 list1.put("aar_importe_descuento", ArticulosApartados.get(i).getImporte_descuento());
-
-                    JSONArray impuestos = new JSONArray();
+                list1.put("aar_porcentaje_descuento", ArticulosApartados.get(i).getPorcentaje_descuento());
+                list1.put("aar_precio_articulo", ArticulosApartados.get(i).getPrecio_articulo());
+                JSONArray impuestos = new JSONArray();
                     try{
                         for (int j=0; j<ArticulosApartados.get(i).getImpuestos().size();j++)
                         {
                             JSONObject list2 = new JSONObject();
                             list2.put(ArticulosApartados.get(i).getImpuestos().get(j).getImpuestosID(), ArticulosApartados.get(i).getImpuestos().get(j).getValorImpuesto());
-                            arreglo.put(list2);
+                            impuestos.put(list2);
                         }
                     } catch (JSONException e2) {
                         e2.printStackTrace();
@@ -1050,7 +1057,7 @@ public class Fragment_Ventas extends Fragment {
             request.put("apa_id_sucursal", ticket_de_venta.getTic_id_sucursal());
             request.put("apa_id_cliente", ticket_de_venta.getTic_id_cliente());
             request.put("apa_importe_pagado", PagoTotal);
-            request.put("apa_importe_restante", RestanteTotal);
+            request.put("apa_importe_restante", String.format("%.2f", RestanteTotal));
             request.put("dias_vencimiento", 30);
             request.put("aArticulos", arreglo);
 
@@ -1285,8 +1292,12 @@ public class Fragment_Ventas extends Fragment {
                             Subtotal = Subtotal + PrecioSubTotalProducto;
 
                             String AplicaApartados = nodo.getString("art_aplica_apartados");
+                            String TieneExistencia = nodo.getString("art_id_existencia");
 
-                            if (AplicaApartados.equals("true")) {
+                            if (AplicaApartados.equals("false")||(TieneExistencia.equals(""))) {
+
+                            }
+                            else {
                                 String ArticuloCantidad = nodo.getString("tar_cantidad");
                                 String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
                                 JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
@@ -1295,7 +1306,7 @@ public class Fragment_Ventas extends Fragment {
                                 String ArticuloIDApartadoVariante = NodoIDApartadoVariante.getString("uuid");
                                 String ArticuloIDApartadoModificador = nodo.getString("tar_id_modificador");
                                 String ArticuloApartadoImportePagado = nodo.getString("tar_importe_pagado");
-                                String ArticuloIDApartadoExistencia = nodo.getString("tar_id_existencia");
+                                String ArticuloIDApartadoExistencia = nodo.getString("art_id_existencia");
                                 String ArticuloApartadoAplicaDevolucion = nodo.getString("tar_aplica_para_devolucion");
                                 String ArticuloApartadoImporteDescuento = nodo.getString("tar_importe_descuento");
                                 String ArticuloApartadoTotal = nodo.getString("tar_importe_total");

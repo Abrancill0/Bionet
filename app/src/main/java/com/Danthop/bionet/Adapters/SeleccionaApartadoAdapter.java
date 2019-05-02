@@ -50,11 +50,10 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
     private Spinner SpinnerSucursal;
     private ArrayList<String> SucursalID;
     private List<ConfiguracionesApartadoModel> ListaConfiguraciones = new ArrayList<>();
+    private List<EditText> ListaDeCantidades = new ArrayList<>();
 
     String ValorTipo;
     String TipoPorcentajeOMonto;
-
-    private EditText MontoAApartar = new EditText(getContext());
 
 
     String Desde;
@@ -77,6 +76,7 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
     public View getDefaultCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
         ArticuloApartadoModel apartado = getRowData(rowIndex);
         View renderedView = null;
+        EditText Monto=null;
 
         switch (columnIndex) {
             case 0:
@@ -89,10 +89,10 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
                 renderedView = renderImporteTotal(apartado);
                 break;
             case 3:
-                renderedView = renderMontoAApartar(apartado);
+                renderedView = renderMontoAApartar(apartado,rowIndex);
                 break;
             case 4:
-                renderedView = renderSeleccionar(apartado,MontoAApartar);
+                renderedView = renderSeleccionar(apartado,ListaDeCantidades.get(rowIndex));
                 break;
         }
         return renderedView;
@@ -124,9 +124,11 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
         return textView;
     }
 
-    private View renderMontoAApartar(final ArticuloApartadoModel apartado) {
+    private EditText renderMontoAApartar(final ArticuloApartadoModel apartado, int index) {
 
+        EditText MontoAApartar = new EditText(getContext());
         LoadConfiguracionesApartados(MontoAApartar,apartado);
+        ListaDeCantidades.add(MontoAApartar);
         return MontoAApartar;
 
     }
