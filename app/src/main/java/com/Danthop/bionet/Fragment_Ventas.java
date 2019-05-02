@@ -35,7 +35,7 @@ import com.Danthop.bionet.Tables.SortableVentaArticulos;
 import com.Danthop.bionet.model.ArticuloApartadoModel;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
-import com.Danthop.bionet.model.ImpuestoDeArticuloApartadoModel;
+import com.Danthop.bionet.model.Impuestos;
 import com.Danthop.bionet.model.PagoModel;
 import com.Danthop.bionet.model.TicketModel;
 import com.Danthop.bionet.model.VolleySingleton;
@@ -122,7 +122,7 @@ public class Fragment_Ventas extends Fragment {
     private List<ArticuloModel> ArticulosVenta;
     private List<PagoModel> ListaDePagosDisponibles;
     private List<PagoModel> ListaDePagos_a_utilizar;
-    private List<ImpuestoDeArticuloApartadoModel> ImpuestosDeArticuloApartado;
+    private List<Impuestos> ImpuestosDeArticuloApartado;
     private List<ArticuloApartadoModel> ListaDeArticulosApartados;
 
     private List<ArticuloApartadoModel> ArticulosApartados;
@@ -1304,7 +1304,7 @@ public class Fragment_Ventas extends Fragment {
                                 while (keys.hasNext()) {
                                     Object key = keys.next();
                                     String value = nodoImpuestos.getString((String) key);
-                                    ImpuestoDeArticuloApartadoModel Impuesto = new ImpuestoDeArticuloApartadoModel((String) key, value);
+                                    Impuestos Impuesto = new Impuestos((String) key, value);
                                     ImpuestosDeArticuloApartado.add(Impuesto);
                                 }
                                 String ArticuloApartadoPorcentajeDescuento = nodo.getString("tar_porcentaje_descuento");

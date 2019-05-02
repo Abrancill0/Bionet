@@ -198,7 +198,7 @@ public class Fragment_inventarios extends Fragment {
                         Articulo = Resultado.getJSONArray("aArticuloExistencias");
                         inventarioModel = new String[Articulo.length()][4];
 
-                        for (int x = 0; x < Articulo.length(); x++) { //aqui
+                        for (int x = 0; x < Articulo.length(); x++) {
                             JSONObject elemento = Articulo.getJSONObject(x);
 
                             RespuestaUUID = elemento.getJSONObject("art_id");

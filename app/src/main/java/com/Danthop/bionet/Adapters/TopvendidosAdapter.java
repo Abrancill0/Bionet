@@ -9,18 +9,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.Danthop.bionet.Tables.SortableClienteFrecuenteTable;
-import com.Danthop.bionet.Tables.SortableInventariosTable;
 import com.Danthop.bionet.model.ClienteFrecuenteModel;
-import com.Danthop.bionet.model.InventarioModel;
 
 import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class ClienteFrecuenteAdapter extends LongPressAwareTableDataAdapter<ClienteFrecuenteModel> {
+public class TopvendidosAdapter extends LongPressAwareTableDataAdapter<ClienteFrecuenteModel> {
     int TEXT_SIZE = 12;
 
-    public ClienteFrecuenteAdapter(final Context context, final List<ClienteFrecuenteModel> data, final SortableClienteFrecuenteTable tableView) {
+    public TopvendidosAdapter(final Context context, final List<ClienteFrecuenteModel> data, final SortableClienteFrecuenteTable tableView) {
         super(context, data, tableView);
     }
     @Override
@@ -30,7 +28,7 @@ public class ClienteFrecuenteAdapter extends LongPressAwareTableDataAdapter<Clie
 
         switch (columnIndex) {
             case 0:
-                renderedView = rendercliente(Invetario);
+                renderedView = renderproducto(Invetario);
                 break;
 
 
@@ -60,13 +58,13 @@ public class ClienteFrecuenteAdapter extends LongPressAwareTableDataAdapter<Clie
         editText.setPadding(20, 10, 20, 10);
         editText.setTextSize(TEXT_SIZE);
         editText.setSingleLine();
-        editText.addTextChangedListener(new ClienteFrecuenteAdapter.OrdenNameUpdater(Inventario));
+        editText.addTextChangedListener(new TopvendidosAdapter.OrdenNameUpdater(Inventario));
         return editText;
     }
 
 
-    private View rendercliente(final ClienteFrecuenteModel Inventario) {
-        return renderString(Inventario.getnombre_cliente());
+    private View renderproducto(final ClienteFrecuenteModel Inventario) {
+        return renderString(Inventario.gettar_nombre_articulo());
     }
 
 

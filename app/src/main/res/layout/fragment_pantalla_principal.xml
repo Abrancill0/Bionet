@@ -67,7 +67,7 @@
 
                 </LinearLayout>
 
-                <de.codecrafters.tableview.TableView
+                <com.Danthop.bionet.Tables.SortableClienteFrecuenteTable
                     android:id="@+id/tablaProductos_sucursales"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

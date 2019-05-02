@@ -2,7 +2,7 @@ package com.Danthop.bionet.model;
 
 import java.util.List;
 
-public class ArticuloApartadoModel {
+public class ArticuloOrdenEspecialModel {
 
     String Cantidad;
     String Articulo_id;
@@ -19,11 +19,11 @@ public class ArticuloApartadoModel {
     String Porcentaje_descuento;
     String Precio_articulo;
 
-    public ArticuloApartadoModel(String cantidad, String articulo_id, String articulo_id_variante,
-                                 String articulo_id_modificador, String importe_pagado, String importe_restante,
-                                 String nombre_articulo, String id_existencias_origen, String aplica_para_devolucion,
-                                 String importe_descuento, String importe_total, List<com.Danthop.bionet.model.Impuestos>  impuestos, String porcentaje_descuento,
-                                 String precio_articulo) {
+    public ArticuloOrdenEspecialModel(String cantidad, String articulo_id, String articulo_id_variante,
+                                      String articulo_id_modificador, String importe_pagado, String importe_restante,
+                                      String nombre_articulo, String id_existencias_origen, String aplica_para_devolucion,
+                                      String importe_descuento, String importe_total, List<com.Danthop.bionet.model.Impuestos>  impuestos, String porcentaje_descuento,
+                                      String precio_articulo) {
         Articulo_id = articulo_id;
         Articulo_id_variante = articulo_id_variante;
         Articulo_id_modificador = articulo_id_modificador;

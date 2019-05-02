@@ -219,7 +219,36 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:visibility="gone"></LinearLayout>
+                    android:visibility="gone">
+                    <com.Danthop.bionet.Tables.SortableOrdenEspecialTable
+                        android:id="@+id/tabla_ordenes"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".7"
+                        android:visibility="visible"
+                        app:tableView_headerColor="@color/white"
+                        table:tableView_columnCount="4"></com.Danthop.bionet.Tables.SortableOrdenEspecialTable>
+
+                    <LinearLayout
+                        android:id="@+id/Tabla_vacia2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".3"
+                        android:background="@color/white"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="No existen Ordenes"
+                            android:textColor="@color/gray" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/layout_apartado"

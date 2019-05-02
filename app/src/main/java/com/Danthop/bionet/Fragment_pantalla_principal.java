@@ -1,6 +1,8 @@
 package com.Danthop.bionet;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
@@ -13,6 +15,7 @@ import android.media.MediaPlayer;
 
 import com.Danthop.bionet.Adapters.ClienteFrecuenteAdapter;
 import com.Danthop.bionet.Adapters.HomeExistenciasAdapter;
+import com.Danthop.bionet.Adapters.TopvendidosAdapter;
 import com.Danthop.bionet.Tables.SortableClienteFrecuenteTable;
 import com.Danthop.bionet.Tables.SortableInventariosTable;
 import com.Danthop.bionet.model.ClienteFrecuenteModel;
@@ -31,11 +34,15 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
+
+import static java.util.stream.Collectors.counting;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,14 +54,22 @@ public class Fragment_pantalla_principal extends Fragment{
     private Toast backToast;
     private SortableInventariosTable tabla_inventario;
     private SortableClienteFrecuenteTable tabla_clientes;
+    private SortableClienteFrecuenteTable tabla_productos;
     private String[][] inventarioModel;
     private List<InventarioModel> inventarios;
     private List<ClienteFrecuenteModel>Clientes;
+    private List<ClienteFrecuenteModel>Productos;
+    private List<ClienteFrecuenteModel>Clientes2;
+    private List<ClienteFrecuenteModel>Top;
     private String existencia;
     private String nombre_cliente;
     private String nombre_sucursal;
     private String producto;
+    private String NumTicket;
+    private String posicion;
     private String UUIDmodificador;
+    private String tar_nombre_articulo;
+    private int tic_importe_total;
     MediaPlayer mp = new MediaPlayer();
 
     public Fragment_pantalla_principal() {
@@ -62,7 +77,6 @@ public class Fragment_pantalla_principal extends Fragment{
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View v = inflater.inflate(R.layout.fragment_pantalla_principal,container, false);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getContext().MODE_PRIVATE );
@@ -80,19 +94,23 @@ public class Fragment_pantalla_principal extends Fragment{
         String[][] DATA_TO_SHOW2 = { { "Notificacion 1"},
                 {""}};
 
-        String[][] DATA_TO_SHOW4 = { { "Cliente 1"},
-                {""}};
 
-        final TableView tabla_Productos = (TableView) v.findViewById(R.id.tablaProductos_sucursales);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Producto", "Sucursal");
-        final SimpleTableDataAdapter simpleTableDataAdapter = new SimpleTableDataAdapter(getContext(),DATA_TO_SHOW);
+
+        tabla_productos = (SortableClienteFrecuenteTable) v.findViewById(R.id.tablaProductos_sucursales);
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Producto");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader.setTextSize(12);
         simpleHeader.setPaddings(10,10,10,10);
-        simpleTableDataAdapter.setTextSize(12);
-        simpleTableDataAdapter.setPaddingLeft(0);
-        simpleTableDataAdapter.setPaddingRight(0);
 
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(1);
+        tableColumnWeightModel.setColumnWeight(0, 2);
+
+        tabla_productos.setHeaderAdapter(simpleHeader);
+        tabla_productos.setColumnModel(tableColumnWeightModel);
+        Productos = new ArrayList<>();
+        Top = new ArrayList<>();
+
+//--------------------------------------------------------------------------------------------------
 
         final TableView tabla_Notificaciones = (TableView) v.findViewById(R.id.tablaNotificaciones);
         final SimpleTableHeaderAdapter simpleHeader2 = new SimpleTableHeaderAdapter(getContext(), "Notificación");
@@ -112,13 +130,13 @@ public class Fragment_pantalla_principal extends Fragment{
         simpleHeader3.setTextSize(12);
         simpleHeader3.setPaddings(10,10,10,10);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(3);
-        tableColumnWeightModel.setColumnWeight(0, 2);
-        tableColumnWeightModel.setColumnWeight(1, 2);
-        tableColumnWeightModel.setColumnWeight(2, 2);
+        final TableColumnWeightModel tableColumnWeightModel3 = new TableColumnWeightModel(3);
+        tableColumnWeightModel3.setColumnWeight(0, 2);
+        tableColumnWeightModel3.setColumnWeight(1, 2);
+        tableColumnWeightModel3.setColumnWeight(2, 2);
 
         tabla_inventario.setHeaderAdapter(simpleHeader3);
-        tabla_inventario.setColumnModel(tableColumnWeightModel);
+        tabla_inventario.setColumnModel(tableColumnWeightModel3);
         inventarios = new ArrayList<>();
 
 //--------------------------------------------------------------------------------------------------
@@ -135,11 +153,9 @@ public class Fragment_pantalla_principal extends Fragment{
         tabla_clientes.setHeaderAdapter(simpleHeader4);
         tabla_clientes.setColumnModel(tableColumnWeightModel4);
         Clientes = new ArrayList<>();
-
+        Clientes2 = new ArrayList<>();
 
 //--------------------------------------------------------------------------------------------------
-        tabla_Productos.setHeaderAdapter(simpleHeader);
-        tabla_Productos.setDataAdapter(simpleTableDataAdapter);
 
         tabla_Notificaciones.setHeaderAdapter(simpleHeader2);
         tabla_Notificaciones.setDataAdapter(simpleTableDataAdapter2);
@@ -161,6 +177,7 @@ public class Fragment_pantalla_principal extends Fragment{
 
         carouselView.setImageListener(imageListener);
 
+        LoadMasVendidos();
         LoadPocasExistencias();
         LoadClientesFrecuentes();
         return v;
@@ -196,7 +213,7 @@ private void LoadPocasExistencias(){
 
                         RespuestaExistencias = elemento.getJSONObject("exi_cantidad");
                         int exis = RespuestaExistencias.getInt("value");
-                        if (exis <= 2) {
+                        if (exis <= 10) {
                             existencia= RespuestaExistencias.getString("value");
                             producto = elemento.getString("art_nombre");
                             nombre_sucursal = elemento.getString("suc_nombre");
@@ -224,25 +241,24 @@ private void LoadPocasExistencias(){
                                     String NombreModificador = elemento.getString("mod_nombre");
                                     NombreCompleto = producto + " " + NombreVariante + " " + NombreModificador;
                                     producto = NombreCompleto;
-
                                 } else {
                                     NombreCompleto = producto + " " + NombreVariante;
                                     producto = NombreCompleto;
                                 }
                             }
+                            final InventarioModel inventario = new InventarioModel(
+                                    "", producto, existencia, "", "", nombre_sucursal,
+                                    "","","","","",
+                                    "","", "","","",
+                                    "","","", "","","",
+                                    "","", "","","",
+                                    "", "","","","","","","");
+                            inventarios.add(inventario);
                         }
+                    }
+                }      final HomeExistenciasAdapter ExistenciasAdapter = new HomeExistenciasAdapter(getContext(), inventarios,tabla_inventario);
+                tabla_inventario.setDataAdapter(ExistenciasAdapter);
 
-                        final InventarioModel inventario = new InventarioModel(
-                                "", producto, existencia, "", "", nombre_sucursal,
-                                "","","","","",
-                                "","", "","","",
-                                "","","", "","","",
-                                "","", "","","",
-                                "", "","","","","","","");
-                        inventarios.add(inventario);
-                    }final HomeExistenciasAdapter ExistenciasAdapter = new HomeExistenciasAdapter(getContext(), inventarios,tabla_inventario);
-                    tabla_inventario.setDataAdapter(ExistenciasAdapter);
-                }
             } catch (JSONException e) {
                 Toast toast1 =
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
@@ -270,9 +286,11 @@ private void LoadClientesFrecuentes(){
     String url = getString(R.string.Url);
     String ApiPath = url + "/api/ventas/tickets/index_app?usu_id=" + usu_id + "&tic_id_sucursal=" + tic_id_sucursal + "&esApp=1";
     JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, null, new Response.Listener<JSONObject>() {
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onResponse(JSONObject response) {
             JSONArray Resultado = null;
+            JSONObject Respuesta_tic_id_cliente = null;
 
             try {
                 int status = Integer.parseInt(response.getString("estatus"));
@@ -283,17 +301,35 @@ private void LoadClientesFrecuentes(){
 
                     for (int x = 0; x < Resultado.length(); x++) {
                         JSONObject elemento = Resultado.getJSONObject(x);
-
                         String cliente = elemento.getString("tic_nombre_cliente");
 
                         if (cliente != "null"){
-                            nombre_cliente = elemento.getString("tic_nombre_cliente");
-                        }
+                            Respuesta_tic_id_cliente = elemento.getJSONObject("tic_id_cliente");
+                            String UUIDTicketCliente = Respuesta_tic_id_cliente.getString("uuid");
+                            String nombre_cliente = elemento.getString("tic_nombre_cliente");
+                            posicion = String.valueOf(x);
 
-                        final ClienteFrecuenteModel Nombrecliente = new ClienteFrecuenteModel(
-                             nombre_cliente);
-                        Clientes.add(Nombrecliente);
-                    }final ClienteFrecuenteAdapter FrecuenteAdapter = new ClienteFrecuenteAdapter(getContext(), Clientes,tabla_clientes);
+                           final ClienteFrecuenteModel Nombrecliente = new ClienteFrecuenteModel(nombre_cliente,"",UUIDTicketCliente,"", "");
+                           Clientes.add(Nombrecliente);
+                        }
+                    }
+                    //MAPGropingBy
+                    Map<String, Long> ClientebyFrecuente = Clientes.stream().collect(Collectors.groupingBy(ClienteFrecuenteModel::getUUIDTicketCliente, counting()));
+                    ClientebyFrecuente.keySet().forEach(employee -> {
+
+                        ClienteFrecuenteModel nombreclient = Clientes.stream()
+                                .filter(Clientes -> employee.equals(Clientes.getUUIDTicketCliente()))
+                                .findAny()
+                                .orElse(null);
+
+                      String nb  = String.valueOf(nombreclient.getnombre_cliente());
+                      String cantTiket = String.valueOf(Math.toIntExact(ClientebyFrecuente.get(employee)));
+
+                        final ClienteFrecuenteModel Nombrecliente2 = new ClienteFrecuenteModel(nb,cantTiket,"","", "");
+                        Clientes2.add(Nombrecliente2);
+                    });
+
+                    final ClienteFrecuenteAdapter FrecuenteAdapter = new ClienteFrecuenteAdapter(getContext(), Clientes2,tabla_clientes);
                     tabla_clientes.setDataAdapter(FrecuenteAdapter);
                 }
             } catch (JSONException e) {
@@ -315,6 +351,77 @@ private void LoadClientesFrecuentes(){
     VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( postRequest );
 }
 //--------------------------------------------------------------------------------------------------
+private void LoadMasVendidos(){
+
+    try {
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    String url = getString(R.string.Url);
+    String ApiPath = url + "/api/ventas/tickets/tickets-x-articulo?usu_id=" + usu_id + "&tic_id_sucursal=" + tic_id_sucursal + "&esApp=1";
+    JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, null, new Response.Listener<JSONObject>() {
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        public void onResponse(JSONObject response) {
+            JSONArray ResultadoProductos = null;
+
+            try {
+                int status = Integer.parseInt(response.getString("estatus"));
+                String Mensaje = response.getString("mensaje");
+
+                if (status == 1) {
+                    ResultadoProductos = response.getJSONArray("resultado");
+
+                    for (int x = 0; x < ResultadoProductos.length(); x++) {
+                        JSONObject elemento = ResultadoProductos.getJSONObject(x);
+
+                        tic_importe_total = elemento.getInt("tic_importe_total");
+                        if (tic_importe_total > 0) {
+                            String tar_id_articulo = elemento.getString("tar_id_articulo");
+                            tar_nombre_articulo = elemento.getString("tar_nombre_articulo");
+
+                            final ClienteFrecuenteModel Topvendidos = new ClienteFrecuenteModel("","","", tar_nombre_articulo, tar_id_articulo);
+                            Productos.add(Topvendidos);
+                        }
+                    }
+                    //MAPGropingBy
+                    Map<String, Long> TopbyProductos = Productos.stream().collect(Collectors.groupingBy(ClienteFrecuenteModel::gettar_id_articulo, counting()));
+                    TopbyProductos.keySet().forEach(employee -> {
+                        ClienteFrecuenteModel nombreproducto = Productos.stream()
+                                .filter(Productos -> employee.equals(Productos.gettar_id_articulo()))
+                                .findAny()
+                                .orElse(null);
+
+                        String Articulo  = String.valueOf(nombreproducto.gettar_nombre_articulo());
+                        String CantTiket = String.valueOf(Math.toIntExact(TopbyProductos.get(employee)));
+
+                        final ClienteFrecuenteModel TopVentas = new ClienteFrecuenteModel("","","",Articulo, CantTiket);
+                        Top.add(TopVentas);
+                    });
+
+                    final TopvendidosAdapter TopVendidoseAdapter = new TopvendidosAdapter(getContext(), Top ,tabla_productos);
+                    tabla_productos.setDataAdapter(TopVendidoseAdapter);
+                }
+
+            } catch (JSONException e) {
+                Toast toast1 =
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                toast1.show();
+            }
+        }
+    },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+    );
+    VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( postRequest );
+}
+
 
 }
 
