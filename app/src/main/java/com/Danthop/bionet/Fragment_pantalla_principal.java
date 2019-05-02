@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,6 +50,7 @@ import static java.util.stream.Collectors.counting;
  */
 public class Fragment_pantalla_principal extends Fragment{
     private String usu_id;
+    private String suc_id;
     private String tic_id_sucursal;
     private long backPressedTime;
     private Toast backToast;
@@ -60,7 +62,9 @@ public class Fragment_pantalla_principal extends Fragment{
     private List<ClienteFrecuenteModel>Clientes;
     private List<ClienteFrecuenteModel>Productos;
     private List<ClienteFrecuenteModel>Clientes2;
+    private List<ClienteFrecuenteModel>TopClienteMax;
     private List<ClienteFrecuenteModel>Top;
+    private List<ClienteFrecuenteModel>Topmax;
     private String existencia;
     private String nombre_cliente;
     private String nombre_sucursal;
@@ -84,12 +88,13 @@ public class Fragment_pantalla_principal extends Fragment{
         String Apellido = sharedPref.getString("usu_apellidos", "");
         String Nombre = sharedPref.getString("usu_nombre", "");
         usu_id = sharedPref.getString("usu_id","");
+        suc_id = sharedPref.getString("suc_id","77de9acd-43b4-56b3-9a65-ec1ce9145730");
         tic_id_sucursal = sharedPref.getString("tic_id_sucursal","77de9acd-43b4-56b3-9a65-ec1ce9145730");
 
 
         //=====Programación de las tablas=====
-        String[][] DATA_TO_SHOW = { { "Producto 1", "Sucursal 1"},
-                {""}};
+        //String[][] DATA_TO_SHOW = { { "Producto 1", "Sucursal 1"},
+               // {""}};
 
         String[][] DATA_TO_SHOW2 = { { "Notificacion 1"},
                 {""}};
@@ -109,6 +114,7 @@ public class Fragment_pantalla_principal extends Fragment{
         tabla_productos.setColumnModel(tableColumnWeightModel);
         Productos = new ArrayList<>();
         Top = new ArrayList<>();
+        Topmax = new ArrayList<>();
 
 //--------------------------------------------------------------------------------------------------
 
@@ -154,6 +160,7 @@ public class Fragment_pantalla_principal extends Fragment{
         tabla_clientes.setColumnModel(tableColumnWeightModel4);
         Clientes = new ArrayList<>();
         Clientes2 = new ArrayList<>();
+        TopClienteMax = new ArrayList<>();
 
 //--------------------------------------------------------------------------------------------------
 
@@ -316,20 +323,35 @@ private void LoadClientesFrecuentes(){
                     //MAPGropingBy
                     Map<String, Long> ClientebyFrecuente = Clientes.stream().collect(Collectors.groupingBy(ClienteFrecuenteModel::getUUIDTicketCliente, counting()));
                     ClientebyFrecuente.keySet().forEach(employee -> {
-
+                        String Articulo = String.valueOf(Collections.max(ClientebyFrecuente.entrySet(), Map.Entry.comparingByValue()).getKey());
                         ClienteFrecuenteModel nombreclient = Clientes.stream()
-                                .filter(Clientes -> employee.equals(Clientes.getUUIDTicketCliente()))
+                                .filter(Clientes -> Articulo.equals(Clientes.getUUIDTicketCliente()))
                                 .findAny()
                                 .orElse(null);
 
                       String nb  = String.valueOf(nombreclient.getnombre_cliente());
                       String cantTiket = String.valueOf(Math.toIntExact(ClientebyFrecuente.get(employee)));
 
-                        final ClienteFrecuenteModel Nombrecliente2 = new ClienteFrecuenteModel(nb,cantTiket,"","", "");
-                        Clientes2.add(Nombrecliente2);
+                      final ClienteFrecuenteModel Nombrecliente2 = new ClienteFrecuenteModel(nb,cantTiket,"","", "");
+                      Clientes2.add(Nombrecliente2);
+
+
                     });
 
-                    final ClienteFrecuenteAdapter FrecuenteAdapter = new ClienteFrecuenteAdapter(getContext(), Clientes2,tabla_clientes);
+                    Map<String, Long> TopbyProductosmax = Clientes2.stream().collect(Collectors.groupingBy(ClienteFrecuenteModel::gettar_id_articulo, counting()));
+                    TopbyProductosmax.keySet().forEach(employee -> {
+                        String Clientemax = String.valueOf(Collections.max(TopbyProductosmax.entrySet(), Map.Entry.comparingByValue()).getKey());
+                        ClienteFrecuenteModel nombreclient = Clientes2.stream()
+                                .filter(Clientes2 -> Clientemax.equals(Clientes2.gettar_id_articulo()))
+                                .findAny()
+                                .orElse(null);
+                        String nb  = String.valueOf(nombreclient.getnombre_cliente());
+
+                        final ClienteFrecuenteModel TopClientemax = new ClienteFrecuenteModel(nb,"","","", "");
+                        TopClienteMax.add(TopClientemax);
+                    });
+
+                    final ClienteFrecuenteAdapter FrecuenteAdapter = new ClienteFrecuenteAdapter(getContext(), TopClienteMax,tabla_clientes);
                     tabla_clientes.setDataAdapter(FrecuenteAdapter);
                 }
             } catch (JSONException e) {
@@ -358,12 +380,13 @@ private void LoadMasVendidos(){
         e.printStackTrace();
     }
     String url = getString(R.string.Url);
-    String ApiPath = url + "/api/ventas/tickets/tickets-x-articulo?usu_id=" + usu_id + "&tic_id_sucursal=" + tic_id_sucursal + "&esApp=1";
+    String ApiPath = url + "/api/topProd?usu_id=" + usu_id + "&suc_id=" + suc_id + "&esApp=1";
     JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, null, new Response.Listener<JSONObject>() {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onResponse(JSONObject response) {
             JSONArray ResultadoProductos = null;
+            JSONArray RespuestaProductos = null;
 
             try {
                 int status = Integer.parseInt(response.getString("estatus"));
@@ -373,33 +396,20 @@ private void LoadMasVendidos(){
                     ResultadoProductos = response.getJSONArray("resultado");
 
                     for (int x = 0; x < ResultadoProductos.length(); x++) {
-                        JSONObject elemento = ResultadoProductos.getJSONObject(x);
+                        JSONArray elemento = ResultadoProductos.getJSONArray(x);
 
-                        tic_importe_total = elemento.getInt("tic_importe_total");
-                        if (tic_importe_total > 0) {
-                            String tar_id_articulo = elemento.getString("tar_id_articulo");
-                            tar_nombre_articulo = elemento.getString("tar_nombre_articulo");
-
-                            final ClienteFrecuenteModel Topvendidos = new ClienteFrecuenteModel("","","", tar_nombre_articulo, tar_id_articulo);
-                            Productos.add(Topvendidos);
+                        for (int y = 0; y < elemento.length(); y++) {
+                            JSONObject elemento2 = ResultadoProductos.getJSONObject(y);
+                            tar_nombre_articulo = elemento2.getString("tar_nombre_articulo");
+                            NumTicket = elemento2.getString("cantidad");
                         }
+                        //NumTicket = elemento.getString("cantidad");
+
+                            final ClienteFrecuenteModel Topvendidos = new ClienteFrecuenteModel("","","", tar_nombre_articulo, "");
+                            Productos.add(Topvendidos);
                     }
-                    //MAPGropingBy
-                    Map<String, Long> TopbyProductos = Productos.stream().collect(Collectors.groupingBy(ClienteFrecuenteModel::gettar_id_articulo, counting()));
-                    TopbyProductos.keySet().forEach(employee -> {
-                        ClienteFrecuenteModel nombreproducto = Productos.stream()
-                                .filter(Productos -> employee.equals(Productos.gettar_id_articulo()))
-                                .findAny()
-                                .orElse(null);
 
-                        String Articulo  = String.valueOf(nombreproducto.gettar_nombre_articulo());
-                        String CantTiket = String.valueOf(Math.toIntExact(TopbyProductos.get(employee)));
-
-                        final ClienteFrecuenteModel TopVentas = new ClienteFrecuenteModel("","","",Articulo, CantTiket);
-                        Top.add(TopVentas);
-                    });
-
-                    final TopvendidosAdapter TopVendidoseAdapter = new TopvendidosAdapter(getContext(), Top ,tabla_productos);
+                    final TopvendidosAdapter TopVendidoseAdapter = new TopvendidosAdapter(getContext(), Productos ,tabla_productos);
                     tabla_productos.setDataAdapter(TopVendidoseAdapter);
                 }
 

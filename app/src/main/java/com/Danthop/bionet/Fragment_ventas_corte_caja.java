@@ -16,21 +16,25 @@ public class Fragment_ventas_corte_caja extends Fragment {
 
     Button pestania_ventas;
     Button pestania_reporte;
+    Button btn_corte;
+    Button btn_listado_corte;
+    Button btn_factura_ventas;
 
 
     public Fragment_ventas_corte_caja() {
         // Required empty public constructor
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ventas_corte_caja_listado,container, false);
         pestania_ventas = v.findViewById(R.id.Ventas_btn);
         pestania_reporte = v.findViewById(R.id.btn_pestania_reporte);
-        loadButtons();
+        btn_corte = v.findViewById(R.id.btn_corte);
+        btn_listado_corte = v.findViewById(R.id.btn_listado_corte);
+        btn_factura_ventas = v.findViewById(R.id.btn_factura_ventas);
 
+        loadButtons();
         return v;
     }
 
@@ -50,5 +54,7 @@ public class Fragment_ventas_corte_caja extends Fragment {
             }
         });
     }
+
+
 
 }
