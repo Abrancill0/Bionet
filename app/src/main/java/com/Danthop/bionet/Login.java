@@ -48,6 +48,7 @@ public class Login extends Activity {
     LoginModel Resultado = new LoginModel();
     private List<LoginModel> IDSucursales;
 
+    private JSONArray jsonArray;
     private static final int REQUEST_CODE = 999;
 
     Dialog reestablecer;
@@ -189,11 +190,12 @@ public class Login extends Activity {
                             ValorIdSucursales = RespuestaIdSucursales.getJSONArray("values");
 
 
-                            JSONArray jsonArray = new JSONArray();
+                            jsonArray = new JSONArray();
                             //RespuestaIdSucursales for para sacar olos 2 valores
                             for (int i=0; i<ValorIdSucursales.length(); i++) {
 
-                                JSONObject elemento = ValorIdSucursales.getJSONObject(i);
+                                String elemento = String.valueOf( ValorIdSucursales.get(i) );
+
 
                                 JSONObject request2 = new JSONObject();
                                 try {
@@ -326,6 +328,7 @@ public class Login extends Activity {
             editor.putString("usu_imagen_perfil", "http://192.168.100.192:8010"+Resultado.getUsuImagen());
             editor.putString("usu_activo", Resultado.getUsu_activo());
             editor.putString("usu_administrador", Resultado.getUsu_administrador());
+            editor.putString("usu_Sucursalitas", String.valueOf( jsonArray ) );
 
             editor.commit();
 
