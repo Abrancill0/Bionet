@@ -22,6 +22,7 @@ import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.google.gson.JsonArray;
 import com.mercadolibre.android.sdk.Meli;
 
 
@@ -29,6 +30,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,8 +43,10 @@ public class Login extends Activity {
     ProgressDialog progreso;
 
     private String macAddress;
+    private String usu_sucursales;
 
     LoginModel Resultado = new LoginModel();
+    private List<LoginModel> IDSucursales;
 
     private static final int REQUEST_CODE = 999;
 
@@ -66,6 +71,7 @@ public class Login extends Activity {
 
         TextUsuario = (EditText)findViewById(R.id.TextUsuario);
         TextPassword = (EditText)findViewById(R.id.TextPassword);
+        IDSucursales = new ArrayList<>();
 
         // Set SDK to log events
         Meli.setLoggingEnabled(true);
@@ -92,6 +98,8 @@ public class Login extends Activity {
         progreso = new ProgressDialog(this);
         progreso.setMessage("Iniciando sesion...");
         progreso.show();
+
+
 
 
         try{
@@ -121,6 +129,8 @@ public class Login extends Activity {
                 JSONArray Respuesta = null;
                 JSONObject RespuestaObjeto = null;
                 JSONObject RespuestaNodoUsuID = null;
+                JSONObject RespuestaIdSucursales = null;
+                JSONArray ValorIdSucursales = null;
 //VerificarAPI
                 try {
 
@@ -174,6 +184,26 @@ public class Login extends Activity {
 
                             RespuestaNodoUsuID = tipo_id.getJSONObject( "usu_id" );
                             Resultado.setUsuId( RespuestaNodoUsuID.getString( "uuid" ) );
+
+                            RespuestaIdSucursales = RespuestaObjeto.getJSONObject("usu_sucursales");
+                            ValorIdSucursales = RespuestaIdSucursales.getJSONArray("values");
+
+
+                            JSONArray jsonArray = new JSONArray();
+                            //RespuestaIdSucursales for para sacar olos 2 valores
+                            for (int i=0; i<ValorIdSucursales.length(); i++) {
+
+                                JSONObject elemento = ValorIdSucursales.getJSONObject(i);
+
+                                JSONObject request2 = new JSONObject();
+                                try {
+                                    request2.put("usu_sucursales", elemento);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                jsonArray.put(request2);
+
+                            }
 
                             new GuardaPreferencia().execute();
 

@@ -132,8 +132,8 @@
 
             </LinearLayout>
 
-            <de.codecrafters.tableview.TableView
-                android:id="@+id/tabla_inventario"
+            <com.Danthop.bionet.Tables.SortableHistoricoTable
+                android:id="@+id/tabla_historico"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight=".2"

@@ -209,7 +209,6 @@ public class Fragment_Ventas extends Fragment {
         VendedorID = new ArrayList<>();
         progreso = new ProgressDialog(getContext());
 
-
         SucursalName = new ArrayList<>();
         SucursalID = new ArrayList<>();
         SpinnerSucursal = (Spinner) v.findViewById(R.id.sucursal);
