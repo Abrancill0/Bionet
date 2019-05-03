@@ -13,9 +13,9 @@ public class OrdenEspecialModel {
     String Fecha_vencimiento;
     String Fecha_creacion;
     String Orden_estatus;
-    List<ArticuloOrdenEspecialModel> ArticulosOrdenados;
+    List<OrdenEspecialArticuloModel> ArticulosOrdenados;
 
-    public OrdenEspecialModel(String orden_ticket_id, String orden_cliente_id, String orden_nombre_cliente, String orden_sucursal_id, String orden_nombre_sucursal, String orden_importe_pagado, String orden_importe_restante, String fecha_vencimiento, String fecha_creacion, String orden_estatus, List<ArticuloOrdenEspecialModel> articulosOrdenados) {
+    public OrdenEspecialModel(String orden_ticket_id, String orden_cliente_id, String orden_nombre_cliente, String orden_sucursal_id, String orden_nombre_sucursal, String orden_importe_pagado, String orden_importe_restante, String fecha_vencimiento, String fecha_creacion, String orden_estatus, List<OrdenEspecialArticuloModel> articulosOrdenados) {
         Orden_ticket_id = orden_ticket_id;
         Orden_cliente_id = orden_cliente_id;
         Orden_nombre_cliente = orden_nombre_cliente;
@@ -77,11 +77,11 @@ public class OrdenEspecialModel {
         Fecha_vencimiento = fecha_vencimiento;
     }
 
-    public List<ArticuloOrdenEspecialModel> getArticulosOrdenados() {
+    public List<OrdenEspecialArticuloModel> getArticulosOrdenados() {
         return ArticulosOrdenados;
     }
 
-    public void setArticulosOrdenados(List<ArticuloOrdenEspecialModel> articulosApartados) {
+    public void setArticulosOrdenados(List<OrdenEspecialArticuloModel> articulosApartados) {
         ArticulosOrdenados = articulosApartados;
     }
 

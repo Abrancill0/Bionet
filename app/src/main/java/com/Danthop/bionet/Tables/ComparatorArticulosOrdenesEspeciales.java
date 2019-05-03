@@ -1,7 +1,6 @@
 package com.Danthop.bionet.Tables;
 
-import com.Danthop.bionet.model.ArticuloApartadoModel;
-import com.Danthop.bionet.model.ArticuloOrdenEspecialModel;
+import com.Danthop.bionet.model.OrdenEspecialArticuloModel;
 
 import java.util.Comparator;
 
@@ -11,15 +10,15 @@ public class ComparatorArticulosOrdenesEspeciales {
 
     }
 
-    public static Comparator<ArticuloOrdenEspecialModel> getApartadoComparator() {
+    public static Comparator<OrdenEspecialArticuloModel> getApartadoComparator() {
         return new ApartadoNameComparator();
     }
 
 
-    private static class ApartadoNameComparator implements Comparator<ArticuloOrdenEspecialModel> {
+    private static class ApartadoNameComparator implements Comparator<OrdenEspecialArticuloModel> {
 
         @Override
-        public int compare(final ArticuloOrdenEspecialModel orden1, final ArticuloOrdenEspecialModel orden2) {
+        public int compare(final OrdenEspecialArticuloModel orden1, final OrdenEspecialArticuloModel orden2) {
             return orden1.getNombre_articulo().compareTo(orden2.getNombre_articulo());
         }
     }

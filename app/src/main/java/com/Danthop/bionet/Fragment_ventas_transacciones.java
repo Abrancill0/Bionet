@@ -26,8 +26,8 @@ import com.Danthop.bionet.Tables.SortableOrdenEspecialDetalleTable;
 import com.Danthop.bionet.Tables.SortableOrdenEspecialTable;
 import com.Danthop.bionet.model.ApartadoModel;
 import com.Danthop.bionet.model.ArticuloApartadoModel;
-import com.Danthop.bionet.model.ArticuloOrdenEspecialModel;
 import com.Danthop.bionet.model.Impuestos;
+import com.Danthop.bionet.model.OrdenEspecialArticuloModel;
 import com.Danthop.bionet.model.OrdenEspecialModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -508,7 +508,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                         String FechaDeCreacion = elemento.getString("oes_fecha_hora_creo");
                                         String Estatus = elemento.getString("oes_estatus");
 
-                                        List<ArticuloOrdenEspecialModel> ListaDeArticulosOrdenados = new ArrayList<>();
+                                        List<OrdenEspecialArticuloModel> ListaDeArticulosOrdenados = new ArrayList<>();
                                         JSONArray Articulos = elemento.getJSONArray("aArticulosOrdenados");
                                         for(int i= 0; i<Articulos.length(); i++)
                                         {
@@ -545,7 +545,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                             JSONObject NodoPrecioArticulo = elemento2.getJSONObject("oea_precio_articulo");
                                             String ArticuloPrecio = NodoPrecioArticulo.getString("value");
 
-                                            ArticuloOrdenEspecialModel ArticuloOrdenado = new ArticuloOrdenEspecialModel(
+                                            OrdenEspecialArticuloModel ArticuloOrdenado = new OrdenEspecialArticuloModel(
                                                     CantidadApartada,
                                                     ArticuloIDApartado,
                                                     ArticuloIDVariante,
@@ -553,7 +553,6 @@ public class Fragment_ventas_transacciones extends Fragment {
                                                     ArticuloImportePagado,
                                                     ArticuloImporteRestante,
                                                     ArticuloNombreApartado,
-                                                    "",
                                                     ArticuloAplicaDevolucion,
                                                     ArticuloImporteDescuento,
                                                     ArticuloImporteTotal,

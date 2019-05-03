@@ -10,30 +10,33 @@ import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
-public class SortableOrdenEspecialDetalleTable extends SortableTableView<OrdenEspecialArticuloModel> {
+public class SortableSeleccionaOrdenEspecialTable extends SortableTableView<OrdenEspecialArticuloModel> {
 
-    public SortableOrdenEspecialDetalleTable(final Context context) {
+    public SortableSeleccionaOrdenEspecialTable(final Context context) {
         this(context, null);
     }
 
-    public SortableOrdenEspecialDetalleTable(final Context context, final AttributeSet attributes) {
+    public SortableSeleccionaOrdenEspecialTable(final Context context, final AttributeSet attributes) {
         this(context, attributes, android.R.attr.listViewStyle);
     }
 
-    public SortableOrdenEspecialDetalleTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
+    public SortableSeleccionaOrdenEspecialTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Articulo", "Cant", "Importe Total", "Importe Restante");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Articulo", "Cantidad", "Importe Total", "Monto a pagar",
+                "Apartar");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
         tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 1);
         tableColumnWeightModel.setColumnWeight(2, 2);
         tableColumnWeightModel.setColumnWeight(3, 2);
+        tableColumnWeightModel.setColumnWeight(4, 1);
         setColumnModel(tableColumnWeightModel);
 
         setColumnComparator(0, ComparatorArticulosOrdenesEspeciales.getApartadoComparator());
     }
+
 }

@@ -2,7 +2,7 @@ package com.Danthop.bionet.model;
 
 import java.util.List;
 
-public class ArticuloOrdenEspecialModel {
+public class OrdenEspecialArticuloModel {
 
     String Cantidad;
     String Articulo_id;
@@ -11,7 +11,6 @@ public class ArticuloOrdenEspecialModel {
     String Importe_pagado;
     String Importe_restante;
     String Nombre_articulo;
-    String Id_existencias_origen;
     String Aplica_para_devolucion;
     String Importe_descuento;
     String Importe_total;
@@ -19,18 +18,17 @@ public class ArticuloOrdenEspecialModel {
     String Porcentaje_descuento;
     String Precio_articulo;
 
-    public ArticuloOrdenEspecialModel(String cantidad, String articulo_id, String articulo_id_variante,
-                                      String articulo_id_modificador, String importe_pagado, String importe_restante,
-                                      String nombre_articulo, String id_existencias_origen, String aplica_para_devolucion,
-                                      String importe_descuento, String importe_total, List<com.Danthop.bionet.model.Impuestos>  impuestos, String porcentaje_descuento,
-                                      String precio_articulo) {
+    public OrdenEspecialArticuloModel(String cantidad, String articulo_id, String articulo_id_variante,
+                                 String articulo_id_modificador, String importe_pagado, String importe_restante,
+                                 String nombre_articulo, String aplica_para_devolucion,
+                                 String importe_descuento, String importe_total, List<com.Danthop.bionet.model.Impuestos>  impuestos, String porcentaje_descuento,
+                                 String precio_articulo) {
         Articulo_id = articulo_id;
         Articulo_id_variante = articulo_id_variante;
         Articulo_id_modificador = articulo_id_modificador;
         Importe_pagado = importe_pagado;
         Importe_restante = importe_restante;
         Nombre_articulo = nombre_articulo;
-        Id_existencias_origen = id_existencias_origen;
         Aplica_para_devolucion = aplica_para_devolucion;
         Importe_descuento = importe_descuento;
         Importe_total = importe_total;
@@ -87,14 +85,6 @@ public class ArticuloOrdenEspecialModel {
 
     public void setNombre_articulo(String nombre_articulo) {
         Nombre_articulo = nombre_articulo;
-    }
-
-    public String getId_existencias_origen() {
-        return Id_existencias_origen;
-    }
-
-    public void setId_existencias_origen(String id_existencias_origen) {
-        Id_existencias_origen = id_existencias_origen;
     }
 
     public String getAplica_para_devolucion() {

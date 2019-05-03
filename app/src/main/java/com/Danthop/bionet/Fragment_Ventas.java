@@ -26,16 +26,20 @@ import android.widget.Toast;
 import com.Danthop.bionet.Adapters.ClienteAdapter;
 import com.Danthop.bionet.Adapters.MetodoPagoAdapter;
 import com.Danthop.bionet.Adapters.SeleccionaApartadoAdapter;
+import com.Danthop.bionet.Adapters.SeleccionaOrdenEspecialAdapter;
 import com.Danthop.bionet.Adapters.SeleccionarArticuloVentaAdapter;
 import com.Danthop.bionet.Adapters.VentaArticuloAdapter;
 import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.Tables.SortableSeleccionaApartadoTable;
+import com.Danthop.bionet.Tables.SortableSeleccionaOrdenEspecialTable;
 import com.Danthop.bionet.Tables.SortableSeleccionarArticuloTable;
 import com.Danthop.bionet.Tables.SortableVentaArticulos;
 import com.Danthop.bionet.model.ArticuloApartadoModel;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
+import com.Danthop.bionet.model.ConfiguracionesApartadoModel;
 import com.Danthop.bionet.model.Impuestos;
+import com.Danthop.bionet.model.OrdenEspecialArticuloModel;
 import com.Danthop.bionet.model.PagoModel;
 import com.Danthop.bionet.model.TicketModel;
 import com.Danthop.bionet.model.VolleySingleton;
@@ -74,6 +78,7 @@ public class Fragment_Ventas extends Fragment {
     private Button crear_cliente;
     private Button aceptar_agregar_vendedor;
     private Button btn_apartar;
+    private Button btn_ordenar;
     private Button Corte_Caja;
     private Dialog dialog;
     private TextView descuento;
@@ -111,6 +116,7 @@ public class Fragment_Ventas extends Fragment {
     private SortableSeleccionarArticuloTable tabla_selecciona_articulo;
     private SortableVentaArticulos tabla_venta_articulos;
     private SortableSeleccionaApartadoTable tabla_apartados_disponibles;
+    private SortableSeleccionaOrdenEspecialTable tabla_ordenes_disponibles;
     private String SKUarticulo;
 
     private String IDCliente;
@@ -123,9 +129,12 @@ public class Fragment_Ventas extends Fragment {
     private List<PagoModel> ListaDePagosDisponibles;
     private List<PagoModel> ListaDePagos_a_utilizar;
     private List<Impuestos> ImpuestosDeArticuloApartado;
+    private List<Impuestos> ImpuestosDeArticuloOrdenado;
     private List<ArticuloApartadoModel> ListaDeArticulosApartados;
+    private List<OrdenEspecialArticuloModel> ListaDeArticulosOrdenados;
 
     private List<ArticuloApartadoModel> ArticulosApartados;
+    private List<OrdenEspecialArticuloModel> ArticulosOrdenados;
 
     private TicketModel ticket_de_venta;
 
@@ -162,6 +171,7 @@ public class Fragment_Ventas extends Fragment {
 
     private ProgressDialog progreso;
 
+    private String DiasApartado;
 
     public Fragment_Ventas() {
         // Required empty public constructor
@@ -186,6 +196,7 @@ public class Fragment_Ventas extends Fragment {
         btn_agregar_articulo = v.findViewById(R.id.btn_agregar_articulo);
         btn_feenicia = v.findViewById(R.id.btn_feenicia);
         btn_apartar = v.findViewById(R.id.btn_apartar);
+        btn_ordenar = v.findViewById(R.id.btn_orden);
         btn_finalizar = v.findViewById(R.id.btn_finalizar);
         btn_reporte = v.findViewById(R.id.btn_reporte);
         Corte_Caja = v.findViewById(R.id.CorteCaja);
@@ -208,8 +219,11 @@ public class Fragment_Ventas extends Fragment {
         ListaDePagosDisponibles = new ArrayList<>();
         ListaDePagos_a_utilizar = new ArrayList<>();
         ImpuestosDeArticuloApartado = new ArrayList<>();
+        ImpuestosDeArticuloOrdenado = new ArrayList<>();
         ListaDeArticulosApartados = new ArrayList<>();
+        ListaDeArticulosOrdenados = new ArrayList<>();
         ArticulosApartados = new ArrayList<>();
+        ArticulosOrdenados = new ArrayList<>();
 
 
         tabla_venta_articulos = v.findViewById(R.id.tabla_venta_articulos);
@@ -520,7 +534,7 @@ public class Fragment_Ventas extends Fragment {
                     public void onDataClicked(int rowIndex, final ClienteModel clickedData) {
                         dialog.dismiss();
                         ticket_de_venta.setTic_nombre_cliente(clickedData.getCliente_Nombre());
-                        ticket_de_venta.setTic_id_cliente(clickedData.getCliente_usu_id());
+                        ticket_de_venta.setTic_id_cliente(clickedData.getCliente_UUID());
                         btn_agregar_cliente.setText(ticket_de_venta.getTic_nombre_cliente());
                         AniadirClienteTicket();
 
@@ -966,7 +980,15 @@ public class Fragment_Ventas extends Fragment {
             public void onClick(View v) {
                 if(ticket_de_venta.getTic_id_cliente().equals(""))
                 {
-
+                    dialog.setContentView(R.layout.pop_up_ventas_apartar_sin_cliente);
+                    dialog.show();
+                    Button aceptar = dialog.findViewById(R.id.Aceptar);
+                    aceptar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
                 }
                 else {
                     dialog.setContentView(R.layout.pop_up_ventas_selecciona_apartados);
@@ -983,14 +1005,74 @@ public class Fragment_Ventas extends Fragment {
                     btn_apartar_articulos.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            LoadConfiguracionApartado();
                             ApartarArticulosSeleccionados();
                             dialog.dismiss();
+                            dialog.setContentView(R.layout.pop_up_ventas_confirmacion_apartado);
+                            dialog.show();
+                            Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                            aceptar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
                         }
                     });
                 }
 
             }
         });
+
+        btn_ordenar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ticket_de_venta.getTic_id_cliente().equals(""))
+                {
+                    dialog.setContentView(R.layout.pop_up_ventas_apartar_sin_cliente);
+                    dialog.show();
+                    Button aceptar = dialog.findViewById(R.id.Aceptar);
+                    aceptar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                }
+                else {
+                    dialog.setContentView(R.layout.pop_up_ventas_selecciona_orden);
+                    dialog.show();
+                    ArticulosOrdenados.clear();
+                    tabla_ordenes_disponibles = dialog.findViewById(R.id.tabla_seleccionar_ordenes);
+                    tabla_ordenes_disponibles.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
+                    final SeleccionaOrdenEspecialAdapter articuloAdapter = new SeleccionaOrdenEspecialAdapter(getContext(), ListaDeArticulosOrdenados, tabla_ordenes_disponibles, ticket_de_venta, ArticulosOrdenados,
+                            usu_id, SpinnerSucursal, SucursalID);
+                    articuloAdapter.notifyDataSetChanged();
+                    tabla_ordenes_disponibles.setDataAdapter(articuloAdapter);
+
+                    Button btn_apartar_articulos = dialog.findViewById(R.id.btn_apartar_articulos);
+                    btn_apartar_articulos.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            LoadConfiguracionApartado();
+                            ApartarArticulosSeleccionados();
+                            dialog.dismiss();
+                            dialog.setContentView(R.layout.pop_up_ventas_confirmacion_apartado);
+                            dialog.show();
+                            Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                            aceptar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
+                    });
+                }
+
+            }
+        });
+
 
 
 
@@ -1006,7 +1088,7 @@ public class Fragment_Ventas extends Fragment {
 
             for (int i = 0; i < ArticulosApartados.size(); i++) {
                 JSONObject list1 = new JSONObject();
-                list1.put("aar_id_cantidad", ArticulosApartados.get(i).getCantidad());
+                list1.put("aar_cantidad", ArticulosApartados.get(i).getCantidad());
                 list1.put("aar_id_articulo", ArticulosApartados.get(i).getArticulo_id());
                 list1.put("aar_id_variante", ArticulosApartados.get(i).getArticulo_id_variante());
                 list1.put("aar_id_modificador", ArticulosApartados.get(i).getArticulo_id_modificador());
@@ -1026,21 +1108,17 @@ public class Fragment_Ventas extends Fragment {
                 list1.put("aar_importe_descuento", ArticulosApartados.get(i).getImporte_descuento());
                 list1.put("aar_porcentaje_descuento", ArticulosApartados.get(i).getPorcentaje_descuento());
                 list1.put("aar_precio_articulo", ArticulosApartados.get(i).getPrecio_articulo());
-                JSONArray impuestos = new JSONArray();
+                JSONObject impuestos = new JSONObject();
                     try{
                         for (int j=0; j<ArticulosApartados.get(i).getImpuestos().size();j++)
                         {
-                            JSONObject list2 = new JSONObject();
-                            list2.put(ArticulosApartados.get(i).getImpuestos().get(j).getImpuestosID(), ArticulosApartados.get(i).getImpuestos().get(j).getValorImpuesto());
-                            impuestos.put(list2);
+                            impuestos.put(ArticulosApartados.get(i).getImpuestos().get(j).getImpuestosID(), ArticulosApartados.get(i).getImpuestos().get(j).getValorImpuesto());
                         }
                     } catch (JSONException e2) {
                         e2.printStackTrace();
                     }
-
                 list1.put("aar_impuestos", impuestos);
-                list1.put("aar_aplica_para_devolucion", ArticulosApartados.get(i).getAplica_para_devolucion());
-                arreglo.put(list1);
+                    arreglo.put(list1);
             }
         } catch (JSONException e1) {
             e1.printStackTrace();
@@ -1058,7 +1136,7 @@ public class Fragment_Ventas extends Fragment {
             request.put("apa_id_cliente", ticket_de_venta.getTic_id_cliente());
             request.put("apa_importe_pagado", PagoTotal);
             request.put("apa_importe_restante", String.format("%.2f", RestanteTotal));
-            request.put("dias_vencimiento", 30);
+            request.put("dias_vencimiento", DiasApartado);
             request.put("aArticulos", arreglo);
 
 
@@ -1113,7 +1191,6 @@ public class Fragment_Ventas extends Fragment {
 
 
     private void FinalizarTicket(final TextView importeCambio, final TextView importeRecibido, final TextView importeVenta) {
-
 
         JSONArray arreglo = new JSONArray();
         try {
@@ -1178,7 +1255,7 @@ public class Fragment_Ventas extends Fragment {
                         Imagenes.clear();
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
                                 total, descuento, impuesto, subtotal,
-                                carouselView, Imagenes,ImpuestosDeArticuloApartado,ListaDeArticulosApartados);
+                                carouselView, Imagenes,ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados);
                         articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                         LoadImages();
@@ -1223,6 +1300,7 @@ public class Fragment_Ventas extends Fragment {
     private void Aniadir_a_venta(String CBoSKULL, String Cantidad) {
         ArticulosVenta.clear();
         ListaDeArticulosApartados.clear();
+        ListaDeArticulosOrdenados.clear();
         ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
         JSONObject request = new JSONObject();
         try {
@@ -1294,6 +1372,7 @@ public class Fragment_Ventas extends Fragment {
                             String AplicaApartados = nodo.getString("art_aplica_apartados");
                             String TieneExistencia = nodo.getString("art_id_existencia");
 
+                            //APARTADOS--------------------------------------
                             if (AplicaApartados.equals("false")||(TieneExistencia.equals(""))) {
 
                             }
@@ -1342,6 +1421,57 @@ public class Fragment_Ventas extends Fragment {
                                         ArticuloApartadoPorcentajeDescuento,
                                         ArticuloApartadoPrecio);
                                 ListaDeArticulosApartados.add(ArticuloApartado);
+                            }
+
+                            //ORDENES-------------------------------------------------------
+                            String AplicaOrdenes = nodo.getString("art_aplica_ordenes_especiales");
+                            if (AplicaOrdenes.equals("true")||(TieneExistencia.equals(""))) {
+                                String ArticuloCantidad = nodo.getString("tar_cantidad");
+                                String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
+                                JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
+                                String ArticuloIDApartado = NodoIDApartado.getString("uuid");
+                                JSONObject NodoIDApartadoVariante = nodo.getJSONObject("tar_id_variante");
+                                String ArticuloIDApartadoVariante = NodoIDApartadoVariante.getString("uuid");
+                                String ArticuloIDApartadoModificador = nodo.getString("tar_id_modificador");
+                                String ArticuloApartadoImportePagado = nodo.getString("tar_importe_pagado");
+                                String ArticuloIDApartadoExistencia = nodo.getString("art_id_existencia");
+                                String ArticuloApartadoAplicaDevolucion = nodo.getString("tar_aplica_para_devolucion");
+                                String ArticuloApartadoImporteDescuento = nodo.getString("tar_importe_descuento");
+                                String ArticuloApartadoTotal = nodo.getString("tar_importe_total");
+                                JSONObject nodoImpuestos = nodo.getJSONObject("tar_impuestos");
+                                Iterator keys = nodoImpuestos.keys();
+                                while (keys.hasNext()) {
+                                    Object key = keys.next();
+                                    String value = nodoImpuestos.getString((String) key);
+                                    Impuestos Impuesto = new Impuestos((String) key, value);
+                                    ImpuestosDeArticuloOrdenado.add(Impuesto);
+                                }
+                                String ArticuloApartadoPorcentajeDescuento = nodo.getString("tar_porcentaje_descuento");
+                                String ArticuloApartadoPrecio = nodo.getString("tar_precio_articulo");
+
+
+                                float importePagado = Float.parseFloat((ArticuloApartadoImportePagado));
+                                float importeTotal = Float.parseFloat((ArticuloApartadoTotal));
+                                float importeRestante = importeTotal - importePagado;
+
+                                OrdenEspecialArticuloModel ArticuloOrdenado = new OrdenEspecialArticuloModel(
+                                        ArticuloCantidad,
+                                        ArticuloIDApartado,
+                                        ArticuloIDApartadoVariante,
+                                        ArticuloIDApartadoModificador,
+                                        ArticuloApartadoImportePagado,
+                                        String.valueOf(importeRestante),
+                                        NombreArticuloApartado,
+                                        ArticuloApartadoAplicaDevolucion,
+                                        ArticuloApartadoImporteDescuento,
+                                        ArticuloApartadoTotal,
+                                        ImpuestosDeArticuloOrdenado,
+                                        ArticuloApartadoPorcentajeDescuento,
+                                        ArticuloApartadoPrecio);
+                                ListaDeArticulosOrdenados.add(ArticuloOrdenado);
+                            }
+                            else {
+
                             }
                         }
 
@@ -1407,7 +1537,7 @@ public class Fragment_Ventas extends Fragment {
                         }
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
                                 total, descuento, impuesto, subtotal,
-                                carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados);
+                                carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados);
                         articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                         LoadImages();
@@ -1461,7 +1591,7 @@ public class Fragment_Ventas extends Fragment {
 
                 JSONObject Respuesta = null;
                 JSONObject RespuestaNodoDireccion = null;
-                JSONObject ElementoUsuario = null;
+                JSONObject ElementoCliente = null;
                 JSONArray RespuestaNodoClientes = null;
 
                 try {
@@ -1478,9 +1608,9 @@ public class Fragment_Ventas extends Fragment {
                         for (int x = 0; x < RespuestaNodoClientes.length(); x++) {
                             JSONObject elemento = RespuestaNodoClientes.getJSONObject(x);
 
-                            ElementoUsuario = elemento.getJSONObject("cli_id");
+                            ElementoCliente = elemento.getJSONObject("cli_id");
 
-                            UUID = ElementoUsuario.getString("uuid");
+                            UUID = ElementoCliente.getString("uuid");
                             nombreCliente = elemento.getString("cli_nombre");
                             correo_electronico = elemento.getString("cli_correo_electronico");
 
@@ -2111,6 +2241,50 @@ public class Fragment_Ventas extends Fragment {
                 ""
 
         );
+    }
+
+    private void LoadConfiguracionApartado()
+    {
+        try {
+            String ApiPath = "http://187.189.192.150:8010/api/ventas/apartados/index?usu_id=" + usu_id + "&esApp=1&suc_id="+SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+
+            // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+
+                                int EstatusApi = Integer.parseInt(response.getString("estatus"));
+
+                                if (EstatusApi == 1) {
+
+                                    JSONObject resultado = response.getJSONObject("resultado");
+                                    JSONObject configuraciones = resultado.getJSONObject("aConfiguracionCuenta");
+                                    DiasApartado = configuraciones.getString("con_dias_apartado_vence");
+                                }
+                            } catch (JSONException e) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(e), Toast.LENGTH_LONG);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf(error), Toast.LENGTH_LONG);
+                        }
+                    }
+            );
+            getRequest.setShouldCache(false);
+
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+        } catch (Error e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -38,11 +38,11 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 import static android.text.InputType.TYPE_CLASS_NUMBER;
 
-public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<ArticuloApartadoModel> {
+public class SeleccionaOrdenEspecialAdapter extends LongPressAwareTableDataAdapter<OrdenEspecialArticuloModel> {
 
     int TEXT_SIZE = 12;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
-    private List<ArticuloApartadoModel> ArticulosApartados;
+    private List<OrdenEspecialArticuloModel> ArticulosOrdenados;
     private TicketModel Ticket;
 
     private String usu_id;
@@ -59,12 +59,12 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
     String Hasta;
 
 
-    public SeleccionaApartadoAdapter(final Context context, final List<ArticuloApartadoModel> data, final SortableSeleccionaApartadoTable tableView,
-                                     TicketModel ticket, List<ArticuloApartadoModel> articulosApartados,
+    public SeleccionaOrdenEspecialAdapter(final Context context, final List<OrdenEspecialArticuloModel> data, final SortableSeleccionaOrdenEspecialTable tableView,
+                                     TicketModel ticket, List<OrdenEspecialArticuloModel> articulosOrdenados,
                                      String Usu_ID, Spinner spinnerSucursal, ArrayList<String> sucursalID ) {
         super(context, data, tableView);
         Ticket = ticket;
-        ArticulosApartados = articulosApartados;
+        ArticulosOrdenados = articulosOrdenados;
         usu_id=Usu_ID;
         SpinnerSucursal=spinnerSucursal;
         SucursalID=sucursalID;
@@ -73,25 +73,25 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
 
     @Override
     public View getDefaultCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        ArticuloApartadoModel apartado = getRowData(rowIndex);
+        OrdenEspecialArticuloModel orden = getRowData(rowIndex);
         View renderedView = null;
         EditText Monto=null;
 
         switch (columnIndex) {
             case 0:
-                renderedView = renderNombreArticulo(apartado);
+                renderedView = renderNombreArticulo(orden);
                 break;
             case 1:
-                renderedView = renderCantidad(apartado);
+                renderedView = renderCantidad(orden);
                 break;
             case 2:
-                renderedView = renderImporteTotal(apartado);
+                renderedView = renderImporteTotal(orden);
                 break;
             case 3:
-                renderedView = renderMontoAApartar(apartado,rowIndex);
+                renderedView = renderMontoAApartar(orden,rowIndex);
                 break;
             case 4:
-                renderedView = renderSeleccionar(apartado,ListaDeCantidades.get(rowIndex));
+                renderedView = renderSeleccionar(orden,ListaDeCantidades.get(rowIndex));
                 break;
         }
         return renderedView;
@@ -99,21 +99,21 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
 
     @Override
     public View getLongPressCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        final ArticuloApartadoModel apartado = getRowData(rowIndex);
+        final OrdenEspecialArticuloModel orden = getRowData(rowIndex);
 
         return renderString("");
     }
 
-    private View renderNombreArticulo(final ArticuloApartadoModel apartado) {
-        return renderString(apartado.getNombre_articulo());
+    private View renderNombreArticulo(final OrdenEspecialArticuloModel orden) {
+        return renderString(orden.getNombre_articulo());
     }
 
-    private View renderCantidad(final ArticuloApartadoModel apartado) {
-        return renderString(apartado.getCantidad());
+    private View renderCantidad(final OrdenEspecialArticuloModel orden) {
+        return renderString(orden.getCantidad());
     }
 
-    private View renderImporteTotal(final ArticuloApartadoModel apartado) {
-        double ImporteTotal = Double.parseDouble( apartado.getImporte_total() );
+    private View renderImporteTotal(final OrdenEspecialArticuloModel orden) {
+        double ImporteTotal = Double.parseDouble( orden.getImporte_total() );
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         final TextView textView = new TextView( getContext() );
         textView.setText( formatter.format( ImporteTotal ) );
@@ -123,17 +123,17 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
         return textView;
     }
 
-    private EditText renderMontoAApartar(final ArticuloApartadoModel apartado, int index) {
+    private EditText renderMontoAApartar(final OrdenEspecialArticuloModel orden, int index) {
 
         EditText MontoAApartar = new EditText(getContext());
         MontoAApartar.setInputType(TYPE_CLASS_NUMBER);
-        LoadConfiguracionesApartados(MontoAApartar,apartado);
+        LoadConfiguracionesApartados(MontoAApartar,orden);
         ListaDeCantidades.add(MontoAApartar);
         return MontoAApartar;
 
     }
 
-    private View renderSeleccionar(final ArticuloApartadoModel apartado, final EditText Monto) {
+    private View renderSeleccionar(final OrdenEspecialArticuloModel orden, final EditText Monto) {
         final CheckBox seleccionar = new CheckBox(getContext());
         seleccionar.setGravity(Gravity.CENTER);
         seleccionar.setPadding(10,10,10,10);
@@ -144,21 +144,21 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
                 if (seleccionar.isChecked())
                 {
                     Monto.setEnabled(false);
-                    ArticuloApartadoModel apartadoNuevo = new ArticuloApartadoModel(apartado.getCantidad(), apartado.getArticulo_id(),apartado.getArticulo_id_variante(),apartado.getArticulo_id_modificador(),
-                            String.valueOf(Monto.getText()),apartado.getImporte_restante(),apartado.getNombre_articulo(),apartado.getId_existencias_origen(),apartado.getAplica_para_devolucion(),
-                            apartado.getImporte_descuento(),apartado.getImporte_total(),apartado.getImpuestos(),
-                            apartado.getPorcentaje_descuento(),apartado.getPrecio_articulo()
-                            );
-                    ArticulosApartados.add(apartadoNuevo);
+                    OrdenEspecialArticuloModel apartadoNuevo = new OrdenEspecialArticuloModel(orden.getCantidad(), orden.getArticulo_id(),orden.getArticulo_id_variante(),orden.getArticulo_id_modificador(),
+                            String.valueOf(Monto.getText()),orden.getImporte_restante(),orden.getNombre_articulo(),orden.getAplica_para_devolucion(),
+                            orden.getImporte_descuento(),orden.getImporte_total(),orden.getImpuestos(),
+                            orden.getPorcentaje_descuento(),orden.getPrecio_articulo()
+                    );
+                    ArticulosOrdenados.add(apartadoNuevo);
 
                 }else
                 {
                     Monto.setEnabled(true);
-                    for(int i=0;i<ArticulosApartados.size();i++)
+                    for(int i=0;i<ArticulosOrdenados.size();i++)
                     {
-                        if(apartado.getArticulo_id().equals(ArticulosApartados.get(i).getArticulo_id()))
+                        if(orden.getArticulo_id().equals(ArticulosOrdenados.get(i).getArticulo_id()))
                         {
-                            ArticulosApartados.remove(i);
+                            ArticulosOrdenados.remove(i);
                         }
 
                     }
@@ -202,7 +202,7 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
         }
     }
 
-    private void LoadConfiguracionesApartados(final EditText cantidad,final ArticuloApartadoModel apartado)
+    private void LoadConfiguracionesApartados(final EditText cantidad,final OrdenEspecialArticuloModel orden)
     {
         try {
 
@@ -241,7 +241,7 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
                                         }
                                     }
 
-                                    float precio = Float.parseFloat((apartado.getPrecio_articulo()));
+                                    float precio = Float.parseFloat((orden.getPrecio_articulo()));
                                     for(int j=0; j<ListaConfiguraciones.size();j++)
                                     {
                                         int DesdePrecio = Integer.parseInt((ListaConfiguraciones.get(j).getDesde()));

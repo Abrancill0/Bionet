@@ -50,7 +50,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight=".4"
                     android:padding="15dp"
-                    android:text="Selecciona los artículos a apartar y coloca los montos a cubrir. Solo aparecerán los artículos que estén disponibles para apartados. El monto sugerido para apartar, se coloca según la regla de configuración de apartado, si no existe una regla de apartado, aparecerá en cero y no se podrá apartar hasta que exista una regla de apartado." />
+                    android:text="Los artículos sin existencias, pueden ser ordenados para ser vendidos al cliente, por medio de una orden especial la cual se atenderá hasta que se obtengan existencias del artículo, después se hará un apartado automaticamente, para ser entregado al cliente." />
 
             </LinearLayout>
 
@@ -60,8 +60,8 @@
                 android:layout_weight=".4"
                 android:orientation="vertical">
 
-                <com.Danthop.bionet.Tables.SortableSeleccionaApartadoTable
-                    android:id="@+id/tabla_seleccionar_apartados"
+                <com.Danthop.bionet.Tables.SortableSeleccionaOrdenEspecialTable
+                    android:id="@+id/tabla_seleccionar_ordenes"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight=".7"
@@ -69,7 +69,7 @@
                     app:tableView_headerColor="@color/white"
                     table:tableView_columnCount="4">
 
-                </com.Danthop.bionet.Tables.SortableSeleccionaApartadoTable>
+                </com.Danthop.bionet.Tables.SortableSeleccionaOrdenEspecialTable>
 
                 <LinearLayout
                     android:id="@+id/Tabla_vacia"
@@ -87,7 +87,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="No existen artículos con apartados disponibles"
+                        android:text="No existen artículos con ordenes especiales disponibles"
                         android:textColor="@color/gray" />
                 </LinearLayout>
 

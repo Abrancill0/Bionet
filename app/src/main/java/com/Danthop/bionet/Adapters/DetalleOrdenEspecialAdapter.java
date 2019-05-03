@@ -3,57 +3,31 @@ package com.Danthop.bionet.Adapters;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.Danthop.bionet.R;
-import com.Danthop.bionet.Tables.SortableApartadoDetalleTable;
-import com.Danthop.bionet.Tables.SortableApartadoTable;
 import com.Danthop.bionet.Tables.SortableOrdenEspecialDetalleTable;
-import com.Danthop.bionet.Tables.SortableSeleccionaApartadoTable;
-import com.Danthop.bionet.model.ApartadoModel;
-import com.Danthop.bionet.model.ArticuloApartadoModel;
-import com.Danthop.bionet.model.ArticuloModel;
-import com.Danthop.bionet.model.ArticuloOrdenEspecialModel;
-import com.Danthop.bionet.model.ClienteModel;
-import com.Danthop.bionet.model.ConfiguracionLealtadModel;
-import com.Danthop.bionet.model.ConfiguracionesApartadoModel;
-import com.Danthop.bionet.model.TicketModel;
-import com.Danthop.bionet.model.VolleySingleton;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.error.VolleyError;
-import com.android.volley.request.JsonObjectRequest;
-
-import org.bouncycastle.asn1.cmp.CAKeyUpdAnnContent;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.Danthop.bionet.model.OrdenEspecialArticuloModel;
+import com.Danthop.bionet.model.OrdenEspecialModel;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class DetalleOrdenEspecialAdapter extends LongPressAwareTableDataAdapter<ArticuloOrdenEspecialModel> {
+public class DetalleOrdenEspecialAdapter extends LongPressAwareTableDataAdapter<OrdenEspecialArticuloModel> {
 
     int TEXT_SIZE = 12;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
 
-    public DetalleOrdenEspecialAdapter(final Context context, final List<ArticuloOrdenEspecialModel> data, final SortableOrdenEspecialDetalleTable tableView) {
+    public DetalleOrdenEspecialAdapter(final Context context, final List<OrdenEspecialArticuloModel> data, final SortableOrdenEspecialDetalleTable tableView) {
         super(context, data, tableView);
     }
 
     @Override
     public View getDefaultCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        ArticuloOrdenEspecialModel orden = getRowData(rowIndex);
+        OrdenEspecialArticuloModel orden = getRowData(rowIndex);
         View renderedView = null;
 
         switch (columnIndex) {
@@ -75,20 +49,20 @@ public class DetalleOrdenEspecialAdapter extends LongPressAwareTableDataAdapter<
 
     @Override
     public View getLongPressCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        final ArticuloOrdenEspecialModel orden = getRowData(rowIndex);
+        final OrdenEspecialArticuloModel orden = getRowData(rowIndex);
 
         return renderString("");
     }
 
-    private View renderNombreArticulo(final ArticuloOrdenEspecialModel orden) {
+    private View renderNombreArticulo(final OrdenEspecialArticuloModel orden) {
         return renderString(orden.getNombre_articulo());
     }
 
-    private View renderCantidad(final ArticuloOrdenEspecialModel orden) {
+    private View renderCantidad(final OrdenEspecialArticuloModel orden) {
         return renderString(orden.getCantidad());
     }
 
-    private View renderImporteTotal(final ArticuloOrdenEspecialModel orden) {
+    private View renderImporteTotal(final OrdenEspecialArticuloModel orden) {
         double ImporteTotal = Double.parseDouble( orden.getImporte_total() );
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         final TextView textView = new TextView( getContext() );
@@ -99,7 +73,7 @@ public class DetalleOrdenEspecialAdapter extends LongPressAwareTableDataAdapter<
         return textView;
     }
 
-    private View renderImporteRestante(final ArticuloOrdenEspecialModel orden) {
+    private View renderImporteRestante(final OrdenEspecialArticuloModel orden) {
         double ImporteTotal = Double.parseDouble( orden.getImporte_restante());
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         final TextView textView = new TextView( getContext() );
@@ -121,9 +95,9 @@ public class DetalleOrdenEspecialAdapter extends LongPressAwareTableDataAdapter<
 
     private static class OrdenNameUpdater implements TextWatcher {
 
-        private ArticuloOrdenEspecialModel ordenToUpdate;
+        private OrdenEspecialArticuloModel ordenToUpdate;
 
-        public OrdenNameUpdater(ArticuloOrdenEspecialModel ordenToUpdate) {
+        public OrdenNameUpdater(OrdenEspecialArticuloModel ordenToUpdate) {
             this.ordenToUpdate = ordenToUpdate;
         }
 
