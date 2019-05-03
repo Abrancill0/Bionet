@@ -30,6 +30,7 @@ public class LoginModel {
         private String usu_administrador;
         private String cbn_nombre_negocio;
         private String usu_correo_electronico;
+        private String usu_sucursales;
 
 
         public String getUsuId() {
@@ -193,5 +194,8 @@ public class LoginModel {
         return usu_correo_electronico;
     }
         public void setusu_correo_electronico(String usu_correo_electronico) { this.usu_correo_electronico = usu_correo_electronico; }
+
+        public String getusu_sucursales() { return usu_sucursales; }
+        public void setusu_sucursales(String usu_sucursales){ this.usu_sucursales = usu_sucursales; }
 }
 

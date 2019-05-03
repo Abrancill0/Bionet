@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:table="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:background="@color/white"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnventas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:background="@drawable/pestanas_desplegables"
+                android:text="Ventas"
+                android:textAllCaps="false"
+                android:fontFamily="@font/muli" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btntransacciones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:background="@drawable/pestanas_desplegables"
+                android:text="Transacciones"
+                android:textAllCaps="false"
+                android:fontFamily="@font/muli"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btncortecaja"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:background="@color/fondo_azul"
+                android:fontFamily="@font/muli"
+                android:text="Corte de caja"
+                android:textAllCaps="false" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="5dp">
+
+        <TextView
+            android:layout_width="210dp"
+            android:layout_height="match_parent"
+            android:text="Generar Corte de Caja."
+            android:textSize="18dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Fecha Inicio"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/btnfechainicio"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:hint="dd/mm/yyyy"
+            android:focusable="false" />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Fecha Fin"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"/>
+
+        <EditText
+            android:id="@+id/btnfechafin"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:hint="dd/mm/yyyy"
+            android:focusable="false" />
+
+        <Button
+            android:id="@+id/btn_generarcorte"
+            style="@android:style/Widget.Holo.Light.Button"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_gray"
+            android:text="Generar Corte"
+            android:textColor="@color/gray"
+            android:textSize="15sp"
+            android:layout_marginLeft="10dp"/>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:background="@drawable/pestanas_desplegables"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <com.Danthop.bionet.Tables.SortableCorteCajaTable
+                android:id="@+id/tabla_historico"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".7"
+                android:visibility="visible"
+                app:tableView_headerColor="@color/white"
+                table:tableView_columnCount="6"></com.Danthop.bionet.Tables.SortableCorteCajaTable>
+        </LinearLayout>
+</LinearLayout>
+</LinearLayout>

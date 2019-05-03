@@ -1,6 +1,6 @@
 package com.Danthop.bionet.Tables;
 import com.Danthop.bionet.model.HistoricoModel;
-import com.Danthop.bionet.model.InventarioModel;
+
 import java.util.Comparator;
 
 public class ComparatorInventarioHistorico {
