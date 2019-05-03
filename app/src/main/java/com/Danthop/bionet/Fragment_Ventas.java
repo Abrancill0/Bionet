@@ -194,7 +194,7 @@ public class Fragment_Ventas extends Fragment {
         btn_agregar_cliente = v.findViewById(R.id.btn_agregar_cliente);
         btn_agregar_vendedor = v.findViewById(R.id.btn_agregar_vendedor);
         btn_agregar_articulo = v.findViewById(R.id.btn_agregar_articulo);
-        btn_feenicia = v.findViewById(R.id.btn_feenicia);
+        //btn_feenicia = v.findViewById(R.id.btn_feenicia);
         btn_apartar = v.findViewById(R.id.btn_apartar);
         btn_ordenar = v.findViewById(R.id.btn_orden);
         btn_finalizar = v.findViewById(R.id.btn_finalizar);
@@ -953,12 +953,12 @@ public class Fragment_Ventas extends Fragment {
         });
 
 
-        btn_feenicia.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+       // btn_feenicia.setOnClickListener(new View.OnClickListener() {
+       //     @Override
+       //     public void onClick(View v) {
 
-                Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
-                getActivity().startActivity(myIntent);
+       //         Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
+       //         getActivity().startActivity(myIntent);
 
 
                 //Intent intent = new Intent(this, Feenicia_Transaction_Bluetooth.class);
@@ -972,8 +972,8 @@ public class Fragment_Ventas extends Fragment {
 
                 // Btn_Buscar_Dispositivo
 
-            }
-        });
+       //     }
+       // });
 
         btn_apartar.setOnClickListener(new View.OnClickListener() {
             @Override

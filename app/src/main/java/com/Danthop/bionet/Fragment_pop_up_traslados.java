@@ -108,6 +108,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     private TableDataClickListener<InventarioModel> tablaElegirArticuloListener;
     private List<InventarioModel> inventarios;
     private TrasladoAdapter TrasladoAdapter;
+    private String FechaApi;
 
     private JSONObject RespuestaTodo = null;
 
@@ -223,6 +224,8 @@ public class Fragment_pop_up_traslados extends DialogFragment {
                 }
                 String Date = dia + "/" + mes + "/" + year;
 
+                FechaApi = year + "-" + mes + "-" + dia;
+
                 Fecha.setText( Date );
             }
         };
@@ -248,8 +251,6 @@ public class Fragment_pop_up_traslados extends DialogFragment {
 
             }
         });
-
-
 
 
        Button Solicitar = (Button) v.findViewById(R.id.btnaceptar);
@@ -613,7 +614,7 @@ private void SolicitarTraslado(){
            jsonBodyrequest.put("tra_id_sucursal_origen",SucursalOrigen);
            jsonBodyrequest.put("tra_id_sucursal_destino",SucursalDestino);
            jsonBodyrequest.put("tra_traslado_temporal",TipoTraslado);
-           jsonBodyrequest.put("tra_fecha_temporal",Fecha.getText());
+           jsonBodyrequest.put("tra_fecha_temporal",FechaApi);
            jsonBodyrequest.put("tra_motivo",observaciones.getText());
            jsonBodyrequest.put("articulos",Arrayarticulos);
 
