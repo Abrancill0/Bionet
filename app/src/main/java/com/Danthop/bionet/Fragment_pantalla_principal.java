@@ -399,14 +399,14 @@ private void LoadMasVendidos(){
                         JSONArray elemento = ResultadoProductos.getJSONArray(x);
 
                         for (int y = 0; y < elemento.length(); y++) {
-                            JSONObject elemento2 = ResultadoProductos.getJSONObject(y);
+                            JSONObject elemento2 = elemento.getJSONObject(y);
                             tar_nombre_articulo = elemento2.getString("tar_nombre_articulo");
                             NumTicket = elemento2.getString("cantidad");
-                        }
-                        //NumTicket = elemento.getString("cantidad");
 
-                            final ClienteFrecuenteModel Topvendidos = new ClienteFrecuenteModel("","","", tar_nombre_articulo, "");
+
+                            final ClienteFrecuenteModel Topvendidos = new ClienteFrecuenteModel("",NumTicket,"", tar_nombre_articulo, "");
                             Productos.add(Topvendidos);
+                        }
                     }
 
                     final TopvendidosAdapter TopVendidoseAdapter = new TopvendidosAdapter(getContext(), Productos ,tabla_productos);

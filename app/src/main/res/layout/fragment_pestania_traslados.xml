@@ -133,19 +133,6 @@
                 android:padding="20dp">
 
                 <Button
-                    android:id="@+id/btnAgregarProd"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginVertical="10dp"
-                    android:layout_weight=".25"
-                    android:background="@drawable/shape_gray"
-                    android:fontFamily="@font/muli"
-                    android:text="Agregar Productos"
-                    android:textAllCaps="false"
-                    android:textColor="@color/gray"
-                    android:textStyle="bold" />
-
-                <Button
                     android:id="@+id/pop_up_traslados"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

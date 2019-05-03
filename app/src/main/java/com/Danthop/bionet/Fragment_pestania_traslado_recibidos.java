@@ -108,15 +108,7 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
             }
         });
 
-        Button agregar = (Button) v.findViewById(R.id.btnAgregarProd);
-        agregar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment_pop_up_punto_reorden dialog = new Fragment_pop_up_punto_reorden();
-                dialog.setTargetFragment(Fragment_pestania_traslado_recibidos.this, 1);
-                dialog.show(getFragmentManager(), "MyCustomDialog");
-            }
-        });
+
 //--------------------------------------------------------------------------------------------------------------
         Button SolicitudesRecibidas = (Button) v.findViewById(R.id.traslados_recibidos);
         SolicitudesRecibidas.setOnClickListener(new View.OnClickListener() {

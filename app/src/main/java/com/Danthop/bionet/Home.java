@@ -241,8 +241,6 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         verifyPermissions();
     }
 
-
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
@@ -446,7 +444,6 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).addToBackStack(null).commit();
     }
 
-
     public void Aceptar(View view) {
         Intent intent = new Intent(Home.this, Login.class);
         startActivity(intent);
@@ -532,7 +529,6 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         }
     }
 
-
     private void processLoginProcessCompleted() {
         Identity identity = Meli.getCurrentIdentity(getApplicationContext());
 
@@ -564,7 +560,6 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         Toast.makeText(this, "Oooops, something went wrong with the login process", Toast.LENGTH_SHORT).show();
     }
 
-
     protected void onStart(){
         super.onStart();
         IntentFilter intentFilter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
@@ -575,8 +570,6 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         super.onStop();
         unregisterReceiver(wifiStateReceiver);
     }
-
-
 
     private BroadcastReceiver wifiStateReceiver = new BroadcastReceiver() {
         @Override
