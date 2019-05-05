@@ -191,11 +191,10 @@ public class Login extends Activity {
 
 
                             jsonArray = new JSONArray();
-                            //RespuestaIdSucursales for para sacar olos 2 valores
+                            //RespuestaIdSucursales for para sacar los 2 valores
                             for (int i=0; i<ValorIdSucursales.length(); i++) {
 
                                 String elemento = String.valueOf( ValorIdSucursales.get(i) );
-
 
                                 JSONObject request2 = new JSONObject();
                                 try {
@@ -328,7 +327,8 @@ public class Login extends Activity {
             editor.putString("usu_imagen_perfil", "http://192.168.100.192:8010"+Resultado.getUsuImagen());
             editor.putString("usu_activo", Resultado.getUsu_activo());
             editor.putString("usu_administrador", Resultado.getUsu_administrador());
-            editor.putString("usu_Sucursalitas", String.valueOf( jsonArray ) );
+            editor.putString("cca_id_sucursal", String.valueOf( jsonArray ) );
+
 
             editor.commit();
 

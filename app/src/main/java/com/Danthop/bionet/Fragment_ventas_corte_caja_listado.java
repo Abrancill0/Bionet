@@ -18,7 +18,7 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Fragment_ventas_corte_caja extends Fragment {
+public class Fragment_ventas_corte_caja_listado extends Fragment {
 
     Button pestania_ventas;
     Button pestania_reporte;
@@ -29,7 +29,7 @@ public class Fragment_ventas_corte_caja extends Fragment {
 
 
 
-    public Fragment_ventas_corte_caja() {
+    public Fragment_ventas_corte_caja_listado() {
         // Required empty public constructor
     }
 

@@ -37,7 +37,6 @@ import com.Danthop.bionet.Tables.SortableVentaArticulos;
 import com.Danthop.bionet.model.ArticuloApartadoModel;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
-import com.Danthop.bionet.model.ConfiguracionesApartadoModel;
 import com.Danthop.bionet.model.Impuestos;
 import com.Danthop.bionet.model.OrdenEspecialArticuloModel;
 import com.Danthop.bionet.model.PagoModel;
@@ -582,7 +581,7 @@ public class Fragment_Ventas extends Fragment {
         Corte_Caja.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container, new Fragment_ventas_corte_caja()).commit();
+                fr.replace(R.id.fragment_container, new Fragment_ventas_corte_caja_listado()).commit();
             }
         });
 

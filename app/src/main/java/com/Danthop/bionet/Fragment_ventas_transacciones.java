@@ -151,7 +151,7 @@ public class Fragment_ventas_transacciones extends Fragment {
         btn_corte_caja.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja()).commit();
+                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();
             }
         });
 

@@ -34,6 +34,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,7 +52,7 @@ import static java.util.stream.Collectors.counting;
 public class Fragment_pantalla_principal extends Fragment{
     private String usu_id;
     private String suc_id;
-    private String tic_id_sucursal;
+    private String valueIdSuc;
     private long backPressedTime;
     private Toast backToast;
     private SortableInventariosTable tabla_inventario;
@@ -88,9 +89,24 @@ public class Fragment_pantalla_principal extends Fragment{
         String Apellido = sharedPref.getString("usu_apellidos", "");
         String Nombre = sharedPref.getString("usu_nombre", "");
         usu_id = sharedPref.getString("usu_id","");
-        suc_id = sharedPref.getString("suc_id","77de9acd-43b4-56b3-9a65-ec1ce9145730");
-        tic_id_sucursal = sharedPref.getString("tic_id_sucursal","77de9acd-43b4-56b3-9a65-ec1ce9145730");
+        suc_id = sharedPref.getString("cca_id_sucursal","");
 
+        try {
+            JSONArray jsonArray = new JSONArray(suc_id);
+            //for (int i = 0; i < jsonArray.length(); i++){
+
+                JSONObject JsonObj = jsonArray.getJSONObject(0);
+                Iterator<String> iter = JsonObj.keys();
+                while (iter.hasNext()) {
+                    String key = iter.next();
+                    valueIdSuc = String.valueOf(JsonObj.get(key));
+                }
+          //  }
+        } catch (JSONException e) {
+            Toast toast1 =
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+            toast1.show();
+        }
 
         //=====Programación de las tablas=====
         //String[][] DATA_TO_SHOW = { { "Producto 1", "Sucursal 1"},
@@ -98,8 +114,6 @@ public class Fragment_pantalla_principal extends Fragment{
 
         String[][] DATA_TO_SHOW2 = { { "Notificacion 1"},
                 {""}};
-
-
 
         tabla_productos = (SortableClienteFrecuenteTable) v.findViewById(R.id.tablaProductos_sucursales);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Producto");
@@ -291,7 +305,7 @@ private void LoadClientesFrecuentes(){
         e.printStackTrace();
     }
     String url = getString(R.string.Url);
-    String ApiPath = url + "/api/ventas/tickets/index_app?usu_id=" + usu_id + "&tic_id_sucursal=" + tic_id_sucursal + "&esApp=1";
+    String ApiPath = url + "/api/clientesfr?usu_id=" + usu_id + "&suc_id=" + valueIdSuc + "&esApp=1";
     JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, null, new Response.Listener<JSONObject>() {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
@@ -308,50 +322,17 @@ private void LoadClientesFrecuentes(){
 
                     for (int x = 0; x < Resultado.length(); x++) {
                         JSONObject elemento = Resultado.getJSONObject(x);
-                        String cliente = elemento.getString("tic_nombre_cliente");
+                        String cliente = elemento.getString("tic_id_cliente");
 
                         if (cliente != "null"){
-                            Respuesta_tic_id_cliente = elemento.getJSONObject("tic_id_cliente");
-                            String UUIDTicketCliente = Respuesta_tic_id_cliente.getString("uuid");
-                            String nombre_cliente = elemento.getString("tic_nombre_cliente");
-                            posicion = String.valueOf(x);
+                            String nombre_cliente = elemento.getString("tic_id_nombre");
 
-                           final ClienteFrecuenteModel Nombrecliente = new ClienteFrecuenteModel(nombre_cliente,"",UUIDTicketCliente,"", "");
+                           final ClienteFrecuenteModel Nombrecliente = new ClienteFrecuenteModel(nombre_cliente,"","","", "");
                            Clientes.add(Nombrecliente);
                         }
                     }
-                    //MAPGropingBy
-                    Map<String, Long> ClientebyFrecuente = Clientes.stream().collect(Collectors.groupingBy(ClienteFrecuenteModel::getUUIDTicketCliente, counting()));
-                    ClientebyFrecuente.keySet().forEach(employee -> {
-                        String Articulo = String.valueOf(Collections.max(ClientebyFrecuente.entrySet(), Map.Entry.comparingByValue()).getKey());
-                        ClienteFrecuenteModel nombreclient = Clientes.stream()
-                                .filter(Clientes -> Articulo.equals(Clientes.getUUIDTicketCliente()))
-                                .findAny()
-                                .orElse(null);
 
-                      String nb  = String.valueOf(nombreclient.getnombre_cliente());
-                      String cantTiket = String.valueOf(Math.toIntExact(ClientebyFrecuente.get(employee)));
-
-                      final ClienteFrecuenteModel Nombrecliente2 = new ClienteFrecuenteModel(nb,cantTiket,"","", "");
-                      Clientes2.add(Nombrecliente2);
-
-
-                    });
-
-                    Map<String, Long> TopbyProductosmax = Clientes2.stream().collect(Collectors.groupingBy(ClienteFrecuenteModel::gettar_id_articulo, counting()));
-                    TopbyProductosmax.keySet().forEach(employee -> {
-                        String Clientemax = String.valueOf(Collections.max(TopbyProductosmax.entrySet(), Map.Entry.comparingByValue()).getKey());
-                        ClienteFrecuenteModel nombreclient = Clientes2.stream()
-                                .filter(Clientes2 -> Clientemax.equals(Clientes2.gettar_id_articulo()))
-                                .findAny()
-                                .orElse(null);
-                        String nb  = String.valueOf(nombreclient.getnombre_cliente());
-
-                        final ClienteFrecuenteModel TopClientemax = new ClienteFrecuenteModel(nb,"","","", "");
-                        TopClienteMax.add(TopClientemax);
-                    });
-
-                    final ClienteFrecuenteAdapter FrecuenteAdapter = new ClienteFrecuenteAdapter(getContext(), TopClienteMax,tabla_clientes);
+                    final ClienteFrecuenteAdapter FrecuenteAdapter = new ClienteFrecuenteAdapter(getContext(), Clientes,tabla_clientes);
                     tabla_clientes.setDataAdapter(FrecuenteAdapter);
                 }
             } catch (JSONException e) {
@@ -380,7 +361,7 @@ private void LoadMasVendidos(){
         e.printStackTrace();
     }
     String url = getString(R.string.Url);
-    String ApiPath = url + "/api/topProd?usu_id=" + usu_id + "&suc_id=" + suc_id + "&esApp=1";
+    String ApiPath = url + "/api/topProd?usu_id=" + usu_id + "&suc_id=" + valueIdSuc + "&esApp=1";
     JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, null, new Response.Listener<JSONObject>() {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override

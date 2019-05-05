@@ -12,6 +12,8 @@ import com.Danthop.bionet.Tables.SortableCorteCajaTable;
 import com.Danthop.bionet.Tables.SortableHistoricoTable;
 import com.Danthop.bionet.model.CorteCajaModel;
 import com.Danthop.bionet.model.HistoricoModel;
+
+import java.text.NumberFormat;
 import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
@@ -38,12 +40,9 @@ public class CorteCajaAdapter extends LongPressAwareTableDataAdapter<CorteCajaMo
                 renderedView = renderforma_pago(corte);
                 break;
             case 3:
-                renderedView = renderfecha(corte);
+                renderedView = renderfechahora(corte);
                 break;
             case 4:
-                renderedView = renderhora(corte);
-                break;
-            case 5:
                 renderedView = renderusuario(corte);
                 break;
 
@@ -80,20 +79,29 @@ public class CorteCajaAdapter extends LongPressAwareTableDataAdapter<CorteCajaMo
         return renderString(corte.getid_venta());
     }
 
+
     private View rendertotal(final CorteCajaModel corte) {
-        return renderString(corte.gettotal());
+        double Precio = Double.parseDouble( corte.gettotal() );
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+        final TextView textView = new TextView( getContext() );
+        textView.setText( formatter.format( Precio ) );
+        textView.setPadding( 20, 10, 20, 10 );
+        textView.setTextSize( TEXT_SIZE );
+
+        return textView;
     }
+
 
     private View renderforma_pago(final CorteCajaModel corte) {
         return renderString(corte.getforma_pago());
     }
 
-    private View renderfecha(final CorteCajaModel corte) {
-        return renderString(corte.getfecha());
+    private View renderfechahora(final CorteCajaModel corte) {
+        return renderString(corte.getfechahora());
     }
-    private View renderhora(final CorteCajaModel corte) {
-        return renderString(corte.gethora());
-    }
+
     private View renderusuario(final CorteCajaModel corte){
         return renderString(corte.getusuario());
     }
