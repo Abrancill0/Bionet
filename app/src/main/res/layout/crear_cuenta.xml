@@ -12,12 +12,13 @@
     android:focusableInTouchMode="true">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="100dp"
-        android:paddingHorizontal="20dp"
+        android:layout_marginHorizontal="50dp"
+        android:layout_weight=".5"
         android:gravity="center_vertical|center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,8 +36,8 @@
                 android:id="@+id/textView458"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_margin="3dp"
+                android:gravity="center"
                 android:text="Punto de venta"
                 android:textAllCaps="true"
                 android:textColor="#544D47" />
@@ -53,7 +54,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="Usuario"
-                android:textColor="#023950" />
+                android:textColor="#023950"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/text_new_usuario"
@@ -64,8 +66,8 @@
                 android:ems="10"
                 android:hint="cuenta@bio-net.com"
                 android:inputType="textWebEmailAddress"
-                android:padding="1dp"
-                android:textSize="14sp" />
+                android:padding="5dp"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -73,7 +75,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="Contraseña"
-                android:textColor="#023950" />
+                android:textColor="#023950"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/text_password"
@@ -84,8 +87,8 @@
                 android:ems="10"
                 android:hint="********"
                 android:inputType="textPassword"
-                android:padding="1dp"
-                android:textSize="14sp" />
+                android:padding="5dp"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textView"
@@ -93,7 +96,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="Repetir contraseña"
-                android:textColor="#023950" />
+                android:textColor="#023950"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/text_repassword"
@@ -104,8 +108,8 @@
                 android:ems="10"
                 android:hint="********"
                 android:inputType="textPassword"
-                android:padding="1dp"
-                android:textSize="14sp" />
+                android:padding="5dp"
+                android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -121,14 +125,13 @@
                 android:layout_width="158dp"
                 android:layout_height="27dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
                 android:background="@null"
                 android:onClick="ActivarLicencia"
                 android:padding="0dp"
                 android:text="@string/activar_licencia"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="14sp"
-                android:layout_marginBottom="10dp"
-                />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btn_aceptar"
@@ -142,14 +145,14 @@
                 android:padding="0dp"
                 android:text="Aceptar"
                 android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight=".5"
         android:orientation="vertical">

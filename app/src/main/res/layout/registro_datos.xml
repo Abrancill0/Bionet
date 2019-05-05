@@ -74,7 +74,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="Nombre del negocio"
-                android:textColor="#023950" />
+                android:textColor="#023950"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/Text_Nombre_Negocio"
@@ -84,8 +85,8 @@
                 android:background="@drawable/shape_gray"
                 android:ems="10"
                 android:inputType="text"
-                android:padding="1dp"
-                android:textSize="14sp" />
+                android:padding="5dp"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -123,7 +124,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="Nombre (s)"
-                    android:textColor="#023950" />
+                    android:textColor="#023950"
+                    android:textSize="18sp" />
 
                 <EditText
                     android:id="@+id/Text_Nombre_Persona"
@@ -133,8 +135,8 @@
                     android:background="@drawable/shape_gray"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:padding="1dp"
-                    android:textSize="14sp" />
+                    android:padding="5dp"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/textView13"
@@ -142,7 +144,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="Apellido Paterno"
-                    android:textColor="#023950" />
+                    android:textColor="#023950"
+                    android:textSize="18sp" />
 
                 <EditText
                     android:id="@+id/Text_Apellido_Paterno"
@@ -153,8 +156,8 @@
                     android:ems="10"
                     android:inputType="text"
                     android:maxLength="10"
-                    android:padding="1dp"
-                    android:textSize="14sp" />
+                    android:padding="5dp"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/textView14"
@@ -162,7 +165,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="Apellido Materno"
-                    android:textColor="#023950" />
+                    android:textColor="#023950"
+                    android:textSize="18sp" />
 
                 <EditText
                     android:id="@+id/Text_Apellido_Materno"
@@ -172,8 +176,8 @@
                     android:background="@drawable/shape_gray"
                     android:ems="10"
                     android:inputType="text"
-                    android:padding="1dp"
-                    android:textSize="14sp" />
+                    android:padding="5dp"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/textView16"
@@ -181,7 +185,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="Celular del administrador"
-                    android:textColor="#023950" />
+                    android:textColor="#023950"
+                    android:textSize="18sp" />
 
                 <EditText
                     android:id="@+id/Text_Celuar_Administrador"
@@ -191,8 +196,8 @@
                     android:background="@drawable/shape_gray"
                     android:ems="10"
                     android:inputType="phone"
-                    android:padding="1dp"
-                    android:textSize="14sp" />
+                    android:padding="5dp"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -214,7 +219,7 @@
                     android:padding="0dp"
                     android:text="Aceptar"
                     android:textColor="#ffffff"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 

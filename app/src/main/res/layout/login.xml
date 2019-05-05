@@ -26,7 +26,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="70dp"
+        android:layout_marginHorizontal="50dp"
         android:layout_weight=".5"
         android:gravity="center_vertical"
         android:orientation="vertical">
@@ -60,7 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="Usuario"
-            android:textColor="#023950" />
+            android:textColor="#023950"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/TextUsuario"
@@ -71,8 +72,8 @@
             android:ems="10"
             android:hint="Nombre de Usuario"
             android:inputType="textPersonName"
-            android:padding="1dp"
-            android:textSize="14sp" />
+            android:padding="5dp"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/textView3"
@@ -80,7 +81,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="Password"
-            android:textColor="#023950" />
+            android:textColor="#023950"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/TextPassword"
@@ -91,8 +93,8 @@
             android:ems="10"
             android:hint="********"
             android:inputType="textPassword"
-            android:padding="1dp"
-            android:textSize="14sp" />
+            android:padding="5dp"
+            android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -113,46 +115,49 @@
                     android:layout_marginBottom="10dp"
                     android:onClick="forgotPassword"
                     android:text="@string/contrasenia_olvidada"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/iniciar_btn"
                 style="@android:style/Widget.Holo.Light.Button"
-                android:layout_width="170dp"
-                android:layout_height="27dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:background="@color/colorPrimaryDark"
                 android:onClick="IniciarSesion"
                 android:padding="0dp"
                 android:text="Iniciar Sesión"
                 android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="16sp"
+                android:layout_marginHorizontal="50dp"/>
 
             <Button
                 android:id="@+id/crear_btn2"
                 style="@android:style/Widget.Holo.Light.Button"
-                android:layout_width="170dp"
-                android:layout_height="27dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:background="@color/colorPrimaryDark"
                 android:onClick="IniciarContraseña"
                 android:padding="0dp"
                 android:text="Iniciar con Contraseña"
                 android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="16sp"
+                android:layout_marginHorizontal="50dp"/>
 
             <Button
                 android:id="@+id/crear_btn"
                 style="@android:style/Widget.Holo.Light.Button"
-                android:layout_width="170dp"
-                android:layout_height="36dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/shape_gray"
                 android:onClick="CrearCuenta"
                 android:padding="0dp"
                 android:text="Crear una cuenta"
-                android:textSize="14sp" />
+                android:textSize="16sp"
+                android:layout_marginHorizontal="50dp"/>
 
 
         </LinearLayout>
