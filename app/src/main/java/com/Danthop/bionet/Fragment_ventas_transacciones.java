@@ -179,7 +179,6 @@ public class Fragment_ventas_transacciones extends Fragment {
                     layout_movimientos.setVisibility(View.GONE);
                     layout_ordenes.setVisibility(View.GONE);
                     layout_apartado.setVisibility(View.VISIBLE);
-                    LoadApartados();
                 }
                 else
                 {
@@ -196,7 +195,6 @@ public class Fragment_ventas_transacciones extends Fragment {
                     layout_movimientos.setVisibility(View.GONE);
                     layout_ordenes.setVisibility(View.VISIBLE);
                     layout_apartado.setVisibility(View.GONE);
-                    LoadOrdenes();
                 }
                 else
                 {
@@ -449,6 +447,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                 dialog.setContentView(R.layout.pop_up_ventas_detalle_apartado);
                 dialog.show();
                 SortableApartadoDetalleTable DetalleApartadoTable = dialog.findViewById(R.id.detalle_apartado_table);
+                DetalleApartadoTable.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia_detalle_apartado));
                 final DetalleApartadoAdapter detalleApartadoAdapter = new DetalleApartadoAdapter(getContext(),clickedData.getArticulosApartados(),DetalleApartadoTable);
                 DetalleApartadoTable.setDataAdapter(detalleApartadoAdapter);
 
@@ -615,6 +614,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                 dialog.setContentView(R.layout.pop_up_ventas_detalle_orden);
                 dialog.show();
                 SortableOrdenEspecialDetalleTable DetalleOrdenTable = dialog.findViewById(R.id.detalle_orden_table);
+                DetalleOrdenTable.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia_detalle_orden));
                 final DetalleOrdenEspecialAdapter detalleApartadoAdapter = new DetalleOrdenEspecialAdapter(getContext(),clickedData.getArticulosOrdenados(),DetalleOrdenTable);
                 DetalleOrdenTable.setDataAdapter(detalleApartadoAdapter);
 

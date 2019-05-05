@@ -1006,7 +1006,7 @@ public class Fragment_Ventas extends Fragment {
                             LoadConfiguracionApartado();
                             ApartarArticulosSeleccionados();
                             dialog.dismiss();
-                            dialog.setContentView(R.layout.pop_up_ventas_confirmacion_apartado);
+                            dialog.setContentView(R.layout.pop_up_ventas_confirmacion_transaccion);
                             dialog.show();
                             Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
                             aceptar.setOnClickListener(new View.OnClickListener() {
@@ -1048,14 +1048,14 @@ public class Fragment_Ventas extends Fragment {
                     articuloAdapter.notifyDataSetChanged();
                     tabla_ordenes_disponibles.setDataAdapter(articuloAdapter);
 
-                    Button btn_apartar_articulos = dialog.findViewById(R.id.btn_apartar_articulos);
-                    btn_apartar_articulos.setOnClickListener(new View.OnClickListener() {
+                    Button btn_ordenar_articulos = dialog.findViewById(R.id.btn_ordenar_articulos);
+                    btn_ordenar_articulos.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             LoadConfiguracionApartado();
-                            ApartarArticulosSeleccionados();
+                            OrdenarArticulosSeleccionados();
                             dialog.dismiss();
-                            dialog.setContentView(R.layout.pop_up_ventas_confirmacion_apartado);
+                            dialog.setContentView(R.layout.pop_up_ventas_confirmacion_transaccion);
                             dialog.show();
                             Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
                             aceptar.setOnClickListener(new View.OnClickListener() {
@@ -1074,6 +1074,115 @@ public class Fragment_Ventas extends Fragment {
 
 
 
+    }
+
+    private void OrdenarArticulosSeleccionados() {
+
+        float PagoTotal=0;
+        float ImporteTotal=0;
+        JSONArray arreglo = new JSONArray();
+        try {
+
+            for (int i = 0; i < ArticulosOrdenados.size(); i++) {
+                JSONObject list1 = new JSONObject();
+                list1.put("oea_cantidad", ArticulosOrdenados.get(i).getCantidad());
+                list1.put("oea_id_articulo", ArticulosOrdenados.get(i).getArticulo_id());
+                list1.put("oea_id_variante", ArticulosOrdenados.get(i).getArticulo_id_variante());
+                list1.put("oea_id_modificador", ArticulosOrdenados.get(i).getArticulo_id_modificador());
+                list1.put("oea_importe_total", ArticulosOrdenados.get(i).getImporte_total());
+
+                float Pagado = Float.parseFloat((ArticulosOrdenados.get(i).getImporte_pagado()).replaceAll("[^0-9.]", ""));
+                PagoTotal = PagoTotal + Pagado;
+                float Total = Float.parseFloat((ArticulosOrdenados.get(i).getImporte_total()).replaceAll("[^0-9.]", ""));
+                ImporteTotal = ImporteTotal + Total;
+                float Restante = Total - Pagado;
+
+                list1.put("oea_importe_pagado", Pagado);
+                list1.put("oea_importe_restante", String.format("%.2f", Restante));
+                list1.put("oea_nombre_articulo", ArticulosOrdenados.get(i).getNombre_articulo());
+                list1.put("oea_aplica_para_devolucion", ArticulosOrdenados.get(i).getAplica_para_devolucion());
+                list1.put("oea_importe_descuento", ArticulosOrdenados.get(i).getImporte_descuento());
+                list1.put("oea_porcentaje_descuento", ArticulosOrdenados.get(i).getPorcentaje_descuento());
+                list1.put("oea_precio_articulo", ArticulosOrdenados.get(i).getPrecio_articulo());
+                JSONObject impuestos = new JSONObject();
+                try{
+                    for (int j=0; j<ArticulosOrdenados.get(i).getImpuestos().size();j++)
+                    {
+                        impuestos.put(ArticulosOrdenados.get(i).getImpuestos().get(j).getImpuestosID(), ArticulosOrdenados.get(i).getImpuestos().get(j).getValorImpuesto());
+                    }
+                } catch (JSONException e2) {
+                    e2.printStackTrace();
+                }
+                list1.put("oea_impuestos", impuestos);
+                arreglo.put(list1);
+            }
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+
+
+        float RestanteTotal = ImporteTotal - PagoTotal;
+
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("oes_id_ticket", ticket_de_venta.getTic_id());
+            request.put("oes_id_sucursal", ticket_de_venta.getTic_id_sucursal());
+            request.put("oes_id_cliente", ticket_de_venta.getTic_id_cliente());
+            request.put("oes_importe_pagado", PagoTotal);
+            request.put("oes_importe_restante", String.format("%.2f", RestanteTotal));
+            request.put("dias_vencimiento", DiasApartado);
+            request.put("aArticulos", arreglo);
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/ordenes_especiales/store_ordenespecial";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+
+
+                    } else {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
 
@@ -1423,7 +1532,7 @@ public class Fragment_Ventas extends Fragment {
 
                             //ORDENES-------------------------------------------------------
                             String AplicaOrdenes = nodo.getString("art_aplica_ordenes_especiales");
-                            if (AplicaOrdenes.equals("true")||(TieneExistencia.equals(""))) {
+                            if (AplicaOrdenes.equals("true")&&(TieneExistencia.equals(""))) {
                                 String ArticuloCantidad = nodo.getString("tar_cantidad");
                                 String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
                                 JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");

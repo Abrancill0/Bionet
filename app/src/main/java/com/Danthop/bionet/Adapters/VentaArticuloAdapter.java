@@ -256,6 +256,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     {
         ImpuestosDeArticuloApartado.clear();
         ListaDeArticulosApartados.clear();
+        ListaDeArticulosOrdenados.clear();
         Articulos.clear();
         JSONObject request = new JSONObject();
         try
@@ -348,9 +349,9 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                 String ArticuloApartadoPrecio = nodo.getString("tar_precio_articulo");
 
 
-                                int importePagado = Integer.parseInt(ArticuloApartadoImportePagado);
-                                int importeTotal = Integer.parseInt(ArticuloApartadoTotal);
-                                int importeRestante = importeTotal - importePagado;
+                                float importePagado = Float.parseFloat((ArticuloApartadoImportePagado));
+                                float importeTotal = Float.parseFloat((ArticuloApartadoTotal));
+                                float importeRestante = importeTotal - importePagado;
 
                                 ArticuloApartadoModel ArticuloApartado = new ArticuloApartadoModel(
                                         ArticuloCantidad,
@@ -372,7 +373,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
                             //ORDENES-------------------------------------------------------
                             String AplicaOrdenes = nodo.getString("art_aplica_ordenes_especiales");
-                            if (AplicaOrdenes.equals("true")||(TieneExistencia.equals(""))) {
+                            if (AplicaOrdenes.equals("true")&&(TieneExistencia.equals(""))) {
                                 String ArticuloCantidad = nodo.getString("tar_cantidad");
                                 String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
                                 JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
@@ -516,6 +517,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     {
         ImpuestosDeArticuloApartado.clear();
         ListaDeArticulosApartados.clear();
+        ListaDeArticulosOrdenados.clear();
         Articulos.clear();
         JSONObject request = new JSONObject();
         try
@@ -634,7 +636,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
                             //ORDENES-------------------------------------------------------
                             String AplicaOrdenes = nodo.getString("art_aplica_ordenes_especiales");
-                            if (AplicaOrdenes.equals("true")||(TieneExistencia.equals(""))) {
+                            if (AplicaOrdenes.equals("true")&&(TieneExistencia.equals(""))) {
                                 String ArticuloCantidad = nodo.getString("tar_cantidad");
                                 String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
                                 JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
