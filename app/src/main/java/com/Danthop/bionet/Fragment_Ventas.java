@@ -522,6 +522,13 @@ public class Fragment_Ventas extends Fragment {
                 dialog = new Dialog(getContext());
                 dialog.setContentView(R.layout.pop_up_ventas_seleccionar_cliente);
                 dialog.show();
+                Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.hide();
+                    }
+                });
                 clientes = new ArrayList<>();
                 crear_cliente = dialog.findViewById(R.id.btn_crear_cliente);
                 tabla_clientes = dialog.findViewById(R.id.tabla_clientes);
@@ -557,6 +564,13 @@ public class Fragment_Ventas extends Fragment {
                 dialog.setContentView(R.layout.pop_up_ventas_agregar_vendedor);
                 dialog.show();
                 SpinnerVendedor = dialog.findViewById(R.id.Combo_vendedores);
+                Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.hide();
+                    }
+                });
                 LoadVendedores();
                 aceptar_agregar_vendedor = (Button) dialog.findViewById(R.id.aceptar_agregar_vendedor);
                 aceptar_agregar_vendedor.setOnClickListener(new View.OnClickListener() {
@@ -593,6 +607,13 @@ public class Fragment_Ventas extends Fragment {
                 progreso.show();
                 tabla_selecciona_articulo = dialog.findViewById(R.id.tabla_seleccionar_articulos);
                 tabla_selecciona_articulo.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
+                Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.hide();
+                    }
+                });
                 CargaArticulos();
                 TableDataClickListener<ArticuloModel> tablaListener = new TableDataClickListener<ArticuloModel>() {
                     @Override
@@ -625,6 +646,13 @@ public class Fragment_Ventas extends Fragment {
                 if (ArticulosVenta.isEmpty()) {
                     dialog.setContentView(R.layout.pop_up_venta_finalizar_sin_articulos);
                     dialog.show();
+                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.hide();
+                        }
+                    });
                     Button aceptar = dialog.findViewById(R.id.Aceptar);
                     aceptar.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -635,6 +663,13 @@ public class Fragment_Ventas extends Fragment {
                 } else if (false == ArticulosVenta.isEmpty()) {
                     dialog.setContentView(R.layout.pop_up_ventas_facturar);
                     dialog.show();
+                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.hide();
+                        }
+                    });
                     Button si_facturar = dialog.findViewById(R.id.si_facturar);
                     si_facturar.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -660,6 +695,13 @@ public class Fragment_Ventas extends Fragment {
                             dialog.dismiss();
                             dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
                             dialog.show();
+                            Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                            cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.hide();
+                                }
+                            });
                             final ListView listaPagos = dialog.findViewById(R.id.lista_de_pagos);
                             CargaMetodosPago(listaPagos);
 
@@ -733,6 +775,13 @@ public class Fragment_Ventas extends Fragment {
                                     dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
                                     dialog.show();
 
+                                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.hide();
+                                        }
+                                    });
                                     TextView importe_venta = dialog.findViewById(R.id.importe_venta);
                                     TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
                                     TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
@@ -814,6 +863,13 @@ public class Fragment_Ventas extends Fragment {
                             dialog.dismiss();
                             dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
                             dialog.show();
+                            Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                            cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.hide();
+                                }
+                            });
                             final ListView listaPagos = dialog.findViewById(R.id.lista_de_pagos);
                             CargaMetodosPago(listaPagos);
 
@@ -888,6 +944,13 @@ public class Fragment_Ventas extends Fragment {
                                     dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
                                     dialog.show();
 
+                                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.hide();
+                                        }
+                                    });
                                     TextView importe_venta = dialog.findViewById(R.id.importe_venta);
                                     TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
                                     TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
@@ -981,6 +1044,13 @@ public class Fragment_Ventas extends Fragment {
                     dialog.setContentView(R.layout.pop_up_ventas_apartar_sin_cliente);
                     dialog.show();
                     Button aceptar = dialog.findViewById(R.id.Aceptar);
+                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.hide();
+                        }
+                    });
                     aceptar.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -1036,10 +1106,24 @@ public class Fragment_Ventas extends Fragment {
                             dialog.dismiss();
                         }
                     });
+                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.hide();
+                        }
+                    });
                 }
                 else {
                     dialog.setContentView(R.layout.pop_up_ventas_selecciona_orden);
                     dialog.show();
+                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.hide();
+                        }
+                    });
                     ArticulosOrdenados.clear();
                     tabla_ordenes_disponibles = dialog.findViewById(R.id.tabla_seleccionar_ordenes);
                     tabla_ordenes_disponibles.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
@@ -1057,6 +1141,13 @@ public class Fragment_Ventas extends Fragment {
                             dialog.dismiss();
                             dialog.setContentView(R.layout.pop_up_ventas_confirmacion_transaccion);
                             dialog.show();
+                            Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                            cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.hide();
+                                }
+                            });
                             Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
                             aceptar.setOnClickListener(new View.OnClickListener() {
                                 @Override

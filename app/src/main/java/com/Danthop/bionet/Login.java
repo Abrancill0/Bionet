@@ -93,8 +93,96 @@ public class Login extends Activity {
             Intent intent2 = new Intent(Login.this, Home.class);
             startActivity(intent2);
         }
+        else
+        {
+            VerificarMac();
+        }
     }
 
+
+    private void VerificarMac()
+    {
+        try{
+            JSONObject request = new JSONObject();
+            try
+            {
+                request.put("esApp", "1");
+                request.put("dis_mac",macAddress);
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
+
+            String ApiPath = url + "/api/obtener-dominio-mac";
+
+            JsonObjectRequest postRequest = new JsonObjectRequest(Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+            {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    Resultado = new LoginModel();
+
+                    JSONArray Respuesta = null;
+                    JSONObject RespuestaObjeto = null;
+                    JSONObject RespuestaNodoUsuID = null;
+                    JSONObject RespuestaIdSucursales = null;
+                    JSONArray ValorIdSucursales = null;
+                    try {
+
+                        Resultado.setEstatus( response.getString( "estatus" ) );
+                        Resultado.setMensaje( response.getString( "mensaje" ) );
+
+                        int status = Integer.parseInt( Resultado.getEstatus() );
+
+                        if (status == 1)
+                        {
+                            /*Intent intent = new Intent(Login.this, Login_contrasena.class );
+                            startActivity(intent);*/
+                        }
+                        else{
+                            progreso.hide();
+
+                            Toast toast2 = Toast.makeText( getApplicationContext(),
+                                    Resultado.getMensaje(), Toast.LENGTH_LONG );
+                            toast2.show();
+
+                        }
+
+                    } catch (JSONException e) {
+                        progreso.hide();
+
+                        Toast toast1 = Toast.makeText(getApplicationContext(),
+                                "Error al conectarse al servidor", Toast.LENGTH_LONG);
+
+                        toast1.show();
+                    }
+                }
+
+            },
+                    new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // error
+                            progreso.hide();
+
+                            Toast toast1 =
+                                    Toast.makeText(getApplicationContext(),
+                                            "Error de conexion", Toast.LENGTH_SHORT);
+                            toast1.show();
+                        }
+                    }
+            );
+            VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
 
 
@@ -102,8 +190,6 @@ public class Login extends Activity {
         progreso = new ProgressDialog(this);
         progreso.setMessage("Iniciando sesion...");
         progreso.show();
-
-
 
 
         try{
@@ -272,11 +358,6 @@ public class Login extends Activity {
 //metodos...
     public void CrearCuenta(View view) {
         Intent intent = new Intent(Login.this, CrearCuentaActivity.class);
-        startActivity(intent);
-    }
-
-    public void IniciarContraseña(View view){
-        Intent intent = new Intent(Login.this, Login_contrasena.class );
         startActivity(intent);
     }
 

@@ -48,7 +48,6 @@ public class Login_contrasena  extends Activity {
 
         SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
-        TextNegocio = (EditText) findViewById(R.id.TextNegocio);
         TextCodigo = (EditText) findViewById(R.id.TextCodigo);
         String Valor = sharedPref.getString("usu_id", "0");
 
@@ -70,7 +69,6 @@ public class Login_contrasena  extends Activity {
         try {
             JSONObject request = new JSONObject();
             try {
-                request.put("cbn_nombre_negocio", TextNegocio.getText());
                 request.put("usu_codigo_acceso", TextCodigo.getText());
             } catch (Exception e)
             {
