@@ -296,6 +296,7 @@ private void LoadPocasExistencias(){
                 }
             }
     );
+    getRequest.setShouldCache(false);
     VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
 }
 //--------------------------------------------------------------------------------------------------
@@ -351,6 +352,7 @@ private void LoadClientesFrecuentes(){
                 }
             }
     );
+    postRequest.setShouldCache(false);
     VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( postRequest );
 }
 //--------------------------------------------------------------------------------------------------
@@ -410,6 +412,7 @@ private void LoadMasVendidos(){
                 }
             }
     );
+    postRequest.setShouldCache(false);
     VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( postRequest );
 }
 
