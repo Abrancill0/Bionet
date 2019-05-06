@@ -133,20 +133,6 @@
                 android:layout_marginHorizontal="50dp"/>
 
             <Button
-                android:id="@+id/crear_btn2"
-                style="@android:style/Widget.Holo.Light.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@color/colorPrimaryDark"
-                android:onClick="IniciarContraseña"
-                android:padding="0dp"
-                android:text="Iniciar con Contraseña"
-                android:textColor="#ffffff"
-                android:textSize="16sp"
-                android:layout_marginHorizontal="50dp"/>
-
-            <Button
                 android:id="@+id/crear_btn"
                 style="@android:style/Widget.Holo.Light.Button"
                 android:layout_width="match_parent"
