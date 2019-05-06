@@ -9,6 +9,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.google.gson.JsonArray;
+import com.itextpdf.text.Document;
 import com.mercadolibre.android.sdk.Meli;
 
 
@@ -30,6 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -260,7 +263,12 @@ public class Login extends Activity {
         }
     }
 
+    public void Pdf()
+    {
+        Document doc = new Document();
+        String outpPath = Environment.getExternalStorageDirectory()+ "/pdfsin.pdf";
 
+    }
 //metodos...
     public void CrearCuenta(View view) {
         Intent intent = new Intent(Login.this, CrearCuentaActivity.class);

@@ -100,7 +100,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.pnikosis:materialish-progress:1.5' // Circulo de Cargando
 
-
+    implementation 'com.itextpdf:itextg:5.5.10'
 
 }
 
