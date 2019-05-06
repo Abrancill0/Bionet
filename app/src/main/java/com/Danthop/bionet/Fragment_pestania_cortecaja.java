@@ -181,7 +181,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
         btn_generarcorte.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              //
+                Generar_Corte();
             }
         });
 
@@ -331,7 +331,8 @@ public class Fragment_pestania_cortecaja extends Fragment {
                                            cde_importe_total,
                                            nombrepago,
                                            cde_fecha_hora_creo,
-                                           tic_nombre_vendedor);
+                                           tic_nombre_vendedor,
+                                           "","","","");
                                    CorteCaja.add(corte);
                                }
                            }
@@ -360,5 +361,9 @@ public class Fragment_pestania_cortecaja extends Fragment {
                 }
         );
         VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( posRequest );
+    }
+
+    public void Generar_Corte(){
+
     }
 }

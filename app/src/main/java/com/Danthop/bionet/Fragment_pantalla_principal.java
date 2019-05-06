@@ -306,7 +306,7 @@ private void LoadClientesFrecuentes(){
         e.printStackTrace();
     }
     String url = getString(R.string.Url);
-    String ApiPath = url + "/api/clientesfr?usu_id=" + usu_id + "&suc_id=" + valueIdSuc + "&esApp=1";
+    String ApiPath = url + "/api/dashboard/clientesfr?usu_id=" + usu_id + "&suc_id=" + valueIdSuc + "&esApp=1";
     JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, null, new Response.Listener<JSONObject>() {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
@@ -363,7 +363,7 @@ private void LoadMasVendidos(){
         e.printStackTrace();
     }
     String url = getString(R.string.Url);
-    String ApiPath = url + "/api/topProd?usu_id=" + usu_id + "&suc_id=" + valueIdSuc + "&esApp=1";
+    String ApiPath = url + "/api/dashboard/topProd/?usu_id=" + usu_id + "&suc_id=" + valueIdSuc + "&esApp=1";
     JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, null, new Response.Listener<JSONObject>() {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
