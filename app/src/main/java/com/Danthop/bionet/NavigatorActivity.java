@@ -1,5 +1,6 @@
 package com.Danthop.bionet;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,9 +9,6 @@ import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -29,7 +27,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class SplashScreen extends AppCompatActivity {
+public class NavigatorActivity extends Activity {
 
     EditText TextUsuario,TextPassword;
     ProgressDialog progreso;
@@ -46,10 +44,10 @@ public class SplashScreen extends AppCompatActivity {
     Dialog reestablecer;
     Dialog correo_enviado;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
         progreso = new ProgressDialog(this);
         SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
@@ -74,13 +72,13 @@ public class SplashScreen extends AppCompatActivity {
 
         if (Valor != "0")
         {
-            Intent intent2 = new Intent(SplashScreen.this, Home.class);
+            Intent intent2 = new Intent(NavigatorActivity.this, Home.class);
             startActivity(intent2);
             finish();
         }
         else
-        {
-            VerificarMac();
+            {
+                VerificarMac();
         }
 
     }
@@ -124,15 +122,7 @@ public class SplashScreen extends AppCompatActivity {
 
                         if (status == 1)
                         {
-
-                            JSONArray DominioArreglo = response.getJSONArray("resultado");
-                            String Dominio = DominioArreglo.getString(0);
-                            SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPref.edit();
-                            editor.putString("usu_dominio", String.valueOf( Dominio ) );
-                            editor.putString("usu_macAdress", String.valueOf( macAddress ) );
-                            editor.commit();
-                            Intent intent2 = new Intent(SplashScreen.this, Login_contrasena.class);
+                            Intent intent2 = new Intent(NavigatorActivity.this, Login_contrasena.class);
                             startActivity(intent2);
                             finish();
 
@@ -140,7 +130,7 @@ public class SplashScreen extends AppCompatActivity {
                         else{
                             progreso.hide();
 
-                            Intent intent2 = new Intent(SplashScreen.this, Login.class);
+                            Intent intent2 = new Intent(NavigatorActivity.this, Login.class);
                             startActivity(intent2);
                             finish();
 
@@ -178,5 +168,4 @@ public class SplashScreen extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 }

@@ -445,8 +445,9 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     }
 
     public void Aceptar(View view) {
-        Intent intent = new Intent(Home.this, Login.class);
+        Intent intent = new Intent(Home.this, SplashScreen.class);
         startActivity(intent);
+        finish();
 
         SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 

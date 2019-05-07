@@ -1,15 +1,19 @@
 package com.Danthop.bionet;
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -61,133 +65,29 @@ public class Login extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
 
+        progreso = new ProgressDialog(this);
         SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
-
-        //Asi puedes verificar la dirección mac del dispositivo
-        //-------------;)----------------------
-        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wInfo = wifiManager.getConnectionInfo();
-        macAddress = wInfo.getMacAddress();
-        System.out.println(macAddress);
-        //------------:)----------------------
+        setContentView(R.layout.login);
 
         TextUsuario = (EditText)findViewById(R.id.TextUsuario);
         TextPassword = (EditText)findViewById(R.id.TextPassword);
         IDSucursales = new ArrayList<>();
 
-        // Set SDK to log events
-        Meli.setLoggingEnabled(true);
+        //-------------;)----------------------
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wInfo = wifiManager.getConnectionInfo();
+        macAddress = wInfo.getMacAddress();
+        //------------:)----------------------
 
-        // Initialize the MercadoLibre SDK
-        Meli.initializeSDK(getApplicationContext());
+        VerifyPermisos();
 
-        String Valor = sharedPref.getString("usu_id","0");
-
-        Intent intent = new Intent(this, MyFirebaseInstanceService.class);
-        this.startService(intent);
-
-        if (Valor != "0")
-        {
-            Intent intent2 = new Intent(Login.this, Home.class);
-            startActivity(intent2);
-        }
-        else
-        {
-            VerificarMac();
-        }
     }
 
-
-    private void VerificarMac()
-    {
-        try{
-            JSONObject request = new JSONObject();
-            try
-            {
-                request.put("esApp", "1");
-                request.put("dis_mac",macAddress);
-            }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
-
-            String ApiPath = url + "/api/obtener-dominio-mac";
-
-            JsonObjectRequest postRequest = new JsonObjectRequest(Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-            {
-                @Override
-                public void onResponse(JSONObject response) {
-
-                    Resultado = new LoginModel();
-
-                    JSONArray Respuesta = null;
-                    JSONObject RespuestaObjeto = null;
-                    JSONObject RespuestaNodoUsuID = null;
-                    JSONObject RespuestaIdSucursales = null;
-                    JSONArray ValorIdSucursales = null;
-                    try {
-
-                        Resultado.setEstatus( response.getString( "estatus" ) );
-                        Resultado.setMensaje( response.getString( "mensaje" ) );
-
-                        int status = Integer.parseInt( Resultado.getEstatus() );
-
-                        if (status == 1)
-                        {
-                            /*Intent intent = new Intent(Login.this, Login_contrasena.class );
-                            startActivity(intent);*/
-                        }
-                        else{
-                            progreso.hide();
-
-                            Toast toast2 = Toast.makeText( getApplicationContext(),
-                                    Resultado.getMensaje(), Toast.LENGTH_LONG );
-                            toast2.show();
-
-                        }
-
-                    } catch (JSONException e) {
-                        progreso.hide();
-
-                        Toast toast1 = Toast.makeText(getApplicationContext(),
-                                "Error al conectarse al servidor", Toast.LENGTH_LONG);
-
-                        toast1.show();
-                    }
-                }
-
-            },
-                    new Response.ErrorListener()
-                    {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // error
-                            progreso.hide();
-
-                            Toast toast1 =
-                                    Toast.makeText(getApplicationContext(),
-                                            "Error de conexion", Toast.LENGTH_SHORT);
-                            toast1.show();
-                        }
-                    }
-            );
-            VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
 
 
 
     private void Login(){
-        progreso = new ProgressDialog(this);
         progreso.setMessage("Iniciando sesion...");
         progreso.show();
 
@@ -545,6 +445,24 @@ public class Login extends Activity {
                 }
             }
         });
+    }
+
+    private void VerifyPermisos()
+    {
+
+        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[0]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[1]) == PackageManager.PERMISSION_GRANTED)
+        {
+        }else{
+            ActivityCompat.requestPermissions(Login.this,
+                    permissions,
+                    REQUEST_CODE);
+        }
     }
 
 }
