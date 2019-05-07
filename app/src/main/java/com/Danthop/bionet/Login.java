@@ -24,7 +24,17 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.google.gson.JsonArray;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.mercadolibre.android.sdk.Meli;
 
 
@@ -32,7 +42,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -349,10 +361,77 @@ public class Login extends Activity {
         }
     }
 
-    public void Pdf()
-    {
+    public void Pdf(View v) {
+
         Document doc = new Document();
-        String outpPath = Environment.getExternalStorageDirectory()+ "/pdfsin.pdf";
+        String outpPath = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ).getPath() +"/pdfsin.pdf";
+
+        try {
+            PdfWriter.getInstance(doc, new FileOutputStream(outpPath));
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // Open to write
+        doc.open();
+
+        doc.setPageSize( PageSize.A4 );
+        doc.addCreationDate();
+        doc.addAuthor( "Android School" );
+        doc.addCreator( "Pratik Butani" );
+
+            //  urName = BaseFont.createFont("assets/fonts/brandon_medium.otf", "UTF-8", BaseFont.EMBEDDED);
+
+
+            BaseColor mColorAccent = new BaseColor( 0, 153, 204, 255 );
+            float mHeadingFontSize = 20.0f;
+            float mValueFontSize = 26.0f;
+/**
+ * How to USE FONT....
+ */
+
+            // LINE SEPARATOR
+            LineSeparator lineSeparator = new LineSeparator();
+            lineSeparator.setLineColor( new BaseColor( 0, 0, 0, 68 ) );
+
+            // Title Order Details...
+// Adding Title....
+            // Font mOrderDetailsTitleFont = new Font( urName,36.0f, Font.NORMAL, BaseColor.BLACK);
+// Creating Chunk
+            Chunk mOrderDetailsTitleChunk = new Chunk( "Order Details" );
+// Creating Paragraph to add...
+            Paragraph mOrderDetailsTitleParagraph = new Paragraph( mOrderDetailsTitleChunk );
+// Setting Alignment for Heading
+            mOrderDetailsTitleParagraph.setAlignment( Element.ALIGN_CENTER );
+// Finally Adding that Chunk
+            try {
+                doc.add( mOrderDetailsTitleParagraph );
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                doc.add( new Paragraph( "jcdjckjdvcdjk" ) );
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            }
+            try {
+                doc.add( new Chunk( lineSeparator ) );
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                doc.add( new Paragraph( "pruebnitsa" ) );
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            }
+
+            doc.close();
+
+
 
     }
 //metodos...
