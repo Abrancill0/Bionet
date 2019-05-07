@@ -32,6 +32,9 @@ public class ClienteFrecuenteAdapter extends LongPressAwareTableDataAdapter<Clie
             case 0:
                 renderedView = rendercliente(Invetario);
                 break;
+            case 1:
+                renderedView = rendercompras(Invetario);
+                break;
 
 
         }
@@ -67,6 +70,10 @@ public class ClienteFrecuenteAdapter extends LongPressAwareTableDataAdapter<Clie
 
     private View rendercliente(final ClienteFrecuenteModel Inventario) {
         return renderString(Inventario.getnombre_cliente());
+    }
+
+    private View rendercompras(final ClienteFrecuenteModel Inventario) {
+        return renderString(Inventario.getNumTicket());
     }
 
 

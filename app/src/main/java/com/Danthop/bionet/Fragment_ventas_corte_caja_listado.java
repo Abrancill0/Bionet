@@ -28,6 +28,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
@@ -54,6 +55,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
     Button btn_factura_ventas;
     private EditText Fechainicio;
     private EditText Fechafin;
+    private Button btn_buscar;
     private String FechaInicio;
     private String FechaFin;
     private String usu_id;
@@ -63,6 +65,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
     private String cca_importe_total;
     private String fecha;
     private String hora;
+    private String cca_importe_forma_pago;
     private List<CorteCajaModel> ListaCorte;
     private SortableCorteCajaTable tabla_Listarcorte;
 
@@ -89,6 +92,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
         btn_factura_ventas = v.findViewById(R.id.btn_factura_ventas);
         Fechainicio=(EditText) v.findViewById(R.id.btnfechainicio);
         Fechafin=(EditText) v.findViewById(R.id.btnfechafin);
+        btn_buscar=(Button)v.findViewById(R.id.btn_buscar);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
@@ -241,7 +245,29 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
         btn_listado_corte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Enlistar_corte();
+
+            }
+        });
+
+        btn_buscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int resultado = FechaInicio.compareTo(FechaFin);
+                if (resultado == 0 || resultado < 0) {
+
+                    if (resultado < 0) {
+
+                        Enlistar_corte();
+
+                    } else {
+                        Toast toast1 = Toast.makeText(getContext(), "Fecha de inicio debe ser diferente a la fecha final", Toast.LENGTH_SHORT);
+                        toast1.show();
+                    }
+                }
+                else {
+                    Toast toast1 = Toast.makeText(getContext(), "Fecha de inicio debe ser menor a la de final", Toast.LENGTH_SHORT);
+                    toast1.show();
+                }
             }
         });
     }
@@ -267,6 +293,8 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             public void onResponse(JSONObject response) {
                 JSONObject Resultado = null;
                 JSONArray aCortes = null;
+                JSONArray aFormasPago = null;
+                JSONObject forma_pago = null;
 
 
                 try {
@@ -283,7 +311,15 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
                                 fecha = elemento.getString("cca_fecha_creo");
                                 hora = elemento.getString("cca_hora_creo");
 
+                                forma_pago = elemento.getJSONObject("cca_importe_forma_pago");
+                                cca_importe_forma_pago = forma_pago.getString("01");
 
+
+
+                                aFormasPago = Resultado.getJSONArray("aFormasPago");
+                                for (int z = 0; z < aFormasPago.length(); z++) {
+                                    JSONObject elemento2 = aFormasPago.getJSONObject(z);
+                                }
 
 
 
@@ -293,7 +329,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
                                             "",
                                             "",
                                             cca_nombre_usuario,
-                                            cca_importe_total,"",fecha,hora);
+                                            cca_importe_total,cca_importe_forma_pago,fecha,hora);
                                     ListaCorte.add(corte);
 
                             }
@@ -301,6 +337,9 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
                         final ListaCajaAdapter ListacorteAdapter = new ListaCajaAdapter(getContext(), ListaCorte, tabla_Listarcorte);
                         tabla_Listarcorte.setDataAdapter(ListacorteAdapter);
 
+                    }else {
+                        Toast toast1 = Toast.makeText(getContext(), "No existen cortes de caja para el periodo proporcionado", Toast.LENGTH_LONG);
+                        toast1.show();
                     }
                 } catch (JSONException e) {
                     Toast toast1 = Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);

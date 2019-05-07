@@ -31,6 +31,10 @@ public class TopvendidosAdapter extends LongPressAwareTableDataAdapter<ClienteFr
                 renderedView = renderproducto(Invetario);
                 break;
 
+            case 1:
+                renderedView = rendercantidad(Invetario);
+                break;
+
 
         }
         return renderedView;
@@ -66,6 +70,11 @@ public class TopvendidosAdapter extends LongPressAwareTableDataAdapter<ClienteFr
     private View renderproducto(final ClienteFrecuenteModel Inventario) {
         return renderString(Inventario.gettar_nombre_articulo());
     }
+
+    private View rendercantidad(final ClienteFrecuenteModel Inventario) {
+        return renderString(Inventario.getNumTicket());
+    }
+
 
 
     private View renderString(final String value) {

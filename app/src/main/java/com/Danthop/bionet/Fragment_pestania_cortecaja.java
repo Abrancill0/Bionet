@@ -59,6 +59,8 @@ public class Fragment_pestania_cortecaja extends Fragment {
     private String cde_fecha_hora_creo;
     private String tic_nombre_vendedor;
     private String nombrepago;
+    private String id;
+    private String importe;
     private EditText Fechainicio;
     private EditText Fechafin;
     private String FechaInicio;
@@ -72,6 +74,8 @@ public class Fragment_pestania_cortecaja extends Fragment {
     private DatePickerDialog.OnDateSetListener inicioDataSetlistener;
     private DatePickerDialog.OnDateSetListener finDataSetlistener;
     ProgressDialog progreso;
+    private JSONArray jsonArray;
+
 
 
     public Fragment_pestania_cortecaja() {
@@ -90,6 +94,8 @@ public class Fragment_pestania_cortecaja extends Fragment {
         btn_factura_ventas = (Button) v.findViewById(R.id.btn_factura_ventas);
         btn_generarcorte=(Button)v.findViewById(R.id.btn_generarcorte);
         btn_buscar =(Button)v.findViewById(R.id.btn_buscar);
+
+        jsonArray = new JSONArray();
 
         Button Ventas_btn = (Button) v.findViewById(R.id.btnventas);
         Ventas_btn.setOnClickListener(new View.OnClickListener() {
@@ -239,6 +245,8 @@ public class Fragment_pestania_cortecaja extends Fragment {
                 DatePickerDialog dialog = new DatePickerDialog( getContext(),android.R.style.Theme_Holo_Light_Dialog_MinWidth, finDataSetlistener,Year,Month,Day);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
+
+
             }
         });
 
@@ -264,12 +272,16 @@ public class Fragment_pestania_cortecaja extends Fragment {
                 {
                     mes = String.valueOf( month+1 );
                 }
+
                 FechaFin= year + "/" + mes + "/" + dia;
                 Fechafin.setText( FechaFin );
             }
+
         };
 
+       //CargaMetodosPago();
         return v;
+
     }
 
 
@@ -322,8 +334,21 @@ public class Fragment_pestania_cortecaja extends Fragment {
                                    FormaPago = elemento2.getJSONArray("tic_importe_forma_pago");
                                    for (int z = 0; z < FormaPago.length(); z++){
                                        JSONObject elemento3 = FormaPago.getJSONObject(z);
-                                       nombrepago = elemento3.getString("nombre");
+                                       id = elemento3.getString("id");
+                                       nombrepago = elemento3.getString("importe");
+
+                                       JSONObject request = new JSONObject();
+                                       try {
+                                           request.put("id", id);
+                                           request.put("valor", nombrepago);
+
+                                       } catch (Exception e) {
+                                           e.printStackTrace();
+                                       }
+                                       jsonArray.put(request);
+
                                    }
+
 
 
                                    final CorteCajaModel corte = new CorteCajaModel(
@@ -363,7 +388,151 @@ public class Fragment_pestania_cortecaja extends Fragment {
         VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( posRequest );
     }
 
+
+   /* private void CargaMetodosPago() {
+
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("tic_id_sucursal", valueIdSuc);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/tickets/select-formas-pago";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray Respuesta = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+
+                        Respuesta = response.getJSONArray("resultado");
+
+                        for (int x = 0; x < Respuesta.length(); x++) {
+                            JSONObject elemento = Respuesta.getJSONObject(x);
+                            String id = elemento.getString("fpa_id");
+                            String nombre = elemento.getString("fpa_nombre");
+
+                            jsonArray = new JSONArray();
+
+                           for (int i=0; i<Respuesta.length(); i++) {
+                            String nombrepagos = String.valueOf( Respuesta.get(i) );
+
+                                JSONObject request2 = new JSONObject();
+                                try {
+                                    request2.put("nombre_pago", nombrepagos);
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                jsonArray.put(request2);
+
+                           }
+
+                        }
+
+
+
+                    } else {
+                        Toast toast1 = Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) { Toast toast1 = Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 = Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+
+    }*/
+
     public void Generar_Corte(){
 
+        progreso = new ProgressDialog(getContext());
+        progreso.setMessage("Generando Corte de Caja...");
+        progreso.show();
+
+
+        String url = getString(R.string.Url);
+        String ApiPath = url + "/api/ventas/cortes/guardar-corte";
+
+        JSONArray ArrayasFP = new JSONArray();
+
+            JSONObject request = new JSONObject();
+            try {
+
+                request.put( "id", id);
+                request.put( "importe", importe);
+
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+
+            ArrayasFP.put(request);
+
+
+
+        JSONObject jsonBodyrequest = new JSONObject();
+        try {
+            jsonBodyrequest.put("esApp", "1" );
+            jsonBodyrequest.put("usu_id", usu_id);
+            jsonBodyrequest.put("cca_id_sucursal",valueIdSuc);
+            //jsonBodyrequest.put("cca_id", );
+            jsonBodyrequest.put("asFP",ArrayasFP);
+
+            
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,jsonBodyrequest, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+               /* Toast.makeText(getContext(), "Solicitud enviada", Toast.LENGTH_LONG).show();
+                Fragment_pop_up_traslado_exitoso dialog = new Fragment_pop_up_traslado_exitoso();
+                dialog.setTargetFragment(Fragment_pestania_cortecaja.this, 1);
+                dialog.show(getFragmentManager(), "MyCustomDialog");
+                progreso.hide();*/
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progreso.hide();
+                        Toast toast1 = Toast.makeText(getContext(), "Error de conexion", Toast.LENGTH_SHORT);
+                        toast1.show();
+                    }
+                }
+        );
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
     }
+
+
 }

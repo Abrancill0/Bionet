@@ -116,13 +116,15 @@ public class Fragment_pantalla_principal extends Fragment{
                 {""}};
 
         tabla_productos = (SortableClienteFrecuenteTable) v.findViewById(R.id.tablaProductos_sucursales);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Producto");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Producto", "Ventas");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader.setTextSize(12);
         simpleHeader.setPaddings(10,10,10,10);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(1);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(2);
         tableColumnWeightModel.setColumnWeight(0, 2);
+        tableColumnWeightModel.setColumnWeight(1, 2);
+
 
         tabla_productos.setHeaderAdapter(simpleHeader);
         tabla_productos.setColumnModel(tableColumnWeightModel);
@@ -162,13 +164,15 @@ public class Fragment_pantalla_principal extends Fragment{
 //--------------------------------------------------------------------------------------------------
 
         tabla_clientes = (SortableClienteFrecuenteTable) v.findViewById(R.id.tablaClientesFrecuentes);
-        final SimpleTableHeaderAdapter simpleHeader4 = new SimpleTableHeaderAdapter(getContext(), "Cliente");
+        final SimpleTableHeaderAdapter simpleHeader4 = new SimpleTableHeaderAdapter(getContext(), "Cliente", "Compras realizadas");
         simpleHeader4.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader4.setTextSize(12);
         simpleHeader4.setPaddings(10,10,10,10);
 
-        final TableColumnWeightModel tableColumnWeightModel4 = new TableColumnWeightModel(1);
+        final TableColumnWeightModel tableColumnWeightModel4 = new TableColumnWeightModel(2);
         tableColumnWeightModel4.setColumnWeight(0, 2);
+        tableColumnWeightModel4.setColumnWeight(1, 2);
+
 
         tabla_clientes.setHeaderAdapter(simpleHeader4);
         tabla_clientes.setColumnModel(tableColumnWeightModel4);
@@ -325,10 +329,12 @@ private void LoadClientesFrecuentes(){
                         JSONObject elemento = Resultado.getJSONObject(x);
                         String cliente = elemento.getString("tic_id_cliente");
 
+
                         if (cliente != "null"){
                             String nombre_cliente = elemento.getString("tic_id_nombre");
+                            String compras = elemento.getString("compras");
 
-                           final ClienteFrecuenteModel Nombrecliente = new ClienteFrecuenteModel(nombre_cliente,"","","", "");
+                           final ClienteFrecuenteModel Nombrecliente = new ClienteFrecuenteModel(nombre_cliente,compras,"","", "");
                            Clientes.add(Nombrecliente);
                         }
                     }
@@ -385,6 +391,7 @@ private void LoadMasVendidos(){
                             JSONObject elemento2 = elemento.getJSONObject(y);
                             tar_nombre_articulo = elemento2.getString("tar_nombre_articulo");
                             NumTicket = elemento2.getString("cantidad");
+
 
 
                             final ClienteFrecuenteModel Topvendidos = new ClienteFrecuenteModel("",NumTicket,"", tar_nombre_articulo, "");

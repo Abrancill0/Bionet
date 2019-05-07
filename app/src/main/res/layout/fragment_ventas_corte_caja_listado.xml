@@ -125,9 +125,9 @@
         android:paddingVertical="5dp">
 
         <TextView
-            android:layout_width="210dp"
+            android:layout_width="230dp"
             android:layout_height="match_parent"
-            android:text="Generar Corte de Caja."
+            android:text="Listado de Cortes de Caja."
             android:textSize="18dp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -168,6 +168,18 @@
             android:layout_height="wrap_content"
             android:inputType="date"
             android:focusable="false" />
+
+        <Button
+            android:id="@+id/btn_buscar"
+            style="@android:style/Widget.Holo.Light.Button"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_gray"
+            android:text="Buscar"
+            android:textColor="@color/gray"
+            android:textSize="15sp"
+            android:layout_marginLeft="10dp"/>
+
     </LinearLayout>
 
 
