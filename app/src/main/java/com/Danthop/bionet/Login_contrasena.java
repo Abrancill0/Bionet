@@ -1,12 +1,16 @@
 package com.Danthop.bionet;
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -38,7 +42,14 @@ public class Login_contrasena  extends Activity {
     ProgressDialog progreso;
     LoginModel Resultado = new LoginModel();
     private SortableInventariosTable tabla_ventas;
+    private static final int REQUEST_CODE = 999;
+    String Dominio;
+    String macAdress;
+    Button Iniciar;
+    Button IniciarAdmin;
 
+    EditText Usuario;
+    EditText Codigo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,17 +59,33 @@ public class Login_contrasena  extends Activity {
 
         SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
-        TextCodigo = (EditText) findViewById(R.id.TextCodigo);
-        String Valor = sharedPref.getString("usu_id", "0");
+        Usuario = findViewById(R.id.textUsuario);
+        Codigo = findViewById(R.id.TextCodigo);
+        Iniciar = findViewById(R.id.iniciar_btn);
+        IniciarAdmin = findViewById(R.id.iniciar_admin_btn);
+
+
+        Dominio = sharedPref.getString("usu_dominio", "");
+        macAdress = sharedPref.getString("usu_macAdress","");
 
         Intent intent = new Intent(this, MyFirebaseInstanceService.class);
         this.startService(intent);
+        VerifyPermisos();
 
+        Iniciar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                verificar_campos();
+            }
+        });
 
-        if (Valor != "0") {
-            Intent intent2 = new Intent(Login_contrasena.this, Home.class);
-            startActivity(intent2);
-        }
+        IniciarAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login_contrasena.this, Login.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void Login() {
@@ -69,7 +96,11 @@ public class Login_contrasena  extends Activity {
         try {
             JSONObject request = new JSONObject();
             try {
-                request.put("usu_codigo_acceso", TextCodigo.getText());
+                request.put("esApp", 1);
+                request.put("usu_usuario", Usuario.getText());
+                request.put("dis_mac", macAdress);
+                request.put("cbn_dominio", Dominio);
+                request.put("usu_codigo_acceso", Codigo.getText());
             } catch (Exception e)
             {
                 e.printStackTrace();
@@ -114,6 +145,7 @@ public class Login_contrasena  extends Activity {
                             new GuardaPreferencia().execute();
                                     Intent intent = new Intent(Login_contrasena.this, Home.class);
                                     startActivity(intent);
+                                    finish();
 
                                     Toast toast1 =
                                             Toast.makeText(getApplicationContext(),
@@ -123,6 +155,13 @@ public class Login_contrasena  extends Activity {
 
                             progreso.hide();
 
+                            Toast toast2 = Toast.makeText( getApplicationContext(),
+                                    Resultado.getMensaje(), Toast.LENGTH_LONG );
+                            toast2.show();
+                        }
+                        else
+                        {
+                            progreso.hide();
                             Toast toast2 = Toast.makeText( getApplicationContext(),
                                     Resultado.getMensaje(), Toast.LENGTH_LONG );
                             toast2.show();
@@ -157,16 +196,16 @@ public class Login_contrasena  extends Activity {
         }
     }
 //Metodos...
-        public void IniciarSesion2 (View view){
+        public void verificar_campos (){
 
-                    if (TextNegocio.getText().length() == 0) {
+                    if (Usuario.getText().length() == 0) {
                         Toast toast1 = Toast.makeText(getApplicationContext(),
-                                "Campo cuenta obligatorio ", Toast.LENGTH_SHORT);
+                                "Campo usuario obligatorio ", Toast.LENGTH_SHORT);
                         toast1.show();
                         return;
                     }
 
-                    if (TextCodigo.getText().length() == 0) {
+                    if (Codigo.getText().length() == 0) {
                         Toast toast1 = Toast.makeText(getApplicationContext(),
                         "Campo password obligatorio ", Toast.LENGTH_SHORT);
                 toast1.show();
@@ -193,6 +232,24 @@ public class Login_contrasena  extends Activity {
 
             editor.commit();
             return null;
+        }
+    }
+
+    private void VerifyPermisos()
+    {
+
+        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[0]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[1]) == PackageManager.PERMISSION_GRANTED)
+        {
+        }else{
+            ActivityCompat.requestPermissions(Login_contrasena.this,
+                    permissions,
+                    REQUEST_CODE);
         }
     }
 }

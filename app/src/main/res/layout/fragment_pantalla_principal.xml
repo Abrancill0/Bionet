@@ -11,9 +11,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".6"
+        android:layout_weight=".65"
         android:orientation="vertical"
-        android:paddingHorizontal="20dp">
+        android:padding="20dp">
 
         <com.synnapps.carouselview.CarouselView
             android:id="@+id/carouselView"
@@ -31,7 +31,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".4"
+        android:layout_weight=".35"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -49,23 +49,16 @@
 
                 <TextView
                     android:id="@+id/textView17"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
+                    android:background="@color/fondo_azul"
                     android:text="Artículos más vendidos"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@color/gray2"
-                    android:orientation="horizontal">
-
-                </LinearLayout>
+                    android:textSize="16sp"
+                    android:padding="5dp"/>
 
                 <com.Danthop.bionet.Tables.SortableClienteFrecuenteTable
                     android:id="@+id/tablaProductos_sucursales"
@@ -86,21 +79,16 @@
 
                 <TextView
                     android:id="@+id/textView31"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
+                    android:background="@color/fondo_azul"
                     android:text="Centro de Mensajes"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@color/gray2"
-                    android:orientation="horizontal"></LinearLayout>
+                    android:textSize="16sp"
+                    android:padding="5dp"/>
 
                 <de.codecrafters.tableview.TableView
                     android:id="@+id/tablaNotificaciones"
@@ -136,23 +124,16 @@
 
                     <TextView
                         android:id="@+id/textViewProd"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
+                        android:background="@color/fondo_azul"
                         android:text="Pocas existencias"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="16sp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@color/gray2"
-                        android:orientation="horizontal">
-
-                    </LinearLayout>
+                        android:textSize="16sp"
+                        android:padding="5dp"/>
 
                     <com.Danthop.bionet.Tables.SortableInventariosTable
                         android:id="@+id/tablaPocas_Existencias"
@@ -174,21 +155,16 @@
 
                     <TextView
                         android:id="@+id/textView32"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
+                        android:background="@color/fondo_azul"
                         android:text="Clientes frecuentes"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="16sp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@color/gray2"
-                        android:orientation="horizontal"></LinearLayout>
+                        android:textSize="16sp"
+                        android:padding="5dp"/>
 
                     <com.Danthop.bionet.Tables.SortableClienteFrecuenteTable
                         android:id="@+id/tablaClientesFrecuentes"
