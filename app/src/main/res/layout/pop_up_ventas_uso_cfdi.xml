@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="414dp"
-    android:layout_height="300dp"
+    xmlns:table="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="420dp"
+    android:layout_height="260dp"
     android:layout_gravity="center"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical">
 
@@ -18,21 +21,31 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".9"
+            android:layout_weight=".7"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".1"
-                android:orientation="horizontal">
+                android:layout_weight=".15"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/textView29"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Uso CFDI"
+                    android:textColor="@color/gray"
+                    android:textSize="22dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".9"
+                android:layout_weight=".95"
                 android:orientation="horizontal">
 
                 <Button
@@ -40,8 +53,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="right"
-                    android:layout_weight=".95"
+                    android:layout_weight="1"
                     android:background="@drawable/ic_tachita"
+                    android:padding="20dp"
                     tools:ignore="MissingConstraints"
                     tools:layout_editor_absoluteX="410dp"
                     tools:layout_editor_absoluteY="0dp" />
@@ -52,37 +66,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".1"
+            android:layout_weight=".3"
             android:orientation="vertical">
 
-            <android.support.constraint.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="70dp">
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/imageView9"
-                    android:layout_width="946dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:src="@drawable/signo"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </android.support.constraint.ConstraintLayout>
+                <Spinner
+                    android:id="@+id/combo_cfdi"
+                    style="@style/SpinnerTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_weight=".5" />
 
-            <TextView
-                android:id="@+id/textView29"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="No cuentas con ningún artículo en tu ticket de Venta"
-                android:textColor="@color/colorPrimary"
-                android:textSize="22dp" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
@@ -93,14 +95,14 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/Aceptar"
+            android:id="@+id/aceptar_agregar_cfdi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Aceptar"
+            android:text="Agregar uso CFDI"
             android:textAllCaps="false"
             android:textColor="#fff"
             android:textSize="22dp" />

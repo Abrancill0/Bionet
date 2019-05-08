@@ -19,14 +19,17 @@ import android.widget.Toast;
 import com.Danthop.bionet.Adapters.ApartadoAdapter;
 import com.Danthop.bionet.Adapters.DetalleApartadoAdapter;
 import com.Danthop.bionet.Adapters.DetalleOrdenEspecialAdapter;
+import com.Danthop.bionet.Adapters.MovimientoAdapter;
 import com.Danthop.bionet.Adapters.OrdenEspecialAdapter;
 import com.Danthop.bionet.Tables.SortableApartadoDetalleTable;
 import com.Danthop.bionet.Tables.SortableApartadoTable;
+import com.Danthop.bionet.Tables.SortableMovimientoTable;
 import com.Danthop.bionet.Tables.SortableOrdenEspecialDetalleTable;
 import com.Danthop.bionet.Tables.SortableOrdenEspecialTable;
 import com.Danthop.bionet.model.ApartadoModel;
 import com.Danthop.bionet.model.ArticuloApartadoModel;
 import com.Danthop.bionet.model.Impuestos;
+import com.Danthop.bionet.model.MovimientoModel;
 import com.Danthop.bionet.model.OrdenEspecialArticuloModel;
 import com.Danthop.bionet.model.OrdenEspecialModel;
 import com.Danthop.bionet.model.VolleySingleton;
@@ -70,8 +73,11 @@ public class Fragment_ventas_transacciones extends Fragment {
 
     private List<OrdenEspecialModel> Lista_de_ordenes= new ArrayList<>();
 
+    private List<MovimientoModel> Lista_de_movimientos= new ArrayList<>();
+
     private SortableApartadoTable TablaApartados;
     private SortableOrdenEspecialTable TablaOrdenes;
+    private SortableMovimientoTable TablaMovimientos;
 
     private String usu_id;
 
@@ -110,6 +116,9 @@ public class Fragment_ventas_transacciones extends Fragment {
         TablaOrdenes = v.findViewById(R.id.tabla_ordenes);
         TablaOrdenes.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia2));
 
+        TablaMovimientos = v.findViewById(R.id.tabla_movimientos);
+        TablaMovimientos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia3));
+
         btn_ventas = v.findViewById(R.id.btn_ventas);
         btn_corte_caja = v.findViewById(R.id.btn_corte_caja);
 
@@ -118,6 +127,7 @@ public class Fragment_ventas_transacciones extends Fragment {
             {
                 LoadApartados();
                 LoadOrdenes();
+                LoadMovimientos();
             }
             public void onNothingSelected(AdapterView<?> parent)
             {
@@ -629,6 +639,91 @@ public class Fragment_ventas_transacciones extends Fragment {
             }
         };
         TablaOrdenes.addDataClickListener(tablaListener);
+
+
+    }
+
+
+    public void LoadMovimientos(){
+        Lista_de_movimientos.clear();
+        try {
+
+            String url = getString(R.string.Url);
+
+            String ApiPath = url + "/api/ventas/movimientos/index?" +
+                    "usu_id=" + usu_id +
+                    "&esApp=1" +
+                    "&suc_id="+ SucursalID.get(SpinnerSucursal.getSelectedItemPosition())+
+                    "&fecha_inicial="+""+
+                    "&fecha_final="+""+
+                    "&forma_pago="+""+
+                    "&usuario_venta="+"";
+
+            // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            try {
+
+                                int EstatusApi = Integer.parseInt(response.getString("estatus"));
+
+                                if (EstatusApi == 1) {
+
+                                    JSONObject RespuestaResultado = response.getJSONObject("resultado");
+
+                                    JSONArray Movimientos = RespuestaResultado.getJSONArray("aMovimientos");
+                                    for (int f=0; f<Movimientos.length();f++)
+                                    {
+                                        JSONObject elemento = Movimientos.getJSONObject(f);
+                                        String fecha = elemento.getString("mov_fecha_hora_creo");
+                                        String NombreSucursal = elemento.getString("suc_nombre");
+                                        String NumSucursal = elemento.getString("suc_numero");
+                                        String Monto = elemento.getString("tic_importe_total");
+
+                                        JSONArray Articulos = elemento.getJSONArray("aArticulos");
+                                        JSONObject nodo = Articulos.getJSONObject(0);
+                                        String Articulo = nodo.getString("tar_nombre_articulo");
+
+                                        MovimientoModel movimiento = new MovimientoModel(fecha,NombreSucursal,NumSucursal,Articulo,Monto);
+                                        Lista_de_movimientos.add(movimiento);
+                                    }
+
+                                    final MovimientoAdapter movimientoAdapter = new MovimientoAdapter(getContext(),Lista_de_movimientos,TablaMovimientos);
+                                    movimientoAdapter.notifyDataSetChanged();
+                                    TablaMovimientos.setDataAdapter(movimientoAdapter);
+
+                                }
+                            } catch (JSONException e) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(e), Toast.LENGTH_LONG);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf(error), Toast.LENGTH_LONG);
+                        }
+                    }
+            );
+            getRequest.setShouldCache(false);
+
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+        } catch (Error e) {
+            e.printStackTrace();
+        }
+        TableDataClickListener<MovimientoModel> tablaListener = new TableDataClickListener<MovimientoModel>() {
+            @Override
+            public void onDataClicked(int rowIndex, final MovimientoModel clickedData) {
+
+            }
+        };
+        TablaMovimientos.addDataClickListener(tablaListener);
 
 
     }

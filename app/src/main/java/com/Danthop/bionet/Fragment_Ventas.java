@@ -147,6 +147,10 @@ public class Fragment_Ventas extends Fragment {
     private ArrayList<String> VendedorName;
     private ArrayList<String> VendedorID;
 
+    private Spinner SpinnerCFDI;
+    private ArrayList<String> CFDI_Name;
+    private ArrayList<String> CFDI_ID;
+
     private ArrayList<String> ArticulosName;
 
     private ArrayList<String> Imagenes;
@@ -211,6 +215,9 @@ public class Fragment_Ventas extends Fragment {
         SucursalName = new ArrayList<>();
         SucursalID = new ArrayList<>();
         SpinnerSucursal = (Spinner) v.findViewById(R.id.sucursal);
+
+        CFDI_Name = new ArrayList<>();
+        CFDI_ID = new ArrayList<>();
 
         ArticulosName = new ArrayList<>();
         Imagenes = new ArrayList<>();
@@ -690,91 +697,21 @@ public class Fragment_Ventas extends Fragment {
 
                                 return;
                             }
-
                             ticket_de_venta.setTic_facturar("True");
                             dialog.dismiss();
-                            dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
+                            dialog.setContentView(R.layout.pop_up_ventas_uso_cfdi);
                             dialog.show();
-                            Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
-                            cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                            SpinnerCFDI = dialog.findViewById(R.id.combo_cfdi);
+                            LoadCFDI();
+
+                            Button Agregar_cfdi = dialog.findViewById(R.id.aceptar_agregar_cfdi);
+                            Agregar_cfdi.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    dialog.hide();
-                                }
-                            });
-                            final ListView listaPagos = dialog.findViewById(R.id.lista_de_pagos);
-                            CargaMetodosPago(listaPagos);
-
-                            TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
-                            double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
-                            NumberFormat formatter = NumberFormat.getCurrencyInstance();
-                            TotalAPagar.setText(formatter.format(ImporteTotalConDecimal));
-
-                            Button realizarPago = dialog.findViewById(R.id.realizar_Pago);
-                            realizarPago.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    double totalsumaimportes = 0;
-
-                                    double TarjetaCredito = 0;
-                                    double TarjetaDebito = 0;
-
-                                    int count = listaPagos.getCount();
-
-                                    System.out.println(ListaDePagosDisponibles.size());
-
-                                    for (int i = 0; i < count; i++) {
-
-                                        // Here's the critical part I was missing
-                                        View childView = listaPagos.getChildAt(i);
-                                        TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
-                                        EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
-
-                                        String label = (String) labeltext.getText();
-                                        String cantPago = String.valueOf(editText.getText());
-                                        if (cantPago.equals("")) {
-                                            cantPago = "0";
-                                        }
-
-                                        if (labeltext.equals("Tarjeta de crédito"))
-                                        {
-                                            TarjetaCredito = Double.parseDouble(cantPago);
-                                        }
-
-                                        if (labeltext.equals("Tarjeta débito "))
-                                        {
-                                            TarjetaDebito = Double.parseDouble(cantPago);
-                                        }
-
-                                        totalsumaimportes += Double.parseDouble(cantPago);
-
-                                    }
-
-                                    //Validar montos antes de pasar de pantallas
-                                    String TotalText = String.valueOf(total.getText());
-                                    double TotalFormat = 0;
-                                    String cleanString = TotalText.replaceAll("\\D", "");
-                                    try {
-                                        TotalFormat = Double.parseDouble(cleanString);
-                                        TotalFormat = TotalFormat / 100;
-                                    } catch (Exception ex) {
-                                        ex.printStackTrace();
-                                    }
-
-
-                                    if (TotalFormat > totalsumaimportes) {
-                                        Toast toast1 =
-                                                Toast.makeText(getContext(), "El monto capturado es menor al total de la venta", Toast.LENGTH_LONG);
-                                        toast1.show();
-
-                                        return;
-                                    }
-
+                                    LoadCFDI();
                                     dialog.dismiss();
-                                    dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
+                                    dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
                                     dialog.show();
-
                                     Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
                                     cerrarPopUp.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -782,72 +719,155 @@ public class Fragment_Ventas extends Fragment {
                                             dialog.hide();
                                         }
                                     });
-                                    TextView importe_venta = dialog.findViewById(R.id.importe_venta);
-                                    TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
-                                    TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
+                                    final ListView listaPagos = dialog.findViewById(R.id.lista_de_pagos);
+                                    CargaMetodosPago(listaPagos);
 
+                                    TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
+                                    double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
+                                    NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                                    TotalAPagar.setText(formatter.format(ImporteTotalConDecimal));
 
-                                    for (int i = 0; i < count; i++) {
-
-                                        // Here's the critical part I was missing
-                                        View childView = listaPagos.getChildAt(i);
-                                        TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
-                                        EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
-
-                                        String label = (String) labeltext.getText();
-                                        String cantPago = String.valueOf(editText.getText());
-                                        if (cantPago.equals("")) {
-                                            cantPago = "0";
-                                        }
-                                        int valor = Integer.parseInt(cantPago);
-                                        if (valor <= 0) {
-                                            ListaDePagosDisponibles.remove(i);
-                                            count = count - 1;
-                                        } else {
-                                            String idPago = ListaDePagosDisponibles.get(i).getId();
-                                            PagoModel pago = new PagoModel(ListaDePagosDisponibles.get(i).getNombre(),
-                                                    idPago, cantPago);
-                                            ListaDePagos_a_utilizar.add(pago);
-                                        }
-
-                                    }
-
-                                    double valorTarjetas = 0;
-
-                                    valorTarjetas = TarjetaCredito + TarjetaDebito;
-
-                                    if (valorTarjetas > 0)
-                                    {
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("nombre", "");
-                                        bundle.putString("descripcion", "");
-                                        bundle.putString("precio", "");
-
-
-                                       // FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                       // FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-                                       // Fragment_selecciona_tipo_publicacion secondFragment = new Fragment_selecciona_tipo_publicacion();
-                                       //  secondFragment.setArguments(bundle);
-
-                                      //  fragmentTransaction.replace(R.id.fragment_container, secondFragment);
-                                      //  fragmentTransaction.commit();
-
-                                        Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
-                                        getActivity().startActivity(myIntent);
-                                    }
-                                    else
-                                    {
-                                        FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
-                                    }
-
-
-                                    Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
-                                    aceptar.setOnClickListener(new View.OnClickListener() {
+                                    Button realizarPago = dialog.findViewById(R.id.realizar_Pago);
+                                    realizarPago.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
 
+                                            double totalsumaimportes = 0;
+
+                                            double TarjetaCredito = 0;
+                                            double TarjetaDebito = 0;
+
+                                            int count = listaPagos.getCount();
+
+                                            System.out.println(ListaDePagosDisponibles.size());
+
+                                            for (int i = 0; i < count; i++) {
+
+                                                // Here's the critical part I was missing
+                                                View childView = listaPagos.getChildAt(i);
+                                                TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
+                                                EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
+
+                                                String label = (String) labeltext.getText();
+                                                String cantPago = String.valueOf(editText.getText());
+                                                if (cantPago.equals("")) {
+                                                    cantPago = "0";
+                                                }
+
+                                                if (labeltext.equals("Tarjeta de crédito"))
+                                                {
+                                                    TarjetaCredito = Double.parseDouble(cantPago);
+                                                }
+
+                                                if (labeltext.equals("Tarjeta débito "))
+                                                {
+                                                    TarjetaDebito = Double.parseDouble(cantPago);
+                                                }
+
+                                                totalsumaimportes += Double.parseDouble(cantPago);
+
+                                            }
+
+                                            //Validar montos antes de pasar de pantallas
+                                            String TotalText = String.valueOf(total.getText());
+                                            double TotalFormat = 0;
+                                            String cleanString = TotalText.replaceAll("\\D", "");
+                                            try {
+                                                TotalFormat = Double.parseDouble(cleanString);
+                                                TotalFormat = TotalFormat / 100;
+                                            } catch (Exception ex) {
+                                                ex.printStackTrace();
+                                            }
+
+
+                                            if (TotalFormat > totalsumaimportes) {
+                                                Toast toast1 =
+                                                        Toast.makeText(getContext(), "El monto capturado es menor al total de la venta", Toast.LENGTH_LONG);
+                                                toast1.show();
+
+                                                return;
+                                            }
+
                                             dialog.dismiss();
+                                            dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
+                                            dialog.show();
+
+                                            Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                                            cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    dialog.hide();
+                                                }
+                                            });
+                                            TextView importe_venta = dialog.findViewById(R.id.importe_venta);
+                                            TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
+                                            TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
+
+
+                                            for (int i = 0; i < count; i++) {
+
+                                                // Here's the critical part I was missing
+                                                View childView = listaPagos.getChildAt(i);
+                                                TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
+                                                EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
+
+                                                String label = (String) labeltext.getText();
+                                                String cantPago = String.valueOf(editText.getText());
+                                                if (cantPago.equals("")) {
+                                                    cantPago = "0";
+                                                }
+                                                int valor = Integer.parseInt(cantPago);
+                                                if (valor <= 0) {
+                                                    ListaDePagosDisponibles.remove(i);
+                                                    count = count - 1;
+                                                } else {
+                                                    String idPago = ListaDePagosDisponibles.get(i).getId();
+                                                    PagoModel pago = new PagoModel(ListaDePagosDisponibles.get(i).getNombre(),
+                                                            idPago, cantPago);
+                                                    ListaDePagos_a_utilizar.add(pago);
+                                                }
+
+                                            }
+
+                                            double valorTarjetas = 0;
+
+                                            valorTarjetas = TarjetaCredito + TarjetaDebito;
+
+                                            if (valorTarjetas > 0)
+                                            {
+                                                Bundle bundle = new Bundle();
+                                                bundle.putString("nombre", "");
+                                                bundle.putString("descripcion", "");
+                                                bundle.putString("precio", "");
+
+
+                                                // FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                                // FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+                                                // Fragment_selecciona_tipo_publicacion secondFragment = new Fragment_selecciona_tipo_publicacion();
+                                                //  secondFragment.setArguments(bundle);
+
+                                                //  fragmentTransaction.replace(R.id.fragment_container, secondFragment);
+                                                //  fragmentTransaction.commit();
+
+                                                Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
+                                                getActivity().startActivity(myIntent);
+                                            }
+                                            else
+                                            {
+                                                FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
+                                            }
+
+
+                                            Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                                            aceptar.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+
+                                                    dialog.dismiss();
+                                                }
+                                            });
+
                                         }
                                     });
 
@@ -2245,6 +2265,68 @@ public class Fragment_Ventas extends Fragment {
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
+    private void AniadirCFDI()
+    {
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("tic_id", ticket_de_venta.getTic_id());
+            request.put("tic_id_uso_cfdi", CFDI_ID.get(SpinnerCFDI.getSelectedItemPosition()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/tickets/update_uso_cfdi";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray Respuesta = null;
+                JSONObject RespuestaNodoTicket = null;
+                JSONObject TicketID = null;
+                JSONArray NodoTicketArticulos = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    } else {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
+
+
     private void BuscarPorSKU(String SKU) {
         dialog.setContentView(R.layout.pop_up_ventas_verificar_articulo);
         final TextView art_nombre = dialog.findViewById(R.id.art_name_articulo);
@@ -2484,5 +2566,84 @@ public class Fragment_Ventas extends Fragment {
             e.printStackTrace();
         }
     }
+
+    private void LoadCFDI()
+    {
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/tickets/select-uso-cdfi";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray Respuesta = null;
+                JSONObject RespuestaNodoID = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+                    if (status == 1) {
+
+                        Respuesta = response.getJSONArray("resultado");
+
+                        for (int x = 0; x < Respuesta.length(); x++) {
+                            JSONObject jsonObject1 = Respuesta.getJSONObject(x);
+                            String CFDI = jsonObject1.getString("ucf_descripcion");
+                            CFDI_Name.add(CFDI);
+                            String CFDI_id = jsonObject1.getString("ucf_id");
+                            CFDI_ID.add(CFDI_id);
+                        }
+                        SpinnerCFDI.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, CFDI_Name));
+
+                    } else {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+
+                } catch (JSONException e) {
+
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+
+                }
+
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+    }
+
 
 }
