@@ -1,6 +1,7 @@
 package com.Danthop.bionet;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -85,12 +86,15 @@ public class Fragment_pestania_cortecaja extends Fragment {
     private Button btn_listado_corte;
     private Button btn_factura_ventas;
     private Button btn_generarcorte;
+    private Button aceptarcorte;
+    private Button salircorte;
     private String id_sucursales;
     private String uuid;
     private Double TotalCorte;
     private DatePickerDialog.OnDateSetListener inicioDataSetlistener;
     private DatePickerDialog.OnDateSetListener finDataSetlistener;
     ProgressDialog progreso;
+    private Dialog dialog;
     private JSONArray jsonArray;
     private JSONArray ArrayPagos;
 
@@ -112,6 +116,8 @@ public class Fragment_pestania_cortecaja extends Fragment {
         btn_factura_ventas = (Button) v.findViewById(R.id.btn_factura_ventas);
         btn_generarcorte=(Button)v.findViewById(R.id.btn_generarcorte);
         btn_buscar =(Button)v.findViewById(R.id.btn_buscar);
+        aceptarcorte=(Button)v.findViewById( R.id.aceptarcorte );
+        salircorte=(Button)v.findViewById( R.id.salircorte );
 
         jsonArray = new JSONArray();
         ArrayPagos = new JSONArray();
@@ -145,6 +151,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
         cca_id_sucursal = sharedPref.getString("cca_id_sucursal", "");
+        dialog = new Dialog(getContext());
         CorteCaja = new ArrayList<>();
         FormasPago = new ArrayList<>();
         Totalventa = new ArrayList<>();
@@ -208,18 +215,81 @@ public class Fragment_pestania_cortecaja extends Fragment {
         });
 
         btn_generarcorte.setOnClickListener( new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                Generar_Corte();
+
+                if (CorteCaja.isEmpty()) {
+                    dialog.setContentView( R.layout.pop_up_cortecaja_finalizar );
+                    dialog.show();
+
+                    Button aceptar = dialog.findViewById( R.id.Aceptar );
+                    aceptar.setOnClickListener( new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+
+                        }
+                    } );
+
+                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.hide();
+                        }
+                    });
+
+                } else {
+
+                    dialog.setContentView( R.layout.pop_up_aceptar_corte_caja );
+                    dialog.show();
+
+                    EditText totalcorte = dialog.findViewById(R.id.Total_corte);
+                    totalcorte.setText("Total corte: $ " + String.valueOf( TotalCorte));
+
+                    Button aceptarcorte = dialog.findViewById( R.id.aceptarcorte );
+                    aceptarcorte.setOnClickListener( new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                            Generar_Corte();
+                            Toast.makeText( getContext(), "Corte de Caja Generado Exitosamente", Toast.LENGTH_LONG ).show();
+                            FragmentTransaction fr = getFragmentManager().beginTransaction();
+                            fr.replace( R.id.fragment_container, new Fragment_ventas_corte_caja_listado() ).commit();
+                        }
+                    } );
+
+
+
+
+                    Button salircorte = dialog.findViewById( R.id.salircorte );
+                    salircorte.setOnClickListener( new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.hide();
+                        }
+                    } );
+
+                    Button cancelar = dialog.findViewById( R.id.cancelar );
+                    cancelar.setOnClickListener( new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.hide();
+                        }
+                    } );
+
+                }
             }
         });
 
 
         Time today = new Time( Time.getCurrentTimezone() );
         today.setToNow();
-        int year = today.year;
         String dia;
         String mes;
+        int year = today.year;
+
         if(today.monthDay < 10){
              dia = "0" + today.monthDay;
         }else {
@@ -231,9 +301,14 @@ public class Fragment_pestania_cortecaja extends Fragment {
              mes = String.valueOf(today.month + 1);
 
         }
-        Fechainicio.setText(dia + "/" + mes + "/" + year );
-        Fechafin.setText(dia + "/" + mes + "/" + year );
 
+        String fechausuario = (dia + "/" + mes + "/" + year );
+        Fechainicio.setText( fechausuario );
+        FechaInicio = year + "/" + mes + "/" + dia;
+
+        String fechausuariofin = (dia + "/" + mes + "/" + year );
+        Fechafin.setText( fechausuariofin );
+        FechaFin = year + "/" + mes + "/" + dia;
 
 
 
@@ -510,16 +585,36 @@ public class Fragment_pestania_cortecaja extends Fragment {
                     if (status == 1){
                         Resultado = response.getJSONObject( "resultado" );
 
+                      /*  dialog.setContentView(R.layout.pop_up_aceptar_corte_caja);
+                        dialog.show();
 
-                        Toast.makeText(getContext(), "Corte de Caja Generado Exitosamente", Toast.LENGTH_LONG).show();
+                        Button salircorte = dialog.findViewById(R.id.salircorte);
+                        salircorte.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.hide();
+                            }
+                        });
+
+                        Button cancelar = dialog.findViewById(R.id.cancelar);
+                        cancelar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.hide();
+                            }
+                        });*/
+
+
+
+                       /* Toast.makeText(getContext(), "Corte de Caja Generado Exitosamente", Toast.LENGTH_LONG).show();
                         FragmentTransaction fr = getFragmentManager().beginTransaction();
-                        fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();
+                        fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();*/
 
 
                     }else {
-                        Toast toast1 = Toast.makeText(getContext(),"Error al generar corte de caja", Toast.LENGTH_LONG);
+                        Toast toast1 = Toast.makeText(getContext(),"No existen ventas para generar corte de caja", Toast.LENGTH_LONG);
                         toast1.show();
-                        progreso.hide();
+                       // progreso.hide();
                     }
 
                 } catch (JSONException e) {

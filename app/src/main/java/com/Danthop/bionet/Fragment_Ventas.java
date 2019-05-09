@@ -575,6 +575,7 @@ public class Fragment_Ventas extends Fragment {
                 cerrarPopUp.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         dialog.hide();
                     }
                 });
