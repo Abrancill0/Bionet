@@ -43,6 +43,9 @@ public class CorteCajaAdapter extends LongPressAwareTableDataAdapter<CorteCajaMo
                 renderedView = renderfechahora(corte);
                 break;
             case 4:
+                renderedView = renderhora(corte);
+                break;
+            case 5:
                 renderedView = renderusuario(corte);
                 break;
 
@@ -99,7 +102,11 @@ public class CorteCajaAdapter extends LongPressAwareTableDataAdapter<CorteCajaMo
     }
 
     private View renderfechahora(final CorteCajaModel corte) {
-        return renderString(corte.getfechahora());
+        return renderString(corte.getfecha());
+    }
+
+    private View renderhora(final CorteCajaModel corte) {
+        return renderString(corte.gethora());
     }
 
     private View renderusuario(final CorteCajaModel corte){

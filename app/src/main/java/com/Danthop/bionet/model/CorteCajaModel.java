@@ -10,10 +10,12 @@ public class CorteCajaModel {
     private String efectivo;
     private String fecha;
     private String hora;
+    private String id_formapago;
+    private Double TotalCorte;
 
 
     public CorteCajaModel(String id_venta, String total, String forma_pago, String fechahora, String usuario,
-                          String monto_total, String efectivo, String fecha, String hora){
+                          String monto_total, String efectivo, String fecha, String hora, String id_formapago, Double TotalCorte){
         this.id_venta = id_venta;
         this.total = total;
         this.forma_pago = forma_pago;
@@ -24,6 +26,9 @@ public class CorteCajaModel {
         this.efectivo = efectivo;
         this.fecha = fecha;
         this.hora = hora;
+        this.id_formapago = id_formapago;
+        this.TotalCorte = TotalCorte;
+
     }
 
     public String getid_venta() { return id_venta; }
@@ -35,6 +40,8 @@ public class CorteCajaModel {
     public String getefectivo() { return efectivo; }
     public String getfecha(){ return fecha; }
     public String gethora() { return hora; }
+    public String getid_formapago() { return id_formapago; }
+    public Double getTotalCorte() { return TotalCorte; }
 
 
     public void setid_venta(String id_venta) { this.id_venta = id_venta; }
@@ -46,5 +53,8 @@ public class CorteCajaModel {
     public void setefectivo(String efectivo ) { this.efectivo = efectivo; }
     public void setfecha(String fecha ) { this.fecha = fecha; }
     public void sethora (String hora ) { this.hora = hora; }
+    public void setId_formapago (String id_formapago ) { this.id_formapago = id_formapago; }
+    public void setTotalCorte (Double TotalCorte ) { this.TotalCorte = TotalCorte; }
+
 
 }

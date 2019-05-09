@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,6 +131,27 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
         tabla_Listarcorte.setHeaderAdapter(simpleHeader);
         tabla_Listarcorte.setColumnModel(tableColumnWeightModel);
 
+
+        Time today = new Time( Time.getCurrentTimezone() );
+        today.setToNow();
+        int year = today.year;
+        String dia;
+        String mes;
+        if(today.monthDay < 10){
+            dia = "0" + today.monthDay;
+        }else {
+            dia = String.valueOf( today.monthDay );
+        }
+        if(today.month + 1 < 10){
+            mes = "0" + (today.month + 1);
+        }else {
+            mes = String.valueOf(today.month + 1);
+
+        }
+        Fechainicio.setText(dia + "/" + mes + "/" + year );
+        Fechafin.setText(dia + "/" + mes + "/" + year );
+
+
         Fechainicio.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,8 +188,10 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
                 {
                     mes = String.valueOf( month+1 );
                 }
+
+                String fechausuario = dia + "/" + mes + "/" + year;
                 FechaInicio = year + "/" + mes + "/" + dia;
-                Fechainicio.setText( FechaInicio );
+                Fechainicio.setText( fechausuario );
             }
         };
 
@@ -207,8 +231,9 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
                 {
                     mes = String.valueOf( month+1 );
                 }
+                String fechausuariofin = dia + "/" + mes + "/" + year;
                 FechaFin= year + "/" + mes + "/" + dia;
-                Fechafin.setText( FechaFin );
+                Fechafin.setText( fechausuariofin );
             }
         };
 
@@ -329,7 +354,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
                                             "",
                                             "",
                                             cca_nombre_usuario,
-                                            cca_importe_total,cca_importe_forma_pago,fecha,hora);
+                                            cca_importe_total,cca_importe_forma_pago,fecha,hora,"",0.0);
                                     ListaCorte.add(corte);
 
                             }
