@@ -70,7 +70,15 @@ public class MovimientoAdapter extends LongPressAwareTableDataAdapter<Movimiento
     }
 
     private View renderMonto(final MovimientoModel movimiento) {
-        return renderString(movimiento.getMovimiento_monto());
+        double Monto = Double.parseDouble( movimiento.getMovimiento_monto() );
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        final TextView textView = new TextView( getContext() );
+        textView.setText( formatter.format( Monto ) );
+        textView.setPadding( 20, 10, 20, 10 );
+        textView.setTextSize( TEXT_SIZE );
+
+        return textView;
+
     }
 
     private View renderString ( final String value){

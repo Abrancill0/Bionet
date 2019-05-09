@@ -13,12 +13,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ApartadoAdapter;
 import com.Danthop.bionet.Adapters.DetalleApartadoAdapter;
 import com.Danthop.bionet.Adapters.DetalleOrdenEspecialAdapter;
+import com.Danthop.bionet.Adapters.MetodoPagoAdapter;
 import com.Danthop.bionet.Adapters.MovimientoAdapter;
 import com.Danthop.bionet.Adapters.OrdenEspecialAdapter;
 import com.Danthop.bionet.Tables.SortableApartadoDetalleTable;
@@ -32,17 +35,23 @@ import com.Danthop.bionet.model.Impuestos;
 import com.Danthop.bionet.model.MovimientoModel;
 import com.Danthop.bionet.model.OrdenEspecialArticuloModel;
 import com.Danthop.bionet.model.OrdenEspecialModel;
+import com.Danthop.bionet.model.PagoModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.squareup.timessquare.CalendarPickerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import de.codecrafters.tableview.listeners.TableDataClickListener;
@@ -56,7 +65,8 @@ public class Fragment_ventas_transacciones extends Fragment {
     private View layout_movimientos;
     private View layout_apartado;
     private View layout_ordenes;
-    private View layout_invisible;
+    private View layout_fechas;
+    private View layout_movimientos_spinners;
 
     private View btn_movimientos;
     private View btn_apartado;
@@ -69,6 +79,14 @@ public class Fragment_ventas_transacciones extends Fragment {
     private ArrayList<String> SucursalName;
     private ArrayList<String> SucursalID;
 
+    private Spinner SpinnerFormaPago;
+    private ArrayList<String> FormaPagoName;
+    private ArrayList<String> FormaPagoID;
+
+    private Spinner SpinnerUsuarioVenta;
+    private ArrayList<String> UsuarioVentaName;
+    private ArrayList<String> UsuarioVentaID;
+
     private List<ApartadoModel> Lista_de_apartados= new ArrayList<>();
 
     private List<OrdenEspecialModel> Lista_de_ordenes= new ArrayList<>();
@@ -79,9 +97,21 @@ public class Fragment_ventas_transacciones extends Fragment {
     private SortableOrdenEspecialTable TablaOrdenes;
     private SortableMovimientoTable TablaMovimientos;
 
+    private Button Abrir_calendarioInicial;
+    private Button Abrir_calendarioFinal;
+    private CalendarPickerView calendarView;
+    private Date FechaInicial;
+
+    private String fecha_inicio;
+    private String fecha_final;
+
     private String usu_id;
 
     private FragmentTransaction fr;
+
+    private TextView transacciones;
+    private TextView total_ventas;
+    private TextView best_seller;
 
 
     public Fragment_ventas_transacciones() {
@@ -98,16 +128,33 @@ public class Fragment_ventas_transacciones extends Fragment {
 
         fr = getFragmentManager().beginTransaction();
         layout_movimientos = v.findViewById(R.id.layout_movimientos);
+        layout_movimientos_spinners = v.findViewById(R.id.movimientos_spinners);
         layout_apartado = v.findViewById(R.id.layout_apartado);
         layout_ordenes = v.findViewById(R.id.layout_ordenes);
-        layout_invisible = v.findViewById(R.id.layout_invisible);
+        layout_fechas = v.findViewById(R.id.layout_fechas);
         btn_movimientos = v.findViewById(R.id.btn_movimientos);
         btn_apartado = v.findViewById(R.id.btn_apartado);
         btn_ordenes_especiales = v.findViewById(R.id.btn_ordenes_especiales);
 
+        transacciones = v.findViewById(R.id.transacciones);
+        total_ventas = v.findViewById(R.id.totalVentas);
+        best_seller = v.findViewById(R.id.masVendido);
+
+        Abrir_calendarioInicial = v.findViewById(R.id.abrir_calendarioInicial);
+        Abrir_calendarioFinal = v.findViewById(R.id.abrir_calendarioFinal);
+        Abrir_calendarioFinal.setEnabled(false);
+
         SucursalName=new ArrayList<>();
         SucursalID = new ArrayList<>();
         SpinnerSucursal=(Spinner)v.findViewById(R.id.sucursal);
+
+        FormaPagoName=new ArrayList<>();
+        FormaPagoID = new ArrayList<>();
+        SpinnerFormaPago=(Spinner)v.findViewById(R.id.FormaPago);
+
+        UsuarioVentaName=new ArrayList<>();
+        UsuarioVentaID = new ArrayList<>();
+        SpinnerUsuarioVenta=(Spinner)v.findViewById(R.id.UsuarioVenta);
 
 
         TablaApartados = v.findViewById(R.id.tabla_apartados);
@@ -128,12 +175,37 @@ public class Fragment_ventas_transacciones extends Fragment {
                 LoadApartados();
                 LoadOrdenes();
                 LoadMovimientos();
+                Fechas();
             }
             public void onNothingSelected(AdapterView<?> parent)
             {
 
             }
         });
+
+        SpinnerFormaPago.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+
+        SpinnerUsuarioVenta.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+
+
 
         LoadSucursales();
         loadButtons();
@@ -147,6 +219,8 @@ public class Fragment_ventas_transacciones extends Fragment {
         layout_movimientos.setVisibility(View.GONE);
         layout_apartado.setVisibility(View.GONE);
         layout_ordenes.setVisibility(View.GONE);
+        layout_fechas.setVisibility(View.INVISIBLE);
+        layout_movimientos_spinners.setVisibility(View.INVISIBLE);
 
     }
 
@@ -171,6 +245,8 @@ public class Fragment_ventas_transacciones extends Fragment {
                 if(layout_movimientos.getVisibility()==View.GONE)
                 {
                     layout_movimientos.setVisibility(View.VISIBLE);
+                    layout_fechas.setVisibility(View.VISIBLE);
+                    layout_movimientos_spinners.setVisibility(View.VISIBLE);
                     layout_ordenes.setVisibility(View.GONE);
                     layout_apartado.setVisibility(View.GONE);
                 }
@@ -187,6 +263,8 @@ public class Fragment_ventas_transacciones extends Fragment {
                 if(layout_apartado.getVisibility()==View.GONE)
                 {
                     layout_movimientos.setVisibility(View.GONE);
+                    layout_fechas.setVisibility(View.INVISIBLE);
+                    layout_movimientos_spinners.setVisibility(View.INVISIBLE);
                     layout_ordenes.setVisibility(View.GONE);
                     layout_apartado.setVisibility(View.VISIBLE);
                 }
@@ -203,6 +281,8 @@ public class Fragment_ventas_transacciones extends Fragment {
                 if(layout_ordenes.getVisibility()==View.GONE)
                 {
                     layout_movimientos.setVisibility(View.GONE);
+                    layout_fechas.setVisibility(View.INVISIBLE);
+                    layout_movimientos_spinners.setVisibility(View.INVISIBLE);
                     layout_ordenes.setVisibility(View.VISIBLE);
                     layout_apartado.setVisibility(View.GONE);
                 }
@@ -673,6 +753,10 @@ public class Fragment_ventas_transacciones extends Fragment {
 
                                     JSONObject RespuestaResultado = response.getJSONObject("resultado");
 
+                                    transacciones.setText(RespuestaResultado.getString("floatNumeroTransacciones"));
+                                    total_ventas.setText(RespuestaResultado.getString("floatTotalEnVentas"));
+                                    best_seller.setText(RespuestaResultado.getString("stringArticuloMasVendido"));
+
                                     JSONArray Movimientos = RespuestaResultado.getJSONArray("aMovimientos");
                                     for (int f=0; f<Movimientos.length();f++)
                                     {
@@ -690,9 +774,37 @@ public class Fragment_ventas_transacciones extends Fragment {
                                         Lista_de_movimientos.add(movimiento);
                                     }
 
+                                    JSONArray FormasPago = RespuestaResultado.getJSONArray("aFormasPago");
+                                    for (int z=0; z<FormasPago.length();z++)
+                                    {
+                                        JSONObject elemento = FormasPago.getJSONObject(z);
+                                        String id = elemento.getString("fpa_id");
+                                        String nombre = elemento.getString("fpa_nombre");
+                                        FormaPagoName.add(nombre);
+                                        FormaPagoID.add(id);
+                                    }
+
+                                    JSONArray UsuariosVenta = RespuestaResultado.getJSONArray("aUsuarios");
+                                    for (int z=0; z<UsuariosVenta.length();z++)
+                                    {
+                                        JSONObject elemento = UsuariosVenta.getJSONObject(z);
+                                        JSONObject NodoId = elemento.getJSONObject("usu_id");
+                                        String id = NodoId.getString("uuid");
+                                        String nombre = elemento.getString("usu_nombre");
+                                        UsuarioVentaName.add(nombre);
+                                        UsuarioVentaID.add(id);
+                                    }
+
                                     final MovimientoAdapter movimientoAdapter = new MovimientoAdapter(getContext(),Lista_de_movimientos,TablaMovimientos);
                                     movimientoAdapter.notifyDataSetChanged();
                                     TablaMovimientos.setDataAdapter(movimientoAdapter);
+
+                                    SpinnerFormaPago.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,FormaPagoName));
+
+                                    SpinnerUsuarioVenta.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,UsuarioVentaName));
+
+
+
 
                                 }
                             } catch (JSONException e) {
@@ -726,6 +838,76 @@ public class Fragment_ventas_transacciones extends Fragment {
         TablaMovimientos.addDataClickListener(tablaListener);
 
 
+    }
+
+    private void Fechas()
+    {
+        Abrir_calendarioInicial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog calendario = new Dialog(getContext());
+                calendario.setContentView(R.layout.calendar);
+                calendario.show();
+                calendarView = calendario.findViewById(R.id.calendar_view);
+
+                Calendar nextYear = Calendar.getInstance();
+                nextYear.add(Calendar.YEAR, 1);
+
+                Date today = new Date();
+                calendarView.init(today, nextYear.getTime()).withSelectedDate(today);
+
+                calendarView.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
+                    @Override
+                    public void onDateSelected(Date date) {
+                        FechaInicial = date;
+                        DateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        long s = calendarView.getSelectedDate().parse(String.valueOf(calendarView.getSelectedDate()));
+                        fecha_inicio = targetFormat.format(s);
+                        calendario.dismiss();
+                        Abrir_calendarioFinal.setEnabled(true);
+                        Abrir_calendarioInicial.setText(fecha_inicio);
+                    }
+
+                    @Override
+                    public void onDateUnselected(Date date) {
+
+                    }
+                });
+
+            }
+        });
+
+        Abrir_calendarioFinal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog calendario = new Dialog(getContext());
+                calendario.setContentView(R.layout.calendar);
+                calendario.show();
+                calendarView = calendario.findViewById(R.id.calendar_view);
+
+                Calendar nextYear = Calendar.getInstance();
+                nextYear.add(Calendar.YEAR, 1);
+
+                calendarView.init(FechaInicial, nextYear.getTime()).withSelectedDate(FechaInicial);
+
+                calendarView.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
+                    @Override
+                    public void onDateSelected(Date date) {
+                        DateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        long s = calendarView.getSelectedDate().parse(String.valueOf(calendarView.getSelectedDate()));
+                        fecha_final = targetFormat.format(s);
+                        calendario.dismiss();
+                        Abrir_calendarioFinal.setText(fecha_final);
+                    }
+
+                    @Override
+                    public void onDateUnselected(Date date) {
+
+                    }
+                });
+
+            }
+        });
     }
 
 }

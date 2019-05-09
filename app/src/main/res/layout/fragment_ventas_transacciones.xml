@@ -167,11 +167,71 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/layout_invisible"
+                    android:id="@+id/layout_fechas"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
-                    android:orientation="vertical"></LinearLayout>
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:visibility="invisible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textView63"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Periodo inicial" />
+
+                        <Button
+                            android:id="@+id/abrir_calendarioInicial"
+                            style="@android:style/Widget.Holo.Light.Button"
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_margin="10dp"
+                            android:background="@color/fondo_azul"
+                            android:drawableLeft="@drawable/ic_calendario"
+                            android:paddingHorizontal="10dp"
+                            android:text="Abrir Calendario"
+                            android:textColor="@color/gray"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textView19"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Periodo final" />
+
+                        <Button
+                            android:id="@+id/abrir_calendarioFinal"
+                            style="@android:style/Widget.Holo.Light.Button"
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_margin="10dp"
+                            android:background="@color/fondo_azul"
+                            android:drawableLeft="@drawable/ic_calendario"
+                            android:paddingHorizontal="10dp"
+                            android:text="Abrir Calendario"
+                            android:textColor="@color/gray"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -193,10 +253,29 @@
                 android:padding="5dp">
 
                 <LinearLayout
+                    android:id="@+id/movimientos_spinners"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight=".4"
-                    android:orientation="vertical"></LinearLayout>
+                    android:orientation="horizontal"
+                    android:visibility="invisible">
+
+                    <Spinner
+                        android:layout_marginHorizontal="5dp"
+                        android:id="@+id/FormaPago"
+                        style="@style/SpinnerTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".6"></Spinner>
+
+                    <Spinner
+                        android:layout_marginHorizontal="5dp"
+                        android:id="@+id/UsuarioVenta"
+                        style="@style/SpinnerTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".6"></Spinner>
+                </LinearLayout>
 
                 <Spinner
                     android:id="@+id/sucursal"
@@ -255,7 +334,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <com.Danthop.bionet.Tables.SortableApartadoTable
                         android:id="@+id/tabla_apartados"
@@ -293,35 +373,141 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:visibility="gone">
-                    <com.Danthop.bionet.Tables.SortableMovimientoTable
-                        android:id="@+id/tabla_movimientos"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".7"
-                        android:visibility="visible"
-                        app:tableView_headerColor="@color/white"
-                        table:tableView_columnCount="4"></com.Danthop.bionet.Tables.SortableMovimientoTable>
+                    android:visibility="visible">
 
                     <LinearLayout
-                        android:id="@+id/Tabla_vacia3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight=".3"
-                        android:background="@color/white"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:orientation="vertical"
-                        android:visibility="visible">
+                        android:layout_weight=".8"
+                        android:orientation="horizontal">
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="No existen movimientos"
-                            android:textColor="@color/gray" />
+                            android:layout_weight=".3"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView45f"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight=".6"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                android:padding="2dp"
+                                android:text="Transacciones" />
+
+                            <TextView
+                                android:id="@+id/transacciones"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight=".4"
+                                android:drawableLeft="@drawable/ic_transacciones"
+                                android:drawablePadding="3dp"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:textSize="20sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight=".3"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView45d"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight=".6"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:text="Total en Ventas" />
+
+                            <TextView
+                                android:id="@+id/totalVentas"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight=".4"
+                                android:drawableLeft="@drawable/ic_money"
+                                android:drawablePadding="3dp"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:text=""
+                                android:textSize="20sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight=".3"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView45"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight=".6"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:text="Más Vendido" />
+
+                            <TextView
+                                android:id="@+id/masVendido"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight=".4"
+                                android:drawableLeft="@drawable/ic_best_seller"
+                                android:drawablePadding="3dp"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:text=""
+                                android:textSize="14sp" />
+                        </LinearLayout>
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".2"
+                        android:orientation="vertical">
+
+                        <com.Danthop.bionet.Tables.SortableMovimientoTable
+                            android:id="@+id/tabla_movimientos"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight=".7"
+                            android:visibility="visible"
+                            app:tableView_headerColor="@color/white"
+                            table:tableView_columnCount="4"></com.Danthop.bionet.Tables.SortableMovimientoTable>
+
+                        <LinearLayout
+                            android:id="@+id/Tabla_vacia3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight=".3"
+                            android:background="@color/white"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:orientation="vertical"
+                            android:visibility="visible">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="No existen movimientos"
+                                android:textColor="@color/gray" />
+                        </LinearLayout>
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>

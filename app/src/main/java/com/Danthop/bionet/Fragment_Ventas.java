@@ -1727,6 +1727,7 @@ public class Fragment_Ventas extends Fragment {
                             String precio = elemento.getString("tar_precio_articulo");
                             String descuento = elemento.getString("art_importe_descuento");
                             String importe = elemento.getString("tar_importe_total");
+                            String existencia = elemento.getString("art_id_existencia");
 
                             JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
                             for (int z = 0; z < RespuestaImagenes.length(); z++) {
@@ -1749,7 +1750,7 @@ public class Fragment_Ventas extends Fragment {
                                     tar_id,
                                     descuento,
                                     "",
-                                    importe,"","",""
+                                    importe,"","",existencia
                             );
                             ArticulosVenta.add(articulo);
                         }

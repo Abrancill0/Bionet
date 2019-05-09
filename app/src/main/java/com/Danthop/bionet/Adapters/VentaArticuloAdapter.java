@@ -61,6 +61,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     private List<Impuestos> ImpuestosDeArticuloOrdenado;
     private List<OrdenEspecialArticuloModel> ListaDeArticulosOrdenados;
 
+    private LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
 
     public VentaArticuloAdapter(final Context context, final List<ArticuloModel> data, final SortableVentaArticulos tableView, TicketModel Ticket, String usu_id,
@@ -92,26 +93,48 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
         ArticuloModel Articulo = getRowData(rowIndex);
         View renderedView = null;
 
+        if(Articulo.getArticulo_articulo_exi_id().equals(""))
+        {
+            //parentView.getChildAt(rowIndex).setBackgroundColor(getResources().getColor(R.color.amarillo));
+        }
+        else
+        {
+            //parentView.getChildAt(rowIndex).setBackgroundColor(getResources().getColor(R.color.white));
+        }
+
         switch (columnIndex) {
             case 0:
+
                 renderedView = renderNombre(Articulo);
                 break;
+
             case 1:
+
                 renderedView = renderSKU(Articulo);
                 break;
+
             case 2:
+
                 renderedView = renderCantidad(Articulo);
                 break;
+
             case 3:
+
                 renderedView = renderPrecio(Articulo);
                 break;
+
             case 4:
+
                 renderedView = renderDescuento(Articulo);
                 break;
+
             case 5:
+
                 renderedView = renderImporte(Articulo);
                 break;
+
             case 6:
+
                 renderedView = renderEliminar(Articulo);
                 break;
 
@@ -461,6 +484,8 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                             String precio = elemento.getString("tar_precio_articulo");
                             String descuento = elemento.getString("art_importe_descuento");
                             String importe = elemento.getString("tar_importe_total");
+                            String existencia = elemento.getString("tar_id_existencia");
+
 
 
 
@@ -476,7 +501,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                     tar_id,
                                     descuento,
                                     "",
-                                    importe,"","",""
+                                    importe,"","",existencia
                             );
                             Articulos.add(articulo);
                         }
@@ -722,6 +747,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                             String precio = elemento.getString("tar_precio_articulo");
                             String descuento = elemento.getString("art_importe_descuento");
                             String importe = elemento.getString("tar_importe_total");
+                            String existencia = elemento.getString("tar_id_existencia");
 
                             JSONArray RespuestaImagenes = elemento.getJSONArray( "art_imagenes");
                             for (int z = 0; z < RespuestaImagenes.length(); z++) {
@@ -741,7 +767,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                     tar_id,
                                     descuento,
                                     "",
-                                    importe,"","",""
+                                    importe,"","",existencia
                             );
                             Articulos.add(articulo);
                         }

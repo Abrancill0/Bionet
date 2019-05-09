@@ -13,7 +13,7 @@ public class MovimientoModel {
         this.movimiento_suc_nombre = movimiento_suc_nombre;
         this.movimiento_suc_numero = movimiento_suc_numero;
         this.movimiento_articulo_ticket = movimiento_articulo_ticket;
-        this.movimiento_monto = movimiento_articulo_ticket;
+        this.movimiento_monto = movimiento_monto;
     }
 
     public String getMovimiento_fecha() {
