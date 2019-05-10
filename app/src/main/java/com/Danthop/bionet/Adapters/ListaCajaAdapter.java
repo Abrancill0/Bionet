@@ -36,7 +36,7 @@ public class ListaCajaAdapter extends LongPressAwareTableDataAdapter<CorteCajaMo
                 renderedView = renderimportetotal(corte);
                 break;
             case 2:
-                renderedView = renderefectivo(corte);
+                //renderedView = renderefectivo(corte);
                 break;
             case 3:
                 renderedView = renderfecha(corte);
@@ -90,7 +90,7 @@ public class ListaCajaAdapter extends LongPressAwareTableDataAdapter<CorteCajaMo
         return textView;
     }
 
-    private View renderefectivo(final CorteCajaModel corte) {
+   /* private View renderefectivo(final CorteCajaModel corte) {
         double Precio = Double.parseDouble( corte.getefectivo() );
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
@@ -99,7 +99,7 @@ public class ListaCajaAdapter extends LongPressAwareTableDataAdapter<CorteCajaMo
         textView.setPadding( 20, 10, 20, 10 );
         textView.setTextSize( TEXT_SIZE );
         return textView;
-    }
+    }*/
 
     private View renderfecha(final CorteCajaModel corte) {
         return renderString(corte.getfecha());
