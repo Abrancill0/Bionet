@@ -75,7 +75,6 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
     public View getDefaultCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
         ArticuloApartadoModel apartado = getRowData(rowIndex);
         View renderedView = null;
-        EditText Monto=null;
 
         switch (columnIndex) {
             case 0:

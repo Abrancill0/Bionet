@@ -93,14 +93,15 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
         ArticuloModel Articulo = getRowData(rowIndex);
         View renderedView = null;
 
+        /*View childView = parentView.getChildAt(rowIndex);
         if(Articulo.getArticulo_articulo_exi_id().equals(""))
         {
-            //parentView.getChildAt(rowIndex).setBackgroundColor(getResources().getColor(R.color.amarillo));
+            childView.setBackgroundColor(getResources().getColor(R.color.amarillo));
         }
         else
         {
-            //parentView.getChildAt(rowIndex).setBackgroundColor(getResources().getColor(R.color.white));
-        }
+            childView.setBackgroundColor(getResources().getColor(R.color.amarillo));
+        }*/
 
         switch (columnIndex) {
             case 0:

@@ -30,6 +30,7 @@ import com.Danthop.bionet.Adapters.SeleccionaOrdenEspecialAdapter;
 import com.Danthop.bionet.Adapters.SeleccionarArticuloVentaAdapter;
 import com.Danthop.bionet.Adapters.VentaArticuloAdapter;
 import com.Danthop.bionet.Tables.SortableClientesTable;
+import com.Danthop.bionet.Tables.SortableMetodosPagoTable;
 import com.Danthop.bionet.Tables.SortableSeleccionaApartadoTable;
 import com.Danthop.bionet.Tables.SortableSeleccionaOrdenEspecialTable;
 import com.Danthop.bionet.Tables.SortableSeleccionarArticuloTable;
@@ -37,6 +38,7 @@ import com.Danthop.bionet.Tables.SortableVentaArticulos;
 import com.Danthop.bionet.model.ArticuloApartadoModel;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
+import com.Danthop.bionet.model.FormaspagoModel;
 import com.Danthop.bionet.model.Impuestos;
 import com.Danthop.bionet.model.OrdenEspecialArticuloModel;
 import com.Danthop.bionet.model.PagoModel;
@@ -116,6 +118,7 @@ public class Fragment_Ventas extends Fragment {
     private SortableVentaArticulos tabla_venta_articulos;
     private SortableSeleccionaApartadoTable tabla_apartados_disponibles;
     private SortableSeleccionaOrdenEspecialTable tabla_ordenes_disponibles;
+    private SortableMetodosPagoTable tabla_metodos_pago;
     private String SKUarticulo;
 
     private String IDCliente;
@@ -156,8 +159,6 @@ public class Fragment_Ventas extends Fragment {
     private ArrayList<String> Imagenes;
     private String[][] LPAU;
 
-
-    private MetodoPagoAdapter pagoAdapter;
 
     private CarouselView carouselView;
 
@@ -713,6 +714,8 @@ public class Fragment_Ventas extends Fragment {
                                     dialog.dismiss();
                                     dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
                                     dialog.show();
+                                    tabla_metodos_pago = dialog.findViewById(R.id.tabla_seleccionar_metodo_pago);
+                                    tabla_metodos_pago.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
                                     Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
                                     cerrarPopUp.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -720,8 +723,7 @@ public class Fragment_Ventas extends Fragment {
                                             dialog.hide();
                                         }
                                     });
-                                    final ListView listaPagos = dialog.findViewById(R.id.lista_de_pagos);
-                                    CargaMetodosPago(listaPagos);
+                                    CargaMetodosPago();
 
                                     TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
                                     double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
@@ -739,34 +741,22 @@ public class Fragment_Ventas extends Fragment {
                                             double TarjetaDebito = 0;
                                             double PagosEfectivo = 0;
 
-                                            int count = listaPagos.getCount();
+                                            for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
 
-                                            System.out.println(ListaDePagosDisponibles.size());
+                                                String tipo_pago = ListaDePagos_a_utilizar.get(i).getNombre();
+                                                String cantPago = ListaDePagos_a_utilizar.get(i).getCantidad();
 
-                                            for (int i = 0; i < count; i++) {
-
-                                                // Here's the critical part I was missing
-                                                View childView = listaPagos.getChildAt(i);
-                                                TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
-                                                EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
-
-                                                String label = (String) labeltext.getText();
-                                                String cantPago = String.valueOf(editText.getText());
-                                                if (cantPago.equals("")) {
-                                                    cantPago = "0";
-                                                }
-
-                                                if (labeltext.equals("Tarjeta de crédito"))
+                                                if (tipo_pago.equals("Tarjeta de crédito"))
                                                 {
                                                     TarjetaCredito = Double.parseDouble(cantPago);
                                                 }
 
-                                                if (labeltext.equals("Tarjeta débito"))
+                                                if (tipo_pago.equals("Tarjeta débito"))
                                                 {
                                                     TarjetaDebito = Double.parseDouble(cantPago);
                                                 }
 
-                                                if(labeltext.equals("Efectivo")){
+                                                if(tipo_pago.equals("Efectivo")){
 
                                                     PagosEfectivo +=Double.parseDouble(cantPago);
 
@@ -831,31 +821,6 @@ public class Fragment_Ventas extends Fragment {
                                             TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
                                             TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
 
-                                            for (int i = 0; i < count; i++) {
-
-                                                // Here's the critical part I was missing
-                                                View childView = listaPagos.getChildAt(i);
-                                                TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
-                                                EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
-
-                                                String label = (String) labeltext.getText();
-                                                String cantPago = String.valueOf(editText.getText());
-                                                if (cantPago.equals("")) {
-                                                    cantPago = "0";
-                                                }
-                                                int valor = Integer.parseInt(cantPago);
-                                                if (valor <= 0) {
-                                                    ListaDePagosDisponibles.remove(i);
-                                                    count = count - 1;
-                                                } else {
-                                                    String idPago = ListaDePagosDisponibles.get(i).getId();
-                                                    PagoModel pago = new PagoModel(ListaDePagosDisponibles.get(i).getNombre(),
-                                                            idPago, cantPago);
-                                                    ListaDePagos_a_utilizar.add(pago);
-                                                }
-
-                                            }
-
                                             double valorTarjetas = 0;
 
                                             valorTarjetas = TarjetaCredito + TarjetaDebito;
@@ -910,6 +875,8 @@ public class Fragment_Ventas extends Fragment {
                             dialog.dismiss();
                             dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
                             dialog.show();
+                            tabla_metodos_pago = dialog.findViewById(R.id.tabla_seleccionar_metodo_pago);
+                            tabla_metodos_pago.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
                             Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
                             cerrarPopUp.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -917,8 +884,7 @@ public class Fragment_Ventas extends Fragment {
                                     dialog.hide();
                                 }
                             });
-                            final ListView listaPagos = dialog.findViewById(R.id.lista_de_pagos);
-                            CargaMetodosPago(listaPagos);
+                            CargaMetodosPago();
 
                             TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
                             double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
@@ -938,44 +904,29 @@ public class Fragment_Ventas extends Fragment {
                                     double TarjetaDebito = 0;
                                     double PagosEfectivo = 0;
 
-                                    int count = listaPagos.getCount();
 
-                                   // System.out.println(ListaDePagosDisponibles.size());
+                                    for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
 
-                                    for (int i = 0; i < count; i++) {
+                                        String tipo_pago = ListaDePagos_a_utilizar.get(i).getNombre();
+                                        String cantPago = ListaDePagos_a_utilizar.get(i).getCantidad();
 
-                                        // Here's the critical part I was missing
-                                        View childView = listaPagos.getChildAt(i);
-
-                                        if (childView != null)
+                                        if (tipo_pago.equals("Tarjeta de crédito"))
                                         {
-                                            TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
-                                            EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
+                                            TarjetaCredito = Double.parseDouble(cantPago);
+                                        }
 
-                                            String label = (String) labeltext.getText();
-                                            String cantPago = String.valueOf(editText.getText());
-                                            if (cantPago.equals("")) {
-                                                cantPago = "0";
-                                            }
+                                        if (tipo_pago.equals("Tarjeta débito"))
+                                        {
+                                            TarjetaDebito = Double.parseDouble(cantPago);
+                                        }
 
-                                            if (label.equals("Tarjeta de crédito"))
-                                            {
-                                                TarjetaCredito = Double.parseDouble(cantPago);
-                                            }
+                                        if(tipo_pago.equals("Efectivo")){
 
-                                            if (label.equals("Tarjeta débito"))
-                                            {
-                                                TarjetaDebito = Double.parseDouble(cantPago);
-                                            }
-
-                                            if(label.equals("Efectivo")){
-                                               PagosEfectivo +=Double.parseDouble(cantPago);
-
-                                            }
-
-                                            totalsumaimportes += Double.parseDouble(cantPago);
+                                            PagosEfectivo +=Double.parseDouble(cantPago);
 
                                         }
+
+                                        totalsumaimportes += Double.parseDouble(cantPago);
 
                                     }
 
@@ -1029,31 +980,6 @@ public class Fragment_Ventas extends Fragment {
                                     TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
                                     TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
 
-
-                                    for (int i = 0; i < count; i++) {
-
-                                        // Here's the critical part I was missing
-                                        View childView = listaPagos.getChildAt(i);
-                                        TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
-                                        EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
-
-                                        String label = (String) labeltext.getText();
-                                        String cantPago = String.valueOf(editText.getText());
-                                        if (cantPago.equals("")) {
-                                            cantPago = "0";
-                                        }
-                                        int valor = Integer.parseInt(cantPago);
-                                        if (valor <= 0) {
-                                            ListaDePagosDisponibles.remove(i);
-                                            count = count - 1;
-                                        } else {
-                                            String idPago = ListaDePagosDisponibles.get(i).getId();
-                                            PagoModel pago = new PagoModel(ListaDePagosDisponibles.get(i).getNombre(),
-                                                    idPago, cantPago);
-                                            ListaDePagos_a_utilizar.add(pago);
-                                        }
-
-                                    }
 
                                     double valorTarjetas = 0;
 
@@ -2107,7 +2033,7 @@ public class Fragment_Ventas extends Fragment {
         }
     }
 
-    private void CargaMetodosPago(final ListView Listview) {
+    private void CargaMetodosPago() {
 
         ListaDePagosDisponibles.clear();
 
@@ -2157,11 +2083,11 @@ public class Fragment_Ventas extends Fragment {
                             );
                             ListaDePagosDisponibles.add(pago);
                         }
-                        pagoAdapter = new MetodoPagoAdapter(getContext(), R.layout.caja_metodo_pago, ListaDePagosDisponibles, Listview,
-                                ticket_de_venta);
-                        pagoAdapter.notifyDataSetChanged();
+                        MetodoPagoAdapter metodo = new MetodoPagoAdapter(getContext(), ListaDePagosDisponibles,tabla_metodos_pago,
+                                ListaDePagos_a_utilizar);
+                        tabla_metodos_pago.setDataAdapter(metodo);
+                        metodo.notifyDataSetChanged();
 
-                        Listview.setAdapter(pagoAdapter);
                     } else {
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);

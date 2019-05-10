@@ -4,6 +4,7 @@
     android:layout_width="580dp"
     android:layout_height="420dp"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:table="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center"
     android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical">
@@ -25,36 +26,52 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".1"
-                android:gravity="center_vertical"
+                android:gravity="center_vertical|center_horizontal"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView29"
-                    android:layout_width="match_parent"
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:text="Método de Pago"
-                    android:textColor="@color/colorPrimary"
+                    android:layout_margin="10dp"
+                    android:text="Total a pagar:"
+                    android:textColor="@android:color/holo_blue_dark"
                     android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/total_a_pagar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="$0.00"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="24sp" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight=".9"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/btnSalir3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="right"
-                    android:layout_weight=".9"
+                    android:layout_weight=".6"
                     android:background="@drawable/ic_tachita"
                     tools:ignore="MissingConstraints"
                     tools:layout_editor_absoluteX="410dp"
                     tools:layout_editor_absoluteY="0dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".4"
+                    android:orientation="vertical"></LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
@@ -62,56 +79,46 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".3"
+            android:layout_weight=".4"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".3"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="20dp">
 
-                <ListView
-                    android:id="@+id/lista_de_pagos"
+                <com.Danthop.bionet.Tables.SortableMetodosPagoTable
+                    android:id="@+id/tabla_seleccionar_metodo_pago"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingHorizontal="10dp"></ListView>
-            </LinearLayout>
+                    android:layout_weight=".7"
+                    android:visibility="visible"
+                    app:tableView_headerColor="@color/white"
+                    table:tableView_columnCount="4">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight=".7"
-                android:gravity="center_vertical|center_horizontal"
-                android:orientation="vertical">
+                </com.Danthop.bionet.Tables.SortableMetodosPagoTable>
 
                 <LinearLayout
+                    android:id="@+id/Tabla_vacia"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight=".5"
+                    android:layout_weight=".3"
+                    android:background="@color/white"
                     android:gravity="center_vertical|center_horizontal"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="visible">
 
                     <TextView
-                        android:id="@+id/textView11"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="Total a pagar:"
-                        android:textColor="@android:color/holo_blue_dark"
-                        android:textSize="22dp" />
-
-                    <TextView
-                        android:id="@+id/total_a_pagar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="$0.00"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="24sp" />
-
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="No cuentas con ningún método de pago disponible"
+                        android:textColor="@color/gray" />
                 </LinearLayout>
-
             </LinearLayout>
 
         </LinearLayout>

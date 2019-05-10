@@ -726,116 +726,201 @@ public class Fragment_ventas_transacciones extends Fragment {
 
     public void LoadMovimientos(){
         Lista_de_movimientos.clear();
-        try {
+        if(FormaPagoName.isEmpty()&&UsuarioVentaName.isEmpty()) {
+            try {
 
-            String url = getString(R.string.Url);
+                String url = getString(R.string.Url);
 
-            String ApiPath = url + "/api/ventas/movimientos/index?" +
-                    "usu_id=" + usu_id +
-                    "&esApp=1" +
-                    "&suc_id="+ SucursalID.get(SpinnerSucursal.getSelectedItemPosition())+
-                    "&fecha_inicial="+""+
-                    "&fecha_final="+""+
-                    "&forma_pago="+""+
-                    "&usuario_venta="+"";
+                String ApiPath;
 
-            // prepare the Request
-            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
+                ApiPath = url + "/api/ventas/movimientos/index?" +
+                        "usu_id=" + usu_id +
+                        "&esApp=1" +
+                        "&suc_id=" + SucursalID.get(SpinnerSucursal.getSelectedItemPosition()) +
+                        "&fecha_inicial=" + "" +
+                        "&fecha_final=" + "" +
+                        "&forma_pago=" + "" +
+                        "&usuario_venta=" + "";
+                // prepare the Request
+                JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
 
-                            try {
+                                try {
 
-                                int EstatusApi = Integer.parseInt(response.getString("estatus"));
+                                    int EstatusApi = Integer.parseInt(response.getString("estatus"));
 
-                                if (EstatusApi == 1) {
+                                    if (EstatusApi == 1) {
 
-                                    JSONObject RespuestaResultado = response.getJSONObject("resultado");
+                                        JSONObject RespuestaResultado = response.getJSONObject("resultado");
 
-                                    transacciones.setText(RespuestaResultado.getString("floatNumeroTransacciones"));
-                                    total_ventas.setText(RespuestaResultado.getString("floatTotalEnVentas"));
-                                    best_seller.setText(RespuestaResultado.getString("stringArticuloMasVendido"));
+                                        transacciones.setText(RespuestaResultado.getString("floatNumeroTransacciones"));
+                                        total_ventas.setText(RespuestaResultado.getString("floatTotalEnVentas"));
+                                        best_seller.setText(RespuestaResultado.getString("stringArticuloMasVendido"));
 
-                                    JSONArray Movimientos = RespuestaResultado.getJSONArray("aMovimientos");
-                                    for (int f=0; f<Movimientos.length();f++)
-                                    {
-                                        JSONObject elemento = Movimientos.getJSONObject(f);
-                                        String fecha = elemento.getString("mov_fecha_hora_creo");
-                                        String NombreSucursal = elemento.getString("suc_nombre");
-                                        String NumSucursal = elemento.getString("suc_numero");
-                                        String Monto = elemento.getString("tic_importe_total");
+                                        JSONArray Movimientos = RespuestaResultado.getJSONArray("aMovimientos");
+                                        for (int f = 0; f < Movimientos.length(); f++) {
+                                            JSONObject elemento = Movimientos.getJSONObject(f);
+                                            String fecha = elemento.getString("mov_fecha_hora_creo");
+                                            String NombreSucursal = elemento.getString("suc_nombre");
+                                            String NumSucursal = elemento.getString("suc_numero");
+                                            String Monto = elemento.getString("tic_importe_total");
 
-                                        JSONArray Articulos = elemento.getJSONArray("aArticulos");
-                                        JSONObject nodo = Articulos.getJSONObject(0);
-                                        String Articulo = nodo.getString("tar_nombre_articulo");
+                                            JSONArray Articulos = elemento.getJSONArray("aArticulos");
+                                            JSONObject nodo = Articulos.getJSONObject(0);
+                                            String Articulo = nodo.getString("tar_nombre_articulo");
 
-                                        MovimientoModel movimiento = new MovimientoModel(fecha,NombreSucursal,NumSucursal,Articulo,Monto);
-                                        Lista_de_movimientos.add(movimiento);
+                                            MovimientoModel movimiento = new MovimientoModel(fecha, NombreSucursal, NumSucursal, Articulo, Monto);
+                                            Lista_de_movimientos.add(movimiento);
+                                        }
+
+                                        JSONArray FormasPago = RespuestaResultado.getJSONArray("aFormasPago");
+                                        for (int z = 0; z < FormasPago.length(); z++) {
+                                            JSONObject elemento = FormasPago.getJSONObject(z);
+                                            String id = elemento.getString("fpa_id");
+                                            String nombre = elemento.getString("fpa_nombre");
+                                            FormaPagoName.add(nombre);
+                                            FormaPagoID.add(id);
+                                        }
+
+                                        JSONArray UsuariosVenta = RespuestaResultado.getJSONArray("aUsuarios");
+                                        for (int z = 0; z < UsuariosVenta.length(); z++) {
+                                            JSONObject elemento = UsuariosVenta.getJSONObject(z);
+                                            JSONObject NodoId = elemento.getJSONObject("usu_id");
+                                            String id = NodoId.getString("uuid");
+                                            String nombre = elemento.getString("usu_nombre");
+                                            UsuarioVentaName.add(nombre);
+                                            UsuarioVentaID.add(id);
+                                        }
+
+                                        final MovimientoAdapter movimientoAdapter = new MovimientoAdapter(getContext(), Lista_de_movimientos, TablaMovimientos);
+                                        movimientoAdapter.notifyDataSetChanged();
+                                        TablaMovimientos.setDataAdapter(movimientoAdapter);
+
+                                        SpinnerFormaPago.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, FormaPagoName));
+
+                                        SpinnerUsuarioVenta.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, UsuarioVentaName));
+
+
                                     }
-
-                                    JSONArray FormasPago = RespuestaResultado.getJSONArray("aFormasPago");
-                                    for (int z=0; z<FormasPago.length();z++)
-                                    {
-                                        JSONObject elemento = FormasPago.getJSONObject(z);
-                                        String id = elemento.getString("fpa_id");
-                                        String nombre = elemento.getString("fpa_nombre");
-                                        FormaPagoName.add(nombre);
-                                        FormaPagoID.add(id);
-                                    }
-
-                                    JSONArray UsuariosVenta = RespuestaResultado.getJSONArray("aUsuarios");
-                                    for (int z=0; z<UsuariosVenta.length();z++)
-                                    {
-                                        JSONObject elemento = UsuariosVenta.getJSONObject(z);
-                                        JSONObject NodoId = elemento.getJSONObject("usu_id");
-                                        String id = NodoId.getString("uuid");
-                                        String nombre = elemento.getString("usu_nombre");
-                                        UsuarioVentaName.add(nombre);
-                                        UsuarioVentaID.add(id);
-                                    }
-
-                                    final MovimientoAdapter movimientoAdapter = new MovimientoAdapter(getContext(),Lista_de_movimientos,TablaMovimientos);
-                                    movimientoAdapter.notifyDataSetChanged();
-                                    TablaMovimientos.setDataAdapter(movimientoAdapter);
-
-                                    SpinnerFormaPago.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,FormaPagoName));
-
-                                    SpinnerUsuarioVenta.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,UsuarioVentaName));
-
-
-
-
+                                } catch (JSONException e) {
+                                    Toast toast1 =
+                                            Toast.makeText(getContext(),
+                                                    String.valueOf(e), Toast.LENGTH_LONG);
                                 }
-                            } catch (JSONException e) {
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
                                 Toast toast1 =
                                         Toast.makeText(getContext(),
-                                                String.valueOf(e), Toast.LENGTH_LONG);
+                                                String.valueOf(error), Toast.LENGTH_LONG);
                             }
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast toast1 =
-                                    Toast.makeText(getContext(),
-                                            String.valueOf(error), Toast.LENGTH_LONG);
-                        }
-                    }
-            );
-            getRequest.setShouldCache(false);
+                );
+                getRequest.setShouldCache(false);
 
-            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
-        } catch (Error e) {
-            e.printStackTrace();
-        }
-        TableDataClickListener<MovimientoModel> tablaListener = new TableDataClickListener<MovimientoModel>() {
-            @Override
-            public void onDataClicked(int rowIndex, final MovimientoModel clickedData) {
-
+                VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+            } catch (Error e) {
+                e.printStackTrace();
             }
-        };
-        TablaMovimientos.addDataClickListener(tablaListener);
+            TableDataClickListener<MovimientoModel> tablaListener = new TableDataClickListener<MovimientoModel>() {
+                @Override
+                public void onDataClicked(int rowIndex, final MovimientoModel clickedData) {
+
+                }
+            };
+            TablaMovimientos.addDataClickListener(tablaListener);
+
+        }
+        else
+        {
+            try {
+
+                String url = getString(R.string.Url);
+
+                String ApiPath;
+
+                ApiPath = url + "/api/ventas/movimientos/index?" +
+                        "usu_id=" + usu_id +
+                        "&esApp=1" +
+                        "&suc_id=" + SucursalID.get(SpinnerSucursal.getSelectedItemPosition()) +
+                        "&fecha_inicial=" + "" +
+                        "&fecha_final=" + "" +
+                        "&forma_pago=" + FormaPagoID.get(SpinnerFormaPago.getSelectedItemPosition()) +
+                        "&usuario_venta=" + UsuarioVentaID.get(SpinnerUsuarioVenta.getSelectedItemPosition());
+                // prepare the Request
+                JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+
+                                try {
+
+                                    int EstatusApi = Integer.parseInt(response.getString("estatus"));
+
+                                    if (EstatusApi == 1) {
+
+                                        JSONObject RespuestaResultado = response.getJSONObject("resultado");
+
+                                        transacciones.setText(RespuestaResultado.getString("floatNumeroTransacciones"));
+                                        total_ventas.setText(RespuestaResultado.getString("floatTotalEnVentas"));
+                                        best_seller.setText(RespuestaResultado.getString("stringArticuloMasVendido"));
+
+                                        JSONArray Movimientos = RespuestaResultado.getJSONArray("aMovimientos");
+                                        for (int f = 0; f < Movimientos.length(); f++) {
+                                            JSONObject elemento = Movimientos.getJSONObject(f);
+                                            String fecha = elemento.getString("mov_fecha_hora_creo");
+                                            String NombreSucursal = elemento.getString("suc_nombre");
+                                            String NumSucursal = elemento.getString("suc_numero");
+                                            String Monto = elemento.getString("tic_importe_total");
+
+                                            JSONArray Articulos = elemento.getJSONArray("aArticulos");
+                                            JSONObject nodo = Articulos.getJSONObject(0);
+                                            String Articulo = nodo.getString("tar_nombre_articulo");
+
+                                            MovimientoModel movimiento = new MovimientoModel(fecha, NombreSucursal, NumSucursal, Articulo, Monto);
+                                            Lista_de_movimientos.add(movimiento);
+                                        }
+
+                                        final MovimientoAdapter movimientoAdapter = new MovimientoAdapter(getContext(), Lista_de_movimientos, TablaMovimientos);
+                                        movimientoAdapter.notifyDataSetChanged();
+                                        TablaMovimientos.setDataAdapter(movimientoAdapter);
+
+                                    }
+                                } catch (JSONException e) {
+                                    Toast toast1 =
+                                            Toast.makeText(getContext(),
+                                                    String.valueOf(e), Toast.LENGTH_LONG);
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(error), Toast.LENGTH_LONG);
+                            }
+                        }
+                );
+                getRequest.setShouldCache(false);
+
+                VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+            } catch (Error e) {
+                e.printStackTrace();
+            }
+            TableDataClickListener<MovimientoModel> tablaListener = new TableDataClickListener<MovimientoModel>() {
+                @Override
+                public void onDataClicked(int rowIndex, final MovimientoModel clickedData) {
+
+                }
+            };
+            TablaMovimientos.addDataClickListener(tablaListener);
+
+        }
 
 
     }
