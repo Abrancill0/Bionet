@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.hardware.usb.UsbDevice;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -55,6 +56,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.android.volley.Request.Method;
+import android.hardware.usb.UsbDevice;
+
 
 public class Login extends Activity {
 
@@ -69,6 +72,10 @@ public class Login extends Activity {
 
     private JSONArray jsonArray;
     private static final int REQUEST_CODE = 999;
+
+    private int[][] u_infor;
+   // static UsbController  usbCtrl = null;
+    static UsbDevice dev = null;
 
     Dialog reestablecer;
     Dialog correo_enviado;
@@ -263,7 +270,7 @@ public class Login extends Activity {
 
     public void Pdf(View v) {
 
-        Document doc = new Document();
+     /*  Document doc = new Document();
         String outpPath = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ).getPath() +"/pdfsin.pdf";
 
         try {
@@ -282,16 +289,8 @@ public class Login extends Activity {
         doc.addAuthor( "Android School" );
         doc.addCreator( "Pratik Butani" );
 
-            //  urName = BaseFont.createFont("assets/fonts/brandon_medium.otf", "UTF-8", BaseFont.EMBEDDED);
-
-
-            BaseColor mColorAccent = new BaseColor( 0, 153, 204, 255 );
-            float mHeadingFontSize = 20.0f;
-            float mValueFontSize = 26.0f;
-/**
- * How to USE FONT....
- */
-
+       */
+       /*
             // LINE SEPARATOR
             LineSeparator lineSeparator = new LineSeparator();
             lineSeparator.setLineColor( new BaseColor( 0, 0, 0, 68 ) );
@@ -331,6 +330,16 @@ public class Login extends Activity {
 
             doc.close();
 
+           */
+
+
+      //  usbCtrl.close();
+      //  int  i = 0;
+     //   for( i = 0 ; i < 8 ; i++ ){
+     //       dev = usbCtrl.getDev(u_infor[i][0],u_infor[i][1]);
+     //       if(dev != null)
+      //          break;
+      //  }
 
 
     }

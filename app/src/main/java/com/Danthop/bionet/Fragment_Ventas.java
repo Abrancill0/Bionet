@@ -736,6 +736,7 @@ public class Fragment_Ventas extends Fragment {
 
                                             double TarjetaCredito = 0;
                                             double TarjetaDebito = 0;
+                                            double PagosEfectivo = 0;
 
                                             int count = listaPagos.getCount();
 
@@ -759,17 +760,25 @@ public class Fragment_Ventas extends Fragment {
                                                     TarjetaCredito = Double.parseDouble(cantPago);
                                                 }
 
-                                                if (labeltext.equals("Tarjeta débito "))
+                                                if (labeltext.equals("Tarjeta débito"))
                                                 {
                                                     TarjetaDebito = Double.parseDouble(cantPago);
+                                                }
+
+                                                if(labeltext.equals("Efectivo")){
+
+                                                    PagosEfectivo +=Double.parseDouble(cantPago);
+
                                                 }
 
                                                 totalsumaimportes += Double.parseDouble(cantPago);
 
                                             }
 
+
                                             //Validar montos antes de pasar de pantallas
                                             String TotalText = String.valueOf(total.getText());
+
                                             double TotalFormat = 0;
                                             String cleanString = TotalText.replaceAll("\\D", "");
                                             try {
@@ -777,6 +786,24 @@ public class Fragment_Ventas extends Fragment {
                                                 TotalFormat = TotalFormat / 100;
                                             } catch (Exception ex) {
                                                 ex.printStackTrace();
+                                            }
+
+                                            double totalvalida = totalsumaimportes-PagosEfectivo;
+
+                                            Toast toast2 =
+                                                    Toast.makeText(getContext(),
+                                                            totalvalida + " " + totalsumaimportes + " " + PagosEfectivo,
+                                                            Toast.LENGTH_LONG);
+                                            toast2.show();
+
+                                            if (totalvalida > TotalFormat){
+                                                Toast toast1 =
+                                                        Toast.makeText(getContext(),
+                                                                "la suma de los montos de medios electronicos o tarjetas no puede sobrepasar el total de la venta",
+                                                                Toast.LENGTH_LONG);
+                                                toast1.show();
+
+                                                return;
                                             }
 
 
@@ -802,7 +829,6 @@ public class Fragment_Ventas extends Fragment {
                                             TextView importe_venta = dialog.findViewById(R.id.importe_venta);
                                             TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
                                             TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
-
 
                                             for (int i = 0; i < count; i++) {
 
@@ -903,45 +929,58 @@ public class Fragment_Ventas extends Fragment {
                                 @Override
                                 public void onClick(View v) {
 
+                                 //Aqui se realizan las validaciones cuando no lleva factura
 
                                     double totalsumaimportes = 0;
 
                                     double TarjetaCredito = 0;
                                     double TarjetaDebito = 0;
+                                    double PagosEfectivo = 0;
 
                                     int count = listaPagos.getCount();
 
-                                    System.out.println(ListaDePagosDisponibles.size());
+                                   // System.out.println(ListaDePagosDisponibles.size());
 
                                     for (int i = 0; i < count; i++) {
 
                                         // Here's the critical part I was missing
                                         View childView = listaPagos.getChildAt(i);
-                                        TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
-                                        EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
 
-                                        String label = (String) labeltext.getText();
-                                        String cantPago = String.valueOf(editText.getText());
-                                        if (cantPago.equals("")) {
-                                            cantPago = "0";
-                                        }
-
-                                        if (labeltext.equals("Tarjeta de crédito"))
+                                        if (childView != null)
                                         {
-                                            TarjetaCredito = Double.parseDouble(cantPago);
-                                        }
+                                            TextView labeltext = (TextView) childView.findViewById(R.id.TextMetodo);
+                                            EditText editText = (EditText) childView.findViewById(R.id.TextCantidad);
 
-                                        if (labeltext.equals("Tarjeta débito "))
-                                        {
-                                            TarjetaDebito = Double.parseDouble(cantPago);
-                                        }
+                                            String label = (String) labeltext.getText();
+                                            String cantPago = String.valueOf(editText.getText());
+                                            if (cantPago.equals("")) {
+                                                cantPago = "0";
+                                            }
 
-                                        totalsumaimportes += Double.parseDouble(cantPago);
+                                            if (label.equals("Tarjeta de crédito"))
+                                            {
+                                                TarjetaCredito = Double.parseDouble(cantPago);
+                                            }
+
+                                            if (label.equals("Tarjeta débito"))
+                                            {
+                                                TarjetaDebito = Double.parseDouble(cantPago);
+                                            }
+
+                                            if(label.equals("Efectivo")){
+                                               PagosEfectivo +=Double.parseDouble(cantPago);
+
+                                            }
+
+                                            totalsumaimportes += Double.parseDouble(cantPago);
+
+                                        }
 
                                     }
 
                                     //Validar montos antes de pasar de pantallas
                                     String TotalText = String.valueOf(total.getText());
+
                                     double TotalFormat = 0;
                                     String cleanString = TotalText.replaceAll("\\D", "");
                                     try {
@@ -949,6 +988,20 @@ public class Fragment_Ventas extends Fragment {
                                         TotalFormat = TotalFormat / 100;
                                     } catch (Exception ex) {
                                         ex.printStackTrace();
+                                    }
+
+
+                                    double totalvalida = totalsumaimportes-PagosEfectivo;
+
+
+                                    if (totalvalida > TotalFormat){
+                                        Toast toast1 =
+                                                Toast.makeText(getContext(),
+                                                        "la suma de los montos de medios electronicos o tarjetas no puede sobrepasar el total de la venta",
+                                                        Toast.LENGTH_LONG);
+                                        toast1.show();
+
+                                        return;
                                     }
 
 
@@ -2056,6 +2109,7 @@ public class Fragment_Ventas extends Fragment {
     private void CargaMetodosPago(final ListView Listview) {
 
         ListaDePagosDisponibles.clear();
+
         ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
         JSONObject request = new JSONObject();
         try {
@@ -2105,6 +2159,7 @@ public class Fragment_Ventas extends Fragment {
                         pagoAdapter = new MetodoPagoAdapter(getContext(), R.layout.caja_metodo_pago, ListaDePagosDisponibles, Listview,
                                 ticket_de_venta);
                         pagoAdapter.notifyDataSetChanged();
+
                         Listview.setAdapter(pagoAdapter);
                     } else {
                         Toast toast1 =
