@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:table="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -13,21 +14,24 @@
         android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".3"
-            android:orientation="vertical">
+            android:orientation="vertical"
+
+            >
 
             <Button
-                android:id="@+id/btnventas"
+                android:id="@+id/Ventas_btn"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_margin="0dp"
-                android:background="@drawable/pestanas_desplegables"
+                android:background="@color/white"
+                android:fontFamily="@font/muli"
                 android:text="Ventas"
-                android:textAllCaps="false"
-                android:fontFamily="@font/muli" />
+                android:textAllCaps="false" />
         </LinearLayout>
 
         <LinearLayout
@@ -37,14 +41,14 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/btntransacciones"
+                android:id="@+id/btn_pestania_reporte"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
+                android:fontFamily="@font/muli"
                 android:text="Transacciones"
-                android:textAllCaps="false"
-                android:fontFamily="@font/muli"/>
+                android:textAllCaps="false" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,13 +58,13 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/btncortecaja"
+                android:id="@+id/button4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
                 android:background="@color/fondo_azul"
                 android:fontFamily="@font/muli"
-                android:text="Corte de caja"
+                android:text="Corte Caja"
                 android:textAllCaps="false" />
         </LinearLayout>
     </LinearLayout>
@@ -78,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:background="@color/fondo_azul"
+            android:background="@null"
             android:drawableLeft="@drawable/ic_agregar_producto"
             android:paddingHorizontal="20dp"
             android:text="Corte de Caja"
@@ -104,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:background="@null"
+            android:background="@color/fondo_azul"
             android:drawableLeft="@drawable/ic_agregar_vendedor"
             android:paddingHorizontal="10dp"
             android:text="Factura Ventas"
@@ -123,7 +127,7 @@
         <TextView
             android:layout_width="300dp"
             android:layout_height="match_parent"
-            android:text="Generar Corte de Caja."
+            android:text="Facturar Ventas Mostrador"
             android:textSize="24dp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -142,7 +146,7 @@
             android:text="Fecha Inicio:"
             android:textSize="15dp"
             android:textStyle="bold"
-            />
+           />
 
         <EditText
             android:id="@+id/btnfechainicio"
@@ -162,7 +166,7 @@
             android:textSize="15dp"
             android:textStyle="bold"
             android:layout_marginLeft="10dp"
-            />
+           />
 
         <EditText
             android:id="@+id/btnfechafin"
@@ -172,11 +176,10 @@
             android:focusable="false"
             android:gravity="center"
             android:drawableLeft="@drawable/calend25"
-            android:background="@color/gray2"
-           />
+            android:background="@color/gray2" />
 
         <Button
-            android:id="@+id/btn_buscar"
+            android:id="@+id/btn_buscartickets"
             style="@android:style/Widget.Holo.Light.Button"
             android:layout_width="150dp"
             android:layout_height="30dp"
@@ -188,12 +191,12 @@
             android:layout_marginLeft="10dp" />
 
         <Button
-            android:id="@+id/btn_generarcorte"
+            android:id="@+id/btn_buscar"
             style="@android:style/Widget.Holo.Light.Button"
             android:layout_width="150dp"
             android:layout_height="30dp"
             android:background="@color/colorPrimaryDark"
-            android:text="Generar Corte"
+            android:text="Facturar"
             android:textColor="@color/white"
             android:textSize="17sp"
             android:textStyle="bold"
@@ -218,14 +221,16 @@
             android:padding="10dp">
 
             <com.Danthop.bionet.Tables.SortableCorteCajaTable
-                android:id="@+id/tabla_corte"
+                android:id="@+id/tabla_tickets_sin_factura"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".7"
                 android:visibility="visible"
                 app:tableView_headerColor="@color/white"
-                table:tableView_columnCount="5">
+                table:tableView_columnCount="6">
             </com.Danthop.bionet.Tables.SortableCorteCajaTable>
         </LinearLayout>
-</LinearLayout>
+    </LinearLayout>
+
+
 </LinearLayout>

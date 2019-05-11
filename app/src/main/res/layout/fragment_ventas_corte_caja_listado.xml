@@ -125,10 +125,10 @@
         android:paddingVertical="5dp">
 
         <TextView
-            android:layout_width="230dp"
+            android:layout_width="300dp"
             android:layout_height="match_parent"
             android:text="Listado de Cortes de Caja."
-            android:textSize="18dp"
+            android:textSize="24dp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -143,23 +143,26 @@
         <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Fecha Inicio"
+            android:text="Fecha Inicio:"
             android:textSize="15dp"
             android:textStyle="bold"
            />
 
         <EditText
             android:id="@+id/btnfechainicio"
-            android:layout_width="110dp"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:inputType="date"
             android:focusable="false"
+            android:gravity="center"
+            android:drawableLeft="@drawable/calend25"
+            android:background="@color/gray2"
             />
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="85dp"
             android:layout_height="wrap_content"
-            android:text="Fecha Fin"
+            android:text="Fecha Fin:"
             android:textSize="15dp"
             android:textStyle="bold"
             android:layout_marginLeft="10dp"
@@ -167,21 +170,25 @@
 
         <EditText
             android:id="@+id/btnfechafin"
-            android:layout_width="110dp"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:inputType="date"
             android:focusable="false"
+            android:gravity="center"
+            android:drawableLeft="@drawable/calend25"
+            android:background="@color/gray2"
            />
 
         <Button
             android:id="@+id/btn_buscar"
             style="@android:style/Widget.Holo.Light.Button"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
             android:background="@color/colorPrimaryDark"
             android:text="Buscar"
             android:textColor="@color/white"
             android:textSize="17sp"
+            android:textStyle="bold"
             android:layout_marginLeft="10dp"/>
 
     </LinearLayout>

@@ -1,7 +1,6 @@
 package com.Danthop.bionet;
-
-
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -19,8 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.Danthop.bionet.Adapters.CorteCajaAdapter;
-import com.Danthop.bionet.Adapters.ListaCajaAdapter;
+import com.Danthop.bionet.Adapters.ListaTicketsAdapter;
 import com.Danthop.bionet.Tables.SortableCorteCajaTable;
 import com.Danthop.bionet.Tables.SortableHistoricoTable;
 import com.Danthop.bionet.model.CorteCajaModel;
@@ -30,7 +28,6 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,76 +40,80 @@ import java.util.List;
 
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Fragment_ventas_corte_caja_listado extends Fragment {
+public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
 
     Button pestania_ventas;
     Button pestania_reporte;
     Button btn_corte;
     Button btn_listado_corte;
     Button btn_factura_ventas;
+    Button btn_buscartickets;
     private EditText Fechainicio;
     private EditText Fechafin;
-    private Button btn_buscar;
+    private Button btn_facturar;
     private String FechaInicio;
     private String FechaFin;
     private String usu_id;
     private String cca_id_sucursal;
     private String valueIdSuc;
-    private String cca_nombre_usuario;
-    private String cca_importe_total;
+    private String tic_numero;
+    private String total;
+    private Double tic_importe_recibido;
+    private String hora;
+    private String fecha;
     private Double efectivo01 = 0.0;
     private Double monedero05 = 0.0;
     private Double dineroelectronico06 = 0.0;
     private Double vales08 = 0.0;
-    private String fecha;
-    private String hora;
-    private Double cca_importe_forma_pago;
-    private List<CorteCajaModel> ListaCorte;
-    private SortableCorteCajaTable tabla_Listarcorte;
-
-
-
-
+    private List<CorteCajaModel> ListaTickets;
+    private SortableCorteCajaTable tabla_ListarTickets;
     private DatePickerDialog.OnDateSetListener inicioDataSetlistener;
     private DatePickerDialog.OnDateSetListener finDataSetlistener;
     private SortableHistoricoTable tabla_historico;
+    private Dialog dialog;
 
 
-
-    public Fragment_ventas_corte_caja_listado() {
+    public Fragment_ventas_corte_lista_sinfactura() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_ventas_corte_caja_listado,container, false);
+        View v = inflater.inflate(R.layout.fragment_ventas_corte_lista_sinfactura,container, false);
         pestania_ventas = v.findViewById(R.id.Ventas_btn);
         pestania_reporte = v.findViewById(R.id.btn_pestania_reporte);
-        btn_corte = v.findViewById(R.id.btn_corte);
-        btn_listado_corte = v.findViewById(R.id.btn_listado_corte);
+        btn_factura_ventas = v.findViewById(R.id.btn_factura_ventas);
         Fechainicio=(EditText) v.findViewById(R.id.btnfechainicio);
         Fechafin=(EditText) v.findViewById(R.id.btnfechafin);
-        btn_buscar=(Button)v.findViewById(R.id.btn_buscar);
+        btn_facturar=(Button)v.findViewById(R.id.btn_buscar);
+        btn_buscartickets=(Button)v.findViewById( R.id.btn_buscartickets );
+
+        Button btn_corte = (Button) v.findViewById(R.id.btn_corte);
+        btn_corte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_pestania_cortecaja()).commit();
+            }
+        });
+
+        Button btn_listado_corte = (Button) v.findViewById(R.id.btn_listado_corte);
+        btn_listado_corte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();
+            }
+        });
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
         cca_id_sucursal = sharedPref.getString("cca_id_sucursal", "");
-        ListaCorte = new ArrayList<>();
-
-
-        Button btn_factura_ventas = (Button) v.findViewById(R.id.btn_factura_ventas);
-        btn_factura_ventas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_lista_sinfactura()).commit();
-            }
-        });
-
+        ListaTickets = new ArrayList<>();
+        dialog = new Dialog(getContext());
 
         try {
             JSONArray jsonArray = new JSONArray(cca_id_sucursal);
@@ -130,7 +131,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             toast1.show();
         }
 
-        tabla_Listarcorte = (SortableCorteCajaTable) v.findViewById(R.id.tabla_listacorte);
+        tabla_ListarTickets = (SortableCorteCajaTable) v.findViewById(R.id.tabla_tickets_sin_factura);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Usuario", "Monto Total", "Efectivo", "Monedero electrónico","Dinero electrónico(06)","Vales de despensa(08)","Fecha", "Hora");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
@@ -144,8 +145,8 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
         tableColumnWeightModel.setColumnWeight(6, 1);
         tableColumnWeightModel.setColumnWeight(7, 1);
 
-        tabla_Listarcorte.setHeaderAdapter(simpleHeader);
-        tabla_Listarcorte.setColumnModel(tableColumnWeightModel);
+        tabla_ListarTickets.setHeaderAdapter(simpleHeader);
+        tabla_ListarTickets.setColumnModel(tableColumnWeightModel);
 
         Time today = new Time( Time.getCurrentTimezone() );
         today.setToNow();
@@ -161,7 +162,6 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             mes = "0" + (today.month + 1);
         }else {
             mes = String.valueOf(today.month + 1);
-
         }
 
         String fechausuario = (dia + "/" + mes + "/" + year );
@@ -258,7 +258,6 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
         };
 
 
-
         loadButtons();
         return v;
     }
@@ -279,22 +278,70 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             }
         });
 
-        btn_corte.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_cortecaja()).commit();
-            }
-        });
 
-        btn_listado_corte.setOnClickListener(new View.OnClickListener() {
+        btn_facturar.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                if (ListaTickets.isEmpty()) {
+                    dialog.setContentView( R.layout.pop_up_cortecaja_finalizar_factura );
+                    dialog.show();
+
+                    Button aceptar = dialog.findViewById( R.id.Aceptar );
+                    aceptar.setOnClickListener( new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    } );
+
+                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.hide();
+                        }
+                    });
+
+                } else {
+
+                    /*dialog.setContentView( R.layout.pop_up_aceptar_corte_caja );
+                    dialog.show();
+
+                    Button aceptarcorte = dialog.findViewById( R.id.aceptarcorte );
+                    aceptarcorte.setOnClickListener( new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                           // Facturar_Tickets();
+                            Toast.makeText( getContext(), "Facturacion Exitosa", Toast.LENGTH_LONG ).show();
+                            FragmentTransaction fr = getFragmentManager().beginTransaction();
+                            fr.replace( R.id.fragment_container, new Fragment_ventas_corte_caja_listado() ).commit();
+                        }
+                    } );
+
+                    Button salircorte = dialog.findViewById( R.id.salircorte );
+                    salircorte.setOnClickListener( new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.hide();
+                        }
+                    } );
+
+                    Button cancelar = dialog.findViewById( R.id.cancelar );
+                    cancelar.setOnClickListener( new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.hide();
+                        }
+                    } );*/
+
+                }
             }
         });
 
-        btn_buscar.setOnClickListener(new View.OnClickListener() {
+
+        btn_buscartickets.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int resultado = FechaInicio.compareTo(FechaFin);
@@ -302,7 +349,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
 
                     if (resultado < 0) {
 
-                        Enlistar_corte();
+                        Buscar_tickets();
 
                     } else {
                         Toast toast1 = Toast.makeText(getContext(), "Fecha de inicio debe ser diferente a la fecha final", Toast.LENGTH_SHORT);
@@ -315,17 +362,18 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
                 }
             }
         });
+
     }
 
-    public void Enlistar_corte(){
+    public void Buscar_tickets(){
 
         String url = getString(R.string.Url);
-        String ApiPath = url + "/api/ventas/cortes/lista-cortes";
+        String ApiPath = url + "/api/ventas/cortes/lista-tickets-sin-factura";
 
         JSONObject request = new JSONObject();
         try {
             request.put("usu_id", usu_id);
-            request.put("cca_id_sucursal", valueIdSuc);
+            request.put("tic_id_sucursal", valueIdSuc);
             request.put("esApp", "1");
             request.put("fecha_inicial",FechaInicio);
             request.put("fecha_final",FechaFin);
@@ -337,9 +385,9 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 JSONObject Resultado = null;
-                JSONArray aCortes = null;
-                JSONArray aFormasPago = null;
-                JSONObject forma_pago = null;
+                JSONArray aTickets = null;
+                JSONObject tic_importe_forma_pago = null;
+                JSONArray aFormasPago =  null;
 
 
                 try {
@@ -348,47 +396,50 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
 
                     if (status == 1) {
                         Resultado = response.getJSONObject("resultado");
-                        aCortes = Resultado.getJSONArray("aCortes");
-                            for (int y = 0; y < aCortes.length(); y++){
-                                JSONObject elemento = aCortes.getJSONObject(y);
-                                cca_nombre_usuario = elemento.getString("cca_nombre_usuario");
-                                cca_importe_total = elemento.getString("cca_importe_total");
-                                fecha = elemento.getString("cca_fecha_creo");
-                                hora = elemento.getString("cca_hora_creo");
+                        aTickets = Resultado.getJSONArray("aTickets");
 
-                             //forma_pago = elemento.getJSONObject("cca_importe_forma_pago");
-                             //cca_importe_forma_pago = forma_pago.getDouble("05");
-                             //String forma_pago_efectivo = forma_pago.getString("05");
-                             //if (forma_pago_efectivo != "nu")
+                            for (int y = 0; y < aTickets.length(); y++){
+                                JSONObject elemento = aTickets.getJSONObject(y);
 
+                                tic_numero = elemento.getString("tic_numero");
+                                total = elemento.getString( "tic_importe_total" );
+                                tic_importe_recibido = elemento.getDouble( "tic_importe_recibido" );
+                                fecha = elemento.getString("tic_fecha_venta");
+                                hora = elemento.getString("tic_hora_venta");
 
+                                Double tic_importe_total = elemento.getDouble( "tic_importe_pagado" );
+                                if (tic_importe_total != 0){
+                                    tic_importe_forma_pago = elemento.getJSONObject( "tic_importe_forma_pago" );
 
-
-
-                               /* aFormasPago = Resultado.getJSONArray("aFormasPago");
-                                for (int z = 0; z < aFormasPago.length(); z++) {
-                                    JSONObject elemento2 = aFormasPago.getJSONObject(z);
-                                }*/
+                                    //efectivo01 = tic_importe_forma_pago.getDouble( "01" );
+                                    //monedero05 = tic_importe_forma_pago.getDouble( "05" );
+                                    //dineroelectronico06 = tic_importe_forma_pago.getDouble( "06" );
+                                    //vales08 = tic_importe_forma_pago.getDouble( "08" );
 
 
+                                }
 
-                                    final CorteCajaModel corte = new CorteCajaModel(
+
+
+
+
+                                final CorteCajaModel tickets = new CorteCajaModel(
+                                            tic_numero,
+                                            total,
                                             "",
                                             "",
                                             "",
-                                            "",
-                                            cca_nombre_usuario,
-                                            cca_importe_total,efectivo01,monedero05,dineroelectronico06,vales08,
+                                            "",efectivo01,monedero05,dineroelectronico06,vales08,
                                             fecha,hora,"",0.0);
-                                    ListaCorte.add(corte);
+                                ListaTickets.add(tickets);
 
                             }
 
-                        final ListaCajaAdapter ListacorteAdapter = new ListaCajaAdapter(getContext(), ListaCorte, tabla_Listarcorte);
-                        tabla_Listarcorte.setDataAdapter(ListacorteAdapter);
+                        final ListaTicketsAdapter ListaticketsAdapter = new ListaTicketsAdapter(getContext(), ListaTickets, tabla_ListarTickets);
+                        tabla_ListarTickets.setDataAdapter(ListaticketsAdapter);
 
                     }else {
-                        Toast toast1 = Toast.makeText(getContext(), "No existen cortes de caja para el periodo proporcionado", Toast.LENGTH_LONG);
+                        Toast toast1 = Toast.makeText(getContext(), "No existen tickets en el periodo seleccionado.", Toast.LENGTH_LONG);
                         toast1.show();
                     }
                 } catch (JSONException e) {

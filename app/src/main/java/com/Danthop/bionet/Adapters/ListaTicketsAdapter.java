@@ -16,10 +16,10 @@ import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class ListaCajaAdapter extends LongPressAwareTableDataAdapter<CorteCajaModel> {
+public class ListaTicketsAdapter extends LongPressAwareTableDataAdapter<CorteCajaModel> {
     int TEXT_SIZE = 12;
 
-    public ListaCajaAdapter(final Context context, final List<CorteCajaModel> data, final SortableCorteCajaTable tableView) {
+    public ListaTicketsAdapter(final Context context, final List<CorteCajaModel> data, final SortableCorteCajaTable tableView) {
         super(context, data, tableView);
     }
 
@@ -30,22 +30,22 @@ public class ListaCajaAdapter extends LongPressAwareTableDataAdapter<CorteCajaMo
 
         switch (columnIndex) {
             case 0:
-                renderedView = rendernombreusuario(corte);
+                renderedView = rendernumTickets(corte);
                 break;
             case 1:
-                renderedView = renderimportetotal(corte);
+                renderedView = rendertotal(corte);
                 break;
             case 2:
-               renderedView = renderefectivo(corte);
+                renderedView = renderefectivo(corte);
                 break;
             case 3:
-                renderedView = rendermonederoelectronico(corte);
+                 renderedView = rendermonederoelectronico(corte);
                 break;
             case 4:
-                renderedView = renderdineroelectronico(corte);
+                 renderedView = renderdineroelectronico(corte);
                 break;
             case 5:
-                renderedView = rendervalesdespensa(corte);
+                 renderedView = rendervalesdespensa(corte);
                 break;
             case 6:
                 renderedView = renderfecha(corte);
@@ -53,6 +53,9 @@ public class ListaCajaAdapter extends LongPressAwareTableDataAdapter<CorteCajaMo
             case 7:
                 renderedView = renderhora(corte);
                 break;
+
+
+
 
 
         }
@@ -80,33 +83,37 @@ public class ListaCajaAdapter extends LongPressAwareTableDataAdapter<CorteCajaMo
         editText.setPadding(20, 10, 20, 10);
         editText.setTextSize(TEXT_SIZE);
         editText.setSingleLine();
-        editText.addTextChangedListener(new ListaCajaAdapter.OrdenNameUpdater(corte));
+        editText.addTextChangedListener(new ListaTicketsAdapter.OrdenNameUpdater(corte));
         return editText;
     }
 
-    private View rendernombreusuario(final CorteCajaModel corte) {
-        return renderString(corte.getusuario());
+    private View rendernumTickets(final CorteCajaModel corte) {
+        return renderString(corte.getid_venta());
     }
 
-    private View renderimportetotal(final CorteCajaModel corte) {
-        double Precio = Double.parseDouble( corte.getmonto_total() );
+    private View rendertotal(final CorteCajaModel corte) {
+        double Precio = Double.parseDouble( corte.gettotal() );
+
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
         final TextView textView = new TextView( getContext() );
         textView.setText( formatter.format( Precio ) );
         textView.setPadding( 20, 10, 20, 10 );
         textView.setTextSize( TEXT_SIZE );
+
         return textView;
     }
 
-   private View renderefectivo(final CorteCajaModel corte) {
-        double Precio = corte.getefectivo() ;
+    private View renderefectivo(final CorteCajaModel corte) {
+        double Precio =corte.getefectivo();
+
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
         final TextView textView = new TextView( getContext() );
         textView.setText( formatter.format( Precio ) );
         textView.setPadding( 20, 10, 20, 10 );
         textView.setTextSize( TEXT_SIZE );
+
         return textView;
     }
 
@@ -149,7 +156,6 @@ public class ListaCajaAdapter extends LongPressAwareTableDataAdapter<CorteCajaMo
         return textView;
     }
 
-
     private View renderfecha(final CorteCajaModel corte) {
         return renderString(corte.getfecha());
     }
@@ -157,6 +163,7 @@ public class ListaCajaAdapter extends LongPressAwareTableDataAdapter<CorteCajaMo
     private View renderhora(final CorteCajaModel corte) {
         return renderString(corte.gethora());
     }
+
 
 
     private View renderString(final String value) {

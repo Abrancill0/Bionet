@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.CorteCajaAdapter;
@@ -35,6 +36,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -137,6 +139,15 @@ public class Fragment_pestania_cortecaja extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_ventas_transacciones()).commit();
+            }
+        });
+
+        Button btn_factura_ventas = (Button) v.findViewById(R.id.btn_factura_ventas);
+        btn_factura_ventas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_lista_sinfactura()).commit();
             }
         });
 
@@ -245,7 +256,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
                     dialog.setContentView( R.layout.pop_up_aceptar_corte_caja );
                     dialog.show();
 
-                    EditText totalcorte = dialog.findViewById(R.id.Total_corte);
+                    TextView totalcorte = dialog.findViewById(R.id.Total_corte);
                     totalcorte.setText("Total corte: $ " + String.valueOf( TotalCorte));
 
                     Button aceptarcorte = dialog.findViewById( R.id.aceptarcorte );
@@ -462,10 +473,11 @@ public class Fragment_pestania_cortecaja extends Fragment {
                                    tic_numero =elemento2.getString("tic_numero");
 
                                    FormaPago = elemento2.getJSONArray("tic_importe_forma_pago");
+
                                    for (int z = 0; z < FormaPago.length(); z++){
                                        JSONObject elemento3 = FormaPago.getJSONObject(z);
                                        id = elemento3.getString("id");
-                                       int importe = Integer.valueOf( elemento3.getString("importe") );
+                                       Double importe = elemento3.getDouble("importe");
                                        nombrepago = elemento3.getString( "nombre" );
 
 
@@ -491,7 +503,8 @@ public class Fragment_pestania_cortecaja extends Fragment {
                                            nombrepago,
                                            "",
                                            tic_nombre_vendedor,
-                                           "","",cde_fecha_hora_creo,hora,id_formapago,TotalCorte);
+                                           "",0.0, 0.0, 0.0, 0.0,
+                                           cde_fecha_hora_creo,hora,id_formapago,TotalCorte);
                                    CorteCaja.add(corte);
                                    Totalventa.add(corte);
                                }
@@ -509,8 +522,8 @@ public class Fragment_pestania_cortecaja extends Fragment {
                                            .orElse(null);
                                    String nombrepago  = String.valueOf(idpago.getformapago());
                                    String IDpago = idpago.getid_pago();
-                                   int total = FormasPago.stream().filter(Pagos -> employee.equals(Pagos.getid_pago())).mapToInt(FormaspagoModel::getImporte).sum();
-                                   TotalCorte = Double.valueOf( FormasPago.stream().mapToInt( FormaspagoModel::getImporte).sum() );
+                                   Double total = FormasPago.stream().filter(Pagos -> employee.equals(Pagos.getid_pago())).mapToDouble(FormaspagoModel::getImporte).sum();
+                                   TotalCorte = Double.valueOf( FormasPago.stream().mapToDouble( FormaspagoModel::getImporte).sum() );
 
                                    JSONObject request = new JSONObject();
                                    try {

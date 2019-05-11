@@ -7,7 +7,12 @@ public class CorteCajaModel {
     private String fechahora;
     private String usuario;
     private String monto_total;
-    private String efectivo;
+    private Double efectivo;
+
+    private Double monederoElectronico;
+    private Double dineroElectronico;
+    private Double valesDespensa;
+
     private String fecha;
     private String hora;
     private String id_formapago;
@@ -15,7 +20,7 @@ public class CorteCajaModel {
 
 
     public CorteCajaModel(String id_venta, String total, String forma_pago, String fechahora, String usuario,
-                          String monto_total, String efectivo, String fecha, String hora, String id_formapago, Double TotalCorte){
+                          String monto_total, Double efectivo, Double monederoElectronico, Double dineroElectronico, Double valesDespensa, String fecha, String hora, String id_formapago, Double TotalCorte){
         this.id_venta = id_venta;
         this.total = total;
         this.forma_pago = forma_pago;
@@ -24,6 +29,11 @@ public class CorteCajaModel {
 
         this.monto_total = monto_total;
         this.efectivo = efectivo;
+
+        this.monederoElectronico = monederoElectronico;
+        this.dineroElectronico = dineroElectronico;
+        this.valesDespensa = valesDespensa;
+
         this.fecha = fecha;
         this.hora = hora;
         this.id_formapago = id_formapago;
@@ -37,7 +47,12 @@ public class CorteCajaModel {
     public String getfechahora() { return fechahora; }
     public String getusuario() { return usuario; }
     public String getmonto_total() { return monto_total; }
-    public String getefectivo() { return efectivo; }
+    public Double getefectivo() { return efectivo; }
+
+    public Double getMonederoElectronico() { return monederoElectronico; }
+    public Double getDineroElectronico() { return dineroElectronico; }
+    public Double getValesDespensa() { return  valesDespensa; }
+
     public String getfecha(){ return fecha; }
     public String gethora() { return hora; }
     public String getid_formapago() { return id_formapago; }
@@ -50,7 +65,12 @@ public class CorteCajaModel {
     public void setfechahora(String fechahora) { this.fechahora = fechahora; }
     public void setusuario(String usuario) { this.usuario = usuario; }
     public void setmonto_total(String monto_total ) { this.monto_total = monto_total; }
-    public void setefectivo(String efectivo ) { this.efectivo = efectivo; }
+    public void setefectivo(Double efectivo ) { this.efectivo = efectivo; }
+
+    public void setMonederoElectronico(Double monederoElectronico) { this.monederoElectronico = monederoElectronico; }
+    public void setDineroElectronico (Double dineroElectronico) { this.dineroElectronico = dineroElectronico; }
+    public void setValesDespensa (Double valesDespensa) { this.valesDespensa = valesDespensa; }
+
     public void setfecha(String fecha ) { this.fecha = fecha; }
     public void sethora (String hora ) { this.hora = hora; }
     public void setId_formapago (String id_formapago ) { this.id_formapago = id_formapago; }

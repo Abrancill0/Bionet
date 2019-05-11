@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:table="http://schemas.android.com/apk/res-auto"
+    android:layout_width="414dp"
+    android:layout_height="300dp"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="420dp"
-    android:layout_height="250dp"
     android:layout_gravity="center"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical">
 
@@ -20,7 +17,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="match_parent"
             android:layout_weight=".9"
             android:orientation="horizontal">
 
@@ -35,17 +32,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".95"
+                android:layout_weight=".9"
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/salircorte"
+                    android:id="@+id/btnSalir3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="right"
-                    android:layout_weight="1"
+                    android:layout_weight=".95"
                     android:background="@drawable/ic_tachita"
-                    android:padding="20dp"
                     tools:ignore="MissingConstraints"
                     tools:layout_editor_absoluteX="410dp"
                     tools:layout_editor_absoluteY="0dp" />
@@ -55,48 +51,38 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="match_parent"
             android:layout_weight=".1"
             android:orientation="vertical">
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_weight=".3"
-                android:orientation="vertical">
+                android:layout_height="70dp">
 
-                <TextView
-                    android:id="@+id/textView29"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/imageView9"
+                    android:layout_width="946dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:text="¿Generar Corte de caja?"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="25dp" />
-            </LinearLayout>
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:src="@drawable/signo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/textView29"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_weight=".3"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/Total_corte"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:textColor="@color/black"
-                    android:textSize="24dp"
-                    android:gravity="center"
-                    android:text="Total corte:">
-                </TextView>
-
-            </LinearLayout>
-
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Se requiere seleccionar al menos un ticket para facturar."
+                android:textColor="@color/colorPrimary"
+                android:textSize="22dp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -107,26 +93,14 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/aceptarcorte"
+            android:id="@+id/Aceptar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Si"
-            android:textAllCaps="false"
-            android:textColor="#fff"
-            android:textSize="22dp" />
-        <Button
-            android:id="@+id/cancelar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/btn"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="No"
+            android:text="Aceptar"
             android:textAllCaps="false"
             android:textColor="#fff"
             android:textSize="22dp" />
