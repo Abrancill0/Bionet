@@ -59,7 +59,8 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
     private List<EditText> ListaDeCantidades = new ArrayList<>();
     List<PagoModel> MetodosPagoSeleccionados = new ArrayList<>();
 
-
+    private String ValorImporte[] = new String[30];
+    private String Valorcheck[] = new String[30];
 
     public MetodoPagoAdapter(final Context context, final List<PagoModel> data, final SortableMetodosPagoTable tableView,
                              List<PagoModel> metodosPagoSeleccionados) {
@@ -73,17 +74,17 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
         PagoModel forma = getRowData(rowIndex);
         View renderedView = null;
 
-        switch (columnIndex) {
-            case 0:
-                renderedView = renderFormaPagoName(forma);
-                break;
-            case 1:
-                renderedView = renderImporte();
-                break;
-            case 2:
-                renderedView = renderSeleccionar(forma,ListaDeCantidades.get(rowIndex));
-                break;
-        }
+           switch (columnIndex) {
+               case 0:
+                   renderedView = renderFormaPagoName( forma );
+                   break;
+               case 1:
+                   renderedView = renderImporte(rowIndex);
+                   break;
+               case 2:
+                   renderedView = renderSeleccionar( forma, ListaDeCantidades.get( rowIndex ), rowIndex );
+                   break;
+           }
 
         return renderedView;
     }
@@ -99,22 +100,66 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
         return renderString(forma.getNombre());
     }
 
-    private View renderImporte() {
+    private View renderImporte(int Indice) {
         final EditText MontoAApartar = new EditText(getContext());
         MontoAApartar.setInputType(TYPE_NUMBER_FLAG_DECIMAL);
         MontoAApartar.setGravity(View.TEXT_ALIGNMENT_CENTER);
         ListaDeCantidades.add(MontoAApartar);
+
+        if (ValorImporte[Indice]!=null)
+        {
+            String variable = ValorImporte[Indice];
+
+            MontoAApartar.setText( variable );
+
+            if (Valorcheck[Indice]=="true")
+            {
+                MontoAApartar.setEnabled(false);
+            }
+            else
+            {
+                MontoAApartar.setEnabled(true);
+            }
+        }
+
+
+        MontoAApartar.addTextChangedListener( new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                ValorImporte[Indice]= String.valueOf( MontoAApartar.getText() );
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         return MontoAApartar;
     }
 
-    private View renderSeleccionar(final PagoModel forma, final EditText Monto) {
+    private View renderSeleccionar(final PagoModel forma, final EditText Monto,int Indice) {
         final CheckBox seleccionar = new CheckBox(getContext());
         seleccionar.setGravity(Gravity.CENTER);
         seleccionar.setPadding(10,10,10,10);
 
+        if (Valorcheck[Indice]!=null)
+        {
+          boolean variable = Boolean.parseBoolean( Valorcheck[Indice] );
+
+            seleccionar.setChecked( variable );
+
+        }
+
         seleccionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                     if (seleccionar.isChecked())
                     {
                             Monto.setEnabled(false);
@@ -124,6 +169,7 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
                                     String.valueOf(Monto.getText())
                             );
                             MetodosPagoSeleccionados.add(pago);
+                        Valorcheck[Indice]="true";
                     }else
                     {
                         Monto.setEnabled(true);
@@ -135,6 +181,7 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
                             }
 
                         }
+                        Valorcheck[Indice]="false";
                     }
 
             }
@@ -142,7 +189,6 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
 
         return seleccionar;
     }
-
 
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());

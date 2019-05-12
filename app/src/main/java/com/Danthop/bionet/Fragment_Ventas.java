@@ -159,14 +159,12 @@ public class Fragment_Ventas extends Fragment {
     private ArrayList<String> Imagenes;
     private String[][] LPAU;
 
-
     private CarouselView carouselView;
 
     private String TicketIDVenta;
     private int TicketSubtotal;
     private String TicketImporteDescuento;
     private float TicketIVA;
-
 
     private TableDataClickListener<ArticuloModel> VentaArticuloTablaListener;
 
@@ -231,10 +229,8 @@ public class Fragment_Ventas extends Fragment {
         ArticulosApartados = new ArrayList<>();
         ArticulosOrdenados = new ArrayList<>();
 
-
         tabla_venta_articulos = v.findViewById(R.id.tabla_venta_articulos);
         tabla_venta_articulos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
-
 
         InstanciarModeloTicket();
         LoadSucursales();
@@ -710,6 +706,7 @@ public class Fragment_Ventas extends Fragment {
                             Agregar_cfdi.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    //aqui
                                     LoadCFDI();
                                     dialog.dismiss();
                                     dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
@@ -862,7 +859,7 @@ public class Fragment_Ventas extends Fragment {
 
                                         }
                                     });
-
+//aqui
                                 }
                             });
                         }
@@ -1162,9 +1159,6 @@ public class Fragment_Ventas extends Fragment {
             }
         });
 
-
-
-
     }
 
     private void OrdenarArticulosSeleccionados() {
@@ -1276,7 +1270,6 @@ public class Fragment_Ventas extends Fragment {
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
-
     private void ApartarArticulosSeleccionados() {
 
         float PagoTotal=0;
@@ -1387,7 +1380,6 @@ public class Fragment_Ventas extends Fragment {
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
-
     private void FinalizarTicket(final TextView importeCambio, final TextView importeRecibido, final TextView importeVenta) {
 
         JSONArray arreglo = new JSONArray();
@@ -1493,7 +1485,6 @@ public class Fragment_Ventas extends Fragment {
         postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
-
 
     private void Aniadir_a_venta(String CBoSKULL, String Cantidad) {
         ArticulosVenta.clear();
@@ -1767,8 +1758,6 @@ public class Fragment_Ventas extends Fragment {
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
     }
-
-
 
     private void Muestra_clientes() {
         JSONObject request = new JSONObject();
@@ -2117,7 +2106,6 @@ public class Fragment_Ventas extends Fragment {
 
     }
 
-
     private void AniadirClienteTicket() {
         ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
         //ArticulosVenta.clear();
@@ -2309,7 +2297,6 @@ public class Fragment_Ventas extends Fragment {
     }
 
 
-
     private void BuscarPorSKU(String SKU) {
         dialog.setContentView(R.layout.pop_up_ventas_verificar_articulo);
         final TextView art_nombre = dialog.findViewById(R.id.art_name_articulo);
@@ -2459,7 +2446,6 @@ public class Fragment_Ventas extends Fragment {
             e.printStackTrace();
         }
     }
-
 
     private void InstanciarModeloTicket() {
         ticket_de_venta = new TicketModel(
@@ -2627,6 +2613,5 @@ public class Fragment_Ventas extends Fragment {
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
     }
-
 
 }
