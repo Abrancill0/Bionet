@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -102,8 +103,8 @@ public class Fragment_ventas_transacciones extends Fragment {
     private CalendarPickerView calendarView;
     private Date FechaInicial;
 
-    private String fecha_inicio;
-    private String fecha_final;
+    private String fecha_inicio="";
+    private String fecha_final="";
 
     private String usu_id;
 
@@ -112,6 +113,9 @@ public class Fragment_ventas_transacciones extends Fragment {
     private TextView transacciones;
     private TextView total_ventas;
     private TextView best_seller;
+
+    private String content;
+    private WebView webView;
 
 
     public Fragment_ventas_transacciones() {
@@ -168,6 +172,15 @@ public class Fragment_ventas_transacciones extends Fragment {
 
         btn_ventas = v.findViewById(R.id.btn_ventas);
         btn_corte_caja = v.findViewById(R.id.btn_corte_caja);
+        Fechas();
+
+        TableDataClickListener<MovimientoModel> tablaListener = new TableDataClickListener<MovimientoModel>() {
+            @Override
+            public void onDataClicked(int rowIndex, final MovimientoModel clickedData) {
+                VerTicketWeb();
+            }
+        };
+        TablaMovimientos.addDataClickListener(tablaListener);
 
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -175,7 +188,6 @@ public class Fragment_ventas_transacciones extends Fragment {
                 LoadApartados();
                 LoadOrdenes();
                 LoadMovimientos();
-                Fechas();
             }
             public void onNothingSelected(AdapterView<?> parent)
             {
@@ -187,6 +199,9 @@ public class Fragment_ventas_transacciones extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
 
+                LoadApartados();
+                LoadOrdenes();
+                LoadMovimientos();
             }
             public void onNothingSelected(AdapterView<?> parent)
             {
@@ -197,7 +212,9 @@ public class Fragment_ventas_transacciones extends Fragment {
         SpinnerUsuarioVenta.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-
+                LoadApartados();
+                LoadOrdenes();
+                LoadMovimientos();
             }
             public void onNothingSelected(AdapterView<?> parent)
             {
@@ -826,13 +843,6 @@ public class Fragment_ventas_transacciones extends Fragment {
             } catch (Error e) {
                 e.printStackTrace();
             }
-            TableDataClickListener<MovimientoModel> tablaListener = new TableDataClickListener<MovimientoModel>() {
-                @Override
-                public void onDataClicked(int rowIndex, final MovimientoModel clickedData) {
-
-                }
-            };
-            TablaMovimientos.addDataClickListener(tablaListener);
 
         }
         else
@@ -847,8 +857,8 @@ public class Fragment_ventas_transacciones extends Fragment {
                         "usu_id=" + usu_id +
                         "&esApp=1" +
                         "&suc_id=" + SucursalID.get(SpinnerSucursal.getSelectedItemPosition()) +
-                        "&fecha_inicial=" + "" +
-                        "&fecha_final=" + "" +
+                        "&fecha_inicial=" + fecha_inicio +
+                        "&fecha_final=" + fecha_final +
                         "&forma_pago=" + FormaPagoID.get(SpinnerFormaPago.getSelectedItemPosition()) +
                         "&usuario_venta=" + UsuarioVentaID.get(SpinnerUsuarioVenta.getSelectedItemPosition());
                 // prepare the Request
@@ -912,13 +922,6 @@ public class Fragment_ventas_transacciones extends Fragment {
             } catch (Error e) {
                 e.printStackTrace();
             }
-            TableDataClickListener<MovimientoModel> tablaListener = new TableDataClickListener<MovimientoModel>() {
-                @Override
-                public void onDataClicked(int rowIndex, final MovimientoModel clickedData) {
-
-                }
-            };
-            TablaMovimientos.addDataClickListener(tablaListener);
 
         }
 
@@ -934,12 +937,14 @@ public class Fragment_ventas_transacciones extends Fragment {
                 calendario.setContentView(R.layout.calendar);
                 calendario.show();
                 calendarView = calendario.findViewById(R.id.calendar_view);
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DAY_OF_YEAR, -1);
 
-                Calendar nextYear = Calendar.getInstance();
-                nextYear.add(Calendar.YEAR, 1);
+                Calendar yearsAgo = Calendar.getInstance();
+                yearsAgo.add(Calendar.YEAR, -100);
 
                 Date today = new Date();
-                calendarView.init(today, nextYear.getTime()).withSelectedDate(today);
+                calendarView.init(yearsAgo.getTime(), today).withSelectedDate(calendar.getTime());
 
                 calendarView.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
                     @Override
@@ -951,6 +956,10 @@ public class Fragment_ventas_transacciones extends Fragment {
                         calendario.dismiss();
                         Abrir_calendarioFinal.setEnabled(true);
                         Abrir_calendarioInicial.setText(fecha_inicio);
+
+                        LoadApartados();
+                        LoadOrdenes();
+                        LoadMovimientos();
                     }
 
                     @Override
@@ -973,7 +982,8 @@ public class Fragment_ventas_transacciones extends Fragment {
                 Calendar nextYear = Calendar.getInstance();
                 nextYear.add(Calendar.YEAR, 1);
 
-                calendarView.init(FechaInicial, nextYear.getTime()).withSelectedDate(FechaInicial);
+                Date today = new Date();
+                calendarView.init(FechaInicial, today).withSelectedDate(FechaInicial);
 
                 calendarView.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
                     @Override
@@ -983,6 +993,10 @@ public class Fragment_ventas_transacciones extends Fragment {
                         fecha_final = targetFormat.format(s);
                         calendario.dismiss();
                         Abrir_calendarioFinal.setText(fecha_final);
+
+                        LoadApartados();
+                        LoadOrdenes();
+                        LoadMovimientos();
                     }
 
                     @Override
@@ -993,6 +1007,214 @@ public class Fragment_ventas_transacciones extends Fragment {
 
             }
         });
+    }
+
+
+    private void VerTicketWeb()
+    {
+        content= "<style type=\"text/css\" media=\"all\">\n" +
+                "#tblTicketTemplate {\n" +
+                "  width: 100%;\n" +
+                "  font-size: 10px;\n" +
+                "  font-family: \"Courier New\";\n" +
+                "  text-transform: uppercase;\n" +
+                "  line-height: 1.3;\n" +
+                "  border: solid 1px #D4DADF;\n" +
+                "}\n" +
+                "#tblTicketTemplate thead tr td {\n" +
+                "  padding-left: 10%;\n" +
+                "  padding-right: 10%;\n" +
+                "}\n" +
+                "#tblTicketTemplate #tdLogo {\n" +
+                "  text-align: center;\n" +
+                "  vertical-align: middle;\n" +
+                "}\n" +
+                "#tblTicketTemplate #tdFiscal{\n" +
+                "  text-align: center;\n" +
+                "  vertical-align: middle;\n" +
+                "  font-weight: bold;\n" +
+                "}\n" +
+                "#tblTicketTemplate .trDivider{\n" +
+                "  border-bottom: dashed 1px black;\n" +
+                "}\n" +
+                "#tblTicketTemplate .trDivider td {\n" +
+                "  padding-bottom: 3px;\n" +
+                "}\n" +
+                "#tblTicketTemplate .trDivider + tr td {\n" +
+                "  padding-top: 3px;\n" +
+                "}\n" +
+                "#tblTicketTemplate tbody .trInfo{\n" +
+                "  font-size: 10px;\n" +
+                "  vertical-align: top;\n" +
+                "}\n" +
+                "#tblTicketTemplate tbody .trInfo td a{\n" +
+                "  text-align: center;\n" +
+                "}\n" +
+                "#tblTicketTemplate tbody #trTituloDetalle{\n" +
+                "  font-weight: bold;\n" +
+                "  text-align: center;\n" +
+                "  border-top: dashed 1px black;\n" +
+                "  border-bottom: dashed 1px black;\n" +
+                "}\n" +
+                "#tblTicketTemplate tbody .trArticulo{\n" +
+                "  font-size: 10px;\n" +
+                "}\n" +
+                "#tblTicketTemplate .importe{\n" +
+                "  text-align: right;\n" +
+                "}\n" +
+                "#tblTicketTemplate tbody .trArticulo + tr td{\n" +
+                "  font-size: 9px;\n" +
+                "}\n" +
+                "#tblTicketTemplate tbody .trTotal{\n" +
+                "  font-size: 14px;\n" +
+                "  font-weight: bold;\n" +
+                "}\n" +
+                "#tblTicketTemplate tfoot{\n" +
+                "  text-align: center;\n" +
+                "}\n" +
+                "</style>\n" +
+                "<table id=\"tblTicketTemplate\">\n" +
+                "  <thead>\n" +
+                "    <tr>\n" +
+                "      <td id=\"tdLogo\" colspan=\"4\">\n" +
+                "        <!--img src=\" asset(Session::get('con_logo_negocio')) \" class=\"img_con_logo_ticket\" width=\"100%\" height=\"75\" /-->\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "      <td id=\"tdFiscal\" colspan=\"4\">\n" +
+                "        <!--$aDatos['aSucursal']['suc_razon_social'] <br />$aDatos['aSucursal']['suc_rfc'] -->\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "    <tr class=\"trDivider\">\n" +
+                "      <td id=\"tdFiscal\" colspan=\"4\">\n" +
+                "        <!--Funciones::formatDireccion($aDatos['aSucursalPrincipal']['suc_direccion'], \"suc_\")-->\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "      <td id=\"tdFiscal2\" colspan=\"4\">\n" +
+                "        <!--Funciones::formatDireccion($aDatos['aSucursal']['suc_direccion'], \"suc_\")-->\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "    <tr class=\"trDivider\">\n" +
+                "      <td id=\"tdFiscalTelefono\" colspan=\"4\">\n" +
+                "        <!--Tel.:  $aDatos['aSucursal']['suc_telefono'] -->\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </thead>\n" +
+                "  <tbody>\n" +
+                "    <tr class=\"trInfo\">\n" +
+                "      <td id=\"tdFechaHora\" colspan=\"2\">\n" +
+                "        <!--b>Fec./Hr.:</b>  date(\"d/m/Y H:i\")-->\n" +
+                "      </td>\n" +
+                "      <td id=\"tdTicketNum\" colspan=\"2\">\n" +
+                "        <!--b>Ticket:</b> T00001-->\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "    <tr class=\"trInfo\">\n" +
+                "      <td id=\"tdVendedor\" colspan=\"4\">\n" +
+                "        <!--b>Vendedor:</b>  Session::get(\"nombre\") -->\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "    <tr class=\"trInfo\">\n" +
+                "      <td id=\"tdCliente\" colspan=\"4\">\n" +
+                "        <!--b>Cliente:</b>  Session::get(\"nombre\") -->\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "    <tr id=\"trTituloDetalle\">\n" +
+                "      <td>C.</td>\n" +
+                "      <td>Articulo</td>\n" +
+                "      <td>P.U.</td>\n" +
+                "      <td>Importe</td>\n" +
+                "    </tr>\n" +
+                "    <tr id=\"tableListArticulos\">\n" +
+                "      <!--tr class=\"trArticulo\">\n" +
+                "        <td>1</td>\n" +
+                "        <td>*Nombre del articulo</td>\n" +
+                "        <td class=\"importe\">3.00</td>\n" +
+                "        <td class=\"importe\">3.00 A</td>\n" +
+                "      </tr>\n" +
+                "      <tr>\n" +
+                "        <td></td>\n" +
+                "        <td colspan=\"2\">Descripción del articulo</td>\n" +
+                "        <td></td>\n" +
+                "      </tr-->\n" +
+                "    </tr>\n" +
+                "    <tr class=\"trDivider\">\n" +
+                "      <td colspan=\"4\"></td>\n" +
+                "    </tr>\n" +
+                "\n" +
+                "    <tr class=\"trTotales\">\n" +
+                "      <td colspan=\"2\">Subtotal:</td>\n" +
+                "      <td class=\"importe\">$</td>\n" +
+                "      <td id=\"tdSubTotal\" class=\"importe\"></td>\n" +
+                "    </tr>\n" +
+                "    <tr id=\"trImpuestosTotales\" class=\"trTotales\">\n" +
+                "      <!--td colspan=\"2\">Impuesto(9.0%):</td>\n" +
+                "      <td class=\"importe\">$</td>\n" +
+                "      <td class=\"importe\">123</td-->\n" +
+                "    </tr>\n" +
+                "    <tr class=\"trTotal\">\n" +
+                "      <td colspan=\"2\">Total:</td>\n" +
+                "      <td class=\"importe\">$</td>\n" +
+                "      <td id=\"tdTotal\" class=\"importe\"></td>\n" +
+                "    </tr>\n" +
+                "\n" +
+                "    <tr class=\"trInfo\">\n" +
+                "      <td id=\"tdQR\" colspan=\"4\">\n" +
+                "        <!--if(trim(@$aDatos['aSucursal']['con_url_encuesta']) != \"\")\n" +
+                "          <a href=\" trim(@$aDatos['aSucursal']['con_url_encuesta']) \" target=\"_blank\">\n" +
+                "            !! QrCode::size(200)->generate(trim($aDatos['aSucursal']['con_url_encuesta'])); !!\n" +
+                "          </a>\n" +
+                "          <br />\n" +
+                "          <a href=\" trim(@$aDatos['aSucursal']['con_url_encuesta']) \" target=\"_blank\">Nos Interesa su opinión</a>\n" +
+                "        endif-->\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "\n" +
+                "    <tr class=\"trInfo\">\n" +
+                "      <td colspan=\"4\">\n" +
+                "        <!--b>Tarjeta de Credito:</b> 0099-->\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "    <tr class=\"trInfo\">\n" +
+                "      <td colspan=\"4\">\n" +
+                "        <!--b>Folio de facturación:</b><br />0001-001-09-101010-->\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "    <tr class=\"trInfo trDivider\">\n" +
+                "      <td colspan=\"4\">\n" +
+                "        <!--Usted cuenta con 132 puntos del programa de lealtad-->\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "    <!--if (trim($aDatos['aSucursal']['con_texto_politica_devolucion_ticket_digital']) != \"\")\n" +
+                "      <tr class=\"trInfo trDivider\">\n" +
+                "        <td colspan=\"4\">\n" +
+                "          <small><b>*<span id=\"text_con_texto_politica_devolucion_ticket_digital\"> $aDatos['aSucursal']['con_texto_politica_devolucion_ticket_digital'] </span></b></small>\n" +
+                "        </td>\n" +
+                "      </tr>\n" +
+                "    endif-->\n" +
+                "\n" +
+                "    <tr class=\"trInfo\">\n" +
+                "      <td colspan=\"4\">\n" +
+                "        <small><span id=\"text_con_texto_personalidado_ticket_digital\" class=\"h5\"><!-- $aDatos['aSucursal']['con_texto_personalidado_ticket_digital'] --></span></small>\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "\n" +
+                "  </tbody>\n" +
+                "  <tfoot>\n" +
+                "    <tr class=\"trInfo\">\n" +
+                "      <td colspan=\"4\">\n" +
+                "        Este ticket fue creado desde bio-Net Punto de Venta, el mejor sistema para tu negocio, para más información visita <a href=\"bionetpos.com\" target=\"_blank\">bionetpos.com</a>\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tfoot>\n" +
+                "</table>";
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.pop_up_ticket_web);
+        webView = (WebView) dialog.findViewById(R.id.simpleWebView);
+        // displaying text in WebView
+        webView.loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
+        dialog.show();
     }
 
 }

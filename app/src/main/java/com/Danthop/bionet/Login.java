@@ -3,11 +3,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.usb.UsbDevice;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -18,6 +20,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -28,6 +31,8 @@ import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.google.gson.JsonArray;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -47,6 +52,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -77,8 +83,6 @@ public class Login extends Activity {
    // static UsbController  usbCtrl = null;
     static UsbDevice dev = null;
 
-    Dialog reestablecer;
-    Dialog correo_enviado;
 
 
     @Override
@@ -101,8 +105,8 @@ public class Login extends Activity {
 
         VerifyPermisos();
 
-    }
 
+    }
 
 
 
@@ -268,10 +272,10 @@ public class Login extends Activity {
         }
     }
 
-    public void Pdf(View v) {
+    public void Pdf() {
 
-     /*  Document doc = new Document();
-        String outpPath = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ).getPath() +"/pdfsin.pdf";
+       Document doc = new Document();
+        String outpPath = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ).getPath() +"/ticket.pdf";
 
         try {
             PdfWriter.getInstance(doc, new FileOutputStream(outpPath));
@@ -284,20 +288,16 @@ public class Login extends Activity {
         // Open to write
         doc.open();
 
-        doc.setPageSize( PageSize.A4 );
+        doc.setPageSize( PageSize.A4);
         doc.addCreationDate();
-        doc.addAuthor( "Android School" );
-        doc.addCreator( "Pratik Butani" );
 
-       */
-       /*
             // LINE SEPARATOR
             LineSeparator lineSeparator = new LineSeparator();
-            lineSeparator.setLineColor( new BaseColor( 0, 0, 0, 68 ) );
+            lineSeparator.setLineColor( new BaseColor( 6, 0, 0, 68 ) );
 
             // Title Order Details...
 // Adding Title....
-            // Font mOrderDetailsTitleFont = new Font( urName,36.0f, Font.NORMAL, BaseColor.BLACK);
+            // Font mOrderDetailsTitleFont = new Font( "Ticket de venta" ,36.0f, Font.NORMAL, BaseColor.BLACK);
 // Creating Chunk
             Chunk mOrderDetailsTitleChunk = new Chunk( "Order Details" );
 // Creating Paragraph to add...
@@ -330,10 +330,23 @@ public class Login extends Activity {
 
             doc.close();
 
-           */
+
+            Dialog ticket = new Dialog(Login.this);
+            ticket.setContentView(R.layout.pop_up_ticket);
+            ticket.show();
 
 
-      //  usbCtrl.close();
+            PDFView pdfView = ticket.findViewById(R.id.pdfView);
+            File file = new File(outpPath);
+            Uri uri = Uri.fromFile(file);
+            pdfView.fromUri(uri)
+                .defaultPage(1)
+                .enableAnnotationRendering(true)
+                .scrollHandle(new DefaultScrollHandle(this))
+                .spacing(10) // in dp
+                .load();
+
+        //  usbCtrl.close();
       //  int  i = 0;
      //   for( i = 0 ; i < 8 ; i++ ){
      //       dev = usbCtrl.getDev(u_infor[i][0],u_infor[i][1]);
@@ -552,6 +565,7 @@ public class Login extends Activity {
                     REQUEST_CODE);
         }
     }
+
 
 }
 

@@ -111,6 +111,7 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
 
 //--------------------------------------------------------------------------------------------------------------
         Button SolicitudesRecibidas = (Button) v.findViewById(R.id.traslados_recibidos);
+        SolicitudesRecibidas.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
         SolicitudesRecibidas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +121,7 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
         });
 
         Button SolicitudesEnviadas = v.findViewById(R.id.traslados_enviados);
+        SolicitudesEnviadas.setBackgroundResource(R.drawable.pestanas_desplegables);
         SolicitudesEnviadas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
