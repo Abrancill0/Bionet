@@ -356,12 +356,15 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
                                 fecha = elemento.getString("cca_fecha_creo");
                                 hora = elemento.getString("cca_hora_creo");
 
-                             //forma_pago = elemento.getJSONObject("cca_importe_forma_pago");
-                             //cca_importe_forma_pago = forma_pago.getDouble("05");
-                             //String forma_pago_efectivo = forma_pago.getString("05");
-                             //if (forma_pago_efectivo != "nu")
+                                Double importe_total = elemento.getDouble( "cca_importe_total" );
+                                if (importe_total != 0) {
+                                    forma_pago = elemento.getJSONObject( "cca_importe_forma_pago" );
+
+                                    //efectivo01 = forma_pago.getDouble( "01" );
+                                    //monedero05 = forma_pago.getDouble( "05" );
 
 
+                                }
 
 
 
@@ -378,7 +381,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
                                             "",
                                             "",
                                             cca_nombre_usuario,
-                                            cca_importe_total,efectivo01,monedero05,dineroelectronico06,vales08,
+                                            cca_importe_total,cca_importe_forma_pago,monedero05,dineroelectronico06,vales08,
                                             fecha,hora,"",0.0);
                                     ListaCorte.add(corte);
 

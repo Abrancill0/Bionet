@@ -533,11 +533,13 @@ public class Fragment_Ventas extends Fragment {
                         dialog.hide();
                     }
                 });
+
                 clientes = new ArrayList<>();
                 crear_cliente = dialog.findViewById(R.id.btn_crear_cliente);
                 tabla_clientes = dialog.findViewById(R.id.tabla_clientes);
                 tabla_clientes.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
                 Muestra_clientes();
+
                 TableDataClickListener<ClienteModel> tablaListener = new TableDataClickListener<ClienteModel>() {
                     @Override
                     public void onDataClicked(int rowIndex, final ClienteModel clickedData) {
