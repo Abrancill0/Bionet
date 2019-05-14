@@ -6,14 +6,16 @@ public class MovimientoModel {
     String movimiento_suc_numero;
     String movimiento_articulo_ticket;
     String movimiento_monto;
+    String movimiento_tic_id;
 
     public MovimientoModel(String movimiento_fecha, String movimiento_suc_nombre, String movimiento_suc_numero, String movimiento_articulo_ticket,
-                           String movimiento_monto) {
+                           String movimiento_monto,String movimiento_tic_id) {
         this.movimiento_fecha = movimiento_fecha;
         this.movimiento_suc_nombre = movimiento_suc_nombre;
         this.movimiento_suc_numero = movimiento_suc_numero;
         this.movimiento_articulo_ticket = movimiento_articulo_ticket;
         this.movimiento_monto = movimiento_monto;
+        this.movimiento_tic_id = movimiento_tic_id;
     }
 
     public String getMovimiento_fecha() {
@@ -54,5 +56,13 @@ public class MovimientoModel {
 
     public void setMovimiento_monto(String movimiento_monto) {
         this.movimiento_monto = movimiento_monto;
+    }
+
+    public String getMovimiento_tic_id() {
+        return movimiento_tic_id;
+    }
+
+    public void setMovimiento_tic_id(String movimiento_tic_id) {
+        this.movimiento_tic_id = movimiento_tic_id;
     }
 }

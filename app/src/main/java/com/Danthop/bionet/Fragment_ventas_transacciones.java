@@ -118,6 +118,17 @@ public class Fragment_ventas_transacciones extends Fragment {
     private WebView webView;
 
 
+    private String NombreSucursal="";
+    private String NumeroSucursal="";
+    private String Direccion="";
+    private String RazonSocial="";
+    private String RFC="";
+    private String LogoNegocio="";
+    private String FechaCreacion="";
+
+
+
+
     public Fragment_ventas_transacciones() {
         // Required empty public constructor
     }
@@ -177,7 +188,7 @@ public class Fragment_ventas_transacciones extends Fragment {
         TableDataClickListener<MovimientoModel> tablaListener = new TableDataClickListener<MovimientoModel>() {
             @Override
             public void onDataClicked(int rowIndex, final MovimientoModel clickedData) {
-                VerTicketWeb();
+                loadTicket(clickedData);
             }
         };
         TablaMovimientos.addDataClickListener(tablaListener);
@@ -785,10 +796,12 @@ public class Fragment_ventas_transacciones extends Fragment {
                                             String Monto = elemento.getString("tic_importe_total");
 
                                             JSONArray Articulos = elemento.getJSONArray("aArticulos");
+                                            JSONObject Tic_id = elemento.getJSONObject("tic_id");
+                                            String Movimiento_tic_id = Tic_id.getString("uuid");
                                             JSONObject nodo = Articulos.getJSONObject(0);
                                             String Articulo = nodo.getString("tar_nombre_articulo");
 
-                                            MovimientoModel movimiento = new MovimientoModel(fecha, NombreSucursal, NumSucursal, Articulo, Monto);
+                                            MovimientoModel movimiento = new MovimientoModel(fecha, NombreSucursal, NumSucursal, Articulo, Monto,Movimiento_tic_id);
                                             Lista_de_movimientos.add(movimiento);
                                         }
 
@@ -886,12 +899,14 @@ public class Fragment_ventas_transacciones extends Fragment {
                                             String NombreSucursal = elemento.getString("suc_nombre");
                                             String NumSucursal = elemento.getString("suc_numero");
                                             String Monto = elemento.getString("tic_importe_total");
+                                            JSONObject Tic_id = elemento.getJSONObject("tic_id");
+                                            String Movimiento_tic_id = Tic_id.getString("uuid");
 
                                             JSONArray Articulos = elemento.getJSONArray("aArticulos");
                                             JSONObject nodo = Articulos.getJSONObject(0);
                                             String Articulo = nodo.getString("tar_nombre_articulo");
 
-                                            MovimientoModel movimiento = new MovimientoModel(fecha, NombreSucursal, NumSucursal, Articulo, Monto);
+                                            MovimientoModel movimiento = new MovimientoModel(fecha, NombreSucursal, NumSucursal, Articulo, Monto,Movimiento_tic_id);
                                             Lista_de_movimientos.add(movimiento);
                                         }
 
@@ -927,6 +942,8 @@ public class Fragment_ventas_transacciones extends Fragment {
 
 
     }
+
+
 
     private void Fechas()
     {
@@ -1009,9 +1026,69 @@ public class Fragment_ventas_transacciones extends Fragment {
         });
     }
 
-
-    private void VerTicketWeb()
+    private void loadTicket(MovimientoModel movimiento)
     {
+        try {
+
+            String url = getString(R.string.Url);
+
+            String ApiPath;
+
+            ApiPath = url + "/api/ventas/movimientos/obtener_detalle_ticket?" +
+                    "usu_id=" + usu_id +
+                    "&esApp=1" +
+                    "&tic_id="+ movimiento.getMovimiento_tic_id()+
+                    "&suc_id=" + SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+            // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            try {
+
+                                int EstatusApi = Integer.parseInt(response.getString("estatus"));
+
+                                if (EstatusApi == 1) {
+
+                                    JSONObject RespuestaResultado = response.getJSONObject("resultado");
+
+                                    JSONObject NodoASucursal = RespuestaResultado.getJSONObject("aSucursal");
+                                    NombreSucursal = NodoASucursal.getString("suc_nombre");
+                                    NumeroSucursal = NodoASucursal.getString("suc_numero");
+                                    Direccion = NodoASucursal.getString("suc_direccion");
+                                    RazonSocial = NodoASucursal.getString("suc_razon_social");
+                                    RFC = NodoASucursal.getString("suc_rfc");
+                                    LogoNegocio = NodoASucursal.getString("con_logo_negocio");
+
+                                    JSONObject NodoTicket = RespuestaResultado.getJSONObject("aTicket");
+                                    FechaCreacion = RespuestaResultado.getString("tic_fecha_hora_creo");
+
+
+                                }
+                            } catch (JSONException e) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(e), Toast.LENGTH_LONG);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf(error), Toast.LENGTH_LONG);
+                        }
+                    }
+            );
+            getRequest.setShouldCache(false);
+
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+        } catch (Error e) {
+            e.printStackTrace();
+        }
+
         content= "<style type=\"text/css\" media=\"all\">\n" +
                 "#tblTicketTemplate {\n" +
                 "  width: 100%;\n" +
@@ -1077,12 +1154,12 @@ public class Fragment_ventas_transacciones extends Fragment {
                 "  <thead>\n" +
                 "    <tr>\n" +
                 "      <td id=\"tdLogo\" colspan=\"4\">\n" +
-                "        <!--img src=\" asset(Session::get('con_logo_negocio')) \" class=\"img_con_logo_ticket\" width=\"100%\" height=\"75\" /-->\n" +
+                "        <img src="+getString(R.string.Url)+LogoNegocio+" class=\"img_con_logo_ticket\" width=\"100%\" height=\"75\" />\n" +
                 "      </td>\n" +
                 "    </tr>\n" +
                 "    <tr>\n" +
                 "      <td id=\"tdFiscal\" colspan=\"4\">\n" +
-                "        <!--$aDatos['aSucursal']['suc_razon_social'] <br />$aDatos['aSucursal']['suc_rfc'] -->\n" +
+                "        "+RazonSocial+"<br />"+RFC+"\n" +
                 "      </td>\n" +
                 "    </tr>\n" +
                 "    <tr class=\"trDivider\">\n" +
@@ -1107,7 +1184,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                 "        <!--b>Fec./Hr.:</b>  date(\"d/m/Y H:i\")-->\n" +
                 "      </td>\n" +
                 "      <td id=\"tdTicketNum\" colspan=\"2\">\n" +
-                "        <!--b>Ticket:</b> T00001-->\n" +
+                "        <b>Ticket:</b>\n" +
                 "      </td>\n" +
                 "    </tr>\n" +
                 "    <tr class=\"trInfo\">\n" +
@@ -1215,6 +1292,8 @@ public class Fragment_ventas_transacciones extends Fragment {
         // displaying text in WebView
         webView.loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
         dialog.show();
+
     }
+
 
 }
