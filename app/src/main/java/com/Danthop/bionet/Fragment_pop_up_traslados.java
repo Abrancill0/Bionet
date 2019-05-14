@@ -135,7 +135,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
         tableColumnWeightModel.setColumnWeight(0, 1);
         tableColumnWeightModel.setColumnWeight(1, 2);
-        tableColumnWeightModel.setColumnWeight(2, 3);
+        tableColumnWeightModel.setColumnWeight(2, 2);
         tableColumnWeightModel.setColumnWeight(3, 2);
         tableColumnWeightModel.setColumnWeight(4, 2);
         tableColumnWeightModel.setColumnWeight(4, 2);

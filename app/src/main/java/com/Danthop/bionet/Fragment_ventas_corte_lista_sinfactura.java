@@ -13,9 +13,11 @@ import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ListaTicketsAdapter;
@@ -27,7 +29,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,6 +75,13 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
     private DatePickerDialog.OnDateSetListener finDataSetlistener;
     private SortableHistoricoTable tabla_historico;
     private Dialog dialog;
+    private ArrayList<String> SucursalID;
+    private ArrayList<String> ClienteName;
+    private ArrayList<String> CFDI;
+    private Spinner SpinnerNameClientes;
+    private Spinner SpinnerCFDI;
+    private String cli_nombre;
+    private String ucf_id;
 
 
     public Fragment_ventas_corte_lista_sinfactura() {
@@ -90,6 +98,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         Fechafin=(EditText) v.findViewById(R.id.btnfechafin);
         btn_facturar=(Button)v.findViewById(R.id.btn_buscar);
         btn_buscartickets=(Button)v.findViewById( R.id.btn_buscartickets );
+
 
         Button btn_corte = (Button) v.findViewById(R.id.btn_corte);
         btn_corte.setOnClickListener(new View.OnClickListener() {
@@ -132,17 +141,17 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         }
 
         tabla_ListarTickets = (SortableCorteCajaTable) v.findViewById(R.id.tabla_tickets_sin_factura);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Usuario", "Monto Total", "Efectivo", "Monedero electrónico","Dinero electrónico(06)","Vales de despensa(08)","Fecha", "Hora");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "", "Usuario", "Monto Total", "Efectivo", "Monedero electrónico","Dinero electrónico","Vales de despensa","Fecha");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(8);
         tableColumnWeightModel.setColumnWeight(0, 1);
-        tableColumnWeightModel.setColumnWeight(1, 2);
-        tableColumnWeightModel.setColumnWeight(2, 1);
-        tableColumnWeightModel.setColumnWeight(3, 2);
+        tableColumnWeightModel.setColumnWeight(1, 1);
+        tableColumnWeightModel.setColumnWeight(2, 2);
+        tableColumnWeightModel.setColumnWeight(3, 1);
         tableColumnWeightModel.setColumnWeight(4, 2);
         tableColumnWeightModel.setColumnWeight(5, 2);
-        tableColumnWeightModel.setColumnWeight(6, 1);
+        tableColumnWeightModel.setColumnWeight(6, 2);
         tableColumnWeightModel.setColumnWeight(7, 1);
 
         tabla_ListarTickets.setHeaderAdapter(simpleHeader);
@@ -282,8 +291,8 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         btn_facturar.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (ListaTickets.isEmpty()) {
+
                     dialog.setContentView( R.layout.pop_up_cortecaja_finalizar_factura );
                     dialog.show();
 
@@ -305,36 +314,39 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
 
                 } else {
 
-                    /*dialog.setContentView( R.layout.pop_up_aceptar_corte_caja );
+                    dialog.setContentView( R.layout.pop_up_corte_facturar_tickets );
                     dialog.show();
+                    ClienteName = new ArrayList<>();
+                    CFDI = new ArrayList<>();
+                    SpinnerNameClientes = dialog.findViewById(R.id.Combo_clientes);
+                    SpinnerCFDI = dialog.findViewById(R.id.Combo_cfdi);
 
-                    Button aceptarcorte = dialog.findViewById( R.id.aceptarcorte );
-                    aceptarcorte.setOnClickListener( new View.OnClickListener() {
+                    SpinnerClientes();
+                    SpinnerCFDi();
+
+                    Button btnSifacturar = dialog.findViewById( R.id.btnSifacturar );
+                    btnSifacturar.setOnClickListener( new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             dialog.dismiss();
-                           // Facturar_Tickets();
-                            Toast.makeText( getContext(), "Facturacion Exitosa", Toast.LENGTH_LONG ).show();
-                            FragmentTransaction fr = getFragmentManager().beginTransaction();
-                            fr.replace( R.id.fragment_container, new Fragment_ventas_corte_caja_listado() ).commit();
                         }
                     } );
 
-                    Button salircorte = dialog.findViewById( R.id.salircorte );
-                    salircorte.setOnClickListener( new View.OnClickListener() {
+                    Button btnCerrar = dialog.findViewById(R.id.btnCerrar);
+                    btnCerrar.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             dialog.hide();
                         }
-                    } );
+                    });
 
-                    Button cancelar = dialog.findViewById( R.id.cancelar );
-                    cancelar.setOnClickListener( new View.OnClickListener() {
+                    Button btnSalir3 = dialog.findViewById(R.id.btnSalir3);
+                    btnSalir3.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             dialog.hide();
                         }
-                    } );*/
+                    });
 
                 }
             }
@@ -430,7 +442,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
                                             "",
                                             "",
                                             "",efectivo01,monedero05,dineroelectronico06,vales08,
-                                            fecha,hora,"",0.0);
+                                            fecha,"","",0.0);
                                 ListaTickets.add(tickets);
 
                             }
@@ -457,6 +469,131 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
                 }
         );
         VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( posRequest );
+    }
+
+
+    private void SpinnerClientes() {
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String url = getString(R.string.Url);
+        String ApiPath = url + "/api/clientes/index_app";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONObject Respuesta = null;
+                JSONArray aClientes = null;
+
+                try {
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        Respuesta = response.getJSONObject("resultado");
+                        aClientes = Respuesta.getJSONArray("aClientes");
+
+                        for(int x = 0; x < aClientes.length(); x++){
+                            JSONObject elemento = aClientes.getJSONObject(x);
+
+
+                            String cli_numero = elemento.getString( "cli_numero" );
+                            String nombre = elemento.getString("cli_nombre");
+                            cli_nombre = cli_numero + " " + "-" + " " + nombre;
+
+                            ClienteName.add(cli_nombre);
+
+
+                        }
+                        SpinnerNameClientes.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,ClienteName));
+                    }
+                    else {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
+    private void SpinnerCFDi() {
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String url = getString(R.string.Url);
+        String ApiPath = url + "/api/ventas/tickets/select-uso-cdfi";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONArray Respuesta = null;
+
+                try {
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        Respuesta = response.getJSONArray("resultado");
+
+                        for(int x = 0; x < Respuesta.length(); x++){
+                            JSONObject elemento = Respuesta.getJSONObject(x);
+
+                            String descripcion = elemento.getString( "ucf_descripcion" );
+                            String clave = elemento.getString( "ucf_id" );
+                            ucf_id = clave + " " + "-" + " " + descripcion;
+                            CFDI.add(ucf_id);
+
+                        }
+
+                        SpinnerCFDI.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,CFDI));
+                    }
+                    else {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
 }

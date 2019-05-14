@@ -5,11 +5,15 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableCorteCajaTable;
 import com.Danthop.bionet.model.CorteCajaModel;
+import com.Danthop.bionet.model.InventarioModel;
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -29,33 +33,32 @@ public class ListaTicketsAdapter extends LongPressAwareTableDataAdapter<CorteCaj
         View renderedView = null;
 
         switch (columnIndex) {
+
             case 0:
+                renderedView = renderCheck(corte,rowIndex);
+                break;
+
+            case 1:
                 renderedView = rendernumTickets(corte);
                 break;
-            case 1:
+            case 2:
                 renderedView = rendertotal(corte);
                 break;
-            case 2:
+            case 3:
                 renderedView = renderefectivo(corte);
                 break;
-            case 3:
+            case 4:
                  renderedView = rendermonederoelectronico(corte);
                 break;
-            case 4:
+            case 5:
                  renderedView = renderdineroelectronico(corte);
                 break;
-            case 5:
+            case 6:
                  renderedView = rendervalesdespensa(corte);
                 break;
-            case 6:
+            case 7:
                 renderedView = renderfecha(corte);
                 break;
-            case 7:
-                renderedView = renderhora(corte);
-                break;
-
-
-
 
 
         }
@@ -85,6 +88,34 @@ public class ListaTicketsAdapter extends LongPressAwareTableDataAdapter<CorteCaj
         editText.setSingleLine();
         editText.addTextChangedListener(new ListaTicketsAdapter.OrdenNameUpdater(corte));
         return editText;
+    }
+
+    private View renderCheck(final CorteCajaModel corte, final int Indice) {
+
+        final CheckBox check = new CheckBox(getContext());
+
+        check.setPadding(20, 10, 20, 10);
+        check.setBackgroundColor(getResources().getColor( R.color.white));
+        check.setDrawingCacheBackgroundColor(getResources().getColor(R.color.white));
+
+        check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (check.isChecked())
+                {
+
+
+                }
+                else
+                {
+
+                }
+
+            }
+        });
+
+        return check;
     }
 
     private View rendernumTickets(final CorteCajaModel corte) {
@@ -150,7 +181,7 @@ public class ListaTicketsAdapter extends LongPressAwareTableDataAdapter<CorteCaj
 
         final TextView textView = new TextView( getContext() );
         textView.setText( formatter.format( Precio ) );
-        textView.setPadding( 20, 10, 20, 10 );
+        textView.setPadding( 10, 10, 10, 10 );
         textView.setTextSize( TEXT_SIZE );
 
         return textView;
@@ -160,9 +191,6 @@ public class ListaTicketsAdapter extends LongPressAwareTableDataAdapter<CorteCaj
         return renderString(corte.getfecha());
     }
 
-    private View renderhora(final CorteCajaModel corte) {
-        return renderString(corte.gethora());
-    }
 
 
 

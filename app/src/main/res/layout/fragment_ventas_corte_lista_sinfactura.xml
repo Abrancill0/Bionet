@@ -227,7 +227,7 @@
                 android:layout_weight=".7"
                 android:visibility="visible"
                 app:tableView_headerColor="@color/white"
-                table:tableView_columnCount="6">
+                table:tableView_columnCount="8">
             </com.Danthop.bionet.Tables.SortableCorteCajaTable>
         </LinearLayout>
     </LinearLayout>
