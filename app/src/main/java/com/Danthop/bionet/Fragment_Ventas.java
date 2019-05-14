@@ -824,22 +824,14 @@ public class Fragment_Ventas extends Fragment {
 
                                             if (valorTarjetas > 0)
                                             {
-                                                Bundle bundle = new Bundle();
-                                                bundle.putString("nombre", "");
-                                                bundle.putString("descripcion", "");
-                                                bundle.putString("precio", "");
-
-
-                                                // FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                                // FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-                                                // Fragment_selecciona_tipo_publicacion secondFragment = new Fragment_selecciona_tipo_publicacion();
-                                                //  secondFragment.setArguments(bundle);
-
-                                                //  fragmentTransaction.replace(R.id.fragment_container, secondFragment);
-                                                //  fragmentTransaction.commit();
 
                                                 Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
+                                                Bundle mBundle = new Bundle();
+                                                mBundle.putString("Valor", String.valueOf( valorTarjetas ) );
+
+                                                myIntent.putExtras(mBundle);
+
+
                                                 getActivity().startActivity(myIntent);
                                             }
                                             else
@@ -962,20 +954,7 @@ public class Fragment_Ventas extends Fragment {
                                         return;
                                     }
 
-                                    dialog.dismiss();
-                                    dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
-                                    dialog.show();
 
-                                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
-                                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            dialog.hide();
-                                        }
-                                    });
-                                    TextView importe_venta = dialog.findViewById(R.id.importe_venta);
-                                    TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
-                                    TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
 
 
                                     double valorTarjetas = 0;
@@ -984,23 +963,45 @@ public class Fragment_Ventas extends Fragment {
 
                                     if (valorTarjetas > 0)
                                     {
+
                                         Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
+                                        Bundle mBundle = new Bundle();
+                                        mBundle.putString("Valor", String.valueOf( valorTarjetas ) );
+
+                                        myIntent.putExtras(mBundle);
+
+
                                         getActivity().startActivity(myIntent);
                                     }
                                     else
                                     {
+                                        dialog.dismiss();
+                                        dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
+                                        dialog.show();
+
+                                        Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                                        cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialog.hide();
+                                            }
+                                        });
+                                        TextView importe_venta = dialog.findViewById(R.id.importe_venta);
+                                        TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
+                                        TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
+
                                         FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
+
+                                        Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                                        aceptar.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                dialog.dismiss();
+                                            }
+                                        });
                                     }
 
-
-                                    Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
-                                    aceptar.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-
-                                            dialog.dismiss();
-                                        }
-                                    });
                                 }
                             });
 

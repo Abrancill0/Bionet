@@ -2,10 +2,13 @@ package com.Danthop.bionet;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
@@ -25,12 +28,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 
+
 /*  DEPENDENCIAS DE FEENICIA */
 //import com.Danthop.bionet.Android.BTReceiverConnection;
+import com.Danthop.bionet.Adapters.VentaArticuloAdapter;
 import com.Danthop.bionet.BTReceiverConnection;
 import com.Danthop.bionet.SaleConfiguration;
 import com.Danthop.bionet.SaleUtils;
@@ -39,10 +45,21 @@ import com.Danthop.bionet.core.dto.ResponseCode;
 import com.Danthop.bionet.core.dto.SendReceiptResponse;
 
 import com.Danthop.bionet.core.models.FeeniciaCredentials;
+import com.Danthop.bionet.model.PagoModel;
+import com.Danthop.bionet.model.TicketModel;
+import com.Danthop.bionet.model.VolleySingleton;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonObjectRequest;
 import com.imagpay.Settings;
 import com.imagpay.spp.BTReceiver;
 import com.imagpay.spp.SppHandler;
 import com.pnikosis.materialishprogress.ProgressWheel;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -58,12 +75,16 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     private static TextView textViewTransaccion;
     static double monto = 0, tip = 0;
     static Integer msi = 0;
+    private static Dialog dialog;
 
     //VARIABLE EVM
     private SppHandler handlerEVM;
     private BTReceiver _receiver;
     private Settings settings;
     private Handler ui;
+    private String usu_id;
+    private List<PagoModel> ListaDePagos_a_utilizar;
+    private TicketModel ticket_de_venta;
 
     private SaleUtils utils;
 
@@ -112,8 +133,16 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
 
         askForContactPermission();
 
+        Bundle bundle = getIntent().getExtras();
+        String precio = bundle.getString( "Valor");
+
+        SharedPreferences sharedPref = this.getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+        usu_id = sharedPref.getString("usu_id", "");
+
+        dialog = new Dialog(this);
+
         utils = new SaleUtils();
-        monto = 300.00;
+        monto = Double.parseDouble( precio );
         monto = utils.roundTwoDecimals(monto);
 
         tip = 1.00;
@@ -396,6 +425,35 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                         if (!response.getResponseCode().equals("00")) {
                             textView_resultTx.setVisibility(View.VISIBLE);
                             setTextTx(setValue);
+
+
+                         //   dialog.dismiss();
+                         //   dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
+                         //   dialog.show();
+
+                         //   Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                         //   cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                         //       @Override
+                         //       public void onClick(View v) {
+                         //           dialog.hide();
+                          //      }
+                          //  });
+                          //  TextView importe_venta = dialog.findViewById(R.id.importe_venta);
+                          //  TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
+                          //  TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
+
+                          //  FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
+
+                         //   Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                         //   aceptar.setOnClickListener(new View.OnClickListener() {
+                         //       @Override
+                          //      public void onClick(View v) {
+
+                          //          dialog.dismiss();
+                          //      }
+                         //   });
+
+
                         }
                     }
 
@@ -432,7 +490,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     }
 
     /* METODO EL CUAL REGRESA EL RESULTADO DE LA TX*/
-    public static void resultOfTransaction(final ResponseCode response){
+    public void resultOfTransaction(final ResponseCode response){
 
         try {
             Log.i("RESULT_TX: ", response.toString());
@@ -453,6 +511,8 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                         }
 
                         if (response.getResponseCode().equals("00")) {
+
+                            finish();
                             /*** OPCIONAL ***/
                             /// ENVIAMOS EL RECIBO DE COMPRA /////
 
@@ -614,6 +674,113 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+
+    private void FinalizarTicket(final TextView importeCambio, final TextView importeRecibido, final TextView importeVenta) {
+
+        JSONArray arreglo = new JSONArray();
+        try {
+            for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
+                JSONObject list1 = new JSONObject();
+                list1.put("fpa_id", ListaDePagos_a_utilizar.get(i).getId());
+                list1.put("valor", ListaDePagos_a_utilizar.get(i).getCantidad());
+                arreglo.put(list1);
+            }
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+
+
+        JSONObject request = new JSONObject();
+
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("tic_id", ticket_de_venta.getTic_id());
+            request.put("tic_importe_metodo_pago", arreglo);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/tickets/pagar-ticket";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+
+                        JSONObject Respuesta = response.getJSONObject("resultado");
+                        JSONObject RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
+                        String tic_importe_total = RespuestaNodoTicket.getString("tic_importe_total");
+                        String tic_importe_recibido = RespuestaNodoTicket.getString("tic_importe_recibido");
+                        String tic_importe_cambio = RespuestaNodoTicket.getString("tic_importe_cambio");
+                        ticket_de_venta.setTic_importe_total(tic_importe_total);
+                        ticket_de_venta.setTic_importe_recibido(tic_importe_recibido);
+                        ticket_de_venta.setTic_importe_cambio(tic_importe_cambio);
+
+                        double CambioConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_cambio());
+                        double RecibidoConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_recibido());
+                        double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
+                        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+                        importeCambio.setText(formatter.format(CambioConDecimal));
+                        importeRecibido.setText(formatter.format(RecibidoConDecimal));
+                        importeVenta.setText(formatter.format(ImporteTotalConDecimal));
+
+                       // ArticulosVenta.clear();
+                     //   Imagenes.clear();
+                     //   final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
+                     //           total, descuento, impuesto, subtotal,
+                     //           carouselView, Imagenes,ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados);
+                     //   articuloAdapter.notifyDataSetChanged();
+                     //   tabla_venta_articulos.setDataAdapter(articuloAdapter);
+                     //   LoadImages();
+
+
+                     //   InstanciarModeloTicket();
+                     //   ListaDePagos_a_utilizar.clear();
+
+                     //   descuento.setText("$0.00");
+                     //   total.setText("$0.00");
+                     //   subtotal.setText("$0.00");
+                     //   impuesto.setText("$0.00");
+
+                    } else {
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
     }
 
 
