@@ -70,7 +70,7 @@ import org.json.JSONObject;
 public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
 {
     private Toolbar toolbar;
-    private TextView tvMontoMostrar;
+    private static TextView tvMontoMostrar;
     private static AppCompatActivity FEENICIA_TRANSACCION;
     private static TextView textViewTransaccion;
     static double monto = 0, tip = 0;
@@ -86,12 +86,12 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     private List<PagoModel> ListaDePagos_a_utilizar;
     private TicketModel ticket_de_venta;
 
-    private SaleUtils utils;
+    private static SaleUtils utils;
 
     Intent intent;
 
     //// JAR ////
-    Button btn_connect, btn_desconectar;  /// CONECTAR
+    Button btn_connect, btn_desconectar,btn_cerrar;  /// CONECTAR
     Button btn_search_devices; /// BUSCAR DISPOSITIVOS
     TextView textView_Devices;  // DISPOSITIVOS ENCONTRADOS
     static TextView textView_resultTx; // RESULTADO DE LA TRANSACCION
@@ -109,6 +109,10 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     public static String user;  // USER LOGIN
     public static String pwd;   // PASSWORD LOGIN
 
+    public static Double TarjetaCredito;
+    public static Double TarjetaDebio;
+    public static int Contador;
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -125,6 +129,8 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         /// Jar ////
         btn_search_devices = (Button) findViewById(R.id.btn_search_devices);
         btn_connect = (Button) findViewById(R.id.btn_conectar);
+
+        btn_cerrar = (Button) findViewById(R.id.btnCierraFeenicia);
         btn_desconectar = (Button) findViewById(R.id.btn_desconectar);
         textView_Devices = (TextView)findViewById(R.id.textView_Devices);
         textView_Devices.setText("");
@@ -134,7 +140,20 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         askForContactPermission();
 
         Bundle bundle = getIntent().getExtras();
-        String precio = bundle.getString( "Valor");
+        TarjetaCredito = bundle.getDouble( "TC");
+        TarjetaDebio = bundle.getDouble( "TD");
+        double precio = 0;
+
+        if (TarjetaCredito > 0 )
+        {
+            precio = TarjetaCredito;
+            Contador = 1;
+        }
+        else
+        {
+            precio = TarjetaDebio;
+            Contador = 0;
+        }
 
         SharedPreferences sharedPref = this.getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
@@ -142,14 +161,13 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         dialog = new Dialog(this);
 
         utils = new SaleUtils();
-        monto = Double.parseDouble( precio );
+        monto = precio;
         monto = utils.roundTwoDecimals(monto);
 
         tip = 1.00;
         tip = utils.roundTwoDecimals(tip);
 
         msi = 3;
-
 
         //DIBUJAMOS EL MONTO
         tvMontoMostrar.setText( "$ " + monto + " MN");
@@ -169,7 +187,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         }
 
         ///// LIBRERIA FEENICIA_BT //////////
-
         user = "Black_Orange";
         pwd = "Black*2019";
 
@@ -216,7 +233,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                 Log.i("SppHandlerConnection", "TIP: " + String.valueOf(sppHandlerConnection.getTip()));
                 Log.i("SppHandlerConnection", "MSI: " + String.valueOf(sppHandlerConnection.getMsi()));
 
-
             }
 
             @Override
@@ -225,6 +241,25 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
             }
 
         });
+
+
+        btn_cerrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+               // dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
+               // dialog.show();
+
+                finish();
+                // FinalizarTicket(null, null, null);
+
+
+
+            }
+        });
+
 
 
         /// BTN CONECTAR CON DISPOSITIVO BT FEENICIA ///
@@ -426,35 +461,10 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                             textView_resultTx.setVisibility(View.VISIBLE);
                             setTextTx(setValue);
 
-
-                         //   dialog.dismiss();
-                         //   dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
-                         //   dialog.show();
-
-                         //   Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
-                         //   cerrarPopUp.setOnClickListener(new View.OnClickListener() {
-                         //       @Override
-                         //       public void onClick(View v) {
-                         //           dialog.hide();
-                          //      }
-                          //  });
-                          //  TextView importe_venta = dialog.findViewById(R.id.importe_venta);
-                          //  TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
-                          //  TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
-
-                          //  FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
-
-                         //   Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
-                         //   aceptar.setOnClickListener(new View.OnClickListener() {
-                         //       @Override
-                          //      public void onClick(View v) {
-
-                          //          dialog.dismiss();
-                          //      }
-                         //   });
-
-
                         }
+
+
+
                     }
 
 
@@ -490,7 +500,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     }
 
     /* METODO EL CUAL REGRESA EL RESULTADO DE LA TX*/
-    public void resultOfTransaction(final ResponseCode response){
+    public static void resultOfTransaction(final ResponseCode response){
 
         try {
             Log.i("RESULT_TX: ", response.toString());
@@ -512,7 +522,29 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
 
                         if (response.getResponseCode().equals("00")) {
 
-                            finish();
+
+                            if (Contador ==1)
+                            {
+                                monto = TarjetaDebio;
+                                monto = utils.roundTwoDecimals(monto);
+
+                                tvMontoMostrar.setText( "$ " + monto + " MN");
+
+                                // Toast toast1 = Toast.makeText(context, "El siguiente pago es con tarjeta de debito.", Toast.LENGTH_SHORT);
+
+                                //  toast1.show();
+                            }
+                            else
+                            {
+
+
+                                //  Toast toast1 = Toast.makeText(context, "Por favor cierre esta ventana para continuar", Toast.LENGTH_SHORT);
+
+                                //  toast1.show();
+
+                                //finish();
+                            }
+
                             /*** OPCIONAL ***/
                             /// ENVIAMOS EL RECIBO DE COMPRA /////
 

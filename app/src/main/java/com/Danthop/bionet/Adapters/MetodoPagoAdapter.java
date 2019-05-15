@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -102,7 +103,8 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
 
     private View renderImporte(int Indice) {
         final EditText MontoAApartar = new EditText(getContext());
-        MontoAApartar.setInputType(TYPE_NUMBER_FLAG_DECIMAL);
+        //MontoAApartar.setInputType(TYPE_NUMBER_FLAG_DECIMAL);
+        MontoAApartar.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         MontoAApartar.setGravity(View.TEXT_ALIGNMENT_CENTER);
         ListaDeCantidades.add(MontoAApartar);
 

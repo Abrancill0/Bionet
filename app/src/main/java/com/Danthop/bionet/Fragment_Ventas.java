@@ -185,7 +185,6 @@ public class Fragment_Ventas extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ventas, container, false);
 
-
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
         fr = getFragmentManager().beginTransaction();
@@ -236,7 +235,6 @@ public class Fragment_Ventas extends Fragment {
         LoadSucursales();
         LoadAutocomplete();
         LoadButtons();
-
 
         return v;
     }
@@ -829,7 +827,8 @@ public class Fragment_Ventas extends Fragment {
 
                                                 Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
                                                 Bundle mBundle = new Bundle();
-                                                mBundle.putString("Valor", String.valueOf( valorTarjetas ) );
+                                                mBundle.putDouble("TC",TarjetaCredito);
+                                                mBundle.putDouble("TD",TarjetaDebito);
 
                                                 myIntent.putExtras(mBundle);
 
@@ -957,7 +956,20 @@ public class Fragment_Ventas extends Fragment {
                                     }
 
 
+                                    dialog.dismiss();
+                                    dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
+                                    dialog.show();
 
+                                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.hide();
+                                        }
+                                    });
+                                    TextView importe_venta = dialog.findViewById(R.id.importe_venta);
+                                    TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
+                                    TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
 
                                     double valorTarjetas = 0;
 
@@ -968,7 +980,8 @@ public class Fragment_Ventas extends Fragment {
 
                                         Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
                                         Bundle mBundle = new Bundle();
-                                        mBundle.putString("Valor", String.valueOf( valorTarjetas ) );
+                                        mBundle.putDouble("TC",TarjetaCredito);
+                                        mBundle.putDouble("TD",TarjetaDebito);
 
                                         myIntent.putExtras(mBundle);
 
@@ -977,32 +990,21 @@ public class Fragment_Ventas extends Fragment {
                                     }
                                     else
                                     {
-                                        dialog.dismiss();
-                                        dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
-                                        dialog.show();
 
-                                        Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
-                                        cerrarPopUp.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                dialog.hide();
-                                            }
-                                        });
-                                        TextView importe_venta = dialog.findViewById(R.id.importe_venta);
-                                        TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
-                                        TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
 
                                         FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
 
-                                        Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
-                                        aceptar.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
 
-                                                dialog.dismiss();
-                                            }
-                                        });
                                     }
+
+                                    Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                                    aceptar.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            dialog.dismiss();
+                                        }
+                                    });
 
                                 }
                             });
