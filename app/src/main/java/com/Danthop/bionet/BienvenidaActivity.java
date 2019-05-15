@@ -37,7 +37,6 @@ public class BienvenidaActivity extends Activity {
         Intent intent = new Intent(BienvenidaActivity.this, RegistroDatosActivity.class);
         intent.putExtra("IDUsuario", IDUsuario);
         startActivity(intent);
-
     }
 
     public void onBackPressed(){

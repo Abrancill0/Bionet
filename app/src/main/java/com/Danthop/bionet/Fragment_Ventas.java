@@ -805,7 +805,11 @@ public class Fragment_Ventas extends Fragment {
 
                                             dialog.dismiss();
                                             dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
-                                            dialog.show();
+                                            //dialog.show();
+                                            Intent intent = new Intent(getContext(), Confirmacion_venta.class);
+                                            intent.putExtra("TarjetaCredito", TarjetaCredito);
+                                            intent.putExtra("TarjetaDebito", TarjetaDebito);
+                                            startActivity(intent);
 
                                             Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
                                             cerrarPopUp.setOnClickListener(new View.OnClickListener() {
@@ -990,10 +994,15 @@ public class Fragment_Ventas extends Fragment {
                                     }
                                     else
                                     {
-
+                                        dialog.dismiss();
+                                        dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
+                                        //dialog.show();
+                                        Intent intent = new Intent(getContext(), Confirmacion_venta.class);
+                                        intent.putExtra("TarjetaCredito", TarjetaCredito);
+                                        intent.putExtra("TarjetaDebito", TarjetaDebito);
+                                        startActivity(intent);
 
                                         FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
-
 
                                     }
 
