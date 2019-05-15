@@ -24,6 +24,7 @@ import com.Danthop.bionet.Adapters.ListaTicketsAdapter;
 import com.Danthop.bionet.Tables.SortableCorteCajaTable;
 import com.Danthop.bionet.Tables.SortableHistoricoTable;
 import com.Danthop.bionet.model.CorteCajaModel;
+import com.Danthop.bionet.model.FormaspagoModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -69,7 +70,9 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
     private Double monedero05 = 0.0;
     private Double dineroelectronico06 = 0.0;
     private Double vales08 = 0.0;
+    private List<FormaspagoModel>FormasPago;
     private List<CorteCajaModel> ListaTickets;
+    private List<CorteCajaModel> TicketsFactura;
     private SortableCorteCajaTable tabla_ListarTickets;
     private DatePickerDialog.OnDateSetListener inicioDataSetlistener;
     private DatePickerDialog.OnDateSetListener finDataSetlistener;
@@ -118,10 +121,21 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             }
         });
 
+        Button Comisiones = v.findViewById( R.id.Comisiones);
+        Comisiones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_pestania_comison()).commit();
+            }
+        });
+
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
         cca_id_sucursal = sharedPref.getString("cca_id_sucursal", "");
         ListaTickets = new ArrayList<>();
+        TicketsFactura =new ArrayList<>();
+        FormasPago = new ArrayList<>();
         dialog = new Dialog(getContext());
 
         try {
@@ -141,7 +155,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         }
 
         tabla_ListarTickets = (SortableCorteCajaTable) v.findViewById(R.id.tabla_tickets_sin_factura);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "", "Usuario", "Monto Total", "Efectivo", "Monedero electrónico","Dinero electrónico","Vales de despensa","Fecha");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "", "Id Venta", "Monto Total", "Efectivo", "Monedero electrónico","Dinero electrónico","Vales de despensa","Fecha");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(8);
@@ -291,28 +305,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         btn_facturar.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ListaTickets.isEmpty()) {
-
-                    dialog.setContentView( R.layout.pop_up_cortecaja_finalizar_factura );
-                    dialog.show();
-
-                    Button aceptar = dialog.findViewById( R.id.Aceptar );
-                    aceptar.setOnClickListener( new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    } );
-
-                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
-                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.hide();
-                        }
-                    });
-
-                } else {
+                if (TicketsFactura.size() > 0) {
 
                     dialog.setContentView( R.layout.pop_up_corte_facturar_tickets );
                     dialog.show();
@@ -329,6 +322,10 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
                         @Override
                         public void onClick(View v) {
                             dialog.dismiss();
+                            //Generar_Facturacion();
+                            Toast.makeText( getContext(), "Facturación Generada Exitosamente", Toast.LENGTH_LONG ).show();
+                            FragmentTransaction fr = getFragmentManager().beginTransaction();
+                            fr.replace( R.id.fragment_container, new Fragment_ventas_corte_lista_sinfactura() ).commit();
                         }
                     } );
 
@@ -347,6 +344,28 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
                             dialog.hide();
                         }
                     });
+
+
+                } else {
+                   dialog.setContentView( R.layout.pop_up_cortecaja_finalizar_factura );
+                    dialog.show();
+
+                    Button aceptar = dialog.findViewById( R.id.Aceptar );
+                    aceptar.setOnClickListener( new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    } );
+
+                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.hide();
+                        }
+                    });
+
 
                 }
             }
@@ -423,31 +442,71 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
                                 if (tic_importe_total != 0){
                                     tic_importe_forma_pago = elemento.getJSONObject( "tic_importe_forma_pago" );
 
-                                    //efectivo01 = tic_importe_forma_pago.getDouble( "01" );
-                                    //monedero05 = tic_importe_forma_pago.getDouble( "05" );
-                                    //dineroelectronico06 = tic_importe_forma_pago.getDouble( "06" );
-                                    //vales08 = tic_importe_forma_pago.getDouble( "08" );
+                                    JSONObject songs= elemento.getJSONObject("tic_importe_forma_pago");
+                                    Iterator x = songs.keys();
+
+                                    efectivo01=0.0;
+                                    monedero05=0.0;
+                                    dineroelectronico06=0.0;
+                                    vales08=0.0;
+
+                                    while (x.hasNext()) {
+                                        String key = (String) x.next();
 
 
+                                            int Resultado01 = key.compareTo( "01" );
+
+                                            if (Resultado01 == 0) {
+                                                efectivo01 = tic_importe_forma_pago.getDouble( "01" );
+                                            }
+
+                                            int Resultado05 = key.compareTo( "05" );
+
+                                            if (Resultado05 == 0) {
+                                                monedero05 = tic_importe_forma_pago.getDouble( "05" );
+                                            }
+
+
+                                            int Resultado06 = key.compareTo( "06" );
+
+                                            if (Resultado06 == 0) {
+                                                dineroelectronico06 = tic_importe_forma_pago.getDouble( "06" );
+                                            }
+
+
+                                            int Resultado08 = key.compareTo( "08" );
+
+                                            if (Resultado08 == 0) {
+                                                vales08 = tic_importe_forma_pago.getDouble( "08" );
+                                            }
+
+
+
+                                        }
+                                    //Model
+
+                                }else {
+                                    efectivo01=0.0;
+                                    monedero05=0.0;
+                                    dineroelectronico06=0.0;
+                                    vales08=0.0;
                                 }
 
-
-
-
-
                                 final CorteCajaModel tickets = new CorteCajaModel(
-                                            tic_numero,
-                                            total,
-                                            "",
-                                            "",
-                                            "",
-                                            "",efectivo01,monedero05,dineroelectronico06,vales08,
-                                            fecha,"","",0.0);
+                                        tic_numero,
+                                        total,
+                                        "",
+                                        "",
+                                        "",
+                                        "",0.0,0.0,0.0,0.0,
+                                        fecha,"","",0.0,efectivo01,monedero05,dineroelectronico06,vales08);
                                 ListaTickets.add(tickets);
 
                             }
 
-                        final ListaTicketsAdapter ListaticketsAdapter = new ListaTicketsAdapter(getContext(), ListaTickets, tabla_ListarTickets);
+
+
+                        final ListaTicketsAdapter ListaticketsAdapter = new ListaTicketsAdapter(getContext(), ListaTickets, tabla_ListarTickets,TicketsFactura);
                         tabla_ListarTickets.setDataAdapter(ListaticketsAdapter);
 
                     }else {

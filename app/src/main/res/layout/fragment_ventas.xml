@@ -19,9 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".3"
-            android:orientation="vertical"
-
-            >
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/button2"
@@ -65,6 +63,23 @@
                 android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
                 android:text="Corte Caja"
+                android:textAllCaps="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/Comisiones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:background="@drawable/pestanas_desplegables"
+                android:fontFamily="@font/muli"
+                android:text="Comisiones"
                 android:textAllCaps="false" />
         </LinearLayout>
     </LinearLayout>

@@ -81,6 +81,7 @@ public class Fragment_Ventas extends Fragment {
     private Button btn_apartar;
     private Button btn_ordenar;
     private Button Corte_Caja;
+    private Button Comisiones;
     private Dialog dialog;
     private TextView descuento;
     private TextView total;
@@ -201,6 +202,7 @@ public class Fragment_Ventas extends Fragment {
         btn_finalizar = v.findViewById(R.id.btn_finalizar);
         btn_reporte = v.findViewById(R.id.btn_reporte);
         Corte_Caja = v.findViewById(R.id.CorteCaja);
+        Comisiones= v.findViewById(R.id.Comisiones);
         Buscar = v.findViewById(R.id.buscarXSKU);
         descuento = v.findViewById(R.id.descuento_text);
         total = v.findViewById(R.id.total_text);
@@ -601,6 +603,13 @@ public class Fragment_Ventas extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container, new Fragment_ventas_corte_caja_listado()).commit();
+            }
+        });
+
+        Comisiones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fr.replace(R.id.fragment_container, new Fragment_pestania_comison()).commit();
             }
         });
 

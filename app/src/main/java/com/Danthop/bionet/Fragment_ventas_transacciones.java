@@ -76,6 +76,7 @@ public class Fragment_ventas_transacciones extends Fragment {
     private View btn_ordenes_especiales;
 
     private Button btn_corte_caja;
+    private Button Comisiones;
     private Button btn_ventas;
 
     private Spinner SpinnerSucursal;
@@ -165,6 +166,7 @@ public class Fragment_ventas_transacciones extends Fragment {
         transacciones = v.findViewById(R.id.transacciones);
         total_ventas = v.findViewById(R.id.totalVentas);
         best_seller = v.findViewById(R.id.masVendido);
+        Comisiones = v.findViewById( R.id.Comisiones);
 
         Abrir_calendarioInicial = v.findViewById(R.id.abrir_calendarioInicial);
         Abrir_calendarioFinal = v.findViewById(R.id.abrir_calendarioFinal);
@@ -275,6 +277,12 @@ public class Fragment_ventas_transacciones extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();
+            }
+        });
+        Comisiones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fr.replace(R.id.fragment_container, new Fragment_pestania_comison()).commit();
             }
         });
 

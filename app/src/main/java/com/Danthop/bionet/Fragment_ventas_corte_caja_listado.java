@@ -64,10 +64,10 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
     private String valueIdSuc;
     private String cca_nombre_usuario;
     private String cca_importe_total;
-    private Double efectivo01 = 0.0;
-    private Double monedero05 = 0.0;
+    private Double efectivo01 = 0.0 ;
+    private Double monedero05 = 0.0 ;
     private Double dineroelectronico06 = 0.0;
-    private Double vales08 = 0.0;
+    private Double vales08 = 0.0 ;
     private String fecha;
     private String hora;
     private Double cca_importe_forma_pago;
@@ -103,6 +103,14 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
         cca_id_sucursal = sharedPref.getString("cca_id_sucursal", "");
         ListaCorte = new ArrayList<>();
 
+        Button Comisiones = v.findViewById( R.id.Comisiones);
+        Comisiones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_pestania_comison()).commit();
+            }
+        });
 
         Button btn_factura_ventas = (Button) v.findViewById(R.id.btn_factura_ventas);
         btn_factura_ventas.setOnClickListener(new View.OnClickListener() {
@@ -315,6 +323,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
                 }
             }
         });
+
     }
 
     public void Enlistar_corte(){
@@ -358,34 +367,72 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
 
                                 Double importe_total = elemento.getDouble( "cca_importe_total" );
                                 if (importe_total != 0) {
-                                    forma_pago = elemento.getJSONObject( "cca_importe_forma_pago" );
 
-                                    //efectivo01 = forma_pago.getDouble( "01" );
-                                    //monedero05 = forma_pago.getDouble( "05" );
+                                    //forma_pago = elemento.getJSONObject( "cca_importe_forma_pago" );
+                                    JSONObject songs= elemento.getJSONObject("cca_importe_forma_pago");
+                                    Iterator x = songs.keys();
+
+                                    efectivo01=0.0;
+                                    monedero05=0.0;
+                                    dineroelectronico06=0.0;
+                                    vales08=0.0;
+
+                                    while (x.hasNext() ){
+
+                                            String key = (String) x.next();
+
+                                            int Resultado01 = key.compareTo("01");
+
+                                            if (Resultado01 == 0 ){
+                                                efectivo01 = songs.getDouble( "01" );
+                                            }
+
+                                            int Resultado05 = key.compareTo("05");
+
+                                            if (Resultado05 == 0 ){
+                                                monedero05 = songs.getDouble( "05" );
+                                            }
 
 
+                                            int Resultado06 = key.compareTo("06");
+
+                                            if (Resultado06 == 0 ){
+                                                dineroelectronico06 = songs.getDouble( "06" );
+                                            }
+
+
+                                            int Resultado08 = key.compareTo("08");
+
+                                            if (Resultado08 == 0 ){
+                                                vales08 = songs.getDouble( "08" );
+                                            }
+
+
+                                        }
+
+
+
+                                }else {
+                                    efectivo01=0.0;
+                                    monedero05=0.0;
+                                    dineroelectronico06=0.0;
+                                    vales08=0.0;
                                 }
 
 
-
-                               /* aFormasPago = Resultado.getJSONArray("aFormasPago");
-                                for (int z = 0; z < aFormasPago.length(); z++) {
-                                    JSONObject elemento2 = aFormasPago.getJSONObject(z);
-                                }*/
-
-
-
-                                    final CorteCajaModel corte = new CorteCajaModel(
-                                            "",
-                                            "",
-                                            "",
-                                            "",
-                                            cca_nombre_usuario,
-                                            cca_importe_total,cca_importe_forma_pago,monedero05,dineroelectronico06,vales08,
-                                            fecha,hora,"",0.0);
-                                    ListaCorte.add(corte);
+                                final CorteCajaModel corte = new CorteCajaModel(
+                                        "",
+                                        "",
+                                        "",
+                                        "",
+                                        cca_nombre_usuario,
+                                        cca_importe_total,efectivo01,monedero05,dineroelectronico06,vales08,
+                                        fecha,hora,"",0.0,0.0,0.0,0.0,0.0);
+                                ListaCorte.add(corte);
 
                             }
+
+
 
                         final ListaCajaAdapter ListacorteAdapter = new ListaCajaAdapter(getContext(), ListaCorte, tabla_Listarcorte);
                         tabla_Listarcorte.setDataAdapter(ListacorteAdapter);
