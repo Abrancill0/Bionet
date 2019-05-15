@@ -32,6 +32,7 @@ import com.Danthop.bionet.Tables.SortableOrdenEspecialDetalleTable;
 import com.Danthop.bionet.Tables.SortableOrdenEspecialTable;
 import com.Danthop.bionet.model.ApartadoModel;
 import com.Danthop.bionet.model.ArticuloApartadoModel;
+import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.Impuestos;
 import com.Danthop.bionet.model.MovimientoModel;
 import com.Danthop.bionet.model.OrdenEspecialArticuloModel;
@@ -49,6 +50,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -125,6 +127,15 @@ public class Fragment_ventas_transacciones extends Fragment {
     private String RFC="";
     private String LogoNegocio="";
     private String FechaCreacion="";
+    private String NombreVendedor="";
+    private String NombreCliente="";
+    private String NumeroTicket="";
+    private String Subtotal = "";
+    private String Total = "";
+    private String ImpuestosTicket="";
+    private int ImpuestosTotal=0;
+
+    private List<ArticuloModel> ListaArticulosTicket = new ArrayList<>();
 
 
 
@@ -1062,7 +1073,55 @@ public class Fragment_ventas_transacciones extends Fragment {
                                     LogoNegocio = NodoASucursal.getString("con_logo_negocio");
 
                                     JSONObject NodoTicket = RespuestaResultado.getJSONObject("aTicket");
-                                    FechaCreacion = RespuestaResultado.getString("tic_fecha_hora_creo");
+                                    FechaCreacion = NodoTicket.getString("tic_fecha_hora_creo");
+                                    NombreVendedor = NodoTicket.getString("tic_nombre_vendedor");
+                                    NombreCliente = NodoTicket.getString("tic_nombre_cliente");
+                                    Subtotal = NodoTicket.getString("tic_importe_subtotal");
+                                    Total = NodoTicket.getString("tic_importe_total");
+                                    JSONArray ArregloArticulos = NodoTicket.getJSONArray("aArticulos");
+                                    JSONArray NodoImpuestos = RespuestaResultado.getJSONArray("aTicketImpuestos");
+
+                                    ImpuestosTotal=0;
+                                    for(int i=0;i<NodoImpuestos.length();i++)
+                                    {
+                                        JSONObject elemento = NodoImpuestos.getJSONObject(i);
+                                        ImpuestosTotal= Integer.parseInt(ImpuestosTotal+elemento.getString("importe_impuesto"));
+                                    }
+
+                                    for(int i=0;i<ArregloArticulos.length();i++)
+                                    {
+                                        JSONObject elemento = ArregloArticulos.getJSONObject(i);
+                                        String Cantidad = elemento.getString("tar_cantidad");
+                                        String Nombre = elemento.getString("tar_nombre_articulo");
+                                        String Precio = elemento.getString("tar_precio_articulo");
+                                        String Importe = elemento.getString("tar_importe_total");
+
+                                        ArticuloModel articulo =
+                                                new ArticuloModel("",
+                                                        Nombre,
+                                                        "",
+                                                        Precio,
+                                                        "",
+                                                        "",
+                                                        "",
+                                                        "",
+                                                        Cantidad,
+                                                        "",
+                                                        "",
+                                                        "",
+                                                        Importe,
+                                                        "",
+                                                        "",
+                                                        "");
+
+                                        ListaArticulosTicket.add(articulo);
+                                    }
+
+
+
+                                    JSONObject NodoCuentasBioNet = RespuestaResultado.getJSONObject("aCuentasBioNet");
+                                    NumeroTicket = NodoCuentasBioNet.getString("cbn_numero_ticket");
+
 
 
                                 }
@@ -1089,67 +1148,91 @@ public class Fragment_ventas_transacciones extends Fragment {
             e.printStackTrace();
         }
 
-        content= "<style type=\"text/css\" media=\"all\">\n" +
-                "#tblTicketTemplate {\n" +
-                "  width: 100%;\n" +
-                "  font-size: 10px;\n" +
-                "  font-family: \"Courier New\";\n" +
-                "  text-transform: uppercase;\n" +
-                "  line-height: 1.3;\n" +
-                "  border: solid 1px #D4DADF;\n" +
-                "}\n" +
-                "#tblTicketTemplate thead tr td {\n" +
-                "  padding-left: 10%;\n" +
-                "  padding-right: 10%;\n" +
-                "}\n" +
-                "#tblTicketTemplate #tdLogo {\n" +
-                "  text-align: center;\n" +
-                "  vertical-align: middle;\n" +
-                "}\n" +
-                "#tblTicketTemplate #tdFiscal{\n" +
-                "  text-align: center;\n" +
-                "  vertical-align: middle;\n" +
-                "  font-weight: bold;\n" +
-                "}\n" +
-                "#tblTicketTemplate .trDivider{\n" +
-                "  border-bottom: dashed 1px black;\n" +
-                "}\n" +
-                "#tblTicketTemplate .trDivider td {\n" +
-                "  padding-bottom: 3px;\n" +
-                "}\n" +
-                "#tblTicketTemplate .trDivider + tr td {\n" +
-                "  padding-top: 3px;\n" +
-                "}\n" +
-                "#tblTicketTemplate tbody .trInfo{\n" +
-                "  font-size: 10px;\n" +
-                "  vertical-align: top;\n" +
-                "}\n" +
-                "#tblTicketTemplate tbody .trInfo td a{\n" +
-                "  text-align: center;\n" +
-                "}\n" +
-                "#tblTicketTemplate tbody #trTituloDetalle{\n" +
-                "  font-weight: bold;\n" +
-                "  text-align: center;\n" +
-                "  border-top: dashed 1px black;\n" +
-                "  border-bottom: dashed 1px black;\n" +
-                "}\n" +
-                "#tblTicketTemplate tbody .trArticulo{\n" +
-                "  font-size: 10px;\n" +
-                "}\n" +
-                "#tblTicketTemplate .importe{\n" +
-                "  text-align: right;\n" +
-                "}\n" +
-                "#tblTicketTemplate tbody .trArticulo + tr td{\n" +
-                "  font-size: 9px;\n" +
-                "}\n" +
-                "#tblTicketTemplate tbody .trTotal{\n" +
-                "  font-size: 14px;\n" +
-                "  font-weight: bold;\n" +
-                "}\n" +
-                "#tblTicketTemplate tfoot{\n" +
-                "  text-align: center;\n" +
-                "}\n" +
-                "</style>\n" +
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        String cadenaArticulos="";
+        for(int j=0; j<ListaArticulosTicket.size();j++)
+        {
+            double PrecioArticulo = Double.parseDouble(ListaArticulosTicket.get(j).getarticulo_Precio());
+            double ImporteArticulo = Double.parseDouble(ListaArticulosTicket.get(j).getArticulo_importe());
+
+
+            cadenaArticulos=cadenaArticulos+
+                    ("<tr> \n"+
+                    "<td>"+ListaArticulosTicket.get(j).getArticulo_cantidad()+"</td>\n"+
+                    "<td>"+ListaArticulosTicket.get(j).getarticulo_Nombre()+"</td>\n"+
+                    "<td>"+formatter.format( PrecioArticulo )+"</td>\n"+
+                            "<td>"+formatter.format( ImporteArticulo )+"</td>\n"+
+                    "</tr>");
+        }
+
+                content= "<!DOCTYPE html>\n" +
+                "<html dir=\"ltr\" lang=\"en\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"utf-8\">\n" +
+                "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                    "<style type=\"text/css\" media=\"all\">\n" +
+                    "#tblTicketTemplate {\n" +
+                    "  width: 100%;\n" +
+                    "  font-size: 10px;\n" +
+                    "  font-family: \"Courier New\";\n" +
+                    "  text-transform: uppercase;\n" +
+                    "  line-height: 1.3;\n" +
+                    "  border: solid 1px #D4DADF;\n" +
+                    "}\n" +
+                    "#tblTicketTemplate thead tr td {\n" +
+                    "  padding-left: 10%;\n" +
+                    "  padding-right: 10%;\n" +
+                    "}\n" +
+                    "#tblTicketTemplate #tdLogo {\n" +
+                    "  text-align: center;\n" +
+                    "  vertical-align: middle;\n" +
+                    "}\n" +
+                    "#tblTicketTemplate #tdFiscal{\n" +
+                    "  text-align: center;\n" +
+                    "  vertical-align: middle;\n" +
+                    "  font-weight: bold;\n" +
+                    "}\n" +
+                    "#tblTicketTemplate .trDivider{\n" +
+                    "  border-bottom: dashed 1px black;\n" +
+                    "}\n" +
+                    "#tblTicketTemplate .trDivider td {\n" +
+                    "  padding-bottom: 3px;\n" +
+                    "}\n" +
+                    "#tblTicketTemplate .trDivider + tr td {\n" +
+                    "  padding-top: 3px;\n" +
+                    "}\n" +
+                    "#tblTicketTemplate tbody .trInfo{\n" +
+                    "  font-size: 10px;\n" +
+                    "  vertical-align: top;\n" +
+                    "}\n" +
+                    "#tblTicketTemplate tbody .trInfo td a{\n" +
+                    "  text-align: center;\n" +
+                    "}\n" +
+                    "#tblTicketTemplate tbody #trTituloDetalle{\n" +
+                    "  font-weight: bold;\n" +
+                    "  text-align: center;\n" +
+                    "  border-top: dashed 1px black;\n" +
+                    "  border-bottom: dashed 1px black;\n" +
+                    "}\n" +
+                    "#tblTicketTemplate tbody .trArticulo{\n" +
+                    "  font-size: 10px;\n" +
+                    "}\n" +
+                    "#tblTicketTemplate .importe{\n" +
+                    "  text-align: right;\n" +
+                    "}\n" +
+                    "#tblTicketTemplate tbody .trArticulo + tr td{\n" +
+                    "  font-size: 9px;\n" +
+                    "}\n" +
+                    "#tblTicketTemplate tbody .trTotal{\n" +
+                    "  font-size: 14px;\n" +
+                    "  font-weight: bold;\n" +
+                    "}\n" +
+                    "#tblTicketTemplate tfoot{\n" +
+                    "  text-align: center;\n" +
+                    "}\n" +
+                    "</style>\n" +
+                "</head>\n" +
+                "<body>\n"+
                 "<table id=\"tblTicketTemplate\">\n" +
                 "  <thead>\n" +
                 "    <tr>\n" +
@@ -1181,20 +1264,20 @@ public class Fragment_ventas_transacciones extends Fragment {
                 "  <tbody>\n" +
                 "    <tr class=\"trInfo\">\n" +
                 "      <td id=\"tdFechaHora\" colspan=\"2\">\n" +
-                "        <!--b>Fec./Hr.:</b>  date(\"d/m/Y H:i\")-->\n" +
+                "        <b>Fec./Hr.:</b> "+FechaCreacion+"\n" +
                 "      </td>\n" +
                 "      <td id=\"tdTicketNum\" colspan=\"2\">\n" +
-                "        <b>Ticket:</b>\n" +
+                "        <b>Ticket:</b>"+NumeroTicket+"\n" +
                 "      </td>\n" +
                 "    </tr>\n" +
                 "    <tr class=\"trInfo\">\n" +
                 "      <td id=\"tdVendedor\" colspan=\"4\">\n" +
-                "        <!--b>Vendedor:</b>  Session::get(\"nombre\") -->\n" +
+                "        <b>Vendedor:</b>"+NombreVendedor+"\n" +
                 "      </td>\n" +
                 "    </tr>\n" +
                 "    <tr class=\"trInfo\">\n" +
                 "      <td id=\"tdCliente\" colspan=\"4\">\n" +
-                "        <!--b>Cliente:</b>  Session::get(\"nombre\") -->\n" +
+                "        <b>Cliente:</b>"+NombreCliente+"\n" +
                 "      </td>\n" +
                 "    </tr>\n" +
                 "    <tr id=\"trTituloDetalle\">\n" +
@@ -1204,15 +1287,10 @@ public class Fragment_ventas_transacciones extends Fragment {
                 "      <td>Importe</td>\n" +
                 "    </tr>\n" +
                 "    <tr id=\"tableListArticulos\">\n" +
-                "      <!--tr class=\"trArticulo\">\n" +
-                "        <td>1</td>\n" +
-                "        <td>*Nombre del articulo</td>\n" +
-                "        <td class=\"importe\">3.00</td>\n" +
-                "        <td class=\"importe\">3.00 A</td>\n" +
-                "      </tr>\n" +
+                "      "+ cadenaArticulos +
                 "      <tr>\n" +
                 "        <td></td>\n" +
-                "        <td colspan=\"2\">Descripción del articulo</td>\n" +
+                "        <!--td colspan=\"2\">Descripción del articulo</td-->\n" +
                 "        <td></td>\n" +
                 "      </tr-->\n" +
                 "    </tr>\n" +
@@ -1222,17 +1300,17 @@ public class Fragment_ventas_transacciones extends Fragment {
                 "\n" +
                 "    <tr class=\"trTotales\">\n" +
                 "      <td colspan=\"2\">Subtotal:</td>\n" +
-                "      <td class=\"importe\">$</td>\n" +
+                "      <td class=\"importe\">$"+Subtotal+"</td>\n" +
                 "      <td id=\"tdSubTotal\" class=\"importe\"></td>\n" +
                 "    </tr>\n" +
                 "    <tr id=\"trImpuestosTotales\" class=\"trTotales\">\n" +
                 "      <!--td colspan=\"2\">Impuesto(9.0%):</td>\n" +
-                "      <td class=\"importe\">$</td>\n" +
+                "      <td class=\"importe\">$"+formatter.format( ImpuestosTotal)+"</td>\n" +
                 "      <td class=\"importe\">123</td-->\n" +
                 "    </tr>\n" +
                 "    <tr class=\"trTotal\">\n" +
                 "      <td colspan=\"2\">Total:</td>\n" +
-                "      <td class=\"importe\">$</td>\n" +
+                "      <td class=\"importe\">$"+Total+"</td>\n" +
                 "      <td id=\"tdTotal\" class=\"importe\"></td>\n" +
                 "    </tr>\n" +
                 "\n" +
@@ -1285,7 +1363,9 @@ public class Fragment_ventas_transacciones extends Fragment {
                 "      </td>\n" +
                 "    </tr>\n" +
                 "  </tfoot>\n" +
-                "</table>";
+                "</table>\n"+
+                "</body>\n"+
+                "</html>";
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.pop_up_ticket_web);
         webView = (WebView) dialog.findViewById(R.id.simpleWebView);

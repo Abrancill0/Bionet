@@ -11,15 +11,11 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -54,18 +50,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".NavigatorActivity"
             android:label="bio-Net"
-            android:screenOrientation="landscape">
-        </activity>
-
+            android:screenOrientation="landscape"></activity>
         <activity
             android:name=".Login"
-            android:screenOrientation="landscape">
-        </activity>
-
+            android:screenOrientation="landscape"></activity>
         <activity
             android:name=".CrearCuentaActivity"
             android:label="bio-Net"
@@ -102,15 +93,22 @@
             android:name=".Feenicia_Transaction_Bluetooth"
             android:label="bio-Net"
             android:screenOrientation="landscape"
-            android:theme="@style/FeniciaTheme"/>
+            android:theme="@style/Pop_up_activity" />
+        <activity
+            android:name=".Confirmacion_venta"
+            android:label="bio-Net"
+            android:screenOrientation="landscape"
+            android:theme="@style/Pop_up_activity" />
         <activity
             android:name="com.mercadolibre.android.sdk.MercadoLibreActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize"
             android:label="bio-Net"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- Declare the ApplicationID attribute as required by the SDK -->
-        <activity android:name=".Login_contrasena"
+        <activity
+            android:name=".Login_contrasena"
             android:label="bio-Net"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
+
         <meta-data
             android:name="com.mercadolibre.android.sdk.ApplicationId"
             android:value="@string/meli_app_id" /> <!-- Declare the Redirect URI attribute as required by the SDK -->
@@ -138,12 +136,9 @@
         <meta-data
             android:name="com.mercadolibre.android.sdk.RedirectUrl"
             android:value="@string/meli_redirect_uri" />
-
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="fcc505e3371984e8c39da86e2855b0252c3e7935"
-            />
-
+            android:value="fcc505e3371984e8c39da86e2855b0252c3e7935" />
     </application>
 
 </manifest>
