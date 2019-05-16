@@ -499,7 +499,8 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
                                         "",
                                         "",
                                         "",0.0,0.0,0.0,0.0,
-                                        fecha,"","",0.0,efectivo01,monedero05,dineroelectronico06,vales08);
+                                        fecha,"","",0.0,efectivo01,monedero05,dineroelectronico06,vales08,
+                                        "",0.0,0.0,0.0);
                                 ListaTickets.add(tickets);
 
                             }

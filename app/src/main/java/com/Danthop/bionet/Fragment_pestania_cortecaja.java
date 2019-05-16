@@ -531,7 +531,8 @@ public class Fragment_pestania_cortecaja extends Fragment {
                                            "",
                                            tic_nombre_vendedor,
                                            "",0.0, 0.0, 0.0, 0.0,
-                                           cde_fecha_hora_creo,hora,id_formapago,TotalCorte,0.0,0.0,0.0,0.0);
+                                           cde_fecha_hora_creo,hora,id_formapago,TotalCorte,0.0,0.0,0.0,0.0,
+                                            "",0.0,0.0,0.0);
                                    CorteCaja.add(corte);
                                    Totalventa.add(corte);
                                }
