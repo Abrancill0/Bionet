@@ -427,7 +427,8 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
                                         "",
                                         cca_nombre_usuario,
                                         cca_importe_total,efectivo01,monedero05,dineroelectronico06,vales08,
-                                        fecha,hora,"",0.0,0.0,0.0,0.0,0.0);
+                                        fecha,hora,"",0.0,0.0,0.0,0.0,0.0,
+                                        "",0.0,0.0,0.0);
                                 ListaCorte.add(corte);
 
                             }

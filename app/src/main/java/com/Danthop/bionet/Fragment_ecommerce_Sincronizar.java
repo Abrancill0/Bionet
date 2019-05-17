@@ -177,7 +177,6 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                 Envio.setText(clickedData.getEnvio_gratis());
                 EstadoArticulo.setText(clickedData.getEstadoOrden());
 
-
                 BtnActivarPublicacion.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

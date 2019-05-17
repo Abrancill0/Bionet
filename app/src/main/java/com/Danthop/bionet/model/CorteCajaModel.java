@@ -23,10 +23,16 @@ public class CorteCajaModel {
     private Double dineroElectronico06;
     private Double valesDespensa08;
 
+    private String nombrevendedor;
+    private Double montoacomulado;
+    private Double montopagado;
+    private Double montopendiente;
+
 
     public CorteCajaModel(String id_venta, String total, String forma_pago, String fechahora, String usuario,
                           String monto_total, Double efectivo, Double monederoElectronico, Double dineroElectronico, Double valesDespensa, String fecha, String hora, String id_formapago, Double TotalCorte,
-                          Double efectivo01, Double monederoElectronico05, Double dineroElectronico06, Double valesDespensa08){
+                          Double efectivo01, Double monederoElectronico05, Double dineroElectronico06, Double valesDespensa08,
+                          String nombrevendedor, Double montoacomulado, Double montopagado, Double montopendiente){
 
         this.id_venta = id_venta;
         this.total = total;
@@ -50,6 +56,11 @@ public class CorteCajaModel {
         this.monederoElectronico05 = monederoElectronico05;
         this.dineroElectronico06 = dineroElectronico06;
         this.valesDespensa08 = valesDespensa08;
+
+        this.nombrevendedor = nombrevendedor;
+        this.montoacomulado = montoacomulado;
+        this.montopagado = montopagado;
+        this.montopendiente = montopendiente;
 
     }
 
@@ -75,6 +86,11 @@ public class CorteCajaModel {
     public Double getDineroElectronico06() { return dineroElectronico06; }
     public Double getValesDespensa08() { return  valesDespensa08; }
 
+    public String getNombrevendedor() { return nombrevendedor; }
+    public Double getMontoacomulado() { return  montoacomulado; }
+    public Double getMontopagado() { return montopagado; }
+    public Double getMontopendiente() { return  montopendiente; }
+
 
 
     public void setid_venta(String id_venta) { this.id_venta = id_venta; }
@@ -98,6 +114,11 @@ public class CorteCajaModel {
     public void sethora (String hora ) { this.hora = hora; }
     public void setId_formapago (String id_formapago ) { this.id_formapago = id_formapago; }
     public void setTotalCorte (Double TotalCorte ) { this.TotalCorte = TotalCorte; }
+
+    public void setNombrevendedor(String nombrevendedor) { this.nombrevendedor = nombrevendedor; }
+    public void setMontoacomulado(Double montoacomulado) { this.montoacomulado = montoacomulado; }
+    public void setMontopagado(Double montopagado) { this.montopagado = montopagado; }
+    public void setMontopendiente(Double montopendiente) { this.montopendiente = montopendiente; }
 
 
 

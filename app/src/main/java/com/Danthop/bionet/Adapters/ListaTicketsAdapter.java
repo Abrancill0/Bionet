@@ -115,7 +115,8 @@ public class ListaTicketsAdapter extends LongPressAwareTableDataAdapter<CorteCaj
                             "",
                             "",0.0,0.0,0.0,0.0,
                             corte.getfecha(),"","",0.0,
-                            corte.getefectivo(),corte.getMonederoElectronico(), corte.getDineroElectronico(),corte.getValesDespensa());
+                            corte.getefectivo(),corte.getMonederoElectronico(), corte.getDineroElectronico(),corte.getValesDespensa(),
+                            "",0.0,0.0,0.0);
                     TicketsFactura.add(corteM);
 
                 }

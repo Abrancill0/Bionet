@@ -58,11 +58,9 @@ import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
 import com.webviewtopdf.PdfView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.File;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -93,7 +91,6 @@ public class Fragment_Ventas extends Fragment {
     private TextView total;
     private TextView impuesto;
     private TextView subtotal;
-
     private String usu_id;
     private String nombreCliente;
     private String UUID;
@@ -127,11 +124,8 @@ public class Fragment_Ventas extends Fragment {
     private SortableSeleccionaOrdenEspecialTable tabla_ordenes_disponibles;
     private SortableMetodosPagoTable tabla_metodos_pago;
     private String SKUarticulo;
-
     private String IDCliente;
     private String NombreCli;
-
-
     private List<ClienteModel> clientes;
     private List<ArticuloModel> Articulos;
     private List<ArticuloModel> ArticulosVenta;
@@ -141,33 +135,23 @@ public class Fragment_Ventas extends Fragment {
     private List<Impuestos> ImpuestosDeArticuloOrdenado;
     private List<ArticuloApartadoModel> ListaDeArticulosApartados;
     private List<OrdenEspecialArticuloModel> ListaDeArticulosOrdenados;
-
     private List<ArticuloApartadoModel> ArticulosApartados;
     private List<OrdenEspecialArticuloModel> ArticulosOrdenados;
-
     private TicketModel ticket_de_venta;
-
     private FragmentTransaction fr;
-
     private Spinner SpinnerSucursal;
     private ArrayList<String> SucursalName;
     private ArrayList<String> SucursalID;
-
     private Spinner SpinnerVendedor;
     private ArrayList<String> VendedorName;
     private ArrayList<String> VendedorID;
-
     private Spinner SpinnerCFDI;
     private ArrayList<String> CFDI_Name;
     private ArrayList<String> CFDI_ID;
-
     private ArrayList<String> ArticulosName;
-
     private ArrayList<String> Imagenes;
     private String[][] LPAU;
-
     private CarouselView carouselView;
-
     private String TicketIDVenta;
     private int TicketSubtotal;
     private String TicketImporteDescuento;
@@ -829,23 +813,6 @@ public class Fragment_Ventas extends Fragment {
                                             }
 
                                             dialog.dismiss();
-                                            dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
-                                            //dialog.show();
-                                            Intent intent = new Intent(getContext(), Confirmacion_venta.class);
-                                            intent.putExtra("TarjetaCredito", TarjetaCredito);
-                                            intent.putExtra("TarjetaDebito", TarjetaDebito);
-                                            startActivity(intent);
-
-                                            Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
-                                            cerrarPopUp.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    dialog.hide();
-                                                }
-                                            });
-                                            TextView importe_venta = dialog.findViewById(R.id.importe_venta);
-                                            TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
-                                            TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
 
                                             double valorTarjetas = 0;
 
@@ -859,6 +826,13 @@ public class Fragment_Ventas extends Fragment {
                                                 mBundle.putDouble("TC",TarjetaCredito);
                                                 mBundle.putDouble("TD",TarjetaDebito);
 
+                                                mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
+
+                                                for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
+                                                    mBundle.putInt("fpa_id"+i, Integer.parseInt( ListaDePagos_a_utilizar.get(i).getId()));
+                                                    mBundle.putString("valor"+i,ListaDePagos_a_utilizar.get(i).getCantidad());
+                                                }
+
                                                 myIntent.putExtras(mBundle);
 
 
@@ -866,18 +840,37 @@ public class Fragment_Ventas extends Fragment {
                                             }
                                             else
                                             {
+
+
+                                                dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
+                                                dialog.show();
+
+                                                Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                                                cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        dialog.hide();
+                                                    }
+                                                });
+
+                                                TextView importe_venta = dialog.findViewById(R.id.importe_venta);
+                                                TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
+                                                TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
+
                                                 FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
+
+                                                Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                                                aceptar.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+
+                                                        dialog.dismiss();
+                                                    }
+                                                });
                                             }
 
 
-                                            Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
-                                            aceptar.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
 
-                                                    dialog.dismiss();
-                                                }
-                                            });
 
                                         }
                                     });
@@ -984,21 +977,7 @@ public class Fragment_Ventas extends Fragment {
                                         return;
                                     }
 
-
                                     dialog.dismiss();
-                                    dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
-                                    dialog.show();
-
-                                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
-                                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            dialog.hide();
-                                        }
-                                    });
-                                    TextView importe_venta = dialog.findViewById(R.id.importe_venta);
-                                    TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
-                                    TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
 
                                     double valorTarjetas = 0;
 
@@ -1012,8 +991,14 @@ public class Fragment_Ventas extends Fragment {
                                         mBundle.putDouble("TC",TarjetaCredito);
                                         mBundle.putDouble("TD",TarjetaDebito);
 
-                                        myIntent.putExtras(mBundle);
+                                        mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
+                                        for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
+                                            mBundle.putInt("fpa_id"+i, Integer.parseInt( ListaDePagos_a_utilizar.get(i).getId()));
+                                            mBundle.putString("valor"+i,ListaDePagos_a_utilizar.get(i).getCantidad());
+                                        }
+
+                                        myIntent.putExtras(mBundle);
 
                                         getActivity().startActivity(myIntent);
                                     }
@@ -1021,24 +1006,33 @@ public class Fragment_Ventas extends Fragment {
                                     {
                                         dialog.dismiss();
                                         dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
-                                        //dialog.show();
-                                        Intent intent = new Intent(getContext(), Confirmacion_venta.class);
-                                        intent.putExtra("TarjetaCredito", TarjetaCredito);
-                                        intent.putExtra("TarjetaDebito", TarjetaDebito);
-                                        startActivity(intent);
+                                        dialog.show();
+
+                                        Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                                        cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialog.hide();
+                                            }
+                                        });
+
+                                        TextView importe_venta = dialog.findViewById(R.id.importe_venta);
+                                        TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
+                                        TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
 
                                         FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
 
+                                        Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                                        aceptar.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                dialog.dismiss();
+                                            }
+                                        });
                                     }
 
-                                    Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
-                                    aceptar.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
 
-                                            dialog.dismiss();
-                                        }
-                                    });
 
                                 }
                             });
@@ -1048,29 +1042,6 @@ public class Fragment_Ventas extends Fragment {
                 }
             }
         });
-
-
-       // btn_feenicia.setOnClickListener(new View.OnClickListener() {
-       //     @Override
-       //     public void onClick(View v) {
-
-       //         Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
-       //         getActivity().startActivity(myIntent);
-
-
-                //Intent intent = new Intent(this, Feenicia_Transaction_Bluetooth.class);
-                // startActivity(intent);
-                //
-
-
-                //  Button Btn_Buscar_Dispositivo = dialog.findViewById(R.id.Btn_Buscar_Dispositivo);
-                //  Button Btn_Conectar_Dispositivo = dialog.findViewById(R.id.Btn_Conectar_Dispositivo);
-
-
-                // Btn_Buscar_Dispositivo
-
-       //     }
-       // });
 
         btn_apartar.setOnClickListener(new View.OnClickListener() {
             @Override
