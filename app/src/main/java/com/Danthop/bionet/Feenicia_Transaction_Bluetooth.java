@@ -111,7 +111,17 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
 
     public static Double TarjetaCredito;
     public static Double TarjetaDebio;
+
+    public static String fpa_id;
+    public static String valor;
+    public static int tamano;
+
     public static int Contador;
+    public static String Mensaje;
+
+     private double ImporteCambio;
+     private double ImporteRecibido;
+     private double ImporteVenta;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -142,17 +152,35 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         Bundle bundle = getIntent().getExtras();
         TarjetaCredito = bundle.getDouble( "TC");
         TarjetaDebio = bundle.getDouble( "TD");
+        tamano = bundle.getInt( "Tamano");
+
+        for (int i = 0; i < tamano; i++) {
+
+            fpa_id =  bundle.getString( "fpa_id"+i);
+            valor =  bundle.getString( "valor"+i);
+
+            PagoModel modelito = new PagoModel(
+                    "",
+                    fpa_id,
+                    valor
+                     );
+            ListaDePagos_a_utilizar.add(modelito);
+
+        }
+
         double precio = 0;
 
         if (TarjetaCredito > 0 )
         {
             precio = TarjetaCredito;
-            Contador = 1;
+            Contador = 2;
+            Mensaje="Tarjeta de Credito";
         }
         else
         {
             precio = TarjetaDebio;
-            Contador = 0;
+            Contador = 1;
+            Mensaje="Tarjeta de Debito";
         }
 
         SharedPreferences sharedPref = this.getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
@@ -247,19 +275,30 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
+                if (Contador == 0)
+                {
+                    FinalizarTicket();
 
+                    Intent myIntent = new Intent(getApplicationContext(), Confirmacion_venta.class);
+                    Bundle mBundle = new Bundle();
+                    mBundle.putDouble("IC",ImporteCambio);
+                    mBundle.putDouble("IR",ImporteRecibido);
+                    mBundle.putDouble("IV",ImporteVenta);
 
-               // dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
-               // dialog.show();
+                    myIntent.putExtras(mBundle);
 
-                finish();
-                // FinalizarTicket(null, null, null);
+                    getApplicationContext().startActivity(myIntent);
 
+                    finish();
+                }
+                else
+                {
+
+                }
 
 
             }
         });
-
 
 
         /// BTN CONECTAR CON DISPOSITIVO BT FEENICIA ///
@@ -443,8 +482,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         _receiver.registerReceiver();
     }
 
-
-
     public static void resultLoginResponse(final ResponseCode response){
 
         try {
@@ -478,7 +515,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         }
 
     }
-
 
     public static void statusReaderCard(final String result){
         Log.i("RESULTADO_READ_CARD: " , result);
@@ -523,26 +559,45 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                         if (response.getResponseCode().equals("00")) {
 
 
-                            if (Contador ==1)
+                            if (Contador ==2)
                             {
-                                monto = TarjetaDebio;
+
+                                if (TarjetaDebio > 0)
+                                {
+                                    monto = TarjetaDebio;
+                                    monto = utils.roundTwoDecimals(monto);
+
+                                    tvMontoMostrar.setText( "$ " + monto + " MN");
+
+                                    Contador = 1;
+                                }
+                                else
+                                {
+                                    monto = 0;
+                                    monto = utils.roundTwoDecimals(monto);
+
+                                    tvMontoMostrar.setText( "$ " + monto + " MN");
+
+                                    Contador = 0;
+                                }
+
+                                 //Toast toast1 = Toast.makeText(context, "El siguiente pago es con tarjeta de debito.", Toast.LENGTH_SHORT);
+
+                                 // toast1.show();
+                            }
+                            else  if (Contador ==1)
+                            {
+                                monto = 0;
                                 monto = utils.roundTwoDecimals(monto);
 
                                 tvMontoMostrar.setText( "$ " + monto + " MN");
 
-                                // Toast toast1 = Toast.makeText(context, "El siguiente pago es con tarjeta de debito.", Toast.LENGTH_SHORT);
-
-                                //  toast1.show();
-                            }
-                            else
-                            {
-
+                                Contador = 0;
 
                                 //  Toast toast1 = Toast.makeText(context, "Por favor cierre esta ventana para continuar", Toast.LENGTH_SHORT);
 
                                 //  toast1.show();
 
-                                //finish();
                             }
 
                             /*** OPCIONAL ***/
@@ -583,7 +638,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
 
     }
 
-
     /* PINTA EN PANTALLA UN MENSAJE TOAST */
     public void show_Toast(final String text){
         runOnUiThread(new Runnable() {
@@ -614,7 +668,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         });
     }
 
-
     @Override
     protected void onResume () {
         super.onResume();
@@ -641,7 +694,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         super.onDestroy();
     }
 
-
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(FEENICIA_TRANSACCION)
@@ -662,12 +714,10 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                 .show();
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
     }
-
 
     @TargetApi(Build.VERSION_CODES.M)
     public void askForContactPermission() {
@@ -708,8 +758,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         }
     }
 
-
-    private void FinalizarTicket(final TextView importeCambio, final TextView importeRecibido, final TextView importeVenta) {
+    private void FinalizarTicket() {
 
         JSONArray arreglo = new JSONArray();
         try {
@@ -757,36 +806,15 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                         String tic_importe_total = RespuestaNodoTicket.getString("tic_importe_total");
                         String tic_importe_recibido = RespuestaNodoTicket.getString("tic_importe_recibido");
                         String tic_importe_cambio = RespuestaNodoTicket.getString("tic_importe_cambio");
-                        ticket_de_venta.setTic_importe_total(tic_importe_total);
-                        ticket_de_venta.setTic_importe_recibido(tic_importe_recibido);
-                        ticket_de_venta.setTic_importe_cambio(tic_importe_cambio);
 
-                        double CambioConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_cambio());
-                        double RecibidoConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_recibido());
-                        double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
+                        double CambioConDecimal = Double.parseDouble(tic_importe_total);
+                        double RecibidoConDecimal = Double.parseDouble(tic_importe_recibido);
+                        double ImporteTotalConDecimal = Double.parseDouble(tic_importe_cambio);
                         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
-                        importeCambio.setText(formatter.format(CambioConDecimal));
-                        importeRecibido.setText(formatter.format(RecibidoConDecimal));
-                        importeVenta.setText(formatter.format(ImporteTotalConDecimal));
-
-                       // ArticulosVenta.clear();
-                     //   Imagenes.clear();
-                     //   final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
-                     //           total, descuento, impuesto, subtotal,
-                     //           carouselView, Imagenes,ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados);
-                     //   articuloAdapter.notifyDataSetChanged();
-                     //   tabla_venta_articulos.setDataAdapter(articuloAdapter);
-                     //   LoadImages();
-
-
-                     //   InstanciarModeloTicket();
-                     //   ListaDePagos_a_utilizar.clear();
-
-                     //   descuento.setText("$0.00");
-                     //   total.setText("$0.00");
-                     //   subtotal.setText("$0.00");
-                     //   impuesto.setText("$0.00");
+                        ImporteCambio = CambioConDecimal;
+                        ImporteRecibido = RecibidoConDecimal;
+                        ImporteVenta = ImporteTotalConDecimal;
 
                     } else {
                         Toast toast1 =
