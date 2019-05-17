@@ -7,12 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -41,6 +42,7 @@ import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.FormaspagoModel;
 import com.Danthop.bionet.model.Impuestos;
+import com.Danthop.bionet.model.MovimientoModel;
 import com.Danthop.bionet.model.OrdenEspecialArticuloModel;
 import com.Danthop.bionet.model.PagoModel;
 import com.Danthop.bionet.model.TicketModel;
@@ -54,12 +56,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
-
+import com.webviewtopdf.PdfView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.Serializable;
+import java.io.File;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -83,6 +84,7 @@ public class Fragment_Ventas extends Fragment {
     private Button btn_apartar;
     private Button btn_ordenar;
     private Button Corte_Caja;
+    private Button Comisiones;
     private Dialog dialog;
     private TextView descuento;
     private TextView total;
@@ -163,6 +165,10 @@ public class Fragment_Ventas extends Fragment {
 
     private String DiasApartado;
 
+    private List<ArticuloModel> ListaArticulosTicket = new ArrayList<>();
+    private String content;
+    private WebView webView;
+
     public Fragment_Ventas() {
         // Required empty public constructor
     }
@@ -189,6 +195,7 @@ public class Fragment_Ventas extends Fragment {
         btn_finalizar = v.findViewById(R.id.btn_finalizar);
         btn_reporte = v.findViewById(R.id.btn_reporte);
         Corte_Caja = v.findViewById(R.id.CorteCaja);
+        Comisiones= v.findViewById(R.id.Comisiones);
         Buscar = v.findViewById(R.id.buscarXSKU);
         descuento = v.findViewById(R.id.descuento_text);
         total = v.findViewById(R.id.total_text);
@@ -589,6 +596,13 @@ public class Fragment_Ventas extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container, new Fragment_ventas_corte_caja_listado()).commit();
+            }
+        });
+
+        Comisiones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fr.replace(R.id.fragment_container, new Fragment_pestania_comison()).commit();
             }
         });
 
@@ -1476,7 +1490,6 @@ public class Fragment_Ventas extends Fragment {
     }
 
     private void Aniadir_a_venta(String CBoSKULL, String Cantidad) {
-        ArticulosVenta.clear();
         ListaDeArticulosApartados.clear();
         ListaDeArticulosOrdenados.clear();
         ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
@@ -1679,40 +1692,68 @@ public class Fragment_Ventas extends Fragment {
                         NodoTicketArticulos = Respuesta.getJSONArray("aDetalleTicket");
                         for (int x = 0; x < NodoTicketArticulos.length(); x++) {
                             JSONObject elemento = NodoTicketArticulos.getJSONObject(x);
+                            String NombreArticulo = elemento.getString("tar_nombre_articulo");
                             JSONObject NodoTarID = elemento.getJSONObject("tar_id");
                             String tar_id = NodoTarID.getString("uuid");
-                            String NombreArticulo = elemento.getString("tar_nombre_articulo");
-                            String SKUArticulo = elemento.getString("art_sku");
-                            String cantidad = elemento.getString("tar_cantidad");
-                            String precio = elemento.getString("tar_precio_articulo");
-                            String descuento = elemento.getString("art_importe_descuento");
-                            String importe = elemento.getString("tar_importe_total");
-                            String existencia = elemento.getString("art_id_existencia");
 
-                            JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
-                            for (int z = 0; z < RespuestaImagenes.length(); z++) {
-                                String RutaImagen = "http://192.168.100.192:8010" + RespuestaImagenes.getString(z);
-                                Imagenes.add(RutaImagen);
-
-
+                            int Checador=0;
+                            boolean vacio=false;
+                            if(ArticulosVenta.isEmpty())
+                            {
+                                vacio=true;
+                            }
+                            else
+                            {
+                                vacio=false;
+                            }
+                            if(vacio==false)
+                            {
+                                if(CBoSKULL.equals(ArticulosVenta.get(x).getArticulo_sku()))
+                                {
+                                    int cantidad= Integer.parseInt(ArticulosVenta.get(x).getArticulo_cantidad());
+                                    cantidad = cantidad + 1;
+                                    ArticulosVenta.get(x).setArticulo_cantidad(String.valueOf(cantidad));
+                                    Checador=1;
+                                    modificaCantidad(cantidad,ArticulosVenta.get(x).getArticulo_sku());
+                                    break;
+                                }
                             }
 
+                            if (Checador==0)
+                            {
+                                String SKUArticulo = elemento.getString("art_sku");
+                                String cantidad = elemento.getString("tar_cantidad");
+                                String precio = elemento.getString("tar_precio_articulo");
+                                String descuento = elemento.getString("art_importe_descuento");
+                                String importe = elemento.getString("tar_importe_total");
+                                String existencia = elemento.getString("art_id_existencia");
 
-                            final ArticuloModel articulo = new ArticuloModel("",
-                                    NombreArticulo,
-                                    "",
-                                    precio,
-                                    "",
-                                    "",
-                                    SKUArticulo,
-                                    "",
-                                    cantidad,
-                                    tar_id,
-                                    descuento,
-                                    "",
-                                    importe,"","",existencia
-                            );
-                            ArticulosVenta.add(articulo);
+                                JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
+                                for (int z = 0; z < RespuestaImagenes.length(); z++) {
+                                    String RutaImagen = "http://192.168.100.192:8010" + RespuestaImagenes.getString(z);
+                                    Imagenes.add(RutaImagen);
+
+
+                                }
+
+
+                                final ArticuloModel articulo = new ArticuloModel("",
+                                        NombreArticulo,
+                                        "",
+                                        precio,
+                                        "",
+                                        "",
+                                        SKUArticulo,
+                                        "",
+                                        cantidad,
+                                        tar_id,
+                                        descuento,
+                                        "",
+                                        importe,"","",existencia
+                                );
+                                ArticulosVenta.add(articulo);
+                            }
+
                         }
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
                                 total, descuento, impuesto, subtotal,
@@ -2600,6 +2641,677 @@ public class Fragment_Ventas extends Fragment {
         );
 
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+    }
+
+    private void modificaCantidad(int cantidad,String articuli_ide)
+    {
+        ArticulosVenta.clear();
+        ListaDeArticulosApartados.clear();
+        ListaDeArticulosOrdenados.clear();
+        ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
+
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("tar_id",articuli_ide);
+            request.put("cantidad",cantidad);
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
+        String ApiPath = "http://187.189.192.150:8010" + "/api/ventas/tickets/update-cantidad-articulo";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONObject RespuestaNodoTicket = null;
+                JSONObject TicketID = null;
+                JSONArray NodoTicketArticulos = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+
+                        Respuesta = response.getJSONObject("resultado");
+                        Imagenes.clear();
+                        RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
+                        TicketID = RespuestaNodoTicket.getJSONObject("tic_id");
+                        TicketIDVenta = TicketID.getString("uuid");
+
+
+                        float ImpuestoTotal = 0;
+                        float Subtotal = 0;
+                        JSONArray tic_impuestos = RespuestaNodoTicket.getJSONArray("tic_impuestos");
+                        for (int f = 0; f < tic_impuestos.length(); f++) {
+                            JSONObject nodo_impuestos = tic_impuestos.getJSONObject(f);
+                            ImpuestoTotal = Float.parseFloat(nodo_impuestos.getString("valor"));
+                        }
+                        float DescuentoTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_descuentos"));
+                        float PrecioTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_total"));
+
+
+                        JSONArray NodoArticuloTicket = Respuesta.getJSONArray("aDetalleTicket");
+                        for (int j = 0; j < NodoArticuloTicket.length(); j++) {
+                            JSONObject nodo = NodoArticuloTicket.getJSONObject(j);
+
+                            float numero_de_productos = Float.parseFloat((nodo.getString("tar_cantidad")));
+
+                            float PrecioSubTotalProducto = 0;
+
+
+                            //Sumar Subtotal
+                            float SubTot = Float.parseFloat(nodo.getString("art_precio_bruto"));
+                            PrecioSubTotalProducto = PrecioSubTotalProducto + SubTot;
+                            PrecioSubTotalProducto = PrecioSubTotalProducto * numero_de_productos;
+
+                            Subtotal = Subtotal + PrecioSubTotalProducto;
+
+                            String AplicaApartados = nodo.getString("art_aplica_apartados");
+                            String TieneExistencia = nodo.getString("art_id_existencia");
+
+                            //APARTADOS--------------------------------------
+                            if (AplicaApartados.equals("false")||(TieneExistencia.equals(""))) {
+
+                            }
+                            else {
+                                String ArticuloCantidad = nodo.getString("tar_cantidad");
+                                String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
+                                JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
+                                String ArticuloIDApartado = NodoIDApartado.getString("uuid");
+                                JSONObject NodoIDApartadoVariante = nodo.getJSONObject("tar_id_variante");
+                                String ArticuloIDApartadoVariante = NodoIDApartadoVariante.getString("uuid");
+                                String ArticuloIDApartadoModificador = nodo.getString("tar_id_modificador");
+                                String ArticuloApartadoImportePagado = nodo.getString("tar_importe_pagado");
+                                String ArticuloIDApartadoExistencia = nodo.getString("art_id_existencia");
+                                String ArticuloApartadoAplicaDevolucion = nodo.getString("tar_aplica_para_devolucion");
+                                String ArticuloApartadoImporteDescuento = nodo.getString("tar_importe_descuento");
+                                String ArticuloApartadoTotal = nodo.getString("tar_importe_total");
+                                JSONObject nodoImpuestos = nodo.getJSONObject("tar_impuestos");
+                                Iterator keys = nodoImpuestos.keys();
+                                while (keys.hasNext()) {
+                                    Object key = keys.next();
+                                    String value = nodoImpuestos.getString((String) key);
+                                    Impuestos Impuesto = new Impuestos((String) key, value);
+                                    ImpuestosDeArticuloApartado.add(Impuesto);
+                                }
+                                String ArticuloApartadoPorcentajeDescuento = nodo.getString("tar_porcentaje_descuento");
+                                String ArticuloApartadoPrecio = nodo.getString("tar_precio_articulo");
+
+
+                                float importePagado = Float.parseFloat((ArticuloApartadoImportePagado));
+                                float importeTotal = Float.parseFloat((ArticuloApartadoTotal));
+                                float importeRestante = importeTotal - importePagado;
+
+                                ArticuloApartadoModel ArticuloApartado = new ArticuloApartadoModel(
+                                        ArticuloCantidad,
+                                        ArticuloIDApartado,
+                                        ArticuloIDApartadoVariante,
+                                        ArticuloIDApartadoModificador,
+                                        ArticuloApartadoImportePagado,
+                                        String.valueOf(importeRestante),
+                                        NombreArticuloApartado,
+                                        ArticuloIDApartadoExistencia,
+                                        ArticuloApartadoAplicaDevolucion,
+                                        ArticuloApartadoImporteDescuento,
+                                        ArticuloApartadoTotal,
+                                        ImpuestosDeArticuloApartado,
+                                        ArticuloApartadoPorcentajeDescuento,
+                                        ArticuloApartadoPrecio);
+                                ListaDeArticulosApartados.add(ArticuloApartado);
+                            }
+
+                            //ORDENES-------------------------------------------------------
+                            String AplicaOrdenes = nodo.getString("art_aplica_ordenes_especiales");
+                            if (AplicaOrdenes.equals("true")&&(TieneExistencia.equals(""))) {
+                                String ArticuloCantidad = nodo.getString("tar_cantidad");
+                                String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
+                                JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
+                                String ArticuloIDApartado = NodoIDApartado.getString("uuid");
+                                JSONObject NodoIDApartadoVariante = nodo.getJSONObject("tar_id_variante");
+                                String ArticuloIDApartadoVariante = NodoIDApartadoVariante.getString("uuid");
+                                String ArticuloIDApartadoModificador = nodo.getString("tar_id_modificador");
+                                String ArticuloApartadoImportePagado = nodo.getString("tar_importe_pagado");
+                                String ArticuloIDApartadoExistencia = nodo.getString("art_id_existencia");
+                                String ArticuloApartadoAplicaDevolucion = nodo.getString("tar_aplica_para_devolucion");
+                                String ArticuloApartadoImporteDescuento = nodo.getString("tar_importe_descuento");
+                                String ArticuloApartadoTotal = nodo.getString("tar_importe_total");
+                                JSONObject nodoImpuestos = nodo.getJSONObject("tar_impuestos");
+                                Iterator keys = nodoImpuestos.keys();
+                                while (keys.hasNext()) {
+                                    Object key = keys.next();
+                                    String value = nodoImpuestos.getString((String) key);
+                                    Impuestos Impuesto = new Impuestos((String) key, value);
+                                    ImpuestosDeArticuloOrdenado.add(Impuesto);
+                                }
+                                String ArticuloApartadoPorcentajeDescuento = nodo.getString("tar_porcentaje_descuento");
+                                String ArticuloApartadoPrecio = nodo.getString("tar_precio_articulo");
+
+
+                                float importePagado = Float.parseFloat((ArticuloApartadoImportePagado));
+                                float importeTotal = Float.parseFloat((ArticuloApartadoTotal));
+                                float importeRestante = importeTotal - importePagado;
+
+                                OrdenEspecialArticuloModel ArticuloOrdenado = new OrdenEspecialArticuloModel(
+                                        ArticuloCantidad,
+                                        ArticuloIDApartado,
+                                        ArticuloIDApartadoVariante,
+                                        ArticuloIDApartadoModificador,
+                                        ArticuloApartadoImportePagado,
+                                        String.valueOf(importeRestante),
+                                        NombreArticuloApartado,
+                                        ArticuloApartadoAplicaDevolucion,
+                                        ArticuloApartadoImporteDescuento,
+                                        ArticuloApartadoTotal,
+                                        ImpuestosDeArticuloOrdenado,
+                                        ArticuloApartadoPorcentajeDescuento,
+                                        ArticuloApartadoPrecio);
+                                ListaDeArticulosOrdenados.add(ArticuloOrdenado);
+                            }
+                            else {
+
+                            }
+                        }
+
+
+                        //Se modifican los datos del ticket de venta
+                        ticket_de_venta.setTic_id(TicketIDVenta);
+                        ticket_de_venta.setTic_importe_descuentos(String.valueOf(DescuentoTotal));
+                        ticket_de_venta.setTic_importe_total(String.valueOf(PrecioTotal));
+                        ticket_de_venta.setTic_impuestos(String.valueOf(ImpuestoTotal));
+
+
+                        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+                        double Price = Double.parseDouble(ticket_de_venta.getTic_importe_total());
+                        total.setText(formatter.format(Price));
+
+                        double descu = Double.parseDouble(ticket_de_venta.getTic_importe_descuentos());
+                        descuento.setText(formatter.format(descu));
+
+                        double Iva = Double.parseDouble(ticket_de_venta.getTic_impuestos());
+                        impuesto.setText(formatter.format(Iva));
+
+                        double sub = Double.parseDouble(String.valueOf(Subtotal));
+                        subtotal.setText(formatter.format(sub));
+
+
+                        NodoTicketArticulos = Respuesta.getJSONArray("aDetalleTicket");
+                        for (int x = 0; x < NodoTicketArticulos.length(); x++) {
+                            JSONObject elemento = NodoTicketArticulos.getJSONObject(x);
+                            String NombreArticulo = elemento.getString("tar_nombre_articulo");
+                            JSONObject NodoTarID = elemento.getJSONObject("tar_id");
+                            String tar_id = NodoTarID.getString("uuid");
+
+                            int Checador=0;
+                            for (int j=0;j<ArticulosVenta.size();j++)
+                            {
+                                if(NombreArticulo.equals(ArticulosVenta.get(j).getarticulo_Nombre()))
+                                {
+                                    int cantidad= Integer.parseInt(ArticulosVenta.get(j).getArticulo_cantidad());
+                                    cantidad = cantidad + 1;
+                                    ArticulosVenta.get(j).setArticulo_cantidad(String.valueOf(cantidad));
+                                    Checador=1;
+                                    break;
+                                }
+                            }
+                            if (Checador==0)
+                            {
+                                String SKUArticulo = elemento.getString("art_sku");
+                                String cantidad = elemento.getString("tar_cantidad");
+                                String precio = elemento.getString("tar_precio_articulo");
+                                String descuento = elemento.getString("art_importe_descuento");
+                                String importe = elemento.getString("tar_importe_total");
+                                String existencia = elemento.getString("art_id_existencia");
+
+                                JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
+                                for (int z = 0; z < RespuestaImagenes.length(); z++) {
+                                    String RutaImagen = "http://192.168.100.192:8010" + RespuestaImagenes.getString(z);
+                                    Imagenes.add(RutaImagen);
+
+
+                                }
+
+
+                                final ArticuloModel articulo = new ArticuloModel("",
+                                        NombreArticulo,
+                                        "",
+                                        precio,
+                                        "",
+                                        "",
+                                        SKUArticulo,
+                                        "",
+                                        cantidad,
+                                        tar_id,
+                                        descuento,
+                                        "",
+                                        importe,"","",existencia
+                                );
+                                ArticulosVenta.add(articulo);
+                            }
+
+                        }
+                        final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
+                                total, descuento, impuesto, subtotal,
+                                carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados);
+                        articuloAdapter.notifyDataSetChanged();
+                        tabla_venta_articulos.setDataAdapter(articuloAdapter);
+                        LoadImages();
+                    } else {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
+
+    private void loadTicket(String Ticket_IDE)
+    {
+
+
+        try {
+
+            String url = getString(R.string.Url);
+
+            String ApiPath;
+
+            ApiPath = url + "/api/ventas/movimientos/obtener_detalle_ticket?" +
+                    "usu_id=" + usu_id +
+                    "&esApp=1" +
+                    "&tic_id="+ Ticket_IDE+
+                    "&suc_id=" + SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+            // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            try {
+
+                                int EstatusApi = Integer.parseInt(response.getString("estatus"));
+
+                                float ImpuestosTotal=0;
+                                String NombreSucursal="";
+                                String NumeroSucursal="";
+                                String Direccion="";
+                                String RazonSocial="";
+                                String RFC="";
+                                String LogoNegocio="";
+                                String FechaCreacion="";
+                                String NombreVendedor="";
+                                String NombreCliente="";
+                                String NumeroTicket="";
+                                String Subtotal = "";
+                                String Total = "";
+                                String ImpuestosTicket="";
+
+                                if (EstatusApi == 1) {
+
+                                    JSONObject RespuestaResultado = response.getJSONObject("resultado");
+
+                                    JSONObject NodoASucursal = RespuestaResultado.getJSONObject("aSucursal");
+                                    NombreSucursal = NodoASucursal.getString("suc_nombre");
+                                    NumeroSucursal = NodoASucursal.getString("suc_numero");
+                                    Direccion = NodoASucursal.getString("suc_direccion");
+                                    RazonSocial = NodoASucursal.getString("suc_razon_social");
+                                    RFC = NodoASucursal.getString("suc_rfc");
+                                    LogoNegocio = NodoASucursal.getString("con_logo_negocio");
+
+                                    JSONObject NodoTicket = RespuestaResultado.getJSONObject("aTicket");
+                                    FechaCreacion = NodoTicket.getString("tic_fecha_hora_creo");
+                                    NombreVendedor = NodoTicket.getString("tic_nombre_vendedor");
+                                    NombreCliente = NodoTicket.getString("tic_nombre_cliente");
+                                    Subtotal = NodoTicket.getString("tic_importe_subtotal");
+                                    Total = NodoTicket.getString("tic_importe_total");
+                                    JSONArray ArregloArticulos = NodoTicket.getJSONArray("aArticulos");
+                                    JSONArray NodoImpuestos = RespuestaResultado.getJSONArray("aTicketImpuestos");
+
+                                    ImpuestosTotal=0;
+                                    for(int i=0;i<NodoImpuestos.length();i++)
+                                    {
+                                        JSONObject elemento = NodoImpuestos.getJSONObject(i);
+                                        ImpuestosTotal= ImpuestosTotal+Float.parseFloat(elemento.getString("importe_impuesto"));
+                                    }
+
+                                    ListaArticulosTicket.clear();
+                                    for(int i=0;i<ArregloArticulos.length();i++)
+                                    {
+                                        JSONObject elemento = ArregloArticulos.getJSONObject(i);
+                                        String Cantidad = elemento.getString("tar_cantidad");
+                                        String Nombre = elemento.getString("tar_nombre_articulo");
+                                        String Precio = elemento.getString("tar_precio_articulo");
+                                        String Importe = elemento.getString("tar_importe_total");
+
+                                        ArticuloModel articulo =
+                                                new ArticuloModel("",
+                                                        Nombre,
+                                                        "",
+                                                        Precio,
+                                                        "",
+                                                        "",
+                                                        "",
+                                                        "",
+                                                        Cantidad,
+                                                        "",
+                                                        "",
+                                                        "",
+                                                        Importe,
+                                                        "",
+                                                        "",
+                                                        "");
+
+                                        ListaArticulosTicket.add(articulo);
+                                    }
+
+
+
+                                    JSONObject NodoCuentasBioNet = RespuestaResultado.getJSONObject("aCuentasBioNet");
+                                    NumeroTicket = NodoCuentasBioNet.getString("cbn_numero_ticket");
+
+                                    NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                                    String cadenaArticulos="";
+                                    for(int j=0; j<ListaArticulosTicket.size();j++)
+                                    {
+                                        double PrecioArticulo = Double.parseDouble(ListaArticulosTicket.get(j).getarticulo_Precio());
+                                        double ImporteArticulo = Double.parseDouble(ListaArticulosTicket.get(j).getArticulo_importe());
+
+
+                                        cadenaArticulos=cadenaArticulos+
+                                                ("<tr> \n"+
+                                                        "<td>"+ListaArticulosTicket.get(j).getArticulo_cantidad()+"</td>\n"+
+                                                        "<td>"+ListaArticulosTicket.get(j).getarticulo_Nombre()+"</td>\n"+
+                                                        "<td>"+formatter.format( PrecioArticulo )+"</td>\n"+
+                                                        "<td>"+formatter.format( ImporteArticulo )+"</td>\n"+
+                                                        "</tr>");
+                                    }
+
+                                    content= "<!DOCTYPE html>\n" +
+                                            "<html dir=\"ltr\" lang=\"en\">\n" +
+                                            "<head>\n" +
+                                            "    <meta charset=\"utf-8\">\n" +
+                                            "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                                            "<style type=\"text/css\" media=\"all\">\n" +
+                                            "#tblTicketTemplate {\n" +
+                                            "  width: 100%;\n" +
+                                            "  font-size: 10px;\n" +
+                                            "  font-family: \"Courier New\";\n" +
+                                            "  text-transform: uppercase;\n" +
+                                            "  line-height: 1.3;\n" +
+                                            "  border: solid 1px #D4DADF;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate thead tr td {\n" +
+                                            "  padding-left: 10%;\n" +
+                                            "  padding-right: 10%;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate #tdLogo {\n" +
+                                            "  text-align: center;\n" +
+                                            "  vertical-align: middle;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate #tdFiscal{\n" +
+                                            "  text-align: center;\n" +
+                                            "  vertical-align: middle;\n" +
+                                            "  font-weight: bold;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate .trDivider{\n" +
+                                            "  border-bottom: dashed 1px black;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate .trDivider td {\n" +
+                                            "  padding-bottom: 3px;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate .trDivider + tr td {\n" +
+                                            "  padding-top: 3px;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate tbody .trInfo{\n" +
+                                            "  font-size: 10px;\n" +
+                                            "  vertical-align: top;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate tbody .trInfo td a{\n" +
+                                            "  text-align: center;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate tbody #trTituloDetalle{\n" +
+                                            "  font-weight: bold;\n" +
+                                            "  text-align: center;\n" +
+                                            "  border-top: dashed 1px black;\n" +
+                                            "  border-bottom: dashed 1px black;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate tbody .trArticulo{\n" +
+                                            "  font-size: 10px;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate .importe{\n" +
+                                            "  text-align: right;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate tbody .trArticulo + tr td{\n" +
+                                            "  font-size: 9px;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate tbody .trTotal{\n" +
+                                            "  font-size: 14px;\n" +
+                                            "  font-weight: bold;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate tfoot{\n" +
+                                            "  text-align: center;\n" +
+                                            "}\n" +
+                                            "</style>\n" +
+                                            "</head>\n" +
+                                            "<body>\n"+
+                                            "<table id=\"tblTicketTemplate\">\n" +
+                                            "  <thead>\n" +
+                                            "    <tr>\n" +
+                                            "      <td id=\"tdLogo\" colspan=\"4\">\n" +
+                                            "        <img src="+getString(R.string.Url)+LogoNegocio+" class=\"img_con_logo_ticket\" width=\"100%\" height=\"75\" />\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr>\n" +
+                                            "      <td id=\"tdFiscal\" colspan=\"4\">\n" +
+                                            "        "+RazonSocial+"<br />"+RFC+"\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trDivider\">\n" +
+                                            "      <td id=\"tdFiscal\" colspan=\"4\">\n" +
+                                            "        <!--Funciones::formatDireccion($aDatos['aSucursalPrincipal']['suc_direccion'], \"suc_\")-->\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr>\n" +
+                                            "      <td id=\"tdFiscal2\" colspan=\"4\">\n" +
+                                            "        <!--Funciones::formatDireccion($aDatos['aSucursal']['suc_direccion'], \"suc_\")-->\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trDivider\">\n" +
+                                            "      <td id=\"tdFiscalTelefono\" colspan=\"4\">\n" +
+                                            "        <!--Tel.:  $aDatos['aSucursal']['suc_telefono'] -->\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "  </thead>\n" +
+                                            "  <tbody>\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td id=\"tdFechaHora\" colspan=\"2\">\n" +
+                                            "        <b>Fec./Hr.:</b> "+FechaCreacion+"\n" +
+                                            "      </td>\n" +
+                                            "      <td id=\"tdTicketNum\" colspan=\"2\">\n" +
+                                            "        <b>Ticket:</b>"+NumeroTicket+"\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td id=\"tdVendedor\" colspan=\"4\">\n" +
+                                            "        <b>Vendedor:</b>"+NombreVendedor+"\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td id=\"tdCliente\" colspan=\"4\">\n" +
+                                            "        <b>Cliente:</b>"+NombreCliente+"\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr id=\"trTituloDetalle\">\n" +
+                                            "      <td>C.</td>\n" +
+                                            "      <td>Articulo</td>\n" +
+                                            "      <td>P.U.</td>\n" +
+                                            "      <td>Importe</td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr id=\"tableListArticulos\">\n" +
+                                            "      "+ cadenaArticulos +
+                                            "      <tr>\n" +
+                                            "        <td></td>\n" +
+                                            "        <!--td colspan=\"2\">Descripción del articulo</td-->\n" +
+                                            "        <td></td>\n" +
+                                            "      </tr-->\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trDivider\">\n" +
+                                            "      <td colspan=\"4\"></td>\n" +
+                                            "    </tr>\n" +
+                                            "\n" +
+                                            "    <tr class=\"trTotales\">\n" +
+                                            "      <td colspan=\"2\">Subtotal:</td>\n" +
+                                            "      <td class=\"importe\">$"+Subtotal+"</td>\n" +
+                                            "      <td id=\"tdSubTotal\" class=\"importe\"></td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr id=\"trImpuestosTotales\" class=\"trTotales\">\n" +
+                                            "      <td colspan=\"2\">Impuestos:</td>\n" +
+                                            "      <td class=\"importe\">"+formatter.format( ImpuestosTotal)+"</td>\n" +
+                                            "      <!--td class=\"importe\">123</td-->\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trTotal\">\n" +
+                                            "      <td colspan=\"2\">Total:</td>\n" +
+                                            "      <td class=\"importe\">$"+Total+"</td>\n" +
+                                            "      <td id=\"tdTotal\" class=\"importe\"></td>\n" +
+                                            "    </tr>\n" +
+                                            "\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td id=\"tdQR\" colspan=\"4\">\n" +
+                                            "        <!--if(trim(@$aDatos['aSucursal']['con_url_encuesta']) != \"\")\n" +
+                                            "          <a href=\" trim(@$aDatos['aSucursal']['con_url_encuesta']) \" target=\"_blank\">\n" +
+                                            "            !! QrCode::size(200)->generate(trim($aDatos['aSucursal']['con_url_encuesta'])); !!\n" +
+                                            "          </a>\n" +
+                                            "          <br />\n" +
+                                            "          <a href=\" trim(@$aDatos['aSucursal']['con_url_encuesta']) \" target=\"_blank\">Nos Interesa su opinión</a>\n" +
+                                            "        endif-->\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td colspan=\"4\">\n" +
+                                            "        <!--b>Tarjeta de Credito:</b> 0099-->\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td colspan=\"4\">\n" +
+                                            "        <!--b>Folio de facturación:</b><br />0001-001-09-101010-->\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trInfo trDivider\">\n" +
+                                            "      <td colspan=\"4\">\n" +
+                                            "        <!--Usted cuenta con 132 puntos del programa de lealtad-->\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <!--if (trim($aDatos['aSucursal']['con_texto_politica_devolucion_ticket_digital']) != \"\")\n" +
+                                            "      <tr class=\"trInfo trDivider\">\n" +
+                                            "        <td colspan=\"4\">\n" +
+                                            "          <small><b>*<span id=\"text_con_texto_politica_devolucion_ticket_digital\"> $aDatos['aSucursal']['con_texto_politica_devolucion_ticket_digital'] </span></b></small>\n" +
+                                            "        </td>\n" +
+                                            "      </tr>\n" +
+                                            "    endif-->\n" +
+                                            "\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td colspan=\"4\">\n" +
+                                            "        <small><span id=\"text_con_texto_personalidado_ticket_digital\" class=\"h5\"><!-- $aDatos['aSucursal']['con_texto_personalidado_ticket_digital'] --></span></small>\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "\n" +
+                                            "  </tbody>\n" +
+                                            "  <tfoot>\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td colspan=\"4\">\n" +
+                                            "        Este ticket fue creado desde bio-Net Punto de Venta, el mejor sistema para tu negocio, para más información visita <a href=\"bionetpos.com\" target=\"_blank\">bionetpos.com</a>\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "  </tfoot>\n" +
+                                            "</table>\n"+
+                                            "</body>\n"+
+                                            "</html>";
+                                    Dialog dialog = new Dialog(getContext());
+                                    dialog.setContentView(R.layout.pop_up_ticket_web);
+                                    webView = (WebView) dialog.findViewById(R.id.simpleWebView);
+                                    // displaying text in WebView
+                                    webView.loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
+                                    dialog.show();
+
+                                    File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "/PDFTicket/");
+                                    final String fileName="Ticket.pdf";
+
+                                    final ProgressDialog progressDialog=new ProgressDialog(getContext());
+                                    progressDialog.setMessage("Espere un momento por favor");
+                                    progressDialog.show();
+                                    PdfView.createWebPrintJob(getActivity(), webView, directory, fileName, new PdfView.Callback() {
+
+                                        @Override
+                                        public void success(String path) {
+                                            progressDialog.dismiss();
+                                            PdfView.openPdfFile(getActivity(),getString(R.string.app_name),"¿Desea abrir el archivo pdf?"+fileName,path);
+                                        }
+
+                                        @Override
+                                        public void failure() {
+                                            progressDialog.dismiss();
+
+                                        }
+                                    });
+
+
+
+                                }
+                            } catch (JSONException e) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(e), Toast.LENGTH_LONG);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf(error), Toast.LENGTH_LONG);
+                        }
+                    }
+            );
+            getRequest.setShouldCache(false);
+
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+        } catch (Error e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 

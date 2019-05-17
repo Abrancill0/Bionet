@@ -139,7 +139,6 @@ public class SincronizarAdapter extends LongPressAwareTableDataAdapter<Sincroniz
                 // Envio_gratis;
                 // Precio;
 
-
                 //ecommerse_cliente
                 //ecommerse_tipo_pago
                 //ecommerse_costo

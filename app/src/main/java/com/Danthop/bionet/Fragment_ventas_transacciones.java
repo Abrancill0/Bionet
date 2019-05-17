@@ -2,9 +2,11 @@ package com.Danthop.bionet;
 
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -44,11 +46,13 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.squareup.timessquare.CalendarPickerView;
+import com.webviewtopdf.PdfView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -76,6 +80,7 @@ public class Fragment_ventas_transacciones extends Fragment {
     private View btn_ordenes_especiales;
 
     private Button btn_corte_caja;
+    private Button Comisiones;
     private Button btn_ventas;
 
     private Spinner SpinnerSucursal;
@@ -133,7 +138,7 @@ public class Fragment_ventas_transacciones extends Fragment {
     private String Subtotal = "";
     private String Total = "";
     private String ImpuestosTicket="";
-    private int ImpuestosTotal=0;
+    private float ImpuestosTotal=0;
 
     private List<ArticuloModel> ListaArticulosTicket = new ArrayList<>();
 
@@ -165,6 +170,7 @@ public class Fragment_ventas_transacciones extends Fragment {
         transacciones = v.findViewById(R.id.transacciones);
         total_ventas = v.findViewById(R.id.totalVentas);
         best_seller = v.findViewById(R.id.masVendido);
+        Comisiones = v.findViewById( R.id.Comisiones);
 
         Abrir_calendarioInicial = v.findViewById(R.id.abrir_calendarioInicial);
         Abrir_calendarioFinal = v.findViewById(R.id.abrir_calendarioFinal);
@@ -275,6 +281,12 @@ public class Fragment_ventas_transacciones extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();
+            }
+        });
+        Comisiones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fr.replace(R.id.fragment_container, new Fragment_pestania_comison()).commit();
             }
         });
 
@@ -765,6 +777,9 @@ public class Fragment_ventas_transacciones extends Fragment {
 
     public void LoadMovimientos(){
         Lista_de_movimientos.clear();
+        final ProgressDialog progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.show();
         if(FormaPagoName.isEmpty()&&UsuarioVentaName.isEmpty()) {
             try {
 
@@ -843,7 +858,7 @@ public class Fragment_ventas_transacciones extends Fragment {
 
                                         SpinnerUsuarioVenta.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, UsuarioVentaName));
 
-
+                                        progressDialog.dismiss();
                                     }
                                 } catch (JSONException e) {
                                     Toast toast1 =
@@ -925,6 +940,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                         movimientoAdapter.notifyDataSetChanged();
                                         TablaMovimientos.setDataAdapter(movimientoAdapter);
 
+                                        progressDialog.dismiss();
                                     }
                                 } catch (JSONException e) {
                                     Toast toast1 =
@@ -1085,9 +1101,10 @@ public class Fragment_ventas_transacciones extends Fragment {
                                     for(int i=0;i<NodoImpuestos.length();i++)
                                     {
                                         JSONObject elemento = NodoImpuestos.getJSONObject(i);
-                                        ImpuestosTotal= Integer.parseInt(ImpuestosTotal+elemento.getString("importe_impuesto"));
+                                        ImpuestosTotal= ImpuestosTotal+Float.parseFloat(elemento.getString("importe_impuesto"));
                                     }
 
+                                    ListaArticulosTicket.clear();
                                     for(int i=0;i<ArregloArticulos.length();i++)
                                     {
                                         JSONObject elemento = ArregloArticulos.getJSONObject(i);
@@ -1122,6 +1139,252 @@ public class Fragment_ventas_transacciones extends Fragment {
                                     JSONObject NodoCuentasBioNet = RespuestaResultado.getJSONObject("aCuentasBioNet");
                                     NumeroTicket = NodoCuentasBioNet.getString("cbn_numero_ticket");
 
+                                    NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                                    String cadenaArticulos="";
+                                    for(int j=0; j<ListaArticulosTicket.size();j++)
+                                    {
+                                        double PrecioArticulo = Double.parseDouble(ListaArticulosTicket.get(j).getarticulo_Precio());
+                                        double ImporteArticulo = Double.parseDouble(ListaArticulosTicket.get(j).getArticulo_importe());
+
+
+                                        cadenaArticulos=cadenaArticulos+
+                                                ("<tr> \n"+
+                                                        "<td>"+ListaArticulosTicket.get(j).getArticulo_cantidad()+"</td>\n"+
+                                                        "<td>"+ListaArticulosTicket.get(j).getarticulo_Nombre()+"</td>\n"+
+                                                        "<td>"+formatter.format( PrecioArticulo )+"</td>\n"+
+                                                        "<td>"+formatter.format( ImporteArticulo )+"</td>\n"+
+                                                        "</tr>");
+                                    }
+
+                                    content= "<!DOCTYPE html>\n" +
+                                            "<html dir=\"ltr\" lang=\"en\">\n" +
+                                            "<head>\n" +
+                                            "    <meta charset=\"utf-8\">\n" +
+                                            "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                                            "<style type=\"text/css\" media=\"all\">\n" +
+                                            "#tblTicketTemplate {\n" +
+                                            "  width: 100%;\n" +
+                                            "  font-size: 10px;\n" +
+                                            "  font-family: \"Courier New\";\n" +
+                                            "  text-transform: uppercase;\n" +
+                                            "  line-height: 1.3;\n" +
+                                            "  border: solid 1px #D4DADF;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate thead tr td {\n" +
+                                            "  padding-left: 10%;\n" +
+                                            "  padding-right: 10%;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate #tdLogo {\n" +
+                                            "  text-align: center;\n" +
+                                            "  vertical-align: middle;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate #tdFiscal{\n" +
+                                            "  text-align: center;\n" +
+                                            "  vertical-align: middle;\n" +
+                                            "  font-weight: bold;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate .trDivider{\n" +
+                                            "  border-bottom: dashed 1px black;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate .trDivider td {\n" +
+                                            "  padding-bottom: 3px;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate .trDivider + tr td {\n" +
+                                            "  padding-top: 3px;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate tbody .trInfo{\n" +
+                                            "  font-size: 10px;\n" +
+                                            "  vertical-align: top;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate tbody .trInfo td a{\n" +
+                                            "  text-align: center;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate tbody #trTituloDetalle{\n" +
+                                            "  font-weight: bold;\n" +
+                                            "  text-align: center;\n" +
+                                            "  border-top: dashed 1px black;\n" +
+                                            "  border-bottom: dashed 1px black;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate tbody .trArticulo{\n" +
+                                            "  font-size: 10px;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate .importe{\n" +
+                                            "  text-align: right;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate tbody .trArticulo + tr td{\n" +
+                                            "  font-size: 9px;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate tbody .trTotal{\n" +
+                                            "  font-size: 14px;\n" +
+                                            "  font-weight: bold;\n" +
+                                            "}\n" +
+                                            "#tblTicketTemplate tfoot{\n" +
+                                            "  text-align: center;\n" +
+                                            "}\n" +
+                                            "</style>\n" +
+                                            "</head>\n" +
+                                            "<body>\n"+
+                                            "<table id=\"tblTicketTemplate\">\n" +
+                                            "  <thead>\n" +
+                                            "    <tr>\n" +
+                                            "      <td id=\"tdLogo\" colspan=\"4\">\n" +
+                                            "        <img src="+getString(R.string.Url)+LogoNegocio+" class=\"img_con_logo_ticket\" width=\"100%\" height=\"75\" />\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr>\n" +
+                                            "      <td id=\"tdFiscal\" colspan=\"4\">\n" +
+                                            "        "+RazonSocial+"<br />"+RFC+"\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trDivider\">\n" +
+                                            "      <td id=\"tdFiscal\" colspan=\"4\">\n" +
+                                            "        <!--Funciones::formatDireccion($aDatos['aSucursalPrincipal']['suc_direccion'], \"suc_\")-->\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr>\n" +
+                                            "      <td id=\"tdFiscal2\" colspan=\"4\">\n" +
+                                            "        <!--Funciones::formatDireccion($aDatos['aSucursal']['suc_direccion'], \"suc_\")-->\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trDivider\">\n" +
+                                            "      <td id=\"tdFiscalTelefono\" colspan=\"4\">\n" +
+                                            "        <!--Tel.:  $aDatos['aSucursal']['suc_telefono'] -->\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "  </thead>\n" +
+                                            "  <tbody>\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td id=\"tdFechaHora\" colspan=\"2\">\n" +
+                                            "        <b>Fec./Hr.:</b> "+FechaCreacion+"\n" +
+                                            "      </td>\n" +
+                                            "      <td id=\"tdTicketNum\" colspan=\"2\">\n" +
+                                            "        <b>Ticket:</b>"+NumeroTicket+"\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td id=\"tdVendedor\" colspan=\"4\">\n" +
+                                            "        <b>Vendedor:</b>"+NombreVendedor+"\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td id=\"tdCliente\" colspan=\"4\">\n" +
+                                            "        <b>Cliente:</b>"+NombreCliente+"\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr id=\"trTituloDetalle\">\n" +
+                                            "      <td>C.</td>\n" +
+                                            "      <td>Articulo</td>\n" +
+                                            "      <td>P.U.</td>\n" +
+                                            "      <td>Importe</td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr id=\"tableListArticulos\">\n" +
+                                            "      "+ cadenaArticulos +
+                                            "      <tr>\n" +
+                                            "        <td></td>\n" +
+                                            "        <!--td colspan=\"2\">Descripción del articulo</td-->\n" +
+                                            "        <td></td>\n" +
+                                            "      </tr-->\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trDivider\">\n" +
+                                            "      <td colspan=\"4\"></td>\n" +
+                                            "    </tr>\n" +
+                                            "\n" +
+                                            "    <tr class=\"trTotales\">\n" +
+                                            "      <td colspan=\"2\">Subtotal:</td>\n" +
+                                            "      <td class=\"importe\">$"+Subtotal+"</td>\n" +
+                                            "      <td id=\"tdSubTotal\" class=\"importe\"></td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr id=\"trImpuestosTotales\" class=\"trTotales\">\n" +
+                                            "      <td colspan=\"2\">Impuestos:</td>\n" +
+                                            "      <td class=\"importe\">"+formatter.format( ImpuestosTotal)+"</td>\n" +
+                                            "      <!--td class=\"importe\">123</td-->\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trTotal\">\n" +
+                                            "      <td colspan=\"2\">Total:</td>\n" +
+                                            "      <td class=\"importe\">$"+Total+"</td>\n" +
+                                            "      <td id=\"tdTotal\" class=\"importe\"></td>\n" +
+                                            "    </tr>\n" +
+                                            "\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td id=\"tdQR\" colspan=\"4\">\n" +
+                                            "        <!--if(trim(@$aDatos['aSucursal']['con_url_encuesta']) != \"\")\n" +
+                                            "          <a href=\" trim(@$aDatos['aSucursal']['con_url_encuesta']) \" target=\"_blank\">\n" +
+                                            "            !! QrCode::size(200)->generate(trim($aDatos['aSucursal']['con_url_encuesta'])); !!\n" +
+                                            "          </a>\n" +
+                                            "          <br />\n" +
+                                            "          <a href=\" trim(@$aDatos['aSucursal']['con_url_encuesta']) \" target=\"_blank\">Nos Interesa su opinión</a>\n" +
+                                            "        endif-->\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td colspan=\"4\">\n" +
+                                            "        <!--b>Tarjeta de Credito:</b> 0099-->\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td colspan=\"4\">\n" +
+                                            "        <!--b>Folio de facturación:</b><br />0001-001-09-101010-->\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <tr class=\"trInfo trDivider\">\n" +
+                                            "      <td colspan=\"4\">\n" +
+                                            "        <!--Usted cuenta con 132 puntos del programa de lealtad-->\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "    <!--if (trim($aDatos['aSucursal']['con_texto_politica_devolucion_ticket_digital']) != \"\")\n" +
+                                            "      <tr class=\"trInfo trDivider\">\n" +
+                                            "        <td colspan=\"4\">\n" +
+                                            "          <small><b>*<span id=\"text_con_texto_politica_devolucion_ticket_digital\"> $aDatos['aSucursal']['con_texto_politica_devolucion_ticket_digital'] </span></b></small>\n" +
+                                            "        </td>\n" +
+                                            "      </tr>\n" +
+                                            "    endif-->\n" +
+                                            "\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td colspan=\"4\">\n" +
+                                            "        <small><span id=\"text_con_texto_personalidado_ticket_digital\" class=\"h5\"><!-- $aDatos['aSucursal']['con_texto_personalidado_ticket_digital'] --></span></small>\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "\n" +
+                                            "  </tbody>\n" +
+                                            "  <tfoot>\n" +
+                                            "    <tr class=\"trInfo\">\n" +
+                                            "      <td colspan=\"4\">\n" +
+                                            "        Este ticket fue creado desde bio-Net Punto de Venta, el mejor sistema para tu negocio, para más información visita <a href=\"bionetpos.com\" target=\"_blank\">bionetpos.com</a>\n" +
+                                            "      </td>\n" +
+                                            "    </tr>\n" +
+                                            "  </tfoot>\n" +
+                                            "</table>\n"+
+                                            "</body>\n"+
+                                            "</html>";
+                                    Dialog dialog = new Dialog(getContext());
+                                    dialog.setContentView(R.layout.pop_up_ticket_web);
+                                    webView = (WebView) dialog.findViewById(R.id.simpleWebView);
+                                    // displaying text in WebView
+                                    webView.loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
+                                    dialog.show();
+
+                                    File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "/PDFTicket/");
+                                    final String fileName="Ticket.pdf";
+
+                                    final ProgressDialog progressDialog=new ProgressDialog(getContext());
+                                    progressDialog.setMessage("Espere un momento por favor");
+                                    progressDialog.show();
+                                    PdfView.createWebPrintJob(getActivity(), webView, directory, fileName, new PdfView.Callback() {
+
+                                        @Override
+                                        public void success(String path) {
+                                            progressDialog.dismiss();
+                                            PdfView.openPdfFile(getActivity(),getString(R.string.app_name),"¿Desea abrir el archivo pdf?"+fileName,path);
+                                        }
+
+                                        @Override
+                                        public void failure() {
+                                            progressDialog.dismiss();
+
+                                        }
+                                    });
+
 
 
                                 }
@@ -1148,230 +1411,7 @@ public class Fragment_ventas_transacciones extends Fragment {
             e.printStackTrace();
         }
 
-        NumberFormat formatter = NumberFormat.getCurrencyInstance();
-        String cadenaArticulos="";
-        for(int j=0; j<ListaArticulosTicket.size();j++)
-        {
-            double PrecioArticulo = Double.parseDouble(ListaArticulosTicket.get(j).getarticulo_Precio());
-            double ImporteArticulo = Double.parseDouble(ListaArticulosTicket.get(j).getArticulo_importe());
 
-
-            cadenaArticulos=cadenaArticulos+
-                    ("<tr> \n"+
-                    "<td>"+ListaArticulosTicket.get(j).getArticulo_cantidad()+"</td>\n"+
-                    "<td>"+ListaArticulosTicket.get(j).getarticulo_Nombre()+"</td>\n"+
-                    "<td>"+formatter.format( PrecioArticulo )+"</td>\n"+
-                            "<td>"+formatter.format( ImporteArticulo )+"</td>\n"+
-                    "</tr>");
-        }
-
-                content= "<!DOCTYPE html>\n" +
-                "<html dir=\"ltr\" lang=\"en\">\n" +
-                "<head>\n" +
-                "    <meta charset=\"utf-8\">\n" +
-                "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
-                    "<style type=\"text/css\" media=\"all\">\n" +
-                    "#tblTicketTemplate {\n" +
-                    "  width: 100%;\n" +
-                    "  font-size: 10px;\n" +
-                    "  font-family: \"Courier New\";\n" +
-                    "  text-transform: uppercase;\n" +
-                    "  line-height: 1.3;\n" +
-                    "  border: solid 1px #D4DADF;\n" +
-                    "}\n" +
-                    "#tblTicketTemplate thead tr td {\n" +
-                    "  padding-left: 10%;\n" +
-                    "  padding-right: 10%;\n" +
-                    "}\n" +
-                    "#tblTicketTemplate #tdLogo {\n" +
-                    "  text-align: center;\n" +
-                    "  vertical-align: middle;\n" +
-                    "}\n" +
-                    "#tblTicketTemplate #tdFiscal{\n" +
-                    "  text-align: center;\n" +
-                    "  vertical-align: middle;\n" +
-                    "  font-weight: bold;\n" +
-                    "}\n" +
-                    "#tblTicketTemplate .trDivider{\n" +
-                    "  border-bottom: dashed 1px black;\n" +
-                    "}\n" +
-                    "#tblTicketTemplate .trDivider td {\n" +
-                    "  padding-bottom: 3px;\n" +
-                    "}\n" +
-                    "#tblTicketTemplate .trDivider + tr td {\n" +
-                    "  padding-top: 3px;\n" +
-                    "}\n" +
-                    "#tblTicketTemplate tbody .trInfo{\n" +
-                    "  font-size: 10px;\n" +
-                    "  vertical-align: top;\n" +
-                    "}\n" +
-                    "#tblTicketTemplate tbody .trInfo td a{\n" +
-                    "  text-align: center;\n" +
-                    "}\n" +
-                    "#tblTicketTemplate tbody #trTituloDetalle{\n" +
-                    "  font-weight: bold;\n" +
-                    "  text-align: center;\n" +
-                    "  border-top: dashed 1px black;\n" +
-                    "  border-bottom: dashed 1px black;\n" +
-                    "}\n" +
-                    "#tblTicketTemplate tbody .trArticulo{\n" +
-                    "  font-size: 10px;\n" +
-                    "}\n" +
-                    "#tblTicketTemplate .importe{\n" +
-                    "  text-align: right;\n" +
-                    "}\n" +
-                    "#tblTicketTemplate tbody .trArticulo + tr td{\n" +
-                    "  font-size: 9px;\n" +
-                    "}\n" +
-                    "#tblTicketTemplate tbody .trTotal{\n" +
-                    "  font-size: 14px;\n" +
-                    "  font-weight: bold;\n" +
-                    "}\n" +
-                    "#tblTicketTemplate tfoot{\n" +
-                    "  text-align: center;\n" +
-                    "}\n" +
-                    "</style>\n" +
-                "</head>\n" +
-                "<body>\n"+
-                "<table id=\"tblTicketTemplate\">\n" +
-                "  <thead>\n" +
-                "    <tr>\n" +
-                "      <td id=\"tdLogo\" colspan=\"4\">\n" +
-                "        <img src="+getString(R.string.Url)+LogoNegocio+" class=\"img_con_logo_ticket\" width=\"100%\" height=\"75\" />\n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "    <tr>\n" +
-                "      <td id=\"tdFiscal\" colspan=\"4\">\n" +
-                "        "+RazonSocial+"<br />"+RFC+"\n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "    <tr class=\"trDivider\">\n" +
-                "      <td id=\"tdFiscal\" colspan=\"4\">\n" +
-                "        <!--Funciones::formatDireccion($aDatos['aSucursalPrincipal']['suc_direccion'], \"suc_\")-->\n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "    <tr>\n" +
-                "      <td id=\"tdFiscal2\" colspan=\"4\">\n" +
-                "        <!--Funciones::formatDireccion($aDatos['aSucursal']['suc_direccion'], \"suc_\")-->\n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "    <tr class=\"trDivider\">\n" +
-                "      <td id=\"tdFiscalTelefono\" colspan=\"4\">\n" +
-                "        <!--Tel.:  $aDatos['aSucursal']['suc_telefono'] -->\n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "  </thead>\n" +
-                "  <tbody>\n" +
-                "    <tr class=\"trInfo\">\n" +
-                "      <td id=\"tdFechaHora\" colspan=\"2\">\n" +
-                "        <b>Fec./Hr.:</b> "+FechaCreacion+"\n" +
-                "      </td>\n" +
-                "      <td id=\"tdTicketNum\" colspan=\"2\">\n" +
-                "        <b>Ticket:</b>"+NumeroTicket+"\n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "    <tr class=\"trInfo\">\n" +
-                "      <td id=\"tdVendedor\" colspan=\"4\">\n" +
-                "        <b>Vendedor:</b>"+NombreVendedor+"\n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "    <tr class=\"trInfo\">\n" +
-                "      <td id=\"tdCliente\" colspan=\"4\">\n" +
-                "        <b>Cliente:</b>"+NombreCliente+"\n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "    <tr id=\"trTituloDetalle\">\n" +
-                "      <td>C.</td>\n" +
-                "      <td>Articulo</td>\n" +
-                "      <td>P.U.</td>\n" +
-                "      <td>Importe</td>\n" +
-                "    </tr>\n" +
-                "    <tr id=\"tableListArticulos\">\n" +
-                "      "+ cadenaArticulos +
-                "      <tr>\n" +
-                "        <td></td>\n" +
-                "        <!--td colspan=\"2\">Descripción del articulo</td-->\n" +
-                "        <td></td>\n" +
-                "      </tr-->\n" +
-                "    </tr>\n" +
-                "    <tr class=\"trDivider\">\n" +
-                "      <td colspan=\"4\"></td>\n" +
-                "    </tr>\n" +
-                "\n" +
-                "    <tr class=\"trTotales\">\n" +
-                "      <td colspan=\"2\">Subtotal:</td>\n" +
-                "      <td class=\"importe\">$"+Subtotal+"</td>\n" +
-                "      <td id=\"tdSubTotal\" class=\"importe\"></td>\n" +
-                "    </tr>\n" +
-                "    <tr id=\"trImpuestosTotales\" class=\"trTotales\">\n" +
-                "      <!--td colspan=\"2\">Impuesto(9.0%):</td>\n" +
-                "      <td class=\"importe\">$"+formatter.format( ImpuestosTotal)+"</td>\n" +
-                "      <td class=\"importe\">123</td-->\n" +
-                "    </tr>\n" +
-                "    <tr class=\"trTotal\">\n" +
-                "      <td colspan=\"2\">Total:</td>\n" +
-                "      <td class=\"importe\">$"+Total+"</td>\n" +
-                "      <td id=\"tdTotal\" class=\"importe\"></td>\n" +
-                "    </tr>\n" +
-                "\n" +
-                "    <tr class=\"trInfo\">\n" +
-                "      <td id=\"tdQR\" colspan=\"4\">\n" +
-                "        <!--if(trim(@$aDatos['aSucursal']['con_url_encuesta']) != \"\")\n" +
-                "          <a href=\" trim(@$aDatos['aSucursal']['con_url_encuesta']) \" target=\"_blank\">\n" +
-                "            !! QrCode::size(200)->generate(trim($aDatos['aSucursal']['con_url_encuesta'])); !!\n" +
-                "          </a>\n" +
-                "          <br />\n" +
-                "          <a href=\" trim(@$aDatos['aSucursal']['con_url_encuesta']) \" target=\"_blank\">Nos Interesa su opinión</a>\n" +
-                "        endif-->\n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "\n" +
-                "    <tr class=\"trInfo\">\n" +
-                "      <td colspan=\"4\">\n" +
-                "        <!--b>Tarjeta de Credito:</b> 0099-->\n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "    <tr class=\"trInfo\">\n" +
-                "      <td colspan=\"4\">\n" +
-                "        <!--b>Folio de facturación:</b><br />0001-001-09-101010-->\n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "    <tr class=\"trInfo trDivider\">\n" +
-                "      <td colspan=\"4\">\n" +
-                "        <!--Usted cuenta con 132 puntos del programa de lealtad-->\n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "    <!--if (trim($aDatos['aSucursal']['con_texto_politica_devolucion_ticket_digital']) != \"\")\n" +
-                "      <tr class=\"trInfo trDivider\">\n" +
-                "        <td colspan=\"4\">\n" +
-                "          <small><b>*<span id=\"text_con_texto_politica_devolucion_ticket_digital\"> $aDatos['aSucursal']['con_texto_politica_devolucion_ticket_digital'] </span></b></small>\n" +
-                "        </td>\n" +
-                "      </tr>\n" +
-                "    endif-->\n" +
-                "\n" +
-                "    <tr class=\"trInfo\">\n" +
-                "      <td colspan=\"4\">\n" +
-                "        <small><span id=\"text_con_texto_personalidado_ticket_digital\" class=\"h5\"><!-- $aDatos['aSucursal']['con_texto_personalidado_ticket_digital'] --></span></small>\n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "\n" +
-                "  </tbody>\n" +
-                "  <tfoot>\n" +
-                "    <tr class=\"trInfo\">\n" +
-                "      <td colspan=\"4\">\n" +
-                "        Este ticket fue creado desde bio-Net Punto de Venta, el mejor sistema para tu negocio, para más información visita <a href=\"bionetpos.com\" target=\"_blank\">bionetpos.com</a>\n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "  </tfoot>\n" +
-                "</table>\n"+
-                "</body>\n"+
-                "</html>";
-        Dialog dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.pop_up_ticket_web);
-        webView = (WebView) dialog.findViewById(R.id.simpleWebView);
-        // displaying text in WebView
-        webView.loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
-        dialog.show();
 
     }
 

@@ -58,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:background="@color/fondo_azul"
+                android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
                 android:text="Corte de caja"
                 android:textAllCaps="false" />
@@ -75,60 +75,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
+                android:background="@color/fondo_azul"
                 android:text="Comisiones"
                 android:textAllCaps="false" />
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="215dp"
-        android:layout_weight=".3"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn_corte"
-            style="@android:style/Widget.Holo.Light.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:background="@color/fondo_azul"
-            android:drawableLeft="@drawable/ic_agregar_producto"
-            android:paddingHorizontal="20dp"
-            android:text="Corte de Caja"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/btn_listado_corte"
-            style="@android:style/Widget.Holo.Light.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:layout_marginHorizontal="20dp"
-            android:drawableLeft="@drawable/ic_agregar_cliente"
-            android:paddingHorizontal="10dp"
-            android:text="Listado de Corte"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/btn_factura_ventas"
-            style="@android:style/Widget.Holo.Light.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:background="@null"
-            android:drawableLeft="@drawable/ic_agregar_vendedor"
-            android:paddingHorizontal="10dp"
-            android:text="Factura Ventas"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="14sp" />
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -140,8 +93,8 @@
         <TextView
             android:layout_width="300dp"
             android:layout_height="match_parent"
-            android:text="Generar Corte de Caja."
-            android:textSize="24dp"
+            android:text="Comisiones"
+            android:textSize="22dp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -149,72 +102,23 @@
         android:id="@+id/LayoutFechas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp">
-
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="Fecha Inicio:"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            />
-
-        <EditText
-            android:id="@+id/btnfechainicio"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
-            android:inputType="date"
-            android:focusable="false"
-            android:gravity="center"
-            android:drawableLeft="@drawable/calend25"
-            android:background="@color/gray2"
-            />
-
-        <TextView
-            android:layout_width="85dp"
-            android:layout_height="wrap_content"
-            android:text="Fecha Fin:"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            android:layout_marginLeft="10dp"
-            />
-
-        <EditText
-            android:id="@+id/btnfechafin"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
-            android:inputType="date"
-            android:focusable="false"
-            android:gravity="center"
-            android:drawableLeft="@drawable/calend25"
-            android:background="@color/gray2"
-           />
-
-        <Button
-            android:id="@+id/btn_buscar"
-            style="@android:style/Widget.Holo.Light.Button"
-            android:layout_width="150dp"
-            android:layout_height="30dp"
-            android:background="@color/colorPrimaryDark"
-            android:text="Buscar"
-            android:textColor="@color/white"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:layout_marginLeft="10dp" />
 
         <Button
             android:id="@+id/btn_generarcorte"
             style="@android:style/Widget.Holo.Light.Button"
             android:layout_width="150dp"
             android:layout_height="30dp"
+            android:layout_gravity="right"
+            android:layout_marginLeft="10dp"
             android:background="@color/colorPrimaryDark"
-            android:text="Generar Corte"
+            android:drawableLeft="@drawable/icons8actualizar"
+            android:text="Actualizar"
             android:textColor="@color/white"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:layout_marginLeft="10dp"/>
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -235,13 +139,14 @@
             android:padding="10dp">
 
             <com.Danthop.bionet.Tables.SortableCorteCajaTable
-                android:id="@+id/tabla_corte"
+                android:id="@+id/tabla_comisiones"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".7"
                 android:visibility="visible"
                 app:tableView_headerColor="@color/white"
                 table:tableView_columnCount="5">
+
             </com.Danthop.bionet.Tables.SortableCorteCajaTable>
         </LinearLayout>
 </LinearLayout>

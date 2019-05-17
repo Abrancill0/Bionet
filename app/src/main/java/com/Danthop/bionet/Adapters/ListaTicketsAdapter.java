@@ -22,9 +22,11 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class ListaTicketsAdapter extends LongPressAwareTableDataAdapter<CorteCajaModel> {
     int TEXT_SIZE = 12;
+    private final List<CorteCajaModel> TicketsFactura;
 
-    public ListaTicketsAdapter(final Context context, final List<CorteCajaModel> data, final SortableCorteCajaTable tableView) {
+    public ListaTicketsAdapter(final Context context, final List<CorteCajaModel> data, final SortableCorteCajaTable tableView, List<CorteCajaModel> ticketsfactura) {
         super(context, data, tableView);
+        TicketsFactura = ticketsfactura;
     }
 
     @Override
@@ -105,10 +107,29 @@ public class ListaTicketsAdapter extends LongPressAwareTableDataAdapter<CorteCaj
                 if (check.isChecked())
                 {
 
+                    final CorteCajaModel corteM = new CorteCajaModel (
+                            corte.getid_venta(),
+                            corte.gettotal(),
+                            "",
+                            "",
+                            "",
+                            "",0.0,0.0,0.0,0.0,
+                            corte.getfecha(),"","",0.0,
+                            corte.getefectivo(),corte.getMonederoElectronico(), corte.getDineroElectronico(),corte.getValesDespensa(),
+                            "",0.0,0.0,0.0);
+                    TicketsFactura.add(corteM);
 
                 }
                 else
                 {
+                    for(int i=0;i <TicketsFactura.size();i++)
+                    {
+                        if(corte.getid_venta().equals(TicketsFactura.get(i).getid_venta()))
+                        {
+                            TicketsFactura.remove(i);
+                        }
+
+                    }
 
                 }
 
@@ -136,7 +157,7 @@ public class ListaTicketsAdapter extends LongPressAwareTableDataAdapter<CorteCaj
     }
 
     private View renderefectivo(final CorteCajaModel corte) {
-        double Precio =corte.getefectivo();
+        double Precio =corte.getefectivo01();
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
@@ -149,7 +170,7 @@ public class ListaTicketsAdapter extends LongPressAwareTableDataAdapter<CorteCaj
     }
 
     private View rendermonederoelectronico(final CorteCajaModel corte) {
-        double Precio =corte.getMonederoElectronico();
+        double Precio =corte.getMonederoElectronico05();
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
@@ -162,7 +183,7 @@ public class ListaTicketsAdapter extends LongPressAwareTableDataAdapter<CorteCaj
     }
 
     private View renderdineroelectronico(final CorteCajaModel corte) {
-        double Precio =corte.getDineroElectronico();
+        double Precio =corte.getDineroElectronico06();
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
@@ -175,7 +196,7 @@ public class ListaTicketsAdapter extends LongPressAwareTableDataAdapter<CorteCaj
     }
 
     private View rendervalesdespensa(final CorteCajaModel corte) {
-        double Precio =corte.getValesDespensa();
+        double Precio =corte.getValesDespensa08();
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 

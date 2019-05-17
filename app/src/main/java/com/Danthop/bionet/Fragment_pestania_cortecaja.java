@@ -55,6 +55,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
     private List<CorteCajaModel> Totalventa;
     private List<FormaspagoModel>FormasPago;
     private SortableCorteCajaTable tabla_Generarcorte;
+    private SortableCorteCajaTable tabla_formaspago;
     private TableDataClickListener<HistoricoModel> tablaListener;
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private FragmentTransaction fr;
@@ -69,6 +70,11 @@ public class Fragment_pestania_cortecaja extends Fragment {
     private String cde_fecha_hora_creo;
     private String tic_nombre_vendedor;
     private String nombrepago;
+    private String nompago;
+    private String nombrepago01;
+    private String nombrepago05;
+    private String nombrepago06;
+    private String nombrepago08;
     private String id_formapago;
     private String id;
     private String cde_id;
@@ -148,6 +154,15 @@ public class Fragment_pestania_cortecaja extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_ventas_corte_lista_sinfactura()).commit();
+            }
+        });
+
+        Button btn_comisiones = (Button) v.findViewById(R.id.Comisiones);
+        btn_comisiones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_pestania_comison()).commit();
             }
         });
 
@@ -270,8 +285,6 @@ public class Fragment_pestania_cortecaja extends Fragment {
                             fr.replace( R.id.fragment_container, new Fragment_ventas_corte_caja_listado() ).commit();
                         }
                     } );
-
-
 
 
                     Button salircorte = dialog.findViewById( R.id.salircorte );
@@ -481,6 +494,20 @@ public class Fragment_pestania_cortecaja extends Fragment {
                                        nombrepago = elemento3.getString( "nombre" );
 
 
+                                      /*JSONObject songs = elemento3.getJSONObject("nombre");
+                                    Iterator It = songs.keys();
+
+                                       while (It.hasNext() ) {
+
+                                           String key = (String) It.next();
+
+                                           int Resultado01 = key.compareTo( "Efectivo" );
+
+                                           if (Resultado01 == 0) {
+                                               nombrepago01 = elemento3.getString( "nombre" );
+                                           }
+                                       }*/
+
                                      /* JSONObject request = new JSONObject();
                                        try {
                                            request.put("id", id);
@@ -504,14 +531,15 @@ public class Fragment_pestania_cortecaja extends Fragment {
                                            "",
                                            tic_nombre_vendedor,
                                            "",0.0, 0.0, 0.0, 0.0,
-                                           cde_fecha_hora_creo,hora,id_formapago,TotalCorte);
+                                           cde_fecha_hora_creo,hora,id_formapago,TotalCorte,0.0,0.0,0.0,0.0,
+                                            "",0.0,0.0,0.0);
                                    CorteCaja.add(corte);
                                    Totalventa.add(corte);
                                }
                            }
 
 
-                           Map<String, List<FormaspagoModel>> GroupingFormasPago = null, Dinero = null;
+                           Map<String, List<FormaspagoModel>> GroupingFormasPago = null;
                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                                GroupingFormasPago = FormasPago.stream().collect(Collectors.groupingBy(FormaspagoModel::getid_pago));
 
@@ -520,7 +548,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
                                            .filter(Pagos -> employee.equals(Pagos.getid_pago()))
                                            .findAny()
                                            .orElse(null);
-                                   String nombrepago  = String.valueOf(idpago.getformapago());
+                                   nompago  = String.valueOf(idpago.getformapago());
                                    String IDpago = idpago.getid_pago();
                                    Double total = FormasPago.stream().filter(Pagos -> employee.equals(Pagos.getid_pago())).mapToDouble(FormaspagoModel::getImporte).sum();
                                    TotalCorte = Double.valueOf( FormasPago.stream().mapToDouble( FormaspagoModel::getImporte).sum() );
