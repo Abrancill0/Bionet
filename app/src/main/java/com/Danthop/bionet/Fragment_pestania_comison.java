@@ -39,6 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -66,7 +67,9 @@ public class Fragment_pestania_comison extends Fragment {
     private Double montoacomulado;
     private Double montopagado;
     private Double importependiente;
-    private Double importe_pendiente;
+    private Double pago;
+    private EditText pagar_valor;
+    private String importe_pendiente;
     private String tic_id;
     private List<CorteCajaModel> ListComisiones;
     private List<CorteCajaModel> pagocomision;
@@ -116,7 +119,6 @@ public class Fragment_pestania_comison extends Fragment {
             }
         });
 
-
        Button Comisiones = v.findViewById( R.id.Comisiones);
         Comisiones.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,8 +137,6 @@ public class Fragment_pestania_comison extends Fragment {
 
         LoadListenerTable();
 
-
-
         try {
          JSONArray jsonArray = new JSONArray(cca_id_sucursal);
          //for (int i = 0; i < jsonArray.length(); i++) {
@@ -154,7 +154,6 @@ public class Fragment_pestania_comison extends Fragment {
      }
 
 
-
         tabla_comisiones = (SortableCorteCajaTable) v.findViewById(R.id.tabla_comisiones);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Nombre Vendedor", "Monto Acumulado", "Monto Pagado", "Monto Pendiente");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
@@ -166,7 +165,6 @@ public class Fragment_pestania_comison extends Fragment {
         tableColumnWeightModel.setColumnWeight(3, 2);
 
 
-
         tabla_comisiones.setHeaderAdapter(simpleHeader);
         tabla_comisiones.setColumnModel(tableColumnWeightModel);
 
@@ -176,6 +174,7 @@ public class Fragment_pestania_comison extends Fragment {
             public void onClick(View v) {
 
                 LoadComisiones();
+
             }
         });
 
@@ -196,8 +195,6 @@ public class Fragment_pestania_comison extends Fragment {
         tabla_comisiones.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
         tabla_comisiones.addDataClickListener(tableListener);
 
-
-
         return v;
     }
 
@@ -209,7 +206,6 @@ public class Fragment_pestania_comison extends Fragment {
 
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/ventas/comisiones/index";
-
 
         JSONObject jsonBodyrequest = new JSONObject();
         try {
@@ -231,7 +227,6 @@ public class Fragment_pestania_comison extends Fragment {
                     int status = Integer.parseInt(response.getString("estatus"));
                     String Mensaje = response.getString("mensaje");
 
-
                     if (status == 1){
                         Resultado = response.getJSONArray( "resultado" );
 
@@ -242,7 +237,8 @@ public class Fragment_pestania_comison extends Fragment {
                             nombrevendedor = elemento.getString("tic_nombre_vendedor" );
                             montoacomulado = elemento.getDouble("tic_importe_comision" );
                             montopagado = elemento.getDouble("tic_importe_comision_total_pagado");
-                            //importe_pendiente = elemento.getDouble( "importe_pendiente" );
+
+                            pago = montoacomulado - montopagado;
 
                             final CorteCajaModel comisiones = new CorteCajaModel(
                                     "",
@@ -252,17 +248,16 @@ public class Fragment_pestania_comison extends Fragment {
                                     "",
                                     "",0.0, 0.0, 0.0, 0.0,
                                     "","","",0.0,0.0,0.0,0.0,0.0,
-                                    nombrevendedor,montoacomulado,montopagado,0.0);
+                                    nombrevendedor,montoacomulado,montopagado,pago);
 
                             ListComisiones.add(comisiones);
 
                         }
 
-
-
-                        final ComisionesAdapter comisionAdapter = new ComisionesAdapter(getContext(), ListComisiones, tabla_comisiones,usu_id,valueIdSuc,tic_id);
+                        final ComisionesAdapter comisionAdapter = new ComisionesAdapter(getContext(), ListComisiones, tabla_comisiones);
                         tabla_comisiones.setDataAdapter(comisionAdapter);
                         progreso.hide();
+
 
 
                     }else {
@@ -297,11 +292,12 @@ public class Fragment_pestania_comison extends Fragment {
 
         JSONObject jsonBodyrequest = new JSONObject();
         try {
-            jsonBodyrequest.put("esApp", "1" );
-            jsonBodyrequest.put("usu_id", usu_id);
-            jsonBodyrequest.put("tic_id_sucursal",valueIdSuc);
-            jsonBodyrequest.put("importe_pagar","");
-            jsonBodyrequest.put("tic_id_vendedor",tic_id);
+                jsonBodyrequest.put("esApp", "1" );
+                jsonBodyrequest.put("usu_id", usu_id);
+                jsonBodyrequest.put("tic_id_sucursal",valueIdSuc);
+                jsonBodyrequest.put("importe_pagar",importe_pendiente);
+                jsonBodyrequest.put("tic_id_vendedor",tic_id);
+
 
 
         }catch (JSONException e){
@@ -323,8 +319,7 @@ public class Fragment_pestania_comison extends Fragment {
 
                         for (int n=0; n<Resultado.length(); n++){
                             JSONObject elemento = Resultado.getJSONObject(n);
-                            importependiente = elemento.getDouble( "importe_pendiente" );
-
+                            //importependiente = elemento.getDouble( "importe_pendiente" );
 
                         }
                         final CorteCajaModel comisiones = new CorteCajaModel(
@@ -340,15 +335,10 @@ public class Fragment_pestania_comison extends Fragment {
                         pagocomision.add(comisiones);
 
 
-
-                        final ComisionesAdapter comisionAdapter = new ComisionesAdapter(getContext(), pagocomision, tabla_comisiones,usu_id,valueIdSuc,tic_id);
+                        final ComisionesAdapter comisionAdapter = new ComisionesAdapter(getContext(), pagocomision, tabla_comisiones);
                         tabla_comisiones.setDataAdapter(comisionAdapter);
-                        progreso.hide();
 
 
-                    }else {
-                        Toast toast1 = Toast.makeText(getContext(),"", Toast.LENGTH_LONG);
-                        toast1.show();
                     }
 
                 } catch (JSONException e) {
@@ -380,27 +370,28 @@ private void LoadListenerTable(){
             ver_pago_comisiones.show();
 
 
-            EditText pagar_valor = ver_pago_comisiones.findViewById( R.id.text_pagar_valor );
-
-
+            NumberFormat formatter = NumberFormat.getCurrencyInstance();
+            formatter.setMaximumFractionDigits(2);
             TextView totalpago = ver_pago_comisiones.findViewById(R.id.text_importe_valor);
-            totalpago.setText("$ " + String.valueOf( importependiente));
+            totalpago.setText(String.valueOf( formatter.format(pago)));
 
             Button cerrar_pago = ver_pago_comisiones.findViewById(R.id.cerrar_pago);
             cerrar_pago.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ver_pago_comisiones.hide();
+
+                    ver_pago_comisiones.dismiss();
                 }
             });
 
 
 
-            Button btnSalir3 = ver_pago_comisiones.findViewById(R.id.btnSalir3);
-            btnSalir3.setOnClickListener(new View.OnClickListener() {
+            Button btnTachita = ver_pago_comisiones.findViewById(R.id.btnSalir3);
+            btnTachita.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ver_pago_comisiones.hide();
+
+                    ver_pago_comisiones.dismiss();
                 }
             });
 
@@ -409,8 +400,23 @@ private void LoadListenerTable(){
             realizar_Pago.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    pagar_valor = (EditText) ver_pago_comisiones.findViewById( R.id.text_pagar_valor );
+                    pagar_valor.getText().toString();
+                    importe_pendiente = String.valueOf(pagar_valor.getText().toString());
+                    int resultado = importe_pendiente.compareTo("");
+                    if (resultado != 0) {
 
-                    PagarComisiones();
+                        PagarComisiones();
+                        ver_pago_comisiones.dismiss();
+
+                        Toast toast1 = Toast.makeText(getContext(),"Pago exitoso", Toast.LENGTH_LONG);
+                        toast1.show();
+
+
+                    }else{
+                            Toast toast1 = Toast.makeText(getContext(),"Se requiere un importe mayor a cero.", Toast.LENGTH_LONG);
+                            toast1.show();
+                        }
 
                 }
             });
