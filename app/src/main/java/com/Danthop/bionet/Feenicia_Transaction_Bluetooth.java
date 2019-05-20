@@ -115,6 +115,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     public static String fpa_id;
     public static String valor;
     public static int tamano;
+    public static String Ticket;
 
     public static int Contador;
     public static String Mensaje;
@@ -153,6 +154,9 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         TarjetaCredito = bundle.getDouble( "TC");
         TarjetaDebio = bundle.getDouble( "TD");
         tamano = bundle.getInt( "Tamano");
+        Ticket = bundle.getString( "Ticket");
+
+        ListaDePagos_a_utilizar  = new ArrayList<>();
 
         for (int i = 0; i < tamano; i++) {
 
@@ -175,12 +179,15 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
             precio = TarjetaCredito;
             Contador = 2;
             Mensaje="Tarjeta de Credito";
+
+            show_Toast("Coloque la tarjeta de credito para procesar el cobro");
         }
         else
         {
             precio = TarjetaDebio;
             Contador = 1;
             Mensaje="Tarjeta de Debito";
+            show_Toast("Coloque la tarjeta de debito para procesar el cobro");
         }
 
         SharedPreferences sharedPref = this.getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
@@ -278,22 +285,10 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                 if (Contador == 0)
                 {
                     FinalizarTicket();
-
-                    Intent myIntent = new Intent(getApplicationContext(), Confirmacion_venta.class);
-                    Bundle mBundle = new Bundle();
-                    mBundle.putDouble("IC",ImporteCambio);
-                    mBundle.putDouble("IR",ImporteRecibido);
-                    mBundle.putDouble("IV",ImporteVenta);
-
-                    myIntent.putExtras(mBundle);
-
-                    getApplicationContext().startActivity(myIntent);
-
-                    finish();
                 }
                 else
                 {
-
+                    show_Toast("Realize el cobro antes de cerrar la pantalla");
                 }
 
 
@@ -570,6 +565,10 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                                     tvMontoMostrar.setText( "$ " + monto + " MN");
 
                                     Contador = 1;
+
+                                    Toast.makeText(FEENICIA_TRANSACCION, "Cobro realizado correctamente", Toast.LENGTH_SHORT).show();
+
+                                    Toast.makeText(FEENICIA_TRANSACCION, "Ahora coloque su tarjeta de debito", Toast.LENGTH_SHORT).show();
                                 }
                                 else
                                 {
@@ -579,6 +578,8 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                                     tvMontoMostrar.setText( "$ " + monto + " MN");
 
                                     Contador = 0;
+                                    Toast.makeText(FEENICIA_TRANSACCION, "Cobro realizado correctamente", Toast.LENGTH_SHORT).show();
+
                                 }
 
                                  //Toast toast1 = Toast.makeText(context, "El siguiente pago es con tarjeta de debito.", Toast.LENGTH_SHORT);
@@ -593,6 +594,8 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                                 tvMontoMostrar.setText( "$ " + monto + " MN");
 
                                 Contador = 0;
+                                Toast.makeText(FEENICIA_TRANSACCION, "Cobro realizado correctamente", Toast.LENGTH_SHORT).show();
+
 
                                 //  Toast toast1 = Toast.makeText(context, "Por favor cierre esta ventana para continuar", Toast.LENGTH_SHORT);
 
@@ -778,7 +781,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
-            request.put("tic_id", ticket_de_venta.getTic_id());
+            request.put("tic_id", Ticket);
             request.put("tic_importe_metodo_pago", arreglo);
 
         } catch (Exception e) {
@@ -815,6 +818,20 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                         ImporteCambio = CambioConDecimal;
                         ImporteRecibido = RecibidoConDecimal;
                         ImporteVenta = ImporteTotalConDecimal;
+
+                        Intent myIntent = new Intent(getApplicationContext(), Confirmacion_venta.class);
+
+                        Bundle mBundle = new Bundle();
+                        mBundle.putDouble("IC",  ImporteCambio  );
+                        mBundle.putDouble("IR",  ImporteRecibido  );
+                        mBundle.putDouble("IV",  ImporteVenta  );
+
+                        myIntent.putExtras(mBundle);
+
+                        getApplicationContext().startActivity(myIntent);
+
+                        finish();
+
 
                     } else {
                         Toast toast1 =

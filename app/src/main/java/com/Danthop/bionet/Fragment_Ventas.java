@@ -825,6 +825,7 @@ public class Fragment_Ventas extends Fragment {
                                                 Bundle mBundle = new Bundle();
                                                 mBundle.putDouble("TC",TarjetaCredito);
                                                 mBundle.putDouble("TD",TarjetaDebito);
+                                                mBundle.putString( "Ticket",TicketIDVenta );
 
                                                 mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
@@ -990,6 +991,7 @@ public class Fragment_Ventas extends Fragment {
                                         Bundle mBundle = new Bundle();
                                         mBundle.putDouble("TC",TarjetaCredito);
                                         mBundle.putDouble("TD",TarjetaDebito);
+                                        mBundle.putString( "Ticket",TicketIDVenta );
 
                                         mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
