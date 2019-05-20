@@ -89,11 +89,13 @@ public class Fragment_pestania_cortecaja extends Fragment {
     private String FechaApiinicio;
     private String FechaApifin;
     private String FechaFin;
-    private Button btn_corte;
+    private TextView btn_corte;
+    private TextView btn_listado_corte;
+    private TextView btn_factura_ventas;
+
     private Button btn_buscar;
-    private Button btn_listado_corte;
-    private Button btn_factura_ventas;
     private Button btn_generarcorte;
+
     private Button aceptarcorte;
     private Button salircorte;
     private String id_sucursales;
@@ -106,7 +108,8 @@ public class Fragment_pestania_cortecaja extends Fragment {
     private JSONArray jsonArray;
     private JSONArray ArrayPagos;
 
-
+    private View layout_tablacortes;
+    private View layaut_fechascortes;
 
     public Fragment_pestania_cortecaja() {
         // Required empty public constructor
@@ -114,24 +117,32 @@ public class Fragment_pestania_cortecaja extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_pestania_cortecaja, container, false);
+        View v = inflater.inflate(R.layout.fragment_ventas_cortecajas, container, false);
         fr = getFragmentManager().beginTransaction();
 
-        btn_corte = (Button) v.findViewById(R.id.btn_corte);
-        btn_listado_corte = (Button) v.findViewById(R.id.btn_listado_corte);
+        btn_corte = (TextView) v.findViewById(R.id.btn_corte); //opcion 1
+        btn_listado_corte = (TextView) v.findViewById(R.id.btn_listado_corte);
+        btn_factura_ventas = (TextView) v.findViewById(R.id.btn_factura_ventas);
+
         Fechainicio=(EditText) v.findViewById(R.id.btnfechainicio);
         Fechafin=(EditText) v.findViewById(R.id.btnfechafin);
-        btn_factura_ventas = (Button) v.findViewById(R.id.btn_factura_ventas);
+
+
         btn_generarcorte=(Button)v.findViewById(R.id.btn_generarcorte);
         btn_buscar =(Button)v.findViewById(R.id.btn_buscar);
-        aceptarcorte=(Button)v.findViewById( R.id.aceptarcorte );
-        salircorte=(Button)v.findViewById( R.id.salircorte );
+
+        layaut_fechascortes = v.findViewById(R.id.layaut_fechascortes);
+        layout_tablacortes = v.findViewById( R.id.layout_tablacortes );
+
+
+        //aceptarcorte=(Button)v.findViewById( R.id.aceptarcorte );
+        //salircorte=(Button)v.findViewById( R.id.salircorte );
 
         jsonArray = new JSONArray();
         ArrayPagos = new JSONArray();
 
-        Button Ventas_btn = (Button) v.findViewById(R.id.btnventas);
-        Ventas_btn.setOnClickListener(new View.OnClickListener() {
+        Button btn_ventas = (Button) v.findViewById(R.id.btn_ventas);
+        btn_ventas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
@@ -139,8 +150,8 @@ public class Fragment_pestania_cortecaja extends Fragment {
             }
         });
 
-        Button btn_pestania_reporte = (Button) v.findViewById(R.id.btntransacciones);
-        btn_pestania_reporte.setOnClickListener(new View.OnClickListener() {
+        Button btn_traslados = (Button) v.findViewById(R.id.btn_traslados);
+        btn_traslados.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
@@ -148,7 +159,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
             }
         });
 
-        Button btn_factura_ventas = (Button) v.findViewById(R.id.btn_factura_ventas);
+       TextView btn_factura_ventas = (TextView) v.findViewById(R.id.btn_factura_ventas);
         btn_factura_ventas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,6 +182,14 @@ public class Fragment_pestania_cortecaja extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();
+            }
+        });
+
+        btn_corte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_pestania_cortecaja()).commit();
             }
         });
 

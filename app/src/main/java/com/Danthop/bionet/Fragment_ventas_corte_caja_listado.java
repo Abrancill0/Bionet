@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.CorteCajaAdapter;
@@ -51,9 +52,9 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
 
     Button pestania_ventas;
     Button pestania_reporte;
-    Button btn_corte;
-    Button btn_listado_corte;
-    Button btn_factura_ventas;
+    TextView btn_corte;
+    TextView btn_listado_corte;
+    TextView btn_factura_ventas;
     private EditText Fechainicio;
     private EditText Fechafin;
     private Button btn_buscar;
@@ -75,12 +76,9 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
     private SortableCorteCajaTable tabla_Listarcorte;
 
 
-
-
     private DatePickerDialog.OnDateSetListener inicioDataSetlistener;
     private DatePickerDialog.OnDateSetListener finDataSetlistener;
     private SortableHistoricoTable tabla_historico;
-
 
 
     public Fragment_ventas_corte_caja_listado() {
@@ -89,14 +87,20 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_ventas_corte_caja_listado,container, false);
-        pestania_ventas = v.findViewById(R.id.Ventas_btn);
-        pestania_reporte = v.findViewById(R.id.btn_pestania_reporte);
-        btn_corte = v.findViewById(R.id.btn_corte);
-        btn_listado_corte = v.findViewById(R.id.btn_listado_corte);
+        View v = inflater.inflate(R.layout.fragment_ventas_listadocortecajas,container, false);
+        pestania_ventas = v.findViewById(R.id.btn_ventas);
+        pestania_reporte = v.findViewById(R.id.btn_traslados);
+
+        btn_corte = (TextView) v.findViewById(R.id.btn_corte);
+        btn_listado_corte = (TextView) v.findViewById(R.id.btn_listado_corte);
+        btn_factura_ventas = (TextView) v.findViewById(R.id.btn_factura_ventas);
+
         Fechainicio=(EditText) v.findViewById(R.id.btnfechainicio);
         Fechafin=(EditText) v.findViewById(R.id.btnfechafin);
+
         btn_buscar=(Button)v.findViewById(R.id.btn_buscar);
+
+
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
@@ -112,7 +116,16 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             }
         });
 
-        Button btn_factura_ventas = (Button) v.findViewById(R.id.btn_factura_ventas);
+        btn_listado_corte = v.findViewById( R.id.btn_listado_corte);
+        btn_listado_corte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();
+            }
+        });
+
+       TextView btn_factura_ventas = (TextView) v.findViewById(R.id.btn_factura_ventas);
         btn_factura_ventas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,8 +151,8 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             toast1.show();
         }
 
-        tabla_Listarcorte = (SortableCorteCajaTable) v.findViewById(R.id.tabla_listacorte);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Usuario", "Monto Total", "Efectivo", "Monedero electrónico","Dinero electrónico(06)","Vales de despensa(08)","Fecha", "Hora");
+        tabla_Listarcorte = (SortableCorteCajaTable) v.findViewById(R.id.tabla_corte);
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Usuario", "Monto Total", "Efectivo", "Monedero electrónico","Dinero electrónico","Vales de despensa","Fecha", "Hora");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(8);

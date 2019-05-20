@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ListaTicketsAdapter;
@@ -49,9 +50,9 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
 
     Button pestania_ventas;
     Button pestania_reporte;
-    Button btn_corte;
-    Button btn_listado_corte;
-    Button btn_factura_ventas;
+    TextView btn_corte;
+    TextView btn_listado_corte;
+    TextView btn_factura_ventas;
     Button btn_buscartickets;
     private EditText Fechainicio;
     private EditText Fechafin;
@@ -93,17 +94,31 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_ventas_corte_lista_sinfactura,container, false);
-        pestania_ventas = v.findViewById(R.id.Ventas_btn);
-        pestania_reporte = v.findViewById(R.id.btn_pestania_reporte);
+        View v = inflater.inflate(R.layout.fragment_ventas_facturarcortecajas,container, false);
+        pestania_ventas = v.findViewById(R.id.btn_ventas);
+        pestania_reporte = v.findViewById(R.id.btn_traslados);
+
+        btn_corte = v.findViewById(R.id.btn_corte); //opcion 1
+        btn_listado_corte = v.findViewById(R.id.btn_listado_corte);
         btn_factura_ventas = v.findViewById(R.id.btn_factura_ventas);
+
         Fechainicio=(EditText) v.findViewById(R.id.btnfechainicio);
         Fechafin=(EditText) v.findViewById(R.id.btnfechafin);
-        btn_facturar=(Button)v.findViewById(R.id.btn_buscar);
+
+        btn_facturar=(Button)v.findViewById(R.id.btn_facturar);
         btn_buscartickets=(Button)v.findViewById( R.id.btn_buscartickets );
 
+        TextView btn_factura_ventas = (TextView) v.findViewById(R.id.btn_factura_ventas);
+        btn_factura_ventas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_lista_sinfactura()).commit();
+            }
+        });
 
-        Button btn_corte = (Button) v.findViewById(R.id.btn_corte);
+
+        TextView btn_corte = (TextView) v.findViewById(R.id.btn_corte);
         btn_corte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,7 +127,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             }
         });
 
-        Button btn_listado_corte = (Button) v.findViewById(R.id.btn_listado_corte);
+        TextView btn_listado_corte = (TextView) v.findViewById(R.id.btn_listado_corte);
         btn_listado_corte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,7 +169,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             toast1.show();
         }
 
-        tabla_ListarTickets = (SortableCorteCajaTable) v.findViewById(R.id.tabla_tickets_sin_factura);
+        tabla_ListarTickets = (SortableCorteCajaTable) v.findViewById(R.id.tabla_corte);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "", "Id Venta", "Monto Total", "Efectivo", "Monedero electrónico","Dinero electrónico","Vales de despensa","Fecha");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
