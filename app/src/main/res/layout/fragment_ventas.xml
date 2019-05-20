@@ -97,7 +97,7 @@
             android:layout_weight=".25"
             android:background="@drawable/pestanas_desplegables"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -117,51 +117,60 @@
                         android:id="@+id/btn_agregar_articulo"
                         style="@android:style/Widget.Holo.Light.Button"
                         android:layout_width="match_parent"
-                        android:layout_height="38dp"
+                        android:layout_height="match_parent"
                         android:layout_marginHorizontal="10dp"
-                        android:background="@null"
+                        android:background="@drawable/pestanas_desplegables"
                         android:drawableLeft="@drawable/ic_agregar_producto"
                         android:drawablePadding="15dp"
-                        android:padding="5dp"
+                        android:padding="15dp"
                         android:text="Artículo"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight=".2"
+                    android:layout_weight=".8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btn_agregar_vendedor"
                         style="@android:style/Widget.Holo.Light.Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_marginHorizontal="10dp"
-                        android:background="@null"
+                        android:background="@drawable/pestanas_desplegables"
                         android:drawableLeft="@drawable/ic_agregar_vendedor"
                         android:drawablePadding="15dp"
-                        android:padding="5dp"
+                        android:padding="15dp"
                         android:text="Vendedor"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".8"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btn_agregar_cliente"
                         style="@android:style/Widget.Holo.Light.Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_marginHorizontal="10dp"
-                        android:background="@null"
+                        android:background="@drawable/pestanas_desplegables"
                         android:drawableLeft="@drawable/ic_agregar_cliente"
                         android:drawablePadding="15dp"
-                        android:padding="5dp"
+                        android:padding="15dp"
                         android:text="Cliente"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -390,7 +399,9 @@
                     android:padding="0dp"
                     android:text="Orden Especial"
                     android:textColor="@color/gray"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:visibility="invisible"/>
+
                 <Button
                     android:id="@+id/btn_apartar"
                     style="@android:style/Widget.Holo.Light.Button"
@@ -401,7 +412,8 @@
                     android:padding="0dp"
                     android:text="Apartar"
                     android:textColor="@color/gray"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:visibility="invisible"/>
 
                 <Button
                     android:id="@+id/btn_finalizar"
@@ -413,7 +425,8 @@
                     android:padding="0dp"
                     android:text="Finalizar Compra"
                     android:textColor="@color/gray"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:visibility="invisible"/>
 
 
             </LinearLayout>

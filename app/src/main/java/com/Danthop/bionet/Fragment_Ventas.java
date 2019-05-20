@@ -156,6 +156,8 @@ public class Fragment_Ventas extends Fragment {
     private int TicketSubtotal;
     private String TicketImporteDescuento;
     private float TicketIVA;
+    private String ticketid;
+    private ArrayList<String> ArticulosConExistencias = new ArrayList<>();
 
     private TableDataClickListener<ArticuloModel> VentaArticuloTablaListener;
 
@@ -169,6 +171,22 @@ public class Fragment_Ventas extends Fragment {
     private List<ArticuloModel> ListaArticulosTicket = new ArrayList<>();
     private String content;
     private WebView webView;
+
+
+    private String NombreSucursal="";
+    private String NumeroSucursal="";
+    private String Direccion="";
+    private String RazonSocial="";
+    private String RFC="";
+    private String LogoNegocio="";
+    private String FechaCreacion="";
+    private String NombreVendedor="";
+    private String NombreCliente="";
+    private String NumeroTicket="";
+    private String Subtotal = "";
+    private String Total = "";
+    private String ImpuestosTicket="";
+    private float ImpuestosTotal=0;
 
     public Fragment_Ventas() {
         // Required empty public constructor
@@ -656,7 +674,7 @@ public class Fragment_Ventas extends Fragment {
         btn_finalizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(Articulos.size());
+                ticketid=ticket_de_venta.getTic_id();
                 if (ArticulosVenta.isEmpty()) {
                     dialog.setContentView(R.layout.pop_up_venta_finalizar_sin_articulos);
                     dialog.show();
@@ -747,6 +765,7 @@ public class Fragment_Ventas extends Fragment {
                                             double TarjetaDebito = 0;
                                             double PagosEfectivo = 0;
 
+
                                             for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
 
                                                 String tipo_pago = ListaDePagos_a_utilizar.get(i).getNombre();
@@ -826,6 +845,7 @@ public class Fragment_Ventas extends Fragment {
                                                 mBundle.putDouble("TC",TarjetaCredito);
                                                 mBundle.putDouble("TD",TarjetaDebito);
                                                 mBundle.putString( "Ticket",TicketIDVenta );
+                                                mBundle.putString("Sucursal",ticket_de_venta.getTic_id_sucursal());
 
                                                 mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
@@ -850,6 +870,7 @@ public class Fragment_Ventas extends Fragment {
                                                 cerrarPopUp.setOnClickListener(new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v) {
+                                                        loadTicket();
                                                         dialog.hide();
                                                     }
                                                 });
@@ -865,6 +886,7 @@ public class Fragment_Ventas extends Fragment {
                                                     @Override
                                                     public void onClick(View v) {
 
+                                                        loadTicket();
                                                         dialog.dismiss();
                                                     }
                                                 });
@@ -916,6 +938,7 @@ public class Fragment_Ventas extends Fragment {
                                     double TarjetaCredito = 0;
                                     double TarjetaDebito = 0;
                                     double PagosEfectivo = 0;
+
 
 
                                     for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
@@ -992,6 +1015,7 @@ public class Fragment_Ventas extends Fragment {
                                         mBundle.putDouble("TC",TarjetaCredito);
                                         mBundle.putDouble("TD",TarjetaDebito);
                                         mBundle.putString( "Ticket",TicketIDVenta );
+                                        mBundle.putString("Sucursal",ticket_de_venta.getTic_id_sucursal());
 
                                         mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
@@ -1014,7 +1038,10 @@ public class Fragment_Ventas extends Fragment {
                                         cerrarPopUp.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                dialog.hide();
+
+                                                loadTicket();
+                                                dialog.dismiss();
+
                                             }
                                         });
 
@@ -1029,7 +1056,9 @@ public class Fragment_Ventas extends Fragment {
                                             @Override
                                             public void onClick(View v) {
 
+                                                loadTicket();
                                                 dialog.dismiss();
+
                                             }
                                         });
                                     }
@@ -1057,7 +1086,7 @@ public class Fragment_Ventas extends Fragment {
                     cerrarPopUp.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            dialog.hide();
+                            dialog.dismiss();
                         }
                     });
                     aceptar.setOnClickListener(new View.OnClickListener() {
@@ -1084,16 +1113,13 @@ public class Fragment_Ventas extends Fragment {
                         public void onClick(View v) {
                             LoadConfiguracionApartado();
                             ApartarArticulosSeleccionados();
+                        }
+                    });
+                    Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                    cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
                             dialog.dismiss();
-                            dialog.setContentView(R.layout.pop_up_ventas_confirmacion_transaccion);
-                            dialog.show();
-                            Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
-                            aceptar.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
                         }
                     });
                 }
@@ -1147,23 +1173,6 @@ public class Fragment_Ventas extends Fragment {
                         public void onClick(View v) {
                             LoadConfiguracionApartado();
                             OrdenarArticulosSeleccionados();
-                            dialog.dismiss();
-                            dialog.setContentView(R.layout.pop_up_ventas_confirmacion_transaccion);
-                            dialog.show();
-                            Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
-                            cerrarPopUp.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.hide();
-                                }
-                            });
-                            Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
-                            aceptar.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
                         }
                     });
                 }
@@ -1254,6 +1263,23 @@ public class Fragment_Ventas extends Fragment {
 
                     if (status == 1) {
 
+                        dialog.dismiss();
+                        dialog.setContentView(R.layout.pop_up_ventas_confirmacion_transaccion);
+                        dialog.show();
+                        Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                        cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.hide();
+                            }
+                        });
+                        Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                        aceptar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
 
                     } else {
                         Toast toast1 =
@@ -1364,6 +1390,25 @@ public class Fragment_Ventas extends Fragment {
 
                     if (status == 1) {
 
+                        dialog.dismiss();
+                        dialog.setContentView(R.layout.pop_up_ventas_confirmacion_transaccion);
+                        dialog.show();
+                        Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                        aceptar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                        cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.hide();
+                            }
+                        });
+
 
                     } else {
                         Toast toast1 =
@@ -1457,7 +1502,7 @@ public class Fragment_Ventas extends Fragment {
                         Imagenes.clear();
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
                                 total, descuento, impuesto, subtotal,
-                                carouselView, Imagenes,ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados);
+                                carouselView, Imagenes,ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,btn_ordenar,btn_apartar,btn_finalizar);
                         articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                         LoadImages();
@@ -1502,6 +1547,7 @@ public class Fragment_Ventas extends Fragment {
 
         int Checador=0;
         boolean vacio=false;
+        ArticulosConExistencias.clear();
         if(ArticulosVenta.isEmpty())
         {
             vacio=true;
@@ -1782,10 +1828,49 @@ public class Fragment_Ventas extends Fragment {
 
                             final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
                                     total, descuento, impuesto, subtotal,
-                                    carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados);
+                                    carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,btn_ordenar,btn_apartar,btn_finalizar);
                             articuloAdapter.notifyDataSetChanged();
                             tabla_venta_articulos.setDataAdapter(articuloAdapter);
                             LoadImages();
+
+                            if(ListaDeArticulosOrdenados.isEmpty())
+                            {
+                                btn_ordenar.setVisibility(View.INVISIBLE);
+                            }
+                            else
+                            {
+                                btn_ordenar.setVisibility(View.VISIBLE);
+                            }
+
+                            if(ListaDeArticulosApartados.isEmpty())
+                            {
+                                btn_apartar.setVisibility(View.INVISIBLE);
+                            }
+                            else
+                            {
+                                btn_apartar.setVisibility(View.VISIBLE);
+                            }
+
+                            for(int k=0; k<ArticulosVenta.size();k++)
+                            {
+                                if(ArticulosVenta.get(k).getArticulo_articulo_exi_id().equals("")){
+
+                                }
+                                else
+                                {
+                                    ArticulosConExistencias.add(ArticulosVenta.get(k).getarticulo_Nombre());
+                                }
+                            }
+
+                            if(ArticulosConExistencias.isEmpty())
+                            {
+                                btn_finalizar.setVisibility(View.INVISIBLE);
+                            }
+                            else
+                            {
+                                btn_finalizar.setVisibility(View.VISIBLE);
+                            }
+
                         } else {
                             Toast toast1 =
                                     Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
@@ -2361,6 +2446,7 @@ public class Fragment_Ventas extends Fragment {
         final TextView art_precio = dialog.findViewById(R.id.art_precio);
         final ImageView imagenArticulo = dialog.findViewById(R.id.imagen_articulo);
         final ElegantNumberButton art_cantidad = dialog.findViewById(R.id.art_cantidad);
+        art_cantidad.setNumber("1");
         try {
 
             String url = getString(R.string.Url);
@@ -2468,7 +2554,7 @@ public class Fragment_Ventas extends Fragment {
                                     }
 
 
-                                    Button Aniadir = dialog.findViewById(R.id.Aniadir_articulo);
+                                    Button Aniadir = dialog.findViewById(R.id.Guardar_cantidad);
                                     Aniadir.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -2892,7 +2978,7 @@ public class Fragment_Ventas extends Fragment {
                         }
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
                                 total, descuento, impuesto, subtotal,
-                                carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados);
+                                carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,btn_ordenar,btn_apartar,btn_finalizar);
                         articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                         LoadImages();
@@ -2925,10 +3011,8 @@ public class Fragment_Ventas extends Fragment {
     }
 
 
-    private void loadTicket(String Ticket_IDE)
+    private void loadTicket()
     {
-
-
         try {
 
             String url = getString(R.string.Url);
@@ -2938,7 +3022,7 @@ public class Fragment_Ventas extends Fragment {
             ApiPath = url + "/api/ventas/movimientos/obtener_detalle_ticket?" +
                     "usu_id=" + usu_id +
                     "&esApp=1" +
-                    "&tic_id="+ Ticket_IDE+
+                    "&tic_id="+ ticketid+
                     "&suc_id=" + SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
@@ -2949,21 +3033,6 @@ public class Fragment_Ventas extends Fragment {
                             try {
 
                                 int EstatusApi = Integer.parseInt(response.getString("estatus"));
-
-                                float ImpuestosTotal=0;
-                                String NombreSucursal="";
-                                String NumeroSucursal="";
-                                String Direccion="";
-                                String RazonSocial="";
-                                String RFC="";
-                                String LogoNegocio="";
-                                String FechaCreacion="";
-                                String NombreVendedor="";
-                                String NombreCliente="";
-                                String NumeroTicket="";
-                                String Subtotal = "";
-                                String Total = "";
-                                String ImpuestosTicket="";
 
                                 if (EstatusApi == 1) {
 

@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:table="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="720dp"
+    android:layout_width="600dp"
     android:layout_height="380dp"
     android:layout_gravity="center"
     android:orientation="vertical">
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,18 +27,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".1"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".7"
-                android:orientation="vertical">
+                android:layout_weight=".25"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/linearLayout7"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight=".5"
                     android:orientation="vertical">
 
@@ -52,105 +51,105 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight=".4"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".8"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView69"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="Artículo: "
+                            android:textColor="@color/colorPrimaryDark" />
+
+                        <TextView
+                            android:id="@+id/art_name_articulo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="TextView" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".8"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView71"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="Categoría: " />
+
+                        <TextView
+                            android:id="@+id/art_name_categoria"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="TextView" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".8"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView70"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+
+                            android:text="Descripción: " />
+
+                        <TextView
+                            android:id="@+id/art_descripcion"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="TextView" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".8"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView42"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Precio: " />
+
+                        <TextView
+                            android:id="@+id/art_precio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="TextView" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".3"
+                android:layout_weight=".75"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="20dp"
-                        android:layout_weight=".4"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight=".8"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textView69"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:text="Artículo: "
-                                android:textColor="@color/colorPrimaryDark" />
-
-                            <TextView
-                                android:id="@+id/art_name_articulo"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="TextView" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight=".8"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textView71"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:text="Categoría: " />
-
-                            <TextView
-                                android:id="@+id/art_name_categoria"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="TextView" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight=".8"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textView70"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-
-                                android:text="Descripción: " />
-
-                            <TextView
-                                android:id="@+id/art_descripcion"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="TextView" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight=".8"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textView42"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Precio: " />
-
-                            <TextView
-                                android:id="@+id/art_precio"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="TextView" />
-                        </LinearLayout>
-
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -190,7 +189,21 @@
         android:layout_weight=".8">
 
         <Button
-            android:id="@+id/Aniadir_articulo"
+            android:id="@+id/eliminar_articulo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/btn"
+            android:gravity="center"
+            android:onClick="Cancelar"
+            android:padding="10dp"
+            android:text="Eliminar"
+            android:textAllCaps="false"
+            android:textColor="#fff"
+            android:textSize="22dp" />
+
+        <Button
+            android:id="@+id/Guardar_cantidad"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

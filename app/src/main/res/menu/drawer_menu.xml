@@ -15,7 +15,13 @@
             android:iconTint="@color/colorPrimaryDark" />
         <item android:id="@+id/nav_Ventas"
             android:icon="@drawable/ic_ventas_menu"
-            android:title="Venta"/>
+            android:title="Ventas"/>
+        <item android:id="@+id/nav_inventario"
+            android:icon="@drawable/ic_inventario_menu"
+            android:title="Inventario"/>
+        <item android:id="@+id/nav_asistencia"
+            android:icon="@drawable/ic_asistencia_menu"
+            android:title="Asistencia"/>
         <item android:id="@+id/nav_clientes"
             android:icon="@drawable/ic_clientes_menu"
             android:title="Clientes"/>
@@ -25,12 +31,6 @@
         <item android:id="@+id/nav_ecommerce"
             android:icon="@drawable/ic_ecommerce_menu"
             android:title="E-commerce"/>
-        <item android:id="@+id/nav_inventario"
-            android:icon="@drawable/ic_inventario_menu"
-            android:title="Inventario"/>
-        <item android:id="@+id/nav_asistencia"
-            android:icon="@drawable/ic_asistencia_menu"
-            android:title="Asistencia"/>
     </group>
     <group android:checkableBehavior="none">
         <item android:id="@+id/nav_cerrar_sesion"

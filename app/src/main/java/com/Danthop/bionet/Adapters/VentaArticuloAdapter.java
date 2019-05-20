@@ -61,6 +61,12 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     private List<Impuestos> ImpuestosDeArticuloOrdenado;
     private List<OrdenEspecialArticuloModel> ListaDeArticulosOrdenados;
 
+    private ArrayList<String> ArticulosConExistencias = new ArrayList<>();
+
+    private Button OrdenarButton;
+    private Button ApartarButton;
+    private Button FinalizarButton;
+
     private LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
 
@@ -70,7 +76,10 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                 List<Impuestos> impuestosDeArticuloApartado,
                                 List<ArticuloApartadoModel> listaDeArticulosApartados,
                                 List<Impuestos> impuestosDeArticuloOrdenado,
-                                List<OrdenEspecialArticuloModel> listaDeArticulosOrdenados) {
+                                List<OrdenEspecialArticuloModel> listaDeArticulosOrdenados,
+                                Button ordenarButton,
+                                Button apartarButton,
+                                Button finalizarButton) {
         super(context, data, tableView);
         Articulos = data;
         tabla_venta_articulos = tableView;
@@ -86,6 +95,9 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
         ListaDeArticulosApartados= listaDeArticulosApartados;
         ImpuestosDeArticuloOrdenado = impuestosDeArticuloOrdenado;
         ListaDeArticulosOrdenados = listaDeArticulosOrdenados;
+        OrdenarButton = ordenarButton;
+        ApartarButton = apartarButton;
+        FinalizarButton = finalizarButton;
     }
 
     @Override
@@ -278,10 +290,24 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
     private void modificaCantidad(ArticuloModel articulo, String cantidad)
     {
+
         ImpuestosDeArticuloApartado.clear();
         ListaDeArticulosApartados.clear();
         ListaDeArticulosOrdenados.clear();
-        Articulos.clear();
+        int CantidadAntigua=0;
+
+        for(int j=0; j<Articulos.size();j++)
+        {
+            if(articulo.getarticulo_Nombre().equals(Articulos.get(j).getarticulo_Nombre()))
+            {
+                CantidadAntigua = Integer.parseInt(Articulos.get(j).getArticulo_cantidad());
+                CantidadAntigua = CantidadAntigua + 1;
+                Articulos.get(j).setArticulo_cantidad(String.valueOf(cantidad));
+                break;
+            }
+        }
+
+
         JSONObject request = new JSONObject();
         try
         {
@@ -503,9 +529,12 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
     private void EliminarArticulo(String taride,String nombre)
     {
+        ArticulosConExistencias.clear();
         ImpuestosDeArticuloApartado.clear();
         ListaDeArticulosApartados.clear();
         ListaDeArticulosOrdenados.clear();
+        Articulos.clear();
+        Imagenes.clear();
         JSONObject request = new JSONObject();
         try
         {
@@ -751,10 +780,50 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), Articulos, tabla_venta_articulos, TicketVenta, Usu_id,
                                 total, descuento, impuesto, subtotal,
-                                carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados);
+                                carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,
+                                OrdenarButton,ApartarButton,FinalizarButton);
                         articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                         LoadImages();
+
+                        if(ListaDeArticulosOrdenados.isEmpty())
+                        {
+                            OrdenarButton.setVisibility(View.INVISIBLE);
+                        }
+                        else
+                        {
+                            OrdenarButton.setVisibility(View.VISIBLE);
+                        }
+
+                        if(ListaDeArticulosApartados.isEmpty())
+                        {
+                            ApartarButton.setVisibility(View.INVISIBLE);
+                        }
+                        else
+                        {
+                            ApartarButton.setVisibility(View.VISIBLE);
+                        }
+
+                        for(int k=0; k<Articulos.size();k++)
+                        {
+                            if(Articulos.get(k).getArticulo_articulo_exi_id().equals("")){
+
+                            }
+                            else
+                            {
+                                ArticulosConExistencias.add(Articulos.get(k).getarticulo_Nombre());
+                            }
+                        }
+
+                        if(ArticulosConExistencias.isEmpty())
+                        {
+                            FinalizarButton.setVisibility(View.INVISIBLE);
+                        }
+                        else
+                        {
+                            FinalizarButton.setVisibility(View.VISIBLE);
+                        }
+
                     }
                     else
                     {

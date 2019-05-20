@@ -30,8 +30,32 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Confirmacion_venta extends AppCompatActivity {
+    private String content;
+    private WebView webView;
+
+
+    private String NombreSucursal="";
+    private String NumeroSucursal="";
+    private String Direccion="";
+    private String RazonSocial="";
+    private String RFC="";
+    private String LogoNegocio="";
+    private String FechaCreacion="";
+    private String NombreVendedor="";
+    private String NombreCliente="";
+    private String NumeroTicket="";
+    private String Subtotal = "";
+    private String Total = "";
+    private String ImpuestosTicket="";
+    private String Sucursal="";
+    private float ImpuestosTotal=0;
+    private String Ticket="";
+
+    private List<ArticuloModel> ListaArticulosTicket = new ArrayList<>();
 
     private String usu_id;
 
@@ -53,6 +77,8 @@ public class Confirmacion_venta extends AppCompatActivity {
         double IC =  bundle.getDouble("IC");
         double IR =  bundle.getDouble("IR");
         double IV =  bundle.getDouble("IV");
+        Sucursal = bundle.getString("Sucursal");
+        Ticket = bundle.getString("Ticket");
 
         double CambioConDecimal = IC;
         double RecibidoConDecimal = IR;
@@ -87,7 +113,7 @@ public class Confirmacion_venta extends AppCompatActivity {
         });
 
     }
-    private void loadTicket(MovimientoModel movimiento)
+    private void loadTicket()
     {
         try {
 
@@ -98,8 +124,8 @@ public class Confirmacion_venta extends AppCompatActivity {
             ApiPath = url + "/api/ventas/movimientos/obtener_detalle_ticket?" +
                     "usu_id=" + usu_id +
                     "&esApp=1" +
-                    "&tic_id="+ movimiento.getMovimiento_tic_id()+
-                    "&suc_id=" + SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+                    "&tic_id="+ Ticket+
+                    "&suc_id=" + Sucursal;
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
                     new Response.Listener<JSONObject>() {
@@ -391,7 +417,7 @@ public class Confirmacion_venta extends AppCompatActivity {
                                             "</table>\n"+
                                             "</body>\n"+
                                             "</html>";
-                                    Dialog dialog = new Dialog(getContext());
+                                    Dialog dialog = new Dialog(Confirmacion_venta.this);
                                     dialog.setContentView(R.layout.pop_up_ticket_web);
                                     webView = (WebView) dialog.findViewById(R.id.simpleWebView);
                                     // displaying text in WebView
@@ -401,15 +427,15 @@ public class Confirmacion_venta extends AppCompatActivity {
                                     File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "/PDFTicket/");
                                     final String fileName="Ticket.pdf";
 
-                                    final ProgressDialog progressDialog=new ProgressDialog(getContext());
+                                    final ProgressDialog progressDialog=new ProgressDialog(Confirmacion_venta.this);
                                     progressDialog.setMessage("Espere un momento por favor");
                                     progressDialog.show();
-                                    PdfView.createWebPrintJob(getActivity(), webView, directory, fileName, new PdfView.Callback() {
+                                    PdfView.createWebPrintJob(Confirmacion_venta.this, webView, directory, fileName, new PdfView.Callback() {
 
                                         @Override
                                         public void success(String path) {
                                             progressDialog.dismiss();
-                                            PdfView.openPdfFile(getActivity(),getString(R.string.app_name),"¿Desea abrir el archivo pdf?"+fileName,path);
+                                            PdfView.openPdfFile(Confirmacion_venta.this,getString(R.string.app_name),"¿Desea abrir el archivo pdf?"+fileName,path);
                                         }
 
                                         @Override
@@ -424,7 +450,7 @@ public class Confirmacion_venta extends AppCompatActivity {
                                 }
                             } catch (JSONException e) {
                                 Toast toast1 =
-                                        Toast.makeText(getContext(),
+                                        Toast.makeText(Confirmacion_venta.this,
                                                 String.valueOf(e), Toast.LENGTH_LONG);
                             }
                         }
@@ -433,14 +459,14 @@ public class Confirmacion_venta extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Toast toast1 =
-                                    Toast.makeText(getContext(),
+                                    Toast.makeText(Confirmacion_venta.this,
                                             String.valueOf(error), Toast.LENGTH_LONG);
                         }
                     }
             );
             getRequest.setShouldCache(false);
 
-            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+            VolleySingleton.getInstanciaVolley(Confirmacion_venta.this).addToRequestQueue(getRequest);
         } catch (Error e) {
             e.printStackTrace();
         }
