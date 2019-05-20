@@ -48,16 +48,10 @@ public class ComisionesAdapter extends LongPressAwareTableDataAdapter<CorteCajaM
 
 
 
-    public ComisionesAdapter(final Context context, final List<CorteCajaModel> data, final SortableCorteCajaTable tableView,
-                             String usu_id, String valoridsucursal, String id_ticket) {
+    public ComisionesAdapter(final Context context, final List<CorteCajaModel> data, final SortableCorteCajaTable tableView) {
         super(context, data, tableView);
-        Usu_id = usu_id;
-        valueIdSuc = valoridsucursal;
-        tic_id = id_ticket;
         tabla_comisiones = tableView;
         montoapagar = 0.0;
-
-
 
 
     }
@@ -220,9 +214,6 @@ public class ComisionesAdapter extends LongPressAwareTableDataAdapter<CorteCajaM
 
                     }
                 });
-
-
-
             }
         });
 
