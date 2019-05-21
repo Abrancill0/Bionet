@@ -513,8 +513,9 @@ public class Fragment_Ventas extends Fragment {
 
         if(Imagenes.isEmpty())
         {
-
+            carouselView.setVisibility(View.INVISIBLE);
         }else{
+            carouselView.setVisibility(View.VISIBLE);
             ViewListener viewListener = new ViewListener() {
 
                 @Override

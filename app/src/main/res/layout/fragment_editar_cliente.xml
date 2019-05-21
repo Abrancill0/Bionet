@@ -125,7 +125,7 @@
                                 android:layout_width="119dp"
                                 android:layout_height="wrap_content"
                                 android:text="Nombre"
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_Nombre"
@@ -136,7 +136,7 @@
                                 android:ems="10"
                                 android:inputType="text"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
 
                         </LinearLayout>
 
@@ -151,7 +151,7 @@
                                 android:layout_width="119dp"
                                 android:layout_height="wrap_content"
                                 android:text="E-mail"
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_email"
@@ -162,7 +162,7 @@
                                 android:ems="10"
                                 android:inputType="textEmailAddress"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
 
                         </LinearLayout>
 
@@ -177,7 +177,7 @@
                                 android:layout_width="119dp"
                                 android:layout_height="wrap_content"
                                 android:text="Telefono"
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_telefono"
@@ -188,7 +188,7 @@
                                 android:ems="10"
                                 android:inputType="text"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -202,7 +202,7 @@
                                 android:layout_width="119dp"
                                 android:layout_height="wrap_content"
                                 android:text="C.P."
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_cp"
@@ -213,7 +213,7 @@
                                 android:ems="10"
                                 android:inputType="number"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -228,7 +228,7 @@
                                 android:layout_width="119dp"
                                 android:layout_height="wrap_content"
                                 android:text="Estado"
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <Spinner
                                 android:id="@+id/Text_cliente_estado"
@@ -249,7 +249,7 @@
                                 android:layout_width="119dp"
                                 android:layout_height="wrap_content"
                                 android:text="Municipio"
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_municipio"
@@ -260,7 +260,7 @@
                                 android:ems="10"
                                 android:inputType="text"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -283,7 +283,7 @@
                                 android:layout_width="119dp"
                                 android:layout_height="wrap_content"
                                 android:text="Colonia"
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <Spinner
                                 android:id="@+id/Text_cliente_colonia"
@@ -291,7 +291,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -305,7 +305,7 @@
                                 android:layout_width="119dp"
                                 android:layout_height="wrap_content"
                                 android:text="Calle"
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_calle"
@@ -316,7 +316,7 @@
                                 android:ems="10"
                                 android:inputType="text"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -330,7 +330,7 @@
                                 android:layout_width="119dp"
                                 android:layout_height="wrap_content"
                                 android:text="Núm. int."
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_num_int"
@@ -341,7 +341,7 @@
                                 android:ems="10"
                                 android:inputType="number"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -355,7 +355,7 @@
                                 android:layout_width="119dp"
                                 android:layout_height="wrap_content"
                                 android:text="Núm. Ext."
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_num_ext"
@@ -366,7 +366,7 @@
                                 android:ems="10"
                                 android:inputType="number"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -380,7 +380,7 @@
                                 android:layout_width="119dp"
                                 android:layout_height="wrap_content"
                                 android:text="Sucursal"
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <Spinner
                                 android:id="@+id/Text_cliente_sucursal"
@@ -432,7 +432,7 @@
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"
                             android:text="RFC"
-                            android:textSize="18sp" />
+                            android:textSize="22sp" />
 
                         <EditText
                             android:id="@+id/Text_cliente_rfc"
@@ -441,7 +441,7 @@
                             android:background="@drawable/shape_gray"
                             android:ems="10"
                             android:inputType="text"
-                            android:textSize="14sp" />
+                            android:textSize="18sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -457,7 +457,7 @@
                             android:layout_width="119dp"
                             android:layout_height="wrap_content"
                             android:text="Razón Social"
-                            android:textSize="18sp" />
+                            android:textSize="22sp" />
 
                         <EditText
                             android:id="@+id/Text_cliente_razon_social"
@@ -467,7 +467,7 @@
                             android:ems="10"
                             android:inputType="text"
                             android:padding="1dp"
-                            android:textSize="14sp" />
+                            android:textSize="18sp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -582,7 +582,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
                                 android:text="CP"
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_cp_facturacion"
@@ -593,7 +593,7 @@
                                 android:ems="10"
                                 android:inputType="text"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -607,7 +607,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
                                 android:text="Estado"
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <Spinner
                                 android:id="@+id/Text_cliente_estado_facturacion"
@@ -629,7 +629,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
                                 android:text="Municipio"
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_municipio_facturacion"
@@ -640,7 +640,7 @@
                                 android:ems="10"
                                 android:inputType="text"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -654,7 +654,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
                                 android:text="Colonia"
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <Spinner
                                 android:id="@+id/Text_cliente_colonia_facturacion"
@@ -663,7 +663,7 @@
                                 android:layout_margin="5dp"
                                 android:layout_weight="1"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
 
                         </LinearLayout>
 
@@ -687,7 +687,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
                                 android:text="Calle"
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_calle_facturacion"
@@ -698,7 +698,7 @@
                                 android:ems="10"
                                 android:inputType="text"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
 
                         </LinearLayout>
 
@@ -713,7 +713,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
                                 android:text="Num. Ext."
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_num_ext_facturacion"
@@ -724,7 +724,7 @@
                                 android:ems="10"
                                 android:inputType="text"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -738,7 +738,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
                                 android:text="Num Int"
-                                android:textSize="18sp" />
+                                android:textSize="22sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_num_int_facturacion"
@@ -749,7 +749,7 @@
                                 android:ems="10"
                                 android:inputType="text"
                                 android:padding="1dp"
-                                android:textSize="14sp" />
+                                android:textSize="18sp" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -792,7 +792,7 @@
                             android:padding="10dp"
                             android:text="E-mail personal:"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="18sp" />
+                            android:textSize="22sp" />
 
                         <EditText
                             android:id="@+id/Text_cliente_correo_facturacion"
@@ -803,7 +803,7 @@
                             android:ems="10"
                             android:inputType="text"
                             android:padding="1dp"
-                            android:textSize="14sp" />
+                            android:textSize="18sp" />
                     </LinearLayout>
 
                 </LinearLayout>

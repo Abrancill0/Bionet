@@ -55,16 +55,10 @@ public class FragmentLealtadConfiguraciones extends Fragment{
     private Button Lealtad;
     private Button Inscribir;
     private Button Articulos;
-    private Button Abrir_calendario;
-    private Button vencen;
-    private Button no_vencen;
-    private View Puntos_vencen_dias;
+    private TextView Abrir_calendario;
+    private CheckBox vencen;
     private CalendarPickerView calendarView;
-    private String Fecha_vencimiento;
-    private TextView Fecha;
-    private View Fecha_puntos_vencen;
     private String usu_id;
-    private Button Crear;
     private CheckBox CheckPtMaximos;
     private EditText IntroducirPuntos;
     private Button AceptarPuntos;
@@ -114,18 +108,12 @@ public class FragmentLealtadConfiguraciones extends Fragment{
         SpinnerSucursal=(Spinner)v.findViewById(R.id.Sucursal_lealtad);
         tabla_programas = v.findViewById(R.id.tabla_programas);
         tabla_programas.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
-        Puntos_vencen_dias=v.findViewById(R.id.layout_puntos_vencen_dias);
         CheckPtMaximos = v.findViewById(R.id.CheckBox_pt_maximos);
         Lealtad=v.findViewById(R.id.lealtad);
         Inscribir=v.findViewById(R.id.inscribir);
         Articulos=v.findViewById(R.id.articulo);
-        ViewPtMaximos=v.findViewById(R.id.PuntosMaximosView);
-        PuntosMaximos=v.findViewById(R.id.puntos_maximos);
-        vencen = v.findViewById(R.id.si_vencen);
-        no_vencen = v.findViewById(R.id.no_vencen);
+        vencen = v.findViewById(R.id.vencen);
         Abrir_calendario = v.findViewById(R.id.abrir_calendario);
-        Fecha = v.findViewById(R.id.fecha_vencimiento_puntos);
-        Fecha_puntos_vencen = v.findViewById(R.id.fecha_puntos_vencen);
         CrearConfiguracion = v.findViewById(R.id.crear_configuracion);
 
         LoadListenerTable();
@@ -331,32 +319,26 @@ public class FragmentLealtadConfiguraciones extends Fragment{
                         if(Lealtad_puntos_maximos.equals("0"))
                         {
                             CheckPtMaximos.setChecked(false);
-                            ViewPtMaximos.setVisibility(View.GONE);
-                            PuntosMaximos.setText(Lealtad_puntos_maximos);
+                            CheckPtMaximos.setText("Máximo de puntos por compra");
+
                         }
                         else{
                             CheckPtMaximos.setChecked(true);
-                            ViewPtMaximos.setVisibility(View.VISIBLE);
-                            PuntosMaximos.setText(Lealtad_puntos_maximos);
+                            CheckPtMaximos.setText("Máximo de puntos por compra ("+Lealtad_puntos_maximos+")");
                         }
 
                         if(NodoConfiguraciones2.getString("con_puntos_vencen_programa_lealtad").equals("true"))
                         {
                             Lealtad_fecha_vencimiento = NodoConfiguraciones2.getString("con_fecha_hora_vencen_puntos");
-                            no_vencen.setBackgroundResource(R.drawable.shape_gray);
-                            vencen.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                            vencen.setTextColor(getResources().getColor(R.color.white));
-                            Puntos_vencen_dias.setVisibility(View.VISIBLE);
-                            Fecha_puntos_vencen.setVisibility(View.VISIBLE);
-                            Fecha.setText(Lealtad_fecha_vencimiento);
+                            vencen.setChecked(true);
+                            Abrir_calendario.setText("el dia "+Lealtad_fecha_vencimiento);
+                            Abrir_calendario.setVisibility(View.VISIBLE);
+
                         }
                         else if(NodoConfiguraciones2.getString("con_puntos_vencen_programa_lealtad").equals("false"))
                         {
-                            vencen.setBackgroundResource(R.drawable.shape_gray);
-                            no_vencen.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                            no_vencen.setTextColor(getResources().getColor(R.color.white));
-                            Puntos_vencen_dias.setVisibility(View.GONE);
-                            Fecha_puntos_vencen.setVisibility(View.GONE);
+                            vencen.setChecked(false);
+                            Abrir_calendario.setVisibility(View.INVISIBLE);
                         }
 
                     }
@@ -456,8 +438,7 @@ public class FragmentLealtadConfiguraciones extends Fragment{
 
                                             toast1.show();
                                             puntosMaximos.dismiss();
-                                            ViewPtMaximos.setVisibility(View.VISIBLE);
-                                            PuntosMaximos.setText(Lealtad_puntos_maximos);
+                                            CheckPtMaximos.setText("Máximo de puntos por compra ("+Lealtad_puntos_maximos+")");
 
                                         }
                                         else
@@ -539,12 +520,11 @@ public class FragmentLealtadConfiguraciones extends Fragment{
 
                                 if (status == 1)
                                 {
-
+                                    CheckPtMaximos.setText("Máximo de puntos por compra");
                                     Toast toast1 =
                                             Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
                                     toast1.show();
-                                    ViewPtMaximos.setVisibility(View.GONE);
 
                                 }
                                 else
@@ -592,14 +572,113 @@ public class FragmentLealtadConfiguraciones extends Fragment{
 
     private void FechaVencimiento()
     {
-                vencen.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    no_vencen.setBackgroundResource(R.drawable.shape_gray);
-                    no_vencen.setTextColor(getResources().getColor(R.color.black));
-                    vencen.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                    vencen.setTextColor(getResources().getColor(R.color.white));
-                    Puntos_vencen_dias.setVisibility(View.VISIBLE);
+        vencen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(vencen.isChecked()) {
+                    final Dialog calendario = new Dialog(getContext());
+                    calendario.setContentView(R.layout.calendar);
+                    calendario.show();
+                    calendarView = calendario.findViewById(R.id.calendar_view);
+
+                    Calendar nextYear = Calendar.getInstance();
+                    nextYear.add(Calendar.YEAR, 1);
+
+                    Date today = new Date();
+                    calendarView.init(today, nextYear.getTime())
+                            .withSelectedDate(today);
+
+
+                    calendarView.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
+                        @Override
+                        public void onDateSelected(Date date) {
+
+                            DateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                            long s = calendarView.getSelectedDate().parse(String.valueOf(calendarView.getSelectedDate()));
+                            Lealtad_fecha_vencimiento = targetFormat.format(s);
+                            calendario.dismiss();
+
+                            JSONObject request = new JSONObject();
+                            try {
+                                request.put("usu_id", usu_id);
+                                request.put("esApp", "1");
+                                request.put("con_id", Lealtad_con_id);
+                                request.put("con_fecha_hora_vencen_puntos_programa_lealtad", Lealtad_fecha_vencimiento);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            String url = getString(R.string.Url);
+
+                            String ApiPath = url + "/api/programa-de-lealtad/add-fecha-vencimiento";
+
+                            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+
+                                    JSONArray Respuesta = null;
+                                    JSONObject NodoClientesSeleccionados = null;
+                                    try {
+
+                                        int status = Integer.parseInt(response.getString("estatus"));
+                                        String Mensaje = response.getString("mensaje");
+
+
+                                        if (status == 1) {
+
+                                            Toast toast1 =
+                                                    Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                                            toast1.show();
+                                            Abrir_calendario.setVisibility(View.VISIBLE);
+                                            Abrir_calendario.setText("el día "+Lealtad_fecha_vencimiento);
+
+                                        } else {
+                                            Toast toast1 =
+                                                    Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                                            toast1.show();
+
+
+                                        }
+
+                                    } catch (JSONException e) {
+
+                                        Toast toast1 =
+                                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                                        toast1.show();
+
+
+                                    }
+
+                                }
+
+                            },
+                                    new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
+                                            Toast toast1 =
+                                                    Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                                            toast1.show();
+
+
+                                        }
+                                    }
+                            );
+
+                            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+                        }
+
+                        @Override
+                        public void onDateUnselected(Date date) {
+
+                        }
+                    });
                     Abrir_calendario.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -627,16 +706,13 @@ public class FragmentLealtadConfiguraciones extends Fragment{
                                     calendario.dismiss();
 
                                     JSONObject request = new JSONObject();
-                                    try
-                                    {
+                                    try {
                                         request.put("usu_id", usu_id);
                                         request.put("esApp", "1");
-                                        request.put("con_id",Lealtad_con_id);
+                                        request.put("con_id", Lealtad_con_id);
                                         request.put("con_fecha_hora_vencen_puntos_programa_lealtad", Lealtad_fecha_vencimiento);
 
-                                    }
-                                    catch(Exception e)
-                                    {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
 
@@ -644,8 +720,7 @@ public class FragmentLealtadConfiguraciones extends Fragment{
 
                                     String ApiPath = url + "/api/programa-de-lealtad/add-fecha-vencimiento";
 
-                                    JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-                                    {
+                                    JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
                                         @Override
                                         public void onResponse(JSONObject response) {
 
@@ -657,19 +732,16 @@ public class FragmentLealtadConfiguraciones extends Fragment{
                                                 String Mensaje = response.getString("mensaje");
 
 
-                                                if (status == 1)
-                                                {
+                                                if (status == 1) {
 
                                                     Toast toast1 =
                                                             Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
                                                     toast1.show();
-                                                    Fecha_puntos_vencen.setVisibility(View.VISIBLE);
-                                                    Fecha.setText(Lealtad_fecha_vencimiento);
+                                                    Abrir_calendario.setVisibility(View.VISIBLE);
+                                                    Abrir_calendario.setText("el día "+Lealtad_fecha_vencimiento);
 
-                                                }
-                                                else
-                                                {
+                                                } else {
                                                     Toast toast1 =
                                                             Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
@@ -691,8 +763,7 @@ public class FragmentLealtadConfiguraciones extends Fragment{
                                         }
 
                                     },
-                                            new Response.ErrorListener()
-                                            {
+                                            new Response.ErrorListener() {
                                                 @Override
                                                 public void onErrorResponse(VolleyError error) {
                                                     Toast toast1 =
@@ -715,100 +786,97 @@ public class FragmentLealtadConfiguraciones extends Fragment{
                             });
 
                         }
-                    }); }
-                });
+                    });
 
-                no_vencen.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        vencen.setBackgroundResource(R.drawable.shape_gray);
-                        vencen.setTextColor(getResources().getColor(R.color.black));
-                        no_vencen.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                        no_vencen.setTextColor(getResources().getColor(R.color.white));
-                        Puntos_vencen_dias.setVisibility(View.GONE);
-                        Fecha_puntos_vencen.setVisibility(View.GONE);
+                }
+                else
+                {
+                    JSONObject request = new JSONObject();
+                    try
+                    {
+                        request.put("usu_id", usu_id);
+                        request.put("esApp", "1");
+                        request.put("con_id",Lealtad_con_id);
+                    }
+                    catch(Exception e)
+                    {
+                        e.printStackTrace();
+                    }
 
+                    String url = getString(R.string.Url);
 
-                        JSONObject request = new JSONObject();
-                        try
-                        {
-                            request.put("usu_id", usu_id);
-                            request.put("esApp", "1");
-                            request.put("con_id",Lealtad_con_id);
-                        }
-                        catch(Exception e)
-                        {
-                            e.printStackTrace();
-                        }
+                    String ApiPath = url + "/api/programa-de-lealtad/delete-fecha-vencimiento";
 
-                        String url = getString(R.string.Url);
+                    JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+                    {
+                        @Override
+                        public void onResponse(JSONObject response) {
 
-                        String ApiPath = url + "/api/programa-de-lealtad/delete-fecha-vencimiento";
+                            JSONArray Respuesta = null;
+                            JSONObject NodoClientesSeleccionados = null;
+                            try {
 
-                        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-                        {
-                            @Override
-                            public void onResponse(JSONObject response) {
-
-                                JSONArray Respuesta = null;
-                                JSONObject NodoClientesSeleccionados = null;
-                                try {
-
-                                    int status = Integer.parseInt(response.getString("estatus"));
-                                    String Mensaje = response.getString("mensaje");
+                                int status = Integer.parseInt(response.getString("estatus"));
+                                String Mensaje = response.getString("mensaje");
 
 
-                                    if (status == 1)
-                                    {
-
-                                        Toast toast1 =
-                                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-
-                                        toast1.show();
-
-                                    }
-                                    else
-                                    {
-                                        Toast toast1 =
-                                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-
-                                        toast1.show();
-
-
-                                    }
-
-                                } catch (JSONException e) {
+                                if (status == 1)
+                                {
 
                                     Toast toast1 =
-                                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                                            Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                                    toast1.show();
+
+                                    Abrir_calendario.setVisibility(View.INVISIBLE);
+
+                                }
+                                else
+                                {
+                                    Toast toast1 =
+                                            Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
                                     toast1.show();
 
 
                                 }
 
+                            } catch (JSONException e) {
+
+                                Toast toast1 =
+                                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                                toast1.show();
+
+
                             }
 
-                        },
-                                new Response.ErrorListener()
-                                {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        Toast toast1 =
-                                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        }
 
-                                        toast1.show();
+                    },
+                            new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast toast1 =
+                                            Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                                    toast1.show();
 
 
-                                    }
                                 }
-                        );
+                            }
+                    );
 
-                        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+                    VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
-                    }
-                });
+                }
+
+            }
+        });
+
     }
+
 
 
     private void LoadSpinnerSucursal(){

@@ -41,7 +41,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel> {
 
-    int TEXT_SIZE = 12;
+    int TEXT_SIZE = 14;
 
     private String[][] clienteModel;
 
@@ -108,10 +108,9 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
 
         switch (columnIndex) {
             case 1:
-                renderedView = renderEditableClienteName(cliente);
-                break;
+
             default:
-                renderedView = getDefaultCellView(rowIndex, columnIndex, parentView);
+
         }
 
         return renderedView;
@@ -157,7 +156,7 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
         private ClienteModel clienteToUpdate;
 
         public ClienteNameUpdater(ClienteModel clienteToUpdate) {
-            this.clienteToUpdate = clienteToUpdate;
+
         }
 
         @Override
@@ -172,7 +171,7 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
 
         @Override
         public void afterTextChanged(Editable s) {
-            clienteToUpdate.setCliente_Nombre(s.toString());
+
         }
     }
 

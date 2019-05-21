@@ -189,7 +189,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
                     android:orientation="vertical"
-                    android:padding="20dp"
+                    android:padding="10dp"
                     android:visibility="invisible">
 
                     <LinearLayout
@@ -257,9 +257,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".3"
-            android:orientation="vertical"
+            android:layout_weight=".2"
             android:background="@drawable/pestanas_desplegables"
+            android:orientation="vertical"
             android:padding="20dp">
 
             <LinearLayout
@@ -278,19 +278,19 @@
                     android:visibility="invisible">
 
                     <Spinner
-                        android:layout_marginHorizontal="5dp"
                         android:id="@+id/FormaPago"
                         style="@style/SpinnerTheme"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginHorizontal="5dp"
                         android:layout_weight=".6"></Spinner>
 
                     <Spinner
-                        android:layout_marginHorizontal="5dp"
                         android:id="@+id/UsuarioVenta"
                         style="@style/SpinnerTheme"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginHorizontal="5dp"
                         android:layout_weight=".6"></Spinner>
                 </LinearLayout>
 
@@ -316,6 +316,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:visibility="gone">
+
                     <com.Danthop.bionet.Tables.SortableOrdenEspecialTable
                         android:id="@+id/tabla_ordenes"
                         android:layout_width="match_parent"
@@ -408,9 +409,9 @@
                                 android:id="@+id/textView45f"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:layout_gravity="center"
                                 android:layout_weight=".6"
                                 android:gravity="center"
-                                android:layout_gravity="center"
                                 android:padding="2dp"
                                 android:text="Transacciones" />
 

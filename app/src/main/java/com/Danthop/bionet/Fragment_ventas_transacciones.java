@@ -210,6 +210,68 @@ public class Fragment_ventas_transacciones extends Fragment {
         };
         TablaMovimientos.addDataClickListener(tablaListener);
 
+        TableDataClickListener<ApartadoModel> tablaListener2 = new TableDataClickListener<ApartadoModel>() {
+            @Override
+            public void onDataClicked(int rowIndex, final ApartadoModel clickedData) {
+                dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.pop_up_ventas_detalle_apartado);
+                dialog.show();
+                SortableApartadoDetalleTable DetalleApartadoTable = dialog.findViewById(R.id.detalle_apartado_table);
+                DetalleApartadoTable.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia_detalle_apartado));
+                final DetalleApartadoAdapter detalleApartadoAdapter = new DetalleApartadoAdapter(getContext(),clickedData.getArticulosApartados(),DetalleApartadoTable);
+                DetalleApartadoTable.setDataAdapter(detalleApartadoAdapter);
+
+                Button aceptar = dialog.findViewById(R.id.btn_aceptar_cerrar);
+                aceptar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.hide();
+                    }
+                });
+
+            }
+        };
+        TablaApartados.addDataClickListener(tablaListener2);
+
+        TableDataClickListener<OrdenEspecialModel> tablaListener3 = new TableDataClickListener<OrdenEspecialModel>() {
+            @Override
+            public void onDataClicked(int rowIndex, final OrdenEspecialModel clickedData) {
+                dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.pop_up_ventas_detalle_orden);
+                dialog.show();
+                SortableOrdenEspecialDetalleTable DetalleOrdenTable = dialog.findViewById(R.id.detalle_orden_table);
+                DetalleOrdenTable.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia_detalle_orden));
+                final DetalleOrdenEspecialAdapter detalleApartadoAdapter = new DetalleOrdenEspecialAdapter(getContext(),clickedData.getArticulosOrdenados(),DetalleOrdenTable);
+                DetalleOrdenTable.setDataAdapter(detalleApartadoAdapter);
+
+                Button aceptar = dialog.findViewById(R.id.btn_aceptar_cerrar);
+                aceptar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.hide();
+                    }
+                });
+
+            }
+        };
+        TablaOrdenes.addDataClickListener(tablaListener3);
+
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
@@ -581,28 +643,6 @@ public class Fragment_ventas_transacciones extends Fragment {
         } catch (Error e) {
             e.printStackTrace();
         }
-        TableDataClickListener<ApartadoModel> tablaListener = new TableDataClickListener<ApartadoModel>() {
-            @Override
-            public void onDataClicked(int rowIndex, final ApartadoModel clickedData) {
-                dialog = new Dialog(getContext());
-                dialog.setContentView(R.layout.pop_up_ventas_detalle_apartado);
-                dialog.show();
-                SortableApartadoDetalleTable DetalleApartadoTable = dialog.findViewById(R.id.detalle_apartado_table);
-                DetalleApartadoTable.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia_detalle_apartado));
-                final DetalleApartadoAdapter detalleApartadoAdapter = new DetalleApartadoAdapter(getContext(),clickedData.getArticulosApartados(),DetalleApartadoTable);
-                DetalleApartadoTable.setDataAdapter(detalleApartadoAdapter);
-
-                Button aceptar = dialog.findViewById(R.id.btn_aceptar_cerrar);
-                aceptar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-            }
-        };
-        TablaApartados.addDataClickListener(tablaListener);
 
 
     }
@@ -748,28 +788,6 @@ public class Fragment_ventas_transacciones extends Fragment {
         } catch (Error e) {
             e.printStackTrace();
         }
-        TableDataClickListener<OrdenEspecialModel> tablaListener = new TableDataClickListener<OrdenEspecialModel>() {
-            @Override
-            public void onDataClicked(int rowIndex, final OrdenEspecialModel clickedData) {
-                dialog = new Dialog(getContext());
-                dialog.setContentView(R.layout.pop_up_ventas_detalle_orden);
-                dialog.show();
-                SortableOrdenEspecialDetalleTable DetalleOrdenTable = dialog.findViewById(R.id.detalle_orden_table);
-                DetalleOrdenTable.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia_detalle_orden));
-                final DetalleOrdenEspecialAdapter detalleApartadoAdapter = new DetalleOrdenEspecialAdapter(getContext(),clickedData.getArticulosOrdenados(),DetalleOrdenTable);
-                DetalleOrdenTable.setDataAdapter(detalleApartadoAdapter);
-
-                Button aceptar = dialog.findViewById(R.id.btn_aceptar_cerrar);
-                aceptar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-            }
-        };
-        TablaOrdenes.addDataClickListener(tablaListener);
 
 
     }

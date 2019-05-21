@@ -851,14 +851,16 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                 }
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+        LoadImages();
     }
 
     public void LoadImages() {
 
         if(Imagenes.isEmpty())
         {
-
+            carouselView.setVisibility(View.INVISIBLE);
         }else{
+            carouselView.setVisibility(View.VISIBLE);
             ViewListener viewListener = new ViewListener() {
 
                 @Override
