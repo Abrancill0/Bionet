@@ -829,7 +829,16 @@ public class Fragment_ventas_transacciones extends Fragment {
 
                                         transacciones.setText(RespuestaResultado.getString("floatNumeroTransacciones"));
                                         total_ventas.setText(RespuestaResultado.getString("floatTotalEnVentas"));
-                                        best_seller.setText(RespuestaResultado.getString("stringArticuloMasVendido"));
+                                        String mas_vendido=RespuestaResultado.getString("stringArticuloMasVendido");
+                                        if(mas_vendido.equals("null"))
+                                        {
+                                            best_seller.setText("ninguno");
+                                        }
+                                        else
+                                        {
+                                            best_seller.setText(mas_vendido);
+                                        }
+
 
                                         JSONArray Movimientos = RespuestaResultado.getJSONArray("aMovimientos");
                                         for (int f = 0; f < Movimientos.length(); f++) {
@@ -934,7 +943,15 @@ public class Fragment_ventas_transacciones extends Fragment {
 
                                         transacciones.setText(RespuestaResultado.getString("floatNumeroTransacciones"));
                                         total_ventas.setText(RespuestaResultado.getString("floatTotalEnVentas"));
-                                        best_seller.setText(RespuestaResultado.getString("stringArticuloMasVendido"));
+                                        String mas_vendido=RespuestaResultado.getString("stringArticuloMasVendido");
+                                        if(mas_vendido.equals("null"))
+                                        {
+                                            best_seller.setText("ninguno");
+                                        }
+                                        else
+                                        {
+                                            best_seller.setText(mas_vendido);
+                                        }
 
                                         JSONArray Movimientos = RespuestaResultado.getJSONArray("aMovimientos");
                                         for (int f = 0; f < Movimientos.length(); f++) {

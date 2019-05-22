@@ -2,6 +2,7 @@ package com.Danthop.bionet;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -74,7 +75,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     private String url;
     private String img_ruta_servidor;
     private ImageView imgProfile;
-    private ImageView Logo_empresa;
+    private ImageView imgLogo_empresa;
     LoginModel Resultado = new LoginModel();
 
     private String android_id;
@@ -154,21 +155,21 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
         String Nombre = sharedPref.getString("usu_nombre", "");
         String Apellido = sharedPref.getString("usu_apellidos", "");
-        String ImagenPerfil = sharedPref.getString("usu_imagen_perfil", "");
-        String LogoEmpresa = sharedPref.getString("logo_imagen", "");
+        String RutaImagenPerfil = sharedPref.getString("usu_imagen_perfil", "");
+        String RutaLogoEmpresa = sharedPref.getString("logo_imagen", "");
 
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.fragment_container, new Fragment_pantalla_principal());
         tx.commit();
 
         usu_id = sharedPref.getString("usu_id", "");
-        img_ruta_servidor = ImagenPerfil;
+        img_ruta_servidor = RutaImagenPerfil;
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headView = navigationView.getHeaderView(0);
 
         imgProfile = headView.findViewById(R.id.foto_perfil_hamburguesa);
-        Logo_empresa = findViewById(R.id.logo_empresa);
+        imgLogo_empresa = findViewById(R.id.logo_empresa);
 
         if (img_ruta_servidor.equals("")) {
 
@@ -176,10 +177,10 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
             Picasso.with(getApplicationContext()).load(img_ruta_servidor).into(imgProfile);
         }
 
-        if (LogoEmpresa.equals("")) {
+        if (RutaLogoEmpresa.equals("")) {
 
         } else {
-            Picasso.with(getApplicationContext()).load(LogoEmpresa).into(Logo_empresa);
+            Picasso.with(getApplicationContext()).load(RutaLogoEmpresa).into(imgLogo_empresa);
         }
 
 
@@ -188,7 +189,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         toggle.syncState();
 
 
-        String url = getString(R.string.Url) + ImagenPerfil;
+        String url = getString(R.string.Url) + RutaImagenPerfil;
 
 
         TextView NombreUsuario = (TextView) headView.findViewById(R.id.TextNombrePerfil);
@@ -445,6 +446,10 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     }
 
     public void Aceptar(View view) {
+        ProgressDialog progreso;
+        progreso = new ProgressDialog(this);
+        progreso.setMessage("Cerrando sesion...");
+        progreso.show();
         Intent intent = new Intent(Home.this, SplashScreen.class);
         startActivity(intent);
         finish();
@@ -452,6 +457,8 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
         sharedPref.edit().clear().commit();
+
+
 
     }
 

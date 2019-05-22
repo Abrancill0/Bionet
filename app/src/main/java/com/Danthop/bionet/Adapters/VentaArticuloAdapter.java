@@ -41,7 +41,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<ArticuloModel> {
 
-    int TEXT_SIZE = 12;
+    int TEXT_SIZE = 14;
     private SortableVentaArticulos tabla_venta_articulos;
     private List<ArticuloModel> Articulos;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();

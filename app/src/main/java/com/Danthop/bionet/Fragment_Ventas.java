@@ -1227,86 +1227,93 @@ public class Fragment_Ventas extends Fragment {
             e1.printStackTrace();
         }
 
-
-        float RestanteTotal = ImporteTotal - PagoTotal;
-
-        JSONObject request = new JSONObject();
-        try {
-            request.put("usu_id", usu_id);
-            request.put("esApp", "1");
-            request.put("oes_id_ticket", ticket_de_venta.getTic_id());
-            request.put("oes_id_sucursal", ticket_de_venta.getTic_id_sucursal());
-            request.put("oes_id_cliente", ticket_de_venta.getTic_id_cliente());
-            request.put("oes_importe_pagado", PagoTotal);
-            request.put("oes_importe_restante", String.format("%.2f", RestanteTotal));
-            request.put("dias_vencimiento", DiasApartado);
-            request.put("aArticulos", arreglo);
+        if(arreglo.length()==0)
+        {
+            Toast toast1 =
+                    Toast.makeText(getContext(), "No haz seleccionado ningún artículo", Toast.LENGTH_LONG);
+            toast1.show();
+        }else {
 
 
+            float RestanteTotal = ImporteTotal - PagoTotal;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            JSONObject request = new JSONObject();
+            try {
+                request.put("usu_id", usu_id);
+                request.put("esApp", "1");
+                request.put("oes_id_ticket", ticket_de_venta.getTic_id());
+                request.put("oes_id_sucursal", ticket_de_venta.getTic_id_sucursal());
+                request.put("oes_id_cliente", ticket_de_venta.getTic_id_cliente());
+                request.put("oes_importe_pagado", PagoTotal);
+                request.put("oes_importe_restante", String.format("%.2f", RestanteTotal));
+                request.put("dias_vencimiento", DiasApartado);
+                request.put("aArticulos", arreglo);
 
-        String url = getString(R.string.Url);
 
-        String ApiPath = url + "/api/ventas/ordenes_especiales/store_ordenespecial";
-
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-
-                try {
-
-                    int status = Integer.parseInt(response.getString("estatus"));
-                    String Mensaje = response.getString("mensaje");
-
-                    if (status == 1) {
-
-                        dialog.dismiss();
-                        dialog.setContentView(R.layout.pop_up_ventas_confirmacion_transaccion);
-                        dialog.show();
-                        Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
-                        cerrarPopUp.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.hide();
-                            }
-                        });
-                        Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
-                        aceptar.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                    } else {
-                        Toast toast1 =
-                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-                        toast1.show();
-                    }
-
-                } catch (JSONException e) {
-                    Toast toast1 =
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
-                    toast1.show();
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+            String url = getString(R.string.Url);
+
+            String ApiPath = url + "/api/ventas/ordenes_especiales/store_ordenespecial";
+
+            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+
+                    try {
+
+                        int status = Integer.parseInt(response.getString("estatus"));
+                        String Mensaje = response.getString("mensaje");
+
+                        if (status == 1) {
+
+                            dialog.dismiss();
+                            dialog.setContentView(R.layout.pop_up_ventas_confirmacion_transaccion);
+                            dialog.show();
+                            Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                            cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.hide();
+                                }
+                            });
+                            Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                            aceptar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                        } else {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                            toast1.show();
+                        }
+
+                    } catch (JSONException e) {
                         Toast toast1 =
-                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                         toast1.show();
                     }
                 }
-        );
-        postRequest.setShouldCache(false);
-        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+            },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                            toast1.show();
+                        }
+                    }
+            );
+            postRequest.setShouldCache(false);
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+        }
     }
 
     private void ApartarArticulosSeleccionados() {
@@ -1354,88 +1361,98 @@ public class Fragment_Ventas extends Fragment {
             e1.printStackTrace();
         }
 
+        if(arreglo.length()==0)
+        {
+            Toast toast1 =
+                    Toast.makeText(getContext(), "No haz seleccionado ningún artículo", Toast.LENGTH_LONG);
+            toast1.show();
+        }else{
 
-        float RestanteTotal = ImporteTotal - PagoTotal;
+            float RestanteTotal = ImporteTotal - PagoTotal;
 
-        JSONObject request = new JSONObject();
-        try {
-            request.put("usu_id", usu_id);
-            request.put("esApp", "1");
-            request.put("apa_id_ticket", ticket_de_venta.getTic_id());
-            request.put("apa_id_sucursal", ticket_de_venta.getTic_id_sucursal());
-            request.put("apa_id_cliente", ticket_de_venta.getTic_id_cliente());
-            request.put("apa_importe_pagado", PagoTotal);
-            request.put("apa_importe_restante", String.format("%.2f", RestanteTotal));
-            request.put("dias_vencimiento", DiasApartado);
-            request.put("aArticulos", arreglo);
-
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        String url = getString(R.string.Url);
-
-        String ApiPath = url + "/api/ventas/apartados/store_apartado";
-
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
+            JSONObject request = new JSONObject();
+            try {
+                request.put("usu_id", usu_id);
+                request.put("esApp", "1");
+                request.put("apa_id_ticket", ticket_de_venta.getTic_id());
+                request.put("apa_id_sucursal", ticket_de_venta.getTic_id_sucursal());
+                request.put("apa_id_cliente", ticket_de_venta.getTic_id_cliente());
+                request.put("apa_importe_pagado", PagoTotal);
+                request.put("apa_importe_restante", String.format("%.2f", RestanteTotal));
+                request.put("dias_vencimiento", DiasApartado);
+                request.put("aArticulos", arreglo);
 
 
-                try {
 
-                    int status = Integer.parseInt(response.getString("estatus"));
-                    String Mensaje = response.getString("mensaje");
-
-                    if (status == 1) {
-
-                        dialog.dismiss();
-                        dialog.setContentView(R.layout.pop_up_ventas_confirmacion_transaccion);
-                        dialog.show();
-                        Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
-                        aceptar.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                        Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
-                        cerrarPopUp.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.hide();
-                            }
-                        });
-
-
-                    } else {
-                        Toast toast1 =
-                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-                        toast1.show();
-                    }
-
-                } catch (JSONException e) {
-                    Toast toast1 =
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
-                    toast1.show();
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+            String url = getString(R.string.Url);
+
+            String ApiPath = url + "/api/ventas/apartados/store_apartado";
+
+            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+
+                    try {
+
+                        int status = Integer.parseInt(response.getString("estatus"));
+                        String Mensaje = response.getString("mensaje");
+
+                        if (status == 1) {
+
+                            dialog.dismiss();
+                            dialog.setContentView(R.layout.pop_up_ventas_confirmacion_transaccion);
+                            dialog.show();
+                            Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                            aceptar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                            cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.hide();
+                                }
+                            });
+
+
+                        } else {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                            toast1.show();
+                        }
+
+                    } catch (JSONException e) {
                         Toast toast1 =
-                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                         toast1.show();
                     }
                 }
-        );
-        postRequest.setShouldCache(false);
-        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+            },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                            toast1.show();
+                        }
+                    }
+            );
+            postRequest.setShouldCache(false);
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+        }
+
+
     }
 
     private void FinalizarTicket(final TextView importeCambio, final TextView importeRecibido, final TextView importeVenta) {

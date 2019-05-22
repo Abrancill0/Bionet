@@ -42,7 +42,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class DetalleApartadoAdapter extends LongPressAwareTableDataAdapter<ArticuloApartadoModel> {
 
-    int TEXT_SIZE = 12;
+    int TEXT_SIZE = 14;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
 
     public DetalleApartadoAdapter(final Context context, final List<ArticuloApartadoModel> data, final SortableApartadoDetalleTable tableView) {

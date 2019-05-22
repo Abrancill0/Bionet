@@ -39,7 +39,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecommerce_orden_Model> {
 
-    int TEXT_SIZE = 12;
+    int TEXT_SIZE = 14;
     public Dialog pop_up1;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
 

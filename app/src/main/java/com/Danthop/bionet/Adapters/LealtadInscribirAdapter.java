@@ -19,7 +19,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class LealtadInscribirAdapter extends LongPressAwareTableDataAdapter<ClienteModel> {
 
-    int TEXT_SIZE = 12;
+    int TEXT_SIZE = 14;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
     private FragmentTransaction fr;
 

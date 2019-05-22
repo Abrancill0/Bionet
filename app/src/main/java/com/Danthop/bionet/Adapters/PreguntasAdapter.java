@@ -34,7 +34,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_Model> {
 
-    int TEXT_SIZE = 12;
+    int TEXT_SIZE = 14;
     public Dialog pop_up1;
     public Dialog pop_up2;
     private TextView Respuesta;

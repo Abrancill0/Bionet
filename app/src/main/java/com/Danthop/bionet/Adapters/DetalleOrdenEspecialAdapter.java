@@ -18,7 +18,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class DetalleOrdenEspecialAdapter extends LongPressAwareTableDataAdapter<OrdenEspecialArticuloModel> {
 
-    int TEXT_SIZE = 12;
+    int TEXT_SIZE = 14;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
 
     public DetalleOrdenEspecialAdapter(final Context context, final List<OrdenEspecialArticuloModel> data, final SortableOrdenEspecialDetalleTable tableView) {

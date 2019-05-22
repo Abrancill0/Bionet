@@ -15,6 +15,15 @@ public class UsuariosModel {
     private String usu_escaneo_facial;
     private String usu_codigo_acceso;
     private String usu_imagen_perfil;
+    private String usu_imagen_logo_empresa;
+
+    public String getUsu_imagen_logo_empresa() {
+        return usu_imagen_logo_empresa;
+    }
+
+    public void setUsu_imagen_logo_empresa(String usu_imagen_logo_empresa) {
+        this.usu_imagen_logo_empresa = usu_imagen_logo_empresa;
+    }
 
     public String getUsu_nombre() {
         return usu_nombre;

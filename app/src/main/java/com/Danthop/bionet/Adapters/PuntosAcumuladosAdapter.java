@@ -21,7 +21,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class PuntosAcumuladosAdapter extends LongPressAwareTableDataAdapter<Puntos_acumulados_model> {
 
-    int TEXT_SIZE = 12;
+    int TEXT_SIZE = 14;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
 
 
