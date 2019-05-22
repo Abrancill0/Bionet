@@ -15,5 +15,6 @@ public class MyFirebaseInstanceService extends FirebaseInstanceIdService {
         //Se obtiene el token actualizado
 
         Log.d(LOGTAG, "Token actualizado: " + refreshedToken);
+
     }
 }

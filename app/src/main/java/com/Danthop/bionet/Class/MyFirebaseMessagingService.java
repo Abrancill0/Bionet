@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
@@ -99,6 +100,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onNewToken(String s) {
         super.onNewToken( s );
         Log.d("TokenID",s);
+
+        SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor =  sharedPref.edit();
+        editor.putString("Token", s);
+
+        editor.commit();
+
     }
 
 }

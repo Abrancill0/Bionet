@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -78,19 +79,18 @@ public class Login extends Activity {
 
     private JSONArray jsonArray;
     private static final int REQUEST_CODE = 999;
+    private static String Token;
 
     private int[][] u_infor;
    // static UsbController  usbCtrl = null;
     static UsbDevice dev = null;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         progreso = new ProgressDialog(this);
-        SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+
         setContentView(R.layout.login);
 
         TextUsuario = (EditText)findViewById(R.id.TextUsuario);
@@ -105,7 +105,6 @@ public class Login extends Activity {
 
         VerifyPermisos();
 
-
     }
 
 
@@ -113,6 +112,8 @@ public class Login extends Activity {
     private void Login(){
         progreso.setMessage("Iniciando sesion...");
         progreso.show();
+
+        Log.i("Token", String.valueOf( Token ) );
 
 
         try{
@@ -122,11 +123,15 @@ public class Login extends Activity {
             request.put("usu_correo_electronico", TextUsuario.getText());
             request.put("usu_contrasenia", TextPassword.getText());
             request.put("dis_mac",macAddress);
+            request.put("dis_token",Token);
+
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
+
+            Log.i("Arreglo mando", String.valueOf( request ) );
 
         String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
 
@@ -156,6 +161,8 @@ public class Login extends Activity {
                       {
 
                     Respuesta = response.getJSONArray( "resultado" );
+
+                          Log.i("Arreglo mando", String.valueOf( response ) );
 
                     RespuestaObjeto = Respuesta.getJSONObject( 0 );
 
@@ -397,6 +404,10 @@ public class Login extends Activity {
 
             return;
         }
+
+        SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+        Token = sharedPref.getString("Token", "");
+
 
         Login();
     }
