@@ -14,9 +14,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Class.MyFirebaseInstanceService;
@@ -33,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,9 +47,11 @@ public class Login_contrasena  extends Activity {
     private SortableInventariosTable tabla_ventas;
     private static final int REQUEST_CODE = 999;
     String Dominio;
-    String macAdress;
+    String ID_dispositivo;
     Button Iniciar;
     Button IniciarAdmin;
+    private ArrayList<String> ListaDominios;
+    private Spinner SpinnerDominios;
 
     EditText Usuario;
     EditText Codigo;
@@ -63,10 +68,13 @@ public class Login_contrasena  extends Activity {
         Codigo = findViewById(R.id.TextCodigo);
         Iniciar = findViewById(R.id.iniciar_btn);
         IniciarAdmin = findViewById(R.id.iniciar_admin_btn);
+        ListaDominios=new ArrayList<>();
+        SpinnerDominios=findViewById(R.id.dominios);
 
 
-        Dominio = sharedPref.getString("usu_dominio", "");
-        macAdress = sharedPref.getString("usu_macAdress","");
+
+        ID_dispositivo = sharedPref.getString("id_dispositivo","");
+        loadDominios();
 
         Intent intent = new Intent(this, MyFirebaseInstanceService.class);
         this.startService(intent);
@@ -98,8 +106,8 @@ public class Login_contrasena  extends Activity {
             try {
                 request.put("esApp", 1);
                 request.put("usu_usuario", Usuario.getText());
-                request.put("dis_mac", macAdress);
-                request.put("cbn_dominio", Dominio);
+                request.put("id_dispositivo", "\""+ID_dispositivo+"\"");
+                request.put("cbn_dominio", SpinnerDominios.getSelectedItem());
                 request.put("usu_codigo_acceso", Codigo.getText());
             } catch (Exception e)
             {
@@ -250,6 +258,84 @@ public class Login_contrasena  extends Activity {
             ActivityCompat.requestPermissions(Login_contrasena.this,
                     permissions,
                     REQUEST_CODE);
+        }
+    }
+
+    private void loadDominios()
+    {
+        try{
+            JSONObject request = new JSONObject();
+            try
+            {
+                request.put("esApp", "1");
+                request.put("dis_mac","\""+ID_dispositivo+"\"");
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
+
+            String ApiPath = url + "/api/obtener-dominio-mac";
+
+            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+            {
+                @Override
+                public void onResponse(JSONObject response) {
+
+
+                    try {
+
+                        Resultado.setEstatus( response.getString( "estatus" ) );
+                        Resultado.setMensaje( response.getString( "mensaje" ) );
+
+                        int status = Integer.parseInt( Resultado.getEstatus() );
+
+                        if (status == 1)
+                        {
+                            JSONArray Respuesta = response.getJSONArray("resultado");
+                            for(int x = 0; x < Respuesta.length(); x++){
+                                String dominio=Respuesta.getString(x);
+                                ListaDominios.add(dominio);
+                            }
+                            SpinnerDominios.setAdapter(new ArrayAdapter<String>(Login_contrasena.this,android.R.layout.simple_spinner_item,ListaDominios));
+                        }
+                        else{
+
+
+                        }
+
+                    } catch (JSONException e) {
+                        progreso.hide();
+
+                        Toast toast1 = Toast.makeText(getApplicationContext(),
+                                "Error al conectarse al servidor", Toast.LENGTH_LONG);
+
+                        toast1.show();
+                    }
+                }
+
+            },
+                    new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // error
+                            progreso.hide();
+
+                            Toast toast1 =
+                                    Toast.makeText(getApplicationContext(),
+                                            "Error de conexion", Toast.LENGTH_SHORT);
+                            toast1.show();
+                        }
+                    }
+            );
+            VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
         }
     }
 }

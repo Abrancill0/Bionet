@@ -29,11 +29,13 @@
         android:layout_marginHorizontal="20dp"
         android:layout_weight=".5"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingVertical="30dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight=".7"
             android:gravity="center_vertical|center_horizontal"
             android:orientation="vertical">
 
@@ -54,72 +56,90 @@
                 android:textColor="#544D47" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView41"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="Ingresa tu usuario"
-            android:textColor="#023950"
-            android:textSize="18sp" />
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/textUsuario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/shape_gray"
-            android:ems="10"
-            android:hint="Usuario"
-            android:inputType="textPersonName"
-            android:padding="5dp"
-            android:textSize="18sp" />
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Selecciona tu dominio"
+                android:textColor="#023950"
+                android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="Ingresa tu clave"
-            android:textColor="#023950"
-            android:textSize="18sp" />
+            <Spinner
+                android:id="@+id/dominios"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_marginHorizontal="20dp"/>
 
-        <EditText
-            android:id="@+id/TextCodigo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/shape_gray"
-            android:ems="10"
-            android:hint="Codigo"
-            android:inputType="textPassword"
-            android:padding="5dp"
-            android:textSize="18sp" />
+            <TextView
+                android:id="@+id/textView41"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Ingresa tu usuario"
+                android:textColor="#023950"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/textUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/shape_gray"
+                android:ems="10"
+                android:hint="Usuario"
+                android:inputType="textPersonName"
+                android:padding="5dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Ingresa tu clave"
+                android:textColor="#023950"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/TextCodigo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/shape_gray"
+                android:ems="10"
+                android:hint="Codigo"
+                android:inputType="textPassword"
+                android:padding="5dp"
+                android:textSize="18sp" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight=".8"
             android:gravity="center_vertical|center_horizontal"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingVertical="10dp">
-            </LinearLayout>
 
             <Button
                 android:id="@+id/iniciar_btn"
                 style="@android:style/Widget.Holo.Light.Button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginHorizontal="50dp"
                 android:layout_marginBottom="10dp"
+                android:layout_weight=".5"
                 android:background="@color/colorPrimaryDark"
                 android:padding="0dp"
                 android:text="Iniciar Sesión"
                 android:textColor="#ffffff"
-                android:layout_marginHorizontal="50dp"
                 android:textSize="16sp" />
 
             <Button
@@ -127,12 +147,13 @@
                 style="@android:style/Widget.Holo.Light.Button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginHorizontal="50dp"
                 android:layout_marginBottom="10dp"
+                android:layout_weight=".5"
                 android:background="@color/colorPrimaryDark"
                 android:padding="0dp"
                 android:text="Iniciar como Administrador"
                 android:textColor="#ffffff"
-                android:layout_marginHorizontal="50dp"
                 android:textSize="16sp" />
         </LinearLayout>
 

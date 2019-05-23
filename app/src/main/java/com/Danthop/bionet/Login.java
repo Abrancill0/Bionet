@@ -1,4 +1,5 @@
 package com.Danthop.bionet;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -19,6 +20,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -63,15 +65,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.android.volley.Request.Method;
+
 import android.hardware.usb.UsbDevice;
 
 
 public class Login extends Activity {
 
-    EditText TextUsuario,TextPassword;
+    EditText TextUsuario, TextPassword;
     ProgressDialog progreso;
 
-    private String macAddress;
+    private String ID_dispositivo;
     private String usu_sucursales;
 
     LoginModel Resultado = new LoginModel();
@@ -82,7 +85,7 @@ public class Login extends Activity {
     private static String Token;
 
     private int[][] u_infor;
-   // static UsbController  usbCtrl = null;
+    // static UsbController  usbCtrl = null;
     static UsbDevice dev = null;
 
     @Override
@@ -93,14 +96,15 @@ public class Login extends Activity {
 
         setContentView(R.layout.login);
 
-        TextUsuario = (EditText)findViewById(R.id.TextUsuario);
-        TextPassword = (EditText)findViewById(R.id.TextPassword);
+        TextUsuario = (EditText) findViewById(R.id.TextUsuario);
+        TextPassword = (EditText) findViewById(R.id.TextPassword);
         IDSucursales = new ArrayList<>();
 
         //-------------;)----------------------
-        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wInfo = wifiManager.getConnectionInfo();
-        macAddress = wInfo.getMacAddress();
+
+        SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+        ID_dispositivo = sharedPref.getString("id_dispositivo","");
+
         //------------:)----------------------
 
         VerifyPermisos();
@@ -122,7 +126,7 @@ public class Login extends Activity {
         {
             request.put("usu_correo_electronico", TextUsuario.getText());
             request.put("usu_contrasenia", TextPassword.getText());
-            request.put("dis_mac",macAddress);
+            request.put("dis_mac","\""+ID_dispositivo+"\"");
             request.put("dis_token",Token);
 
         }
@@ -279,90 +283,6 @@ public class Login extends Activity {
         }
     }
 
-    public void Pdf() {
-
-       Document doc = new Document();
-        String outpPath = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ).getPath() +"/ticket.pdf";
-
-        try {
-            PdfWriter.getInstance(doc, new FileOutputStream(outpPath));
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        // Open to write
-        doc.open();
-
-        doc.setPageSize( PageSize.A4);
-        doc.addCreationDate();
-
-            // LINE SEPARATOR
-            LineSeparator lineSeparator = new LineSeparator();
-            lineSeparator.setLineColor( new BaseColor( 6, 0, 0, 68 ) );
-
-            // Title Order Details...
-// Adding Title....
-            // Font mOrderDetailsTitleFont = new Font( "Ticket de venta" ,36.0f, Font.NORMAL, BaseColor.BLACK);
-// Creating Chunk
-            Chunk mOrderDetailsTitleChunk = new Chunk( "Order Details" );
-// Creating Paragraph to add...
-            Paragraph mOrderDetailsTitleParagraph = new Paragraph( mOrderDetailsTitleChunk );
-// Setting Alignment for Heading
-            mOrderDetailsTitleParagraph.setAlignment( Element.ALIGN_CENTER );
-// Finally Adding that Chunk
-            try {
-                doc.add( mOrderDetailsTitleParagraph );
-            } catch (DocumentException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                doc.add( new Paragraph( "jcdjckjdvcdjk" ) );
-            } catch (DocumentException e) {
-                e.printStackTrace();
-            }
-            try {
-                doc.add( new Chunk( lineSeparator ) );
-            } catch (DocumentException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                doc.add( new Paragraph( "pruebnitsa" ) );
-            } catch (DocumentException e) {
-                e.printStackTrace();
-            }
-
-            doc.close();
-
-
-            Dialog ticket = new Dialog(Login.this);
-            ticket.setContentView(R.layout.pop_up_ticket);
-            ticket.show();
-
-
-            PDFView pdfView = ticket.findViewById(R.id.pdfView);
-            File file = new File(outpPath);
-            Uri uri = Uri.fromFile(file);
-            pdfView.fromUri(uri)
-                .defaultPage(1)
-                .enableAnnotationRendering(true)
-                .scrollHandle(new DefaultScrollHandle(this))
-                .spacing(10) // in dp
-                .load();
-
-        //  usbCtrl.close();
-      //  int  i = 0;
-     //   for( i = 0 ; i < 8 ; i++ ){
-     //       dev = usbCtrl.getDev(u_infor[i][0],u_infor[i][1]);
-     //       if(dev != null)
-      //          break;
-      //  }
-
-
-    }
 //metodos...
     public void CrearCuenta(View view) {
         Intent intent = new Intent(Login.this, CrearCuentaActivity.class);
