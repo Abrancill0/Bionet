@@ -106,7 +106,7 @@ public class Login_contrasena  extends Activity {
             try {
                 request.put("esApp", 1);
                 request.put("usu_usuario", Usuario.getText());
-                request.put("id_dispositivo", "\""+ID_dispositivo+"\"");
+                request.put("id_dispositivo", ID_dispositivo+"IMEI");
                 request.put("cbn_dominio", SpinnerDominios.getSelectedItem());
                 request.put("usu_codigo_acceso", Codigo.getText());
             } catch (Exception e)
@@ -268,7 +268,7 @@ public class Login_contrasena  extends Activity {
             try
             {
                 request.put("esApp", "1");
-                request.put("dis_mac","\""+ID_dispositivo+"\"");
+                request.put("dis_mac",ID_dispositivo+"IMEI");
             }
             catch(Exception e)
             {

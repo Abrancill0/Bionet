@@ -1,6 +1,7 @@
 package com.Danthop.bionet;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,17 +13,23 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.DetalleOrdenEspecialAdapter;
 import com.Danthop.bionet.Adapters.LealtadArticuloAdapter;
 import com.Danthop.bionet.Tables.SortableLealtadArticulosTable;
+import com.Danthop.bionet.Tables.SortableOrdenEspecialDetalleTable;
 import com.Danthop.bionet.model.LealtadArticuloModel;
+import com.Danthop.bionet.model.OrdenEspecialModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +37,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.codecrafters.tableview.listeners.TableDataClickListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,12 +51,12 @@ public class FragmentLealtadArticulo extends Fragment {
     private Button Programas;
     private Button Inscribir;
     private Spinner SpinnerSucursal;
+    private Dialog dialog;
+    private ImageLoader imageLoader = ImageLoader.getInstance();
 
 
     private String usu_id;
-    private String Articulo_nombre;
-    private String Articulo_descripcion;
-    private String Articulo_categoria;
+
 
 
     public List<LealtadArticuloModel> articulos;
@@ -94,6 +103,79 @@ public class FragmentLealtadArticulo extends Fragment {
 
             }
         });
+
+
+        TableDataClickListener<LealtadArticuloModel> tablaListener = new TableDataClickListener<LealtadArticuloModel>() {
+            @Override
+            public void onDataClicked(int rowIndex, final LealtadArticuloModel clickedData) {
+                dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.pop_up_lealtad_ficha_articulo);
+                dialog.show();
+
+                TextView Nombre = dialog.findViewById(R.id.articulo_nombre);
+                TextView Tipo = dialog.findViewById(R.id.tipo_producto);
+                TextView Descripción = dialog.findViewById(R.id.descripcion_producto);
+                TextView Categoria = dialog.findViewById(R.id.categoria_producto);
+                TextView Variantes = dialog.findViewById(R.id.variante_producto);
+                TextView DisponibleVenta = dialog.findViewById(R.id.disponible_venta);
+                TextView DisponibleCompra = dialog.findViewById(R.id.disponible_compra);
+                TextView AplicaApartados = dialog.findViewById(R.id.aplica_apartados);
+                TextView AplicaDevoluciones = dialog.findViewById(R.id.aplica_devoluciones);
+
+                Nombre.setText(clickedData.getArticuloNombre());
+                Tipo.setText(clickedData.getArticuloTipo());
+                Descripción.setText(clickedData.getArticuloDescripcion());
+                Categoria.setText(clickedData.getArticuloCategoria());
+                for(int k=0;k<clickedData.getArticuloVariantes().size();k++)
+                {
+                    Variantes.setText(Variantes.getText()+""+clickedData.getArticuloVariantes().get(k));
+                }
+
+                DisponibleVenta.setText(clickedData.getArticuloDispVenta());
+                if(clickedData.getArticuloDispVenta().equals("true"))
+                {
+                    DisponibleVenta.setText("Si");
+                }else
+                {
+                    DisponibleVenta.setText("No");
+                }
+
+                DisponibleCompra.setText(clickedData.getArticuloDispCompra());
+                if(clickedData.getArticuloDispCompra().equals("true"))
+                {
+                    DisponibleCompra.setText("Si");
+                }else
+                {
+                    DisponibleCompra.setText("No");
+                }
+
+                AplicaApartados.setText(clickedData.getArticuloDispApartados());
+                if(clickedData.getArticuloDispApartados().equals("true"))
+                {
+                    AplicaApartados.setText("Si");
+                }else
+                {
+                    AplicaApartados.setText("No");
+                }
+
+                AplicaDevoluciones.setText(clickedData.getArticuloDispCambioDevolucion());
+                if(clickedData.getArticuloDispCambioDevolucion().equals("true"))
+                {
+                    AplicaDevoluciones.setText("Si");
+                }else
+                {
+                    AplicaDevoluciones.setText("No");
+                }
+
+                ImageView imagenArticulo = dialog.findViewById(R.id.img);
+                String ruta =clickedData.getArticuloImagenes().get(0);
+                imageLoader.displayImage(ruta, imagenArticulo);
+
+
+            }
+        };
+
+        tabla_articulos.addDataClickListener(tablaListener);
 
         return v;
 
@@ -162,18 +244,52 @@ public class FragmentLealtadArticulo extends Fragment {
 
                         for(int x = 0; x < Respuesta.length(); x++){
                             JSONObject elemento = Respuesta.getJSONObject(x);
-                            Articulo_nombre = elemento.getString("art_nombre");
-                            Articulo_descripcion = elemento.getString("art_descripcion");
-                            Articulo_categoria = elemento.getString("cat_nombre");
+                            String Articulo_nombre = elemento.getString("art_nombre");
+                            String Articulo_Tipo = elemento.getString("art_tipo");
+                            String Articulo_descripcion = elemento.getString("art_descripcion");
+                            String Articulo_categoria = elemento.getString("cat_nombre");
 
-                           final LealtadArticuloModel articulo = new LealtadArticuloModel(Articulo_nombre,
+                            ArrayList<String> ListaVariantes = new ArrayList<>();
+                            JSONArray Variantes = elemento.getJSONArray("variantes");
+                            for(int y= 0; y <Variantes.length(); y++)
+                            {
+                                JSONObject elementoVariable = Variantes.getJSONObject(y);
+                                String varianteNombre = elementoVariable.getString("ava_nombre");
+                                ListaVariantes.add(varianteNombre);
+                            }
+
+                            ArrayList<String> ListaImagenes = new ArrayList<>();
+                            JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
+                            for (int z = 0; z < RespuestaImagenes.length(); z++) {
+                                String RutaImagen = RespuestaImagenes.getString(z);
+                                ListaImagenes.add(RutaImagen);
+                            }
+
+                            String Articulo_DispVenta = elemento.getString("art_disponible_venta");
+                            String Articulo_DispCompra = elemento.getString("art_disponible_compra");
+                            String Articulo_DispOrdenes = elemento.getString("art_aplica_ordenes_especiales");
+                            String Articulo_DispApartados = elemento.getString("art_aplica_apartados");
+                            String Articulo_DispCambioDev = elemento.getString("art_aplica_cambio_devolucion");
+
+                           final LealtadArticuloModel articulo = new LealtadArticuloModel(
+                                   Articulo_nombre,
+                                   Articulo_Tipo,
                                    Articulo_descripcion,
-                                   Articulo_categoria);
+                                   Articulo_categoria,
+                                   ListaVariantes,
+                                   ListaImagenes,
+                                   Articulo_DispVenta,
+                                   Articulo_DispCompra,
+                                   Articulo_DispOrdenes,
+                                   Articulo_DispApartados,
+                                   Articulo_DispCambioDev
+                                   );
 
                            articulos.add(articulo);
                         }
                        final LealtadArticuloAdapter articuloAdapter = new LealtadArticuloAdapter(getContext(), articulos, tabla_articulos);
                        tabla_articulos.setDataAdapter(articuloAdapter);
+
 
                     }
                     else

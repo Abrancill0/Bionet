@@ -126,8 +126,10 @@ public class Login extends Activity {
         {
             request.put("usu_correo_electronico", TextUsuario.getText());
             request.put("usu_contrasenia", TextPassword.getText());
-            request.put("dis_mac","\""+ID_dispositivo+"\"");
+            request.put("dis_mac",ID_dispositivo+"IMEI");
             request.put("dis_token",Token);
+            request.put("esApp",1);
+
 
         }
         catch(Exception e)
