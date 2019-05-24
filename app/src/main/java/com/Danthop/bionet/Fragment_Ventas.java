@@ -1,14 +1,18 @@
 package com.Danthop.bionet;
 
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.usb.UsbDevice;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -27,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ClienteAdapter;
+import com.Danthop.bionet.Adapters.ListaTicketsAdapter;
 import com.Danthop.bionet.Adapters.MetodoPagoAdapter;
 import com.Danthop.bionet.Adapters.SeleccionaApartadoAdapter;
 import com.Danthop.bionet.Adapters.SeleccionaOrdenEspecialAdapter;
@@ -41,6 +46,7 @@ import com.Danthop.bionet.Tables.SortableVentaArticulos;
 import com.Danthop.bionet.model.ArticuloApartadoModel;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
+import com.Danthop.bionet.model.CorteCajaModel;
 import com.Danthop.bionet.model.FormaspagoModel;
 import com.Danthop.bionet.model.Impuestos;
 import com.Danthop.bionet.model.MovimientoModel;
@@ -53,11 +59,15 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
 import com.webviewtopdf.PdfView;
+import com.zj.usbsdk.UsbController;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,6 +102,8 @@ public class Fragment_Ventas extends Fragment {
     private TextView impuesto;
     private TextView subtotal;
     private String usu_id;
+    private String cca_id_sucursal;
+    private String valueIdSuc;
     private String nombreCliente;
     private String UUID;
     private String telefono;
@@ -188,6 +200,13 @@ public class Fragment_Ventas extends Fragment {
     private String ImpuestosTicket="";
     private float ImpuestosTotal=0;
 
+    private int[][] u_infor;
+    static UsbController usbCtrl = null;
+    static UsbDevice dev = null;
+
+
+    private Button btn_imprimir;
+
     public Fragment_Ventas() {
         // Required empty public constructor
     }
@@ -200,8 +219,26 @@ public class Fragment_Ventas extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
+        cca_id_sucursal = sharedPref.getString("cca_id_sucursal", "");
         fr = getFragmentManager().beginTransaction();
         dialog = new Dialog(getContext());
+
+        try {
+            JSONArray jsonArray = new JSONArray(cca_id_sucursal);
+            //for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject JsonObj = jsonArray.getJSONObject(0);
+            Iterator<String> iter = JsonObj.keys();
+            while (iter.hasNext()) {
+                String key = iter.next();
+                valueIdSuc = String.valueOf(JsonObj.get(key));
+            }
+            //}
+        } catch (JSONException e) {
+            Toast toast1 =
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+            toast1.show();
+        }
+
 
         ArticulosVenta = new ArrayList<>();
         carouselView = (CarouselView) v.findViewById(R.id.carouselView);
@@ -242,6 +279,7 @@ public class Fragment_Ventas extends Fragment {
         ArticulosApartados = new ArrayList<>();
         ArticulosOrdenados = new ArrayList<>();
 
+
         tabla_venta_articulos = v.findViewById(R.id.tabla_venta_articulos);
         tabla_venta_articulos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
 
@@ -250,8 +288,37 @@ public class Fragment_Ventas extends Fragment {
         LoadAutocomplete();
         LoadButtons();
 
+
+      // usbCtrl = new UsbController(this,mHandler);
+
+       // Buscar_promociones();
+
         return v;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        usbCtrl.close();
+    }
+
+    @SuppressLint("HandlerLeak") private final  Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case UsbController.USB_CONNECTED:
+
+                    btn_imprimir.setEnabled(true);
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+
+
 
     public void LoadAutocomplete() {
         try {
@@ -536,8 +603,9 @@ public class Fragment_Ventas extends Fragment {
 
     }
 
-    public void LoadButtons() {
 
+
+    public void LoadButtons() {
 
         btn_agregar_cliente.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -648,6 +716,7 @@ public class Fragment_Ventas extends Fragment {
                     }
                 });
                 CargaArticulos();
+                Buscar_promociones();
                 TableDataClickListener<ArticuloModel> tablaListener = new TableDataClickListener<ArticuloModel>() {
                     @Override
                     public void onDataClicked(int rowIndex, final ArticuloModel clickedData) {
@@ -1599,8 +1668,8 @@ public class Fragment_Ventas extends Fragment {
             try {
                 request.put("usu_id", usu_id);
                 request.put("esApp", "1");
-                request.put("tic_id_sucursal", ticket_de_venta.getTic_id_sucursal());
-                request.put("articulo", nombre_articulo);
+                request.put("tic_id_sucursal", ticket_de_venta.getTic_id_sucursal()); //suc_id
+                request.put("articulo", nombre_articulo); //SKU
                 request.put("cantidad", Cantidad);
                 request.put("tic_id", ticket_de_venta.getTic_id());
 
@@ -1882,7 +1951,7 @@ public class Fragment_Ventas extends Fragment {
 
                             if(ArticulosConExistencias.isEmpty())
                             {
-                                btn_finalizar.setVisibility(View.INVISIBLE);
+                                btn_finalizar.setVisibility(View.VISIBLE); //Invisible
                             }
                             else
                             {
@@ -2577,6 +2646,7 @@ public class Fragment_Ventas extends Fragment {
                                         @Override
                                         public void onClick(View v) {
                                             Aniadir_a_venta(SKUarticulo, art_cantidad.getNumber());
+
                                             dialog.dismiss();
                                         }
                                     });
@@ -3027,7 +3097,92 @@ public class Fragment_Ventas extends Fragment {
         postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
+//------------------------------------------
 
+    public void Buscar_promociones(){
+
+        String url = getString(R.string.Url);
+        String ApiPath = url + "/api/articulos/promociones/consultar_promociones_articulo_sku_app";
+
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("sku","NE3234432423");
+            request.put("suc_id", valueIdSuc);
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest posRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONObject Resultado = null;
+                JSONObject Promociones = null;
+                JsonArray Credito = null;
+                JsonArray Volumen = null;
+                JSONObject Paquetes = null;
+                JsonArray Bonificacion = null;
+
+
+                try {
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        Resultado = response.getJSONObject("resultado");
+                        Promociones = Resultado.getJSONObject("promociones");
+                        Paquetes = Promociones.getJSONObject("paquetes");
+                        //String pro_nombre = Paquetes.getString("pro_nombre");
+
+                   /* aTickets = Resultado.getJSONArray("aTickets");
+                        for (int y = 0; y < aTickets.length(); y++){
+                            JSONObject elemento = aTickets.getJSONObject(y);
+
+                           // tic_numero = elemento.getString("tic_numero");
+
+
+
+                           /* final CorteCajaModel tickets = new CorteCajaModel(
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",0.0,0.0,0.0,0.0,
+                                    "","","",0.0,0.0,0.0,0.0,vales08,
+                                    "",0.0,0.0,0.0);*/
+                            //ListaTickets.add(tickets);
+
+                     //   }
+
+
+
+                      /*  final ListaTicketsAdapter ListaticketsAdapter = new ListaTicketsAdapter(getContext(), ListaTickets, tabla_ListarTickets,TicketsFactura);
+                        tabla_ListarTickets.setDataAdapter(ListaticketsAdapter);*/
+
+                    }else {
+                        Toast toast1 = Toast.makeText(getContext(), "No existen tickets en el periodo seleccionado.", Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                } catch (JSONException e) {
+                    Toast toast1 = Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 = Toast.makeText(getContext(), "Error de conexion", Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( posRequest );
+    }
+    //______________________________________________
 
     private void loadTicket()
     {
@@ -3333,9 +3488,19 @@ public class Fragment_Ventas extends Fragment {
                                             "</table>\n"+
                                             "</body>\n"+
                                             "</html>";
+                                    SendDataString(content);
                                     Dialog dialog = new Dialog(getContext());
                                     dialog.setContentView(R.layout.pop_up_ticket_web);
                                     webView = (WebView) dialog.findViewById(R.id.simpleWebView);
+                                    btn_imprimir = (Button)dialog.findViewById(R.id.btn_imprimir);
+
+                                    btn_imprimir.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            //
+                                        }
+                                    });
+
                                     // displaying text in WebView
                                     webView.loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
                                     dialog.show();
@@ -3390,5 +3555,13 @@ public class Fragment_Ventas extends Fragment {
 
 
     }
+
+   private void SendDataString(String data){
+       /*  if(data.length()>0)
+            usbCtrl.sendMsg(data, "GBK", dev);  //*/
+    }
+
+
+
 
 }

@@ -147,6 +147,10 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                 break;
 
             case 6:
+                //renderedView = renderPromocion(Articulo);
+                break;
+
+            case 7:
 
                 renderedView = renderEliminar(Articulo);
                 break;
@@ -240,6 +244,10 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
         return textView;
     }
+
+   /* private View renderPromocion(final ArticuloModel articulo) {
+        return renderString(articulo.getarticulo_Nombre());
+    }*/
 
 
     private View renderPrecio(final ArticuloModel articulo) {
