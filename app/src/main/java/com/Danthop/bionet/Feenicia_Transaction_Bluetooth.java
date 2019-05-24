@@ -756,7 +756,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                     }
                 } else {
                     // Permission Denied
-                    Toast.makeText(FEENICIA_TRANSACCION, "Debes dar premisos de Bluetooth", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FEENICIA_TRANSACCION, "Debes dar permisos de Bluetooth", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:

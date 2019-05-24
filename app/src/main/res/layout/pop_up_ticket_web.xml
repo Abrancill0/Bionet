@@ -20,5 +20,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="20dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ticket_layout_button"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_weight=".5"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_imprimir"
+            style="@android:style/Widget.Holo.Light.Button"
+            android:layout_width="150dp"
+            android:layout_height="25dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="Imprimir"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp" />
+
     </LinearLayout>
 </LinearLayout>

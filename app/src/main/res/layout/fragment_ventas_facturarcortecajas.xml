@@ -401,25 +401,7 @@
                             table:tableView_columnCount="5">
                         </com.Danthop.bionet.Tables.SortableCorteCajaTable>
 
-                        <LinearLayout
-                            android:id="@+id/Tabla_vacia3"
-                            android:layout_width="match_parent"
-                            android:layout_height="200dp"
-                            android:layout_weight=".3"
-                            android:background="@color/white"
-                            android:gravity="center_vertical|center_horizontal"
-                            android:orientation="vertical"
-                            android:visibility="visible">
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="No existen movimientos"
-                                android:textColor="@color/gray" />
-                        </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
