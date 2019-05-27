@@ -1,72 +1,46 @@
 package com.Danthop.bionet;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.Notification;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.usb.UsbDevice;
-import android.net.Uri;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.Danthop.bionet.Class.MyFirebaseInstanceService;
 import com.Danthop.bionet.model.LoginModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
-import com.github.barteksc.pdfviewer.PDFView;
-import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
-import com.google.gson.JsonArray;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.draw.LineSeparator;
-import com.mercadolibre.android.sdk.Meli;
-
+import com.zj.usbsdk.UsbController;
+import android.os.Handler;
+import android.os.Message;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.LogRecord;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.android.volley.Request.Method;
-
-import android.hardware.usb.UsbDevice;
 
 
 public class Login extends Activity {
@@ -88,12 +62,61 @@ public class Login extends Activity {
     // static UsbController  usbCtrl = null;
     static UsbDevice dev = null;
 
+    static UsbController usbCtrl = null;
+
+
+
+
+    @SuppressLint({"HandlerLeak"})
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch(msg.what) {
+                case 0:
+                 //   Toast.makeText(PrintDemo.this.getApplicationContext(), PrintDemo.this.getString(2130968584), 0).show();
+                    //    PrintDemo.this.btnSend.setEnabled(true);
+                    //   PrintDemo.this.btn_test.setEnabled(true);
+                    //    PrintDemo.this.btnClose.setEnabled(true);
+                    //    PrintDemo.this.btn_printA.setEnabled(true);
+                    //    PrintDemo.this.btn_BMP.setEnabled(true);
+                    //   PrintDemo.this.btn_ChoseCommand.setEnabled(true);
+                    //   PrintDemo.this.btn_prtcodeButton.setEnabled(true);
+                    //   PrintDemo.this.btn_prtsma.setEnabled(true);
+                    //   PrintDemo.this.btn_prttableButton.setEnabled(true);
+                    //    PrintDemo.this.Simplified.setEnabled(true);
+                    //   PrintDemo.this.Korean.setEnabled(true);
+                    //    PrintDemo.this.big5.setEnabled(true);
+                    //    PrintDemo.this.thai.setEnabled(true);
+                    //    PrintDemo.this.btn_conn.setEnabled(false);
+                default:
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         progreso = new ProgressDialog(this);
 
+        usbCtrl = new UsbController(this, this.mHandler);
+
+        this.u_infor = new int[8][2];
+        this.u_infor[0][0] = 7358;
+        this.u_infor[0][1] = 3;
+        this.u_infor[1][0] = 7344;
+        this.u_infor[1][1] = 3;
+        this.u_infor[2][0] = 1155;
+        this.u_infor[2][1] = 22336;
+        this.u_infor[3][0] = 1171;
+        this.u_infor[3][1] = 34656;
+        this.u_infor[4][0] = 1046;
+        this.u_infor[4][1] = 20497;
+        this.u_infor[5][0] = 1046;
+        this.u_infor[5][1] = 43707;
+        this.u_infor[6][0] = 5721;
+        this.u_infor[6][1] = 35173;
+        this.u_infor[7][0] = 1155;
+        this.u_infor[7][1] = 22337;
         setContentView(R.layout.login);
 
         TextUsuario = (EditText) findViewById(R.id.TextUsuario);
@@ -104,6 +127,7 @@ public class Login extends Activity {
 
         SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         ID_dispositivo = sharedPref.getString("id_dispositivo","");
+        Token = sharedPref.getString("Token","");
 
         //------------:)----------------------
 
@@ -112,13 +136,18 @@ public class Login extends Activity {
     }
 
 
-
     private void Login(){
         progreso.setMessage("Iniciando sesion...");
         progreso.show();
 
         Log.i("Token", String.valueOf( Token ) );
 
+
+        if (Token.length()==0)
+        {
+            SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+            Token = sharedPref.getString("Token","");
+        }
 
         try{
         JSONObject request = new JSONObject();
@@ -363,6 +392,40 @@ public class Login extends Activity {
         dialog.dismiss();
     }
 
+    public void PDFIMprimie (View v)
+    {
+        usbCtrl.close();
+
+       // int i =0;
+
+        for(int i = 0; i < 8; ++i) {
+            dev = usbCtrl.getDev(this.u_infor[i][0], this.u_infor[i][1]);
+            if (dev != null) {
+                break;
+            }
+        }
+
+        if (dev != null) {
+            if (!usbCtrl.isHasPermission(dev)) {
+                usbCtrl.getPermission(dev);
+            } else {
+               // Toast.makeText(this.getApplicationContext(), this.getString(2130968584), 0).show();
+
+            }
+        }
+
+        String msg = "";
+       // String lang = this.getString(2130968583);
+      //  if (lang.compareTo("en") == 0) {
+            msg = "Division I is a research and development, production and services in one high-tech research and development, production-oriented enterprises, specializing in POS terminals finance, retail, restaurants, bars, songs and other areas, computer terminals, self-service terminal peripheral equipment R & D, manufacturing and sales! \n company's organizational structure concise and practical, pragmatic style of rigorous, efficient operation. Integrity, dedication, unity, and efficient is the company's corporate philosophy, and constantly strive for today, vibrant, the company will be strong scientific and technological strength, eternal spirit of entrepreneurship, the pioneering and innovative attitude, confidence towards the international information industry, with friends to create brilliant information industry !!! \n\n\n";
+            this.SendDataString(msg);
+     //   } else if (lang.compareTo("ch") == 0) {
+          //  msg = "我司是一家集科研开发、生产经营和服务于一体的高技术研发、生产型企业，专业从事金融、商业零售、餐饮、酒吧、歌吧等领域的POS终端、计算机终端、自助终端周边配套设备的研发、制造及销售！\n公司的组织机构简练实用，作风务实严谨，运行高效。诚信、敬业、团结、高效是公司的企业理念和不断追求今天，朝气蓬勃，公司将以雄厚的科技力量，永恒的创业精神，不断开拓创新的姿态，充满信心的朝着国际化信息产业领域，与朋友们携手共创信息产业的辉煌!!!\n\n\n";
+            this.SendDataString(msg);
+     //   }
+
+    }
+
     public void forgotPassword(View v){
         final Dialog dialog=new Dialog(Login.this);
         dialog.setContentView(R.layout.pop_up_olvide_contrasenia);
@@ -499,6 +562,12 @@ public class Login extends Activity {
         }
     }
 
+    private void SendDataString(String data) {
+        if (data.length() > 0) {
+            usbCtrl.sendMsg(data, "GBK", dev);
+        }
+
+    }
 
 }
 
