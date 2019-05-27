@@ -1,5 +1,9 @@
 package com.Danthop.bionet.model;
 
+import com.Danthop.bionet.Tables.ComparatorPreguntas;
+
+import java.util.List;
+
 public class ClienteModel {
 
     private String cliente_UUID;
@@ -34,6 +38,7 @@ public class ClienteModel {
 
     private String Correo_igual;
     private String Direccion_igual;
+    private List<CompraModel> Compras;
 
 
 
@@ -60,7 +65,8 @@ public class ClienteModel {
                         String num_ext_fiscal,
                         String num_int_fiscal,
                         String correo_igual,
-                        String direccion_igual)
+                        String direccion_igual,
+                        List<CompraModel> compras)
     {
         this.cliente_UUID = cliente_UUID;
         this.cliente_Nombre = cliente_Nombre;
@@ -90,6 +96,7 @@ public class ClienteModel {
         this.num_ext_fiscal = num_ext_fiscal;
         this.num_int_fiscal = num_int_fiscal;
         this.cliente_calle=cliente_calle;
+        this.Compras=compras;
         Correo_igual = correo_igual;
         Direccion_igual = direccion_igual;
 
@@ -307,5 +314,13 @@ public class ClienteModel {
 
     public void setDireccion_igual(String direccion_igual) {
         this.Direccion_igual = direccion_igual;
+    }
+
+    public List<CompraModel> getCompras() {
+        return Compras;
+    }
+
+    public void setCompras(List<CompraModel> compras) {
+        Compras = compras;
     }
 }

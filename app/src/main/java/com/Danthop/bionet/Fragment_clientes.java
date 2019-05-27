@@ -17,8 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ClienteAdapter;
+import com.Danthop.bionet.Adapters.HistorialClientesAdapter;
+import com.Danthop.bionet.Tables.SortableClientesHistorialTable;
 import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.model.ClienteModel;
+import com.Danthop.bionet.model.CompraModel;
 import com.Danthop.bionet.model.ConfiguracionLealtadModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -73,6 +76,7 @@ public class Fragment_clientes extends Fragment {
     private Dialog ver_cliente_dialog;
     private  FragmentTransaction fr;
     private TableDataClickListener<ClienteModel> tablaListener;
+    private SortableClientesHistorialTable HistorialTable;
 
     private List<ClienteModel> clientes;
 
@@ -210,6 +214,18 @@ public class Fragment_clientes extends Fragment {
                             num_ext_fiscal = RespuestaNodoDireccion.getString("cli_numero_exterior");
                             num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
 
+                            List<CompraModel> HistorialCompras = new ArrayList<>();
+                            JSONArray comprasNodo = elemento.getJSONArray("ventas");
+                            for(int d=0; d<comprasNodo.length();d++)
+                            {
+                                JSONObject elementoCompra = comprasNodo.getJSONObject(d);
+                                String NoTicket = elementoCompra.getString("tic_numero");
+                                String Importe = elementoCompra.getString("tic_importe_total");
+                                String Fecha = elementoCompra.getString("fecha_hora_venta");
+                                CompraModel compra = new CompraModel(NoTicket,Importe,Fecha);
+                                HistorialCompras.add(compra);
+                            }
+
 
                             direccion_igual = elemento.getString("cli_direcciones_iguales");
                             if(direccion_igual.equals("false"))
@@ -231,6 +247,8 @@ public class Fragment_clientes extends Fragment {
                             {
                                 email_fiscal = correo_electronico;
                             }
+
+
 
 
                             final ClienteModel cliente = new ClienteModel(UUID,
@@ -258,7 +276,8 @@ public class Fragment_clientes extends Fragment {
                                     num_ext_fiscal,
                                     num_int_fiscal,
                                     correo_igual,
-                                    direccion_igual
+                                    direccion_igual,
+                                    HistorialCompras
                             );
                             clientes.add(cliente);
                         }
@@ -290,6 +309,7 @@ public class Fragment_clientes extends Fragment {
                     }
                 }
         );
+        postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
@@ -301,6 +321,11 @@ public class Fragment_clientes extends Fragment {
                 ver_cliente_dialog=new Dialog(getContext());
                 ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
                 ver_cliente_dialog.show();
+
+                HistorialTable = ver_cliente_dialog.findViewById(R.id.historial_compras);
+                final HistorialClientesAdapter historialAdapter = new HistorialClientesAdapter(getContext(), clickedData.getCompras(), HistorialTable);
+                HistorialTable.setDataAdapter(historialAdapter);
+
 
 
                 TextView NameCliente = ver_cliente_dialog.findViewById(R.id.cliente_nombre);

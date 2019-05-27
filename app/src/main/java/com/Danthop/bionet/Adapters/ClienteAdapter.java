@@ -22,6 +22,7 @@ import com.Danthop.bionet.Numero_sucursal;
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.model.ClienteModel;
+import com.Danthop.bionet.model.CompraModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -266,6 +267,19 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                             num_ext_fiscal = RespuestaNodoDireccion.getString("cli_numero_exterior");
                             num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
 
+                            List<CompraModel> HistorialCompras = new ArrayList<>();
+                            JSONArray comprasNodo = elemento.getJSONArray("ventas");
+                            for(int d=0; d<comprasNodo.length();d++)
+                            {
+                                JSONObject elementoCompra = comprasNodo.getJSONObject(d);
+                                String NoTicket = elementoCompra.getString("tic_numero");
+                                String Importe = elementoCompra.getString("tic_importe_total");
+                                String Fecha = elementoCompra.getString("fecha_hora_venta");
+                                CompraModel compra = new CompraModel(NoTicket,Importe,Fecha);
+                                HistorialCompras.add(compra);
+                            }
+
+
 
                             String direccion_igual = elemento.getString("cli_direcciones_iguales");
                             if(direccion_igual.equals("false"))
@@ -316,7 +330,8 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                                     num_ext_fiscal,
                                     num_int_fiscal,
                                     "",
-                                    ""
+                                    "",
+                                    HistorialCompras
                             );
                             clientes.add(cliente);
                         }

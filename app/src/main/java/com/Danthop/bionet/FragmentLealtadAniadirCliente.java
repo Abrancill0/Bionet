@@ -25,6 +25,7 @@ import com.Danthop.bionet.Adapters.LealtadAniadirClienteAdapter;
 import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.Tables.SortableLealtadAniadirCliente;
 import com.Danthop.bionet.model.ClienteModel;
+import com.Danthop.bionet.model.CompraModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -179,6 +180,9 @@ public class FragmentLealtadAniadirCliente extends Fragment {
                             JSONObject cli_id = elemento.getJSONObject("cli_id");
                             UUID = cli_id.getString("uuid");
 
+                            List<CompraModel> HistorialCompras = new ArrayList<>();
+
+
                             final ClienteModel cliente = new ClienteModel(UUID,
                                     nombre,
                                     correo_electronico,
@@ -204,7 +208,9 @@ public class FragmentLealtadAniadirCliente extends Fragment {
                                     "",
                                     "",
                                     "",
-                                    ""
+                                    "",
+                                    HistorialCompras
+
                             );
                             clientes.add(cliente);
                         }

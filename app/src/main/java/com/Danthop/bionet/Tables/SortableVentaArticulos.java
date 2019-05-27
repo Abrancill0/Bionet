@@ -26,7 +26,7 @@ public class SortableVentaArticulos extends SortableTableView<ArticuloModel> {
     public SortableVentaArticulos(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Artículo", "SKU","Cantidad","Precio", "Desc","Importe","Promocion", "");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Artículo", "SKU","Cant","Precio", "Desc","Importe","Promo", "");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
 

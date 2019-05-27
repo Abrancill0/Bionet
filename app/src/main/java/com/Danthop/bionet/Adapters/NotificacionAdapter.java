@@ -9,12 +9,13 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.Danthop.bionet.R;
-import com.Danthop.bionet.model.Caja_notificacion;
+import com.Danthop.bionet.model.NotificacionModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapter.NotificacionViewHolder> {
-    private ArrayList<Caja_notificacion> mNotificacionList;
+    private List<NotificacionModel> mNotificacionList;
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener{
@@ -29,16 +30,16 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
 
     public static class NotificacionViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView mTextView1;
-        public TextView mTextView2;
-        public TextView mTextView3;
+        public TextView TituloTextView;
+        public TextView FechaTextView;
+        public TextView MensajeTextView;
         public CheckBox Box;
 
         public NotificacionViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
-            mTextView1 = itemView.findViewById(R.id.Fecha_notificacion);
-            mTextView2 = itemView.findViewById(R.id.Hora_notificacion);
-            mTextView3 = itemView.findViewById(R.id.Text_notificacion);
+            TituloTextView = itemView.findViewById(R.id.Titulo_notificacion);
+            FechaTextView = itemView.findViewById(R.id.Fecha_notificacion);
+            MensajeTextView = itemView.findViewById(R.id.Text_notificacion);
             Box = itemView.findViewById(R.id.checkBox);
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +72,7 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
         }
     }
 
-    public  NotificacionAdapter(ArrayList<Caja_notificacion> notificacionList){
+    public  NotificacionAdapter(List<NotificacionModel> notificacionList){
         mNotificacionList = notificacionList;
     }
 
@@ -84,11 +85,11 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
 
     @Override
     public void onBindViewHolder(@NonNull NotificacionViewHolder notificacionViewHolder, int i) {
-        Caja_notificacion currentItem = mNotificacionList.get(i);
+        NotificacionModel currentItem = mNotificacionList.get(i);
 
-        notificacionViewHolder.mTextView1.setText(currentItem.getFecha());
-        notificacionViewHolder.mTextView2.setText(currentItem.getHora());
-        notificacionViewHolder.mTextView3.setText(currentItem.getTextNotificacion());
+        notificacionViewHolder.TituloTextView.setText(currentItem.getTitulo());
+        notificacionViewHolder.FechaTextView.setText(currentItem.getFecha());
+        notificacionViewHolder.MensajeTextView.setText(currentItem.getMensaje());
 
     }
 

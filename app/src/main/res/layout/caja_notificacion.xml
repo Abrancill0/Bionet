@@ -67,7 +67,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/Fecha_notificacion"
+                        android:id="@+id/Titulo_notificacion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="22/12/2018"
@@ -75,7 +75,7 @@
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/Hora_notificacion"
+                        android:id="@+id/Fecha_notificacion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="20:43"

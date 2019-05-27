@@ -1,6 +1,9 @@
 package com.Danthop.bionet;
 
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -10,23 +13,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.Danthop.bionet.model.Caja_notificacion;
 import com.Danthop.bionet.Adapters.NotificacionAdapter;
+import com.Danthop.bionet.model.NotificacionModel;
+import com.Danthop.bionet.model.VolleySingleton;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonObjectRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class Fragment_notificaciones extends Fragment {
 
-    private ArrayList<Caja_notificacion> mNotificacionList;
+    private List<NotificacionModel> mNotificacionList;
     private RecyclerView mRecyclerView;
     private NotificacionAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     ArrayList<Integer> posicionesDelete = new ArrayList();
-
+    private String usu_id;
+    private View v;
+    private TextView NumNotificaciones;
+    private Dialog pop_detail_notification;
 
 
     String text = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.";
@@ -41,9 +60,11 @@ public class Fragment_notificaciones extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_notificaciones,container, false);
-        createExampleList();
-        buildRecyclerView(v);
+        v = inflater.inflate(R.layout.fragment_notificaciones,container, false);
+        NumNotificaciones = v.findViewById(R.id.num_notificaciones);
+        SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+        usu_id = sharedPref.getString("usu_id", "");
+        LoadNotificaciones();
 
 
         Button delete = v.findViewById(R.id.btn_eliminar);
@@ -78,13 +99,60 @@ public class Fragment_notificaciones extends Fragment {
             mAdapter.notifyItemRemoved(position);
     }
 
-    public void createExampleList() {
+    public void LoadNotificaciones() {
         mNotificacionList = new ArrayList<>();
-        mNotificacionList.add(new Caja_notificacion("22/12/2018","12:32",text));
-        mNotificacionList.add(new Caja_notificacion("25/12/2018","11:32",text));
-        mNotificacionList.add(new Caja_notificacion("26/12/2018","06:32",text));
-        mNotificacionList.add(new Caja_notificacion("25/12/2018","11:32",text));
-        mNotificacionList.add(new Caja_notificacion("26/12/2018","06:32",text));
+        try {
+            String ApiPath = "http://187.189.192.150:8010/api/notificaciones/index?usu_id=" + usu_id + "&esApp=1";
+
+            // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+
+                                int EstatusApi = Integer.parseInt(response.getString("estatus"));
+
+                                if (EstatusApi == 1) {
+
+                                    JSONObject resultado = response.getJSONObject("resultado");
+                                    JSONArray NodoNotificaciones = resultado.getJSONArray("aNotificaciones");
+                                    for(int x=0;x<NodoNotificaciones.length();x++)
+                                    {
+                                        JSONObject elemento = NodoNotificaciones.getJSONObject(x);
+                                        JSONObject NodoID = elemento.getJSONObject("nen_id");
+                                        String ID = NodoID.getString("uuid");
+                                        String Titulo = elemento.getString("nen_titulo");
+                                        String Fecha = elemento.getString("nen_fecha_hora_creo");
+                                        String Mensaje = elemento.getString("nen_mensaje");
+                                        NotificacionModel Notificacion = new NotificacionModel(Titulo,ID,Fecha,Mensaje);
+                                        mNotificacionList.add(Notificacion);
+                                    }
+                                    NumNotificaciones.setText("("+mNotificacionList.size()+")");
+                                    buildRecyclerView(v);
+                                }
+                            } catch (JSONException e) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(e), Toast.LENGTH_LONG);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf(error), Toast.LENGTH_LONG);
+                        }
+                    }
+            );
+            getRequest.setShouldCache(false);
+
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+        } catch (Error e) {
+            e.printStackTrace();
+        }
     }
 
     public void buildRecyclerView(View v) {
@@ -99,9 +167,18 @@ public class Fragment_notificaciones extends Fragment {
         mAdapter.setOnItemClickListener(new NotificacionAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                mNotificacionList.get(position);
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_notificacion_detail()).commit();
+                pop_detail_notification = new Dialog(getContext());
+                pop_detail_notification.setContentView(R.layout.pop_up_notificacion_detail);
+                pop_detail_notification.show();
+                TextView Titulo = pop_detail_notification.findViewById(R.id.TextDetailTitulo);
+                TextView Fecha = pop_detail_notification.findViewById(R.id.TextDetailFecha);
+                TextView Mensaje = pop_detail_notification.findViewById(R.id.TextDetailMensaje);
+
+                Titulo.setText(mNotificacionList.get(position).getTitulo());
+                Fecha.setText(mNotificacionList.get(position).getFecha());
+                Mensaje.setText(mNotificacionList.get(position).getMensaje());
+
+
             }
 
             @Override

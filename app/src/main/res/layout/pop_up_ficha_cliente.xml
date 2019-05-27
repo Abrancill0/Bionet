@@ -297,7 +297,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="331dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight=".5"
                         android:orientation="vertical"
                         android:padding="20dp">
@@ -308,21 +308,43 @@
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/textView34"
+                            <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="Historial de Compras"
-                                android:textColor="@color/gray"
-                                android:textSize="18sp"
-                                app:fontFamily="@font/muli" />
+                                android:layout_height="match_parent"
+                                android:layout_weight=".9"
+                                android:orientation="vertical">
 
-                            <de.codecrafters.tableview.TableView
-                                android:id="@+id/tabla_clientes"
-                                android:layout_width="wrap_content"
-                                android:layout_height="321dp"
-                                table:tableView_columnCount="2" />
+                                <TextView
+                                    android:id="@+id/textView34"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="Historial de Compras"
+                                    android:textColor="@color/gray"
+                                    android:textSize="18sp"
+                                    app:fontFamily="@font/muli" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight=".1"
+                                android:orientation="vertical"
+                                android:padding="20dp">
+
+                                <com.Danthop.bionet.Tables.SortableClientesHistorialTable
+                                    android:id="@+id/historial_compras"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:visibility="visible"
+                                    app:tableView_headerColor="@color/white"
+                                    table:tableView_columnCount="3">
+
+                                </com.Danthop.bionet.Tables.SortableClientesHistorialTable>
+
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
@@ -334,13 +356,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingHorizontal="30dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        >
 
                         <TextView
                             android:id="@+id/textVsiew24"

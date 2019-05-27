@@ -26,6 +26,7 @@ import com.Danthop.bionet.Adapters.LealtadInscribirAdapter;
 import com.Danthop.bionet.Tables.SortableLealtadInscribirTable;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
+import com.Danthop.bionet.model.CompraModel;
 import com.Danthop.bionet.model.ConfiguracionLealtadModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -241,6 +242,9 @@ public class FragmentLealtadInscribir extends Fragment {
                             correo_electronico = elemento.getString("cli_correo_electronico");
                             telefono = elemento.getString("cli_telefono");
 
+                            List<CompraModel> HistorialCompras = new ArrayList<>();
+
+
                             final ClienteModel cliente = new ClienteModel(UUID,
                                     nombre,
                                     correo_electronico,
@@ -266,7 +270,8 @@ public class FragmentLealtadInscribir extends Fragment {
                                     "",
                                     "",
                                     "",
-                                    ""
+                                    "",
+                                    HistorialCompras
                             );
                             clientes.add(cliente);
                         }

@@ -94,7 +94,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".25"
+            android:layout_weight=".2"
             android:background="@drawable/pestanas_desplegables"
             android:orientation="vertical"
             android:padding="5dp">
@@ -266,7 +266,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".75"
+            android:layout_weight=".8"
             android:background="#F8F9F9"
             android:orientation="vertical">
 
@@ -299,23 +299,38 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/textView44"
-                        android:layout_width="75dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:text="Subtotal"
-                        android:textColor="@color/colorPrimaryDark" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".6"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/subtotal_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:text="$0.00" />
+                        <TextView
+                            android:id="@+id/textView44"
+                            android:layout_width="75dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:text="Subtotal"
+                            android:textColor="@color/colorPrimaryDark" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".4"
+                        android:orientation="horizontal"
+                        android:gravity="end">
+
+                        <TextView
+                            android:id="@+id/subtotal_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:text="$0.00" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -323,20 +338,36 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/textView44s2"
-                        android:layout_width="75dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:text="Impuestos"
-                        android:textColor="@color/colorPrimaryDark" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".6"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/iva_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:text="$0.00" />
+                        <TextView
+                            android:id="@+id/textView44s2"
+                            android:layout_width="75dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:text="Impuestos"
+                            android:textColor="@color/colorPrimaryDark" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".4"
+                        android:orientation="horizontal"
+                        android:gravity="end">
+
+                        <TextView
+                            android:id="@+id/iva_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:text="$0.00" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -344,20 +375,36 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/textView44s"
-                        android:layout_width="75dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:text="Descuento"
-                        android:textColor="@color/colorPrimaryDark" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".6"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/descuento_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:text="$0.00" />
+                        <TextView
+                            android:id="@+id/textView44s"
+                            android:layout_width="75dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:text="Descuento"
+                            android:textColor="@color/colorPrimaryDark" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".4"
+                        android:orientation="horizontal"
+                        android:gravity="end">
+
+                        <TextView
+                            android:id="@+id/descuento_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:text="$0.00" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -365,20 +412,36 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/textView44s3"
-                        android:layout_width="75dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:text="Total"
-                        android:textColor="@color/colorPrimaryDark" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".6"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/total_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:text="$0.00" />
+                        <TextView
+                            android:id="@+id/textView44s3"
+                            android:layout_width="75dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:text="Total"
+                            android:textColor="@color/colorPrimaryDark" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".4"
+                        android:orientation="horizontal"
+                        android:gravity="end">
+
+                        <TextView
+                            android:id="@+id/total_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:text="$0.00" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -400,7 +463,7 @@
                     android:text="Orden Especial"
                     android:textColor="@color/gray"
                     android:textSize="14sp"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
                 <Button
                     android:id="@+id/btn_apartar"
@@ -413,7 +476,7 @@
                     android:text="Apartar"
                     android:textColor="@color/gray"
                     android:textSize="14sp"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
                 <Button
                     android:id="@+id/btn_finalizar"
@@ -426,7 +489,7 @@
                     android:text="Finalizar Compra"
                     android:textColor="@color/gray"
                     android:textSize="14sp"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
 
             </LinearLayout>

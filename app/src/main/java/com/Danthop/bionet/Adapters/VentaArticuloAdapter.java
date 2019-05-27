@@ -298,23 +298,11 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
     private void modificaCantidad(ArticuloModel articulo, String cantidad)
     {
-
+        Articulos.clear();
         ImpuestosDeArticuloApartado.clear();
         ListaDeArticulosApartados.clear();
         ListaDeArticulosOrdenados.clear();
         int CantidadAntigua=0;
-
-        for(int j=0; j<Articulos.size();j++)
-        {
-            if(articulo.getarticulo_Nombre().equals(Articulos.get(j).getarticulo_Nombre()))
-            {
-                CantidadAntigua = Integer.parseInt(Articulos.get(j).getArticulo_cantidad());
-                CantidadAntigua = CantidadAntigua + 1;
-                Articulos.get(j).setArticulo_cantidad(String.valueOf(cantidad));
-                break;
-            }
-        }
-
 
         JSONObject request = new JSONObject();
         try
@@ -505,6 +493,51 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
                         double sub = Double.parseDouble(String.valueOf(Subtotal));
                         subtotal.setText( formatter.format( sub ) );
+
+                        JSONArray NodoTicketArticulos = Respuesta.getJSONArray("aDetalleTicket");
+                        for (int x = 0; x < NodoTicketArticulos.length(); x++)
+                        {
+                            JSONObject elemento = NodoTicketArticulos.getJSONObject(x);
+                            String NombreArticulo = elemento.getString("tar_nombre_articulo");
+                            JSONObject NodoTarID = elemento.getJSONObject("tar_id");
+                            String tar_id = NodoTarID.getString("uuid");
+
+                            String SKUArticulo = elemento.getString("art_sku");
+                            String cantidad = elemento.getString("tar_cantidad");
+                            String precio = elemento.getString("tar_precio_articulo");
+                            String descuento = elemento.getString("art_importe_descuento");
+                            String importe = elemento.getString("tar_importe_total");
+                            String existencia = elemento.getString("art_id_existencia");
+
+                            JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
+                            for (int z = 0; z < RespuestaImagenes.length(); z++) {
+                                String RutaImagen = "http://192.168.100.192:8010" + RespuestaImagenes.getString(z);
+                                Imagenes.add(RutaImagen);
+                            }
+                            final ArticuloModel articulo = new ArticuloModel("",
+                                    NombreArticulo,
+                                    "",
+                                    precio,
+                                    "",
+                                    "",
+                                    SKUArticulo,
+                                    "",
+                                    cantidad,
+                                    tar_id,
+                                    descuento,
+                                    "",
+                                    importe,"","",existencia
+                            );
+                            Articulos.add(articulo);
+
+                        }
+
+                        final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), Articulos, tabla_venta_articulos, TicketVenta, Usu_id,
+                                total, descuento, impuesto, subtotal,
+                                carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,OrdenarButton,ApartarButton,FinalizarButton);
+                        articuloAdapter.notifyDataSetChanged();
+                        tabla_venta_articulos.setDataAdapter(articuloAdapter);
+                        LoadImages();
 
                     }
                     else
@@ -736,53 +769,41 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                         subtotal.setText( formatter.format( sub ) );
 
 
-                            NodoTicketArticulos = Respuesta.getJSONArray("aDetalleTicket");
-                            for (int x = 0; x < NodoTicketArticulos.length(); x++)
-                            {
-                                int Checador = 0;
-                                JSONObject elemento = NodoTicketArticulos.getJSONObject(x);
-                                String NombreArticulo = elemento.getString("tar_nombre_articulo");
-                                JSONObject NodoTarID = elemento.getJSONObject("tar_id");
-                                String tar_id = NodoTarID.getString("uuid");
+                        NodoTicketArticulos = Respuesta.getJSONArray("aDetalleTicket");
+                        for (int x = 0; x < NodoTicketArticulos.length(); x++)
+                        {
+                            JSONObject elemento = NodoTicketArticulos.getJSONObject(x);
+                            String NombreArticulo = elemento.getString("tar_nombre_articulo");
+                            JSONObject NodoTarID = elemento.getJSONObject("tar_id");
+                            String tar_id = NodoTarID.getString("uuid");
 
-                                String SKUArticulo = elemento.getString("art_sku");
-                                String cantidad = elemento.getString("tar_cantidad");
-                                String precio = elemento.getString("tar_precio_articulo");
-                                String descuento = elemento.getString("art_importe_descuento");
-                                String importe = elemento.getString("tar_importe_total");
-                                String existencia = elemento.getString("art_id_existencia");
+                            String SKUArticulo = elemento.getString("art_sku");
+                            String cantidad = elemento.getString("tar_cantidad");
+                            String precio = elemento.getString("tar_precio_articulo");
+                            String descuento = elemento.getString("art_importe_descuento");
+                            String importe = elemento.getString("tar_importe_total");
+                            String existencia = elemento.getString("art_id_existencia");
 
-                                JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
-                                for (int z = 0; z < RespuestaImagenes.length(); z++) {
-                                    String RutaImagen = "http://192.168.100.192:8010" + RespuestaImagenes.getString(z);
-                                    Imagenes.add(RutaImagen);
-                                }
-
-                                    if(nombre.equals(NombreArticulo))
-                                    {
-                                        Checador=1;
-                                        EliminarArticulo(tar_id,NombreArticulo);
-                                        break;
-                                    }
-
-                                if(Checador==0)
-                                {
-                                    final ArticuloModel articulo = new ArticuloModel("",
-                                            NombreArticulo,
-                                            "",
-                                            precio,
-                                            "",
-                                            "",
-                                            SKUArticulo,
-                                            "",
-                                            cantidad,
-                                            tar_id,
-                                            descuento,
-                                            "",
-                                            importe,"","",existencia
-                                    );
-                                    Articulos.add(articulo);
-                                }
+                            JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
+                            for (int z = 0; z < RespuestaImagenes.length(); z++) {
+                                String RutaImagen = "http://192.168.100.192:8010" + RespuestaImagenes.getString(z);
+                                Imagenes.add(RutaImagen);
+                            }
+                            final ArticuloModel articulo = new ArticuloModel("",
+                                    NombreArticulo,
+                                    "",
+                                    precio,
+                                    "",
+                                    "",
+                                    SKUArticulo,
+                                    "",
+                                    cantidad,
+                                    tar_id,
+                                    descuento,
+                                    "",
+                                    importe,"","",existencia
+                            );
+                            Articulos.add(articulo);
 
                         }
 
