@@ -34,13 +34,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.LogRecord;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.android.volley.Request.Method;
+
+import java.util.Base64;
 
 
 public class Login extends Activity {
@@ -415,15 +424,62 @@ public class Login extends Activity {
         }
 
         String msg = "";
-       // String lang = this.getString(2130968583);
+
+        byte[] bytes = new byte[0];
+        try {
+            bytes = convertDocToByteArray("some.pdf");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String stream = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            stream = Base64.getEncoder().encodeToString(bytes);
+        }
+        byte[] newBytes = new byte[0];
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            newBytes = Base64.getDecoder().decode(stream);
+        }
+        try {
+            convertByteArrayToDoc("some_new.pdf", newBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // String lang = this.getString(2130968583);
       //  if (lang.compareTo("en") == 0) {
             msg = "Division I is a research and development, production and services in one high-tech research and development, production-oriented enterprises, specializing in POS terminals finance, retail, restaurants, bars, songs and other areas, computer terminals, self-service terminal peripheral equipment R & D, manufacturing and sales! \n company's organizational structure concise and practical, pragmatic style of rigorous, efficient operation. Integrity, dedication, unity, and efficient is the company's corporate philosophy, and constantly strive for today, vibrant, the company will be strong scientific and technological strength, eternal spirit of entrepreneurship, the pioneering and innovative attitude, confidence towards the international information industry, with friends to create brilliant information industry !!! \n\n\n";
-            this.SendDataString(msg);
+            this.SendDataByte(newBytes);
      //   } else if (lang.compareTo("ch") == 0) {
           //  msg = "我司是一家集科研开发、生产经营和服务于一体的高技术研发、生产型企业，专业从事金融、商业零售、餐饮、酒吧、歌吧等领域的POS终端、计算机终端、自助终端周边配套设备的研发、制造及销售！\n公司的组织机构简练实用，作风务实严谨，运行高效。诚信、敬业、团结、高效是公司的企业理念和不断追求今天，朝气蓬勃，公司将以雄厚的科技力量，永恒的创业精神，不断开拓创新的姿态，充满信心的朝着国际化信息产业领域，与朋友们携手共创信息产业的辉煌!!!\n\n\n";
-            this.SendDataString(msg);
+            //this.SendDataString(msg);
      //   }
 
+    }
+
+    public static byte[] convertDocToByteArray(String path)throws FileNotFoundException, IOException {
+        File file = new File(path);
+
+        FileInputStream fis = new FileInputStream(file);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] buf = new byte[1024];
+        try {
+            for (int readNum; (readNum = fis.read(buf)) != -1;) {
+                bos.write(buf, 0, readNum);
+            }
+        } catch (IOException ex) {
+           // Logger.getLogger(genJpeg.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        byte[] bytes = bos.toByteArray();
+        return bytes;
+    }
+
+    public static void convertByteArrayToDoc(String path, byte[] bytes)throws FileNotFoundException, IOException {
+        File someFile = new File(path);
+        FileOutputStream fos = new FileOutputStream(someFile);
+        fos.write(bytes);
+        fos.flush();
+        fos.close();
     }
 
     public void forgotPassword(View v){
@@ -562,11 +618,25 @@ public class Login extends Activity {
         }
     }
 
+    //Este metodo se debe de llevar al fracgment de ventas
     private void SendDataString(String data) {
         if (data.length() > 0) {
             usbCtrl.sendMsg(data, "GBK", dev);
         }
 
+    }
+
+    //Este metodo se debe de llevar al fracgment de ventas
+    private void SendDataByte(byte[] data){
+        if(data.length>0)
+            usbCtrl.sendByte(data, dev);
+    }
+
+//Este metodo se debe de llevar al fracgment de ventas
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        usbCtrl.close();
     }
 
 }
