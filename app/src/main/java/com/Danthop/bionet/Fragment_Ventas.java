@@ -36,12 +36,14 @@ import com.Danthop.bionet.Adapters.MetodoPagoAdapter;
 import com.Danthop.bionet.Adapters.SeleccionaApartadoAdapter;
 import com.Danthop.bionet.Adapters.SeleccionaOrdenEspecialAdapter;
 import com.Danthop.bionet.Adapters.SeleccionarArticuloVentaAdapter;
+import com.Danthop.bionet.Adapters.SeleccionarMesesCreditoAdapter;
 import com.Danthop.bionet.Adapters.VentaArticuloAdapter;
 import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.Tables.SortableMetodosPagoTable;
 import com.Danthop.bionet.Tables.SortableSeleccionaApartadoTable;
 import com.Danthop.bionet.Tables.SortableSeleccionaOrdenEspecialTable;
 import com.Danthop.bionet.Tables.SortableSeleccionarArticuloTable;
+import com.Danthop.bionet.Tables.SortableSeleccionarPromocionTable;
 import com.Danthop.bionet.Tables.SortableVentaArticulos;
 import com.Danthop.bionet.model.ArticuloApartadoModel;
 import com.Danthop.bionet.model.ArticuloModel;
@@ -52,6 +54,7 @@ import com.Danthop.bionet.model.Impuestos;
 import com.Danthop.bionet.model.MovimientoModel;
 import com.Danthop.bionet.model.OrdenEspecialArticuloModel;
 import com.Danthop.bionet.model.PagoModel;
+import com.Danthop.bionet.model.PromocionesModel;
 import com.Danthop.bionet.model.TicketModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -131,6 +134,7 @@ public class Fragment_Ventas extends Fragment {
     private String direccion_igual;
     private SortableClientesTable tabla_clientes;
     private SortableSeleccionarArticuloTable tabla_selecciona_articulo;
+    private SortableSeleccionarPromocionTable tabla_selecciona_meses;
     private SortableVentaArticulos tabla_venta_articulos;
     private SortableSeleccionaApartadoTable tabla_apartados_disponibles;
     private SortableSeleccionaOrdenEspecialTable tabla_ordenes_disponibles;
@@ -140,6 +144,7 @@ public class Fragment_Ventas extends Fragment {
     private String NombreCli;
     private List<ClienteModel> clientes;
     private List<ArticuloModel> Articulos;
+    private List<PromocionesModel> Meses;
     private List<ArticuloModel> ArticulosVenta;
     private List<PagoModel> ListaDePagosDisponibles;
     private List<PagoModel> ListaDePagos_a_utilizar;
@@ -200,10 +205,11 @@ public class Fragment_Ventas extends Fragment {
     private String ImpuestosTicket="";
     private float ImpuestosTotal=0;
 
+    private String NomPromoCredito;
+
     private int[][] u_infor;
     static UsbController usbCtrl = null;
     static UsbDevice dev = null;
-
 
     private Button btn_imprimir;
 
@@ -279,6 +285,7 @@ public class Fragment_Ventas extends Fragment {
         ArticulosApartados = new ArrayList<>();
         ArticulosOrdenados = new ArrayList<>();
 
+        Meses = new ArrayList<>();
 
         tabla_venta_articulos = v.findViewById(R.id.tabla_venta_articulos);
         tabla_venta_articulos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
@@ -716,7 +723,7 @@ public class Fragment_Ventas extends Fragment {
                     }
                 });
                 CargaArticulos();
-                Buscar_promociones();
+
                 TableDataClickListener<ArticuloModel> tablaListener = new TableDataClickListener<ArticuloModel>() {
                     @Override
                     public void onDataClicked(int rowIndex, final ArticuloModel clickedData) {
@@ -989,6 +996,9 @@ public class Fragment_Ventas extends Fragment {
                                     dialog.hide();
                                 }
                             });
+
+          //=====================================================
+
                             CargaMetodosPago();
 
                             TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
@@ -1019,7 +1029,36 @@ public class Fragment_Ventas extends Fragment {
                                         if (tipo_pago.equals("Tarjeta de crédito"))
                                         {
                                             TarjetaCredito = Double.parseDouble(cantPago);
+
+                                         //==========================================================
+
+
+                                            dialog.setContentView(R.layout.pop_up_ventas_meses_acredito);
+                                            dialog.show();
+                                            progreso.show();
+                                            tabla_selecciona_meses = dialog.findViewById(R.id.tabla_seleccionar_meses);
+                                            tabla_selecciona_meses.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
+
+                                            Button cerrarPopUp = dialog.findViewById(R.id.btntachita);
+                                            cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    dialog.hide();
+                                                }
+                                            });
+
+                                            Buscar_promociones();
+
+                                            Button btnacpetar = dialog.findViewById(R.id.aceptar_mes);
+                                            btnacpetar.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                  //
+                                                }
+                                            });
+
                                         }
+
 
                                         if (tipo_pago.equals("Tarjeta débito"))
                                         {
@@ -2249,7 +2288,7 @@ public class Fragment_Ventas extends Fragment {
             e.printStackTrace();
         }
     }
-
+//===========================================================================================================
     private void CargaMetodosPago() {
 
         ListaDePagosDisponibles.clear();
@@ -2330,7 +2369,7 @@ public class Fragment_Ventas extends Fragment {
         );
         postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
-
+//===================================================================================================================
 
     }
 
@@ -3120,7 +3159,7 @@ public class Fragment_Ventas extends Fragment {
             public void onResponse(JSONObject response) {
                 JSONObject Resultado = null;
                 JSONObject Promociones = null;
-                JsonArray Credito = null;
+                JSONObject Credito = null;
                 JsonArray Volumen = null;
                 JSONObject Paquetes = null;
                 JsonArray Bonificacion = null;
@@ -3133,34 +3172,28 @@ public class Fragment_Ventas extends Fragment {
                     if (status == 1) {
                         Resultado = response.getJSONObject("resultado");
                         Promociones = Resultado.getJSONObject("promociones");
+                        Credito = Promociones.getJSONObject("credito");
                         Paquetes = Promociones.getJSONObject("paquetes");
-                        //String pro_nombre = Paquetes.getString("pro_nombre");
-
-                   /* aTickets = Resultado.getJSONArray("aTickets");
-                        for (int y = 0; y < aTickets.length(); y++){
-                            JSONObject elemento = aTickets.getJSONObject(y);
-
-                           // tic_numero = elemento.getString("tic_numero");
 
 
+                        Credito = Promociones.getJSONObject("credito");
+                        for (int y = 0; y < Credito.length(); y++){
+                            JSONObject elemento = Credito.getJSONObject( String.valueOf( y ) );
 
-                           /* final CorteCajaModel tickets = new CorteCajaModel(
-                                    "",
-                                    "",
-                                    "",
-                                    "",
-                                    "",
-                                    "",0.0,0.0,0.0,0.0,
-                                    "","","",0.0,0.0,0.0,0.0,vales08,
-                                    "",0.0,0.0,0.0);*/
-                            //ListaTickets.add(tickets);
-
-                     //   }
+                             NomPromoCredito = elemento.getString("pro_nombre");
 
 
 
-                      /*  final ListaTicketsAdapter ListaticketsAdapter = new ListaTicketsAdapter(getContext(), ListaTickets, tabla_ListarTickets,TicketsFactura);
-                        tabla_ListarTickets.setDataAdapter(ListaticketsAdapter);*/
+                            final PromocionesModel tickets = new PromocionesModel(
+                                    NomPromoCredito,"","","");
+                            Meses.add(tickets);
+
+                        }
+
+
+
+                        final SeleccionarMesesCreditoAdapter MesesCreditoAdapter = new SeleccionarMesesCreditoAdapter(getContext(), Meses, tabla_selecciona_meses);
+                        tabla_selecciona_meses.setDataAdapter(MesesCreditoAdapter);
 
                     }else {
                         Toast toast1 = Toast.makeText(getContext(), "No existen tickets en el periodo seleccionado.", Toast.LENGTH_LONG);
