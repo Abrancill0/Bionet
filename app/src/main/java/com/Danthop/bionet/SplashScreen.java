@@ -127,7 +127,7 @@ public class SplashScreen extends AppCompatActivity {
                 try
                 {
                     request.put("esApp", "1");
-                    request.put("dis_mac","\""+ID_dispositivo+"\"");
+                    request.put("dis_mac",ID_dispositivo+"IMEI");
                 }
                 catch(Exception e)
                 {

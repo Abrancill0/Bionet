@@ -74,11 +74,91 @@ public class Fragment_notificaciones extends Fragment {
             @Override
             public void onClick(View v)
             {
-                for(int i = 0;i<posicionesDelete.size();i++){
-                    removeItem(posicionesDelete.get(i));
-                    refresh();
+                JSONArray aNotificaciones = new JSONArray();
+                for (int j=0; j<posicionesDelete.size();j++)
+                {
+                    aNotificaciones.put(mNotificacionList.get(j).getID());
                 }
-                posicionesDelete.clear();
+
+                System.out.println(aNotificaciones);
+
+                JSONObject request = new JSONObject();
+                try
+                {
+                    request.put("usu_id", usu_id);
+                    request.put("esApp", "1");
+                    request.put("aNotificaciones",aNotificaciones);
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                String url = getString(R.string.Url);
+
+                String ApiPath = url + "/api/notificaciones/destroy_notificaciones";
+
+                JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        JSONObject Respuesta = null;
+                        JSONArray NodoConfiguraciones;
+
+                        try {
+
+                            int status = Integer.parseInt(response.getString("estatus"));
+                            String Mensaje = response.getString("mensaje");
+
+
+                            if (status == 1)
+                            {
+                                for(int i = 0;i<posicionesDelete.size();i++){
+                                    removeItem(posicionesDelete.get(i));
+                                    refresh();
+                                }
+                                posicionesDelete.clear();
+                                LoadNotificaciones();
+                            }
+                            else
+                            {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                                toast1.show();
+
+
+                            }
+
+                        } catch (JSONException e) {
+
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                            toast1.show();
+
+
+                        }
+
+                    }
+
+                },
+                        new Response.ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                                toast1.show();
+
+
+                            }
+                        }
+                );
+
+                VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
             }
         });
@@ -90,7 +170,6 @@ public class Fragment_notificaciones extends Fragment {
     public void refresh(){
         for(int i = 0;i<posicionesDelete.size();i++){
             posicionesDelete.set(i,posicionesDelete.get(i)-1);
-            System.out.println(posicionesDelete.get(i));
         }
     }
 
@@ -125,7 +204,8 @@ public class Fragment_notificaciones extends Fragment {
                                         String Titulo = elemento.getString("nen_titulo");
                                         String Fecha = elemento.getString("nen_fecha_hora_creo");
                                         String Mensaje = elemento.getString("nen_mensaje");
-                                        NotificacionModel Notificacion = new NotificacionModel(Titulo,ID,Fecha,Mensaje);
+                                        String Visto = elemento.getString("nen_visto");
+                                        NotificacionModel Notificacion = new NotificacionModel(Titulo,ID,Fecha,Mensaje,Visto);
                                         mNotificacionList.add(Notificacion);
                                     }
                                     NumNotificaciones.setText("("+mNotificacionList.size()+")");
@@ -179,6 +259,81 @@ public class Fragment_notificaciones extends Fragment {
                 Mensaje.setText(mNotificacionList.get(position).getMensaje());
 
 
+                JSONObject request = new JSONObject();
+                try
+                {
+                    request.put("usu_id", usu_id);
+                    request.put("esApp", "1");
+                    request.put("nen_id",mNotificacionList.get(position).getID());
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                String url = getString(R.string.Url);
+
+                String ApiPath = url + "/api/notificaciones/marcar_visto";
+
+                JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        JSONObject Respuesta = null;
+                        JSONArray NodoConfiguraciones;
+
+                        try {
+
+                            int status = Integer.parseInt(response.getString("estatus"));
+                            String Mensaje = response.getString("mensaje");
+
+
+                            if (status == 1)
+                            {
+                                LoadNotificaciones();
+                            }
+                            else
+                            {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                                toast1.show();
+
+
+                            }
+
+                        } catch (JSONException e) {
+
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                            toast1.show();
+
+
+                        }
+
+                    }
+
+                },
+                        new Response.ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                                toast1.show();
+
+
+                            }
+                        }
+                );
+
+                VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+
+
             }
 
             @Override
@@ -199,14 +354,12 @@ public class Fragment_notificaciones extends Fragment {
                     if(y==0)
                     {
                         posicionesDelete.add(position);
-                        System.out.println(posicionesDelete);
                     }
                 }
                 else
                 {
                     posicionesDelete.add(position);
                 }
-                System.out.println(posicionesDelete);
 
 
             }

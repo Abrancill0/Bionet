@@ -230,6 +230,9 @@ public class Fragment_Ventas extends Fragment {
         fr = getFragmentManager().beginTransaction();
         dialog = new Dialog(getContext());
 
+        usbCtrl = new UsbController(getActivity(),mHandler);
+
+
         try {
             JSONArray jsonArray = new JSONArray(cca_id_sucursal);
             //for (int i = 0; i < jsonArray.length(); i++) {

@@ -79,6 +79,7 @@ public class Fragment_clientes extends Fragment {
     private SortableClientesHistorialTable HistorialTable;
 
     private List<ClienteModel> clientes;
+    private List<CompraModel> HistorialCompras;
 
 
     public Fragment_clientes() {
@@ -214,7 +215,7 @@ public class Fragment_clientes extends Fragment {
                             num_ext_fiscal = RespuestaNodoDireccion.getString("cli_numero_exterior");
                             num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
 
-                            List<CompraModel> HistorialCompras = new ArrayList<>();
+                            HistorialCompras = new ArrayList<>();
                             JSONArray comprasNodo = elemento.getJSONArray("ventas");
                             for(int d=0; d<comprasNodo.length();d++)
                             {
@@ -323,10 +324,6 @@ public class Fragment_clientes extends Fragment {
                 ver_cliente_dialog.show();
 
                 HistorialTable = ver_cliente_dialog.findViewById(R.id.historial_compras);
-                final HistorialClientesAdapter historialAdapter = new HistorialClientesAdapter(getContext(), clickedData.getCompras(), HistorialTable);
-                HistorialTable.setDataAdapter(historialAdapter);
-
-
 
                 TextView NameCliente = ver_cliente_dialog.findViewById(R.id.cliente_nombre);
                 TextView CorreoCliente = ver_cliente_dialog.findViewById(R.id.email_cliente);
@@ -515,6 +512,9 @@ public class Fragment_clientes extends Fragment {
 
                     }
                 });
+
+                final HistorialClientesAdapter historialAdapter = new HistorialClientesAdapter(getContext(), clickedData.getCompras(), HistorialTable);
+                HistorialTable.setDataAdapter(historialAdapter);
             }
         };
     }

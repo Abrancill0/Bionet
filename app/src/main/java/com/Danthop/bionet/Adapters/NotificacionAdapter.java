@@ -34,6 +34,7 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
         public TextView FechaTextView;
         public TextView MensajeTextView;
         public CheckBox Box;
+        public View Fondo;
 
         public NotificacionViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
@@ -41,6 +42,7 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
             FechaTextView = itemView.findViewById(R.id.Fecha_notificacion);
             MensajeTextView = itemView.findViewById(R.id.Text_notificacion);
             Box = itemView.findViewById(R.id.checkBox);
+            Fondo = itemView.findViewById(R.id.fondo);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -90,6 +92,15 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
         notificacionViewHolder.TituloTextView.setText(currentItem.getTitulo());
         notificacionViewHolder.FechaTextView.setText(currentItem.getFecha());
         notificacionViewHolder.MensajeTextView.setText(currentItem.getMensaje());
+
+        if(currentItem.getVisto().equals("false"))
+        {
+            notificacionViewHolder.Fondo.setBackgroundResource(R.drawable.shape_white);
+        }
+        else
+        {
+            notificacionViewHolder.Fondo.setBackgroundResource(R.drawable.shape_gray);
+        }
 
     }
 

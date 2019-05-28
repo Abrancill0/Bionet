@@ -1,12 +1,16 @@
 package com.Danthop.bionet;
 
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -47,16 +51,23 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.squareup.timessquare.CalendarPickerView;
 import com.webviewtopdf.PdfView;
+import com.zj.usbsdk.UsbController;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -142,6 +153,35 @@ public class Fragment_ventas_transacciones extends Fragment {
 
     private List<ArticuloModel> ListaArticulosTicket = new ArrayList<>();
 
+    private int[][] u_infor;
+    // static UsbController  usbCtrl = null;
+    static UsbController usbCtrl = null;
+    static UsbDevice dev = null;
+
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch(msg.what) {
+                case 0:
+                    //   Toast.makeText(PrintDemo.this.getApplicationContext(), PrintDemo.this.getString(2130968584), 0).show();
+                    //    PrintDemo.this.btnSend.setEnabled(true);
+                    //   PrintDemo.this.btn_test.setEnabled(true);
+                    //    PrintDemo.this.btnClose.setEnabled(true);
+                    //    PrintDemo.this.btn_printA.setEnabled(true);
+                    //    PrintDemo.this.btn_BMP.setEnabled(true);
+                    //   PrintDemo.this.btn_ChoseCommand.setEnabled(true);
+                    //   PrintDemo.this.btn_prtcodeButton.setEnabled(true);
+                    //   PrintDemo.this.btn_prtsma.setEnabled(true);
+                    //   PrintDemo.this.btn_prttableButton.setEnabled(true);
+                    //    PrintDemo.this.Simplified.setEnabled(true);
+                    //   PrintDemo.this.Korean.setEnabled(true);
+                    //    PrintDemo.this.big5.setEnabled(true);
+                    //    PrintDemo.this.thai.setEnabled(true);
+                    //    PrintDemo.this.btn_conn.setEnabled(false);
+                default:
+            }
+        }
+    };
+
 
 
 
@@ -156,6 +196,7 @@ public class Fragment_ventas_transacciones extends Fragment {
         View v = inflater.inflate(R.layout.fragment_ventas_transacciones,container, false);
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
+
 
         fr = getFragmentManager().beginTransaction();
         layout_movimientos = v.findViewById(R.id.layout_movimientos);
@@ -200,6 +241,26 @@ public class Fragment_ventas_transacciones extends Fragment {
 
         btn_ventas = v.findViewById(R.id.btn_ventas);
         btn_corte_caja = v.findViewById(R.id.btn_corte_caja);
+
+        usbCtrl = new UsbController(getActivity(),mHandler);
+        this.u_infor = new int[8][2];
+        this.u_infor[0][0] = 7358;
+        this.u_infor[0][1] = 3;
+        this.u_infor[1][0] = 7344;
+        this.u_infor[1][1] = 3;
+        this.u_infor[2][0] = 1155;
+        this.u_infor[2][1] = 22336;
+        this.u_infor[3][0] = 1171;
+        this.u_infor[3][1] = 34656;
+        this.u_infor[4][0] = 1046;
+        this.u_infor[4][1] = 20497;
+        this.u_infor[5][0] = 1046;
+        this.u_infor[5][1] = 43707;
+        this.u_infor[6][0] = 5721;
+        this.u_infor[6][1] = 35173;
+        this.u_infor[7][0] = 1155;
+        this.u_infor[7][1] = 22337;
+
         Fechas();
 
         TableDataClickListener<MovimientoModel> tablaListener = new TableDataClickListener<MovimientoModel>() {
@@ -1126,7 +1187,15 @@ public class Fragment_ventas_transacciones extends Fragment {
                                     JSONObject NodoTicket = RespuestaResultado.getJSONObject("aTicket");
                                     FechaCreacion = NodoTicket.getString("tic_fecha_hora_creo");
                                     NombreVendedor = NodoTicket.getString("tic_nombre_vendedor");
+                                        if(NombreVendedor.equals("null"))
+                                        {
+                                            NombreVendedor="";
+                                        }
                                     NombreCliente = NodoTicket.getString("tic_nombre_cliente");
+                                        if(NombreCliente.equals("null"))
+                                        {
+                                            NombreCliente="";
+                                        }
                                     Subtotal = NodoTicket.getString("tic_importe_subtotal");
                                     Total = NodoTicket.getString("tic_importe_total");
                                     JSONArray ArregloArticulos = NodoTicket.getJSONArray("aArticulos");
@@ -1410,13 +1479,22 @@ public class Fragment_ventas_transacciones extends Fragment {
                                         @Override
                                         public void success(String path) {
                                             progressDialog.dismiss();
-                                            PdfView.openPdfFile(getActivity(),getString(R.string.app_name),"¿Desea abrir el archivo pdf?"+fileName,path);
+                                            //PdfView.openPdfFile(getActivity(),getString(R.string.app_name),"¿Desea abrir el archivo pdf?"+fileName,path);
                                         }
 
                                         @Override
                                         public void failure() {
                                             progressDialog.dismiss();
 
+                                        }
+                                    });
+
+                                    //Boton para imprimir le manda el archivo PDF---------------------------------------------------------------------
+                                    Button ImprimirTick = dialog.findViewById(R.id.btn_imprimir);
+                                    ImprimirTick.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            PDFIMprime(directory.getAbsolutePath()+"/"+fileName);
                                         }
                                     });
 
@@ -1449,6 +1527,110 @@ public class Fragment_ventas_transacciones extends Fragment {
 
 
     }
+
+    public void PDFIMprime (String ruta)
+    {
+        usbCtrl.close();
+
+        // int i =0;
+
+        for(int i = 0; i < 8; ++i) {
+            dev = usbCtrl.getDev(this.u_infor[i][0], this.u_infor[i][1]);
+            if (dev != null) {
+                break;
+            }
+        }
+
+        if (dev != null) {
+            if (!usbCtrl.isHasPermission(dev)) {
+                usbCtrl.getPermission(dev);
+            } else {
+                // Toast.makeText(this.getApplicationContext(), this.getString(2130968584), 0).show();
+
+            }
+        }
+
+        String msg = "";
+
+        byte[] bytes = new byte[0];
+        try {
+            bytes = convertDocToByteArray(ruta);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String stream = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            stream = Base64.getEncoder().encodeToString(bytes);
+        }
+        byte[] newBytes = new byte[0];
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            newBytes = Base64.getDecoder().decode(stream);
+        }
+        try {
+            convertByteArrayToDoc(ruta, newBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // String lang = this.getString(2130968583);
+        //  if (lang.compareTo("en") == 0) {
+        msg = "Division I is a research and development, production and services in one high-tech research and development, production-oriented enterprises, specializing in POS terminals finance, retail, restaurants, bars, songs and other areas, computer terminals, self-service terminal peripheral equipment R & D, manufacturing and sales! \n company's organizational structure concise and practical, pragmatic style of rigorous, efficient operation. Integrity, dedication, unity, and efficient is the company's corporate philosophy, and constantly strive for today, vibrant, the company will be strong scientific and technological strength, eternal spirit of entrepreneurship, the pioneering and innovative attitude, confidence towards the international information industry, with friends to create brilliant information industry !!! \n\n\n";
+        this.SendDataByte(newBytes);
+        //   } else if (lang.compareTo("ch") == 0) {
+        //  msg = "我司是一家集科研开发、生产经营和服务于一体的高技术研发、生产型企业，专业从事金融、商业零售、餐饮、酒吧、歌吧等领域的POS终端、计算机终端、自助终端周边配套设备的研发、制造及销售！\n公司的组织机构简练实用，作风务实严谨，运行高效。诚信、敬业、团结、高效是公司的企业理念和不断追求今天，朝气蓬勃，公司将以雄厚的科技力量，永恒的创业精神，不断开拓创新的姿态，充满信心的朝着国际化信息产业领域，与朋友们携手共创信息产业的辉煌!!!\n\n\n";
+        //this.SendDataString(msg);
+        //   }
+
+    }
+
+    public static byte[] convertDocToByteArray(String path)throws FileNotFoundException, IOException {
+        File file = new File(path);
+
+        FileInputStream fis = new FileInputStream(file);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] buf = new byte[1024];
+        try {
+            for (int readNum; (readNum = fis.read(buf)) != -1;) {
+                bos.write(buf, 0, readNum);
+            }
+        } catch (IOException ex) {
+            // Logger.getLogger(genJpeg.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        byte[] bytes = bos.toByteArray();
+        return bytes;
+    }
+
+    public static void convertByteArrayToDoc(String path, byte[] bytes)throws FileNotFoundException, IOException {
+        File someFile = new File(path);
+        FileOutputStream fos = new FileOutputStream(someFile);
+        fos.write(bytes);
+        fos.flush();
+        fos.close();
+    }
+
+    //Este metodo se debe de llevar al fracgment de ventas
+    private void SendDataString(String data) {
+        if (data.length() > 0) {
+            usbCtrl.sendMsg(data, "GBK", dev);
+        }
+
+    }
+
+    //Este metodo se debe de llevar al fracgment de ventas
+    private void SendDataByte(byte[] data){
+        if(data.length>0)
+            usbCtrl.sendByte(data, dev);
+    }
+
+    //Este metodo se debe de llevar al fracgment de ventas
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        usbCtrl.close();
+    }
+
+
 
 
 }

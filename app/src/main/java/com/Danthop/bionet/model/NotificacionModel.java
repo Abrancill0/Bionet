@@ -5,12 +5,14 @@ public class NotificacionModel {
     private String ID;
     private String Fecha;
     private String Mensaje;
+    private String Visto;
 
-    public NotificacionModel(String titulo, String ID, String fecha, String mensaje) {
+    public NotificacionModel(String titulo, String ID, String fecha, String mensaje,String visto) {
         Titulo = titulo;
         this.ID = ID;
         Fecha = fecha;
         Mensaje = mensaje;
+        Visto = visto;
     }
 
     public String getTitulo() {
@@ -43,5 +45,13 @@ public class NotificacionModel {
 
     public void setMensaje(String mensaje) {
         Mensaje = mensaje;
+    }
+
+    public String getVisto() {
+        return Visto;
+    }
+
+    public void setVisto(String visto) {
+        Visto = visto;
     }
 }

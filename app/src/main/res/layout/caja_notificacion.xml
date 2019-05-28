@@ -8,6 +8,7 @@
     app:cardCornerRadius="4dp">
 
     <LinearLayout
+        android:id="@+id/fondo"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -38,7 +39,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight=".6"
-                    android:background="#FAFAFA"
                     android:gravity="center_vertical|center_horizontal">
 
                     <ImageView
@@ -62,7 +62,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight=".4"
-                    android:background="#FAFAFA"
                     android:gravity="center_vertical|center_horizontal"
                     android:orientation="vertical">
 
@@ -95,7 +94,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".45"
-                android:background="#FAFAFA"
                 android:orientation="horizontal">
 
                 <TextView
@@ -114,7 +112,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".9"
-            android:gravity="center_vertical|center">
+            android:gravity="center_vertical|center"
+            android:background="@color/white">
 
             <CheckBox
                 android:id="@+id/checkBox"
