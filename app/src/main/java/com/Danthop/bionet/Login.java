@@ -423,7 +423,29 @@ public class Login extends Activity {
             }
         }
 
-         this.SendDataString("El jose luis es un lokillo");
+        byte[] bytes = new byte[0];
+        try {
+            bytes = convertDocToByteArray("/storage/emulated/0/DCIM/PDFTicket/Ticket.pdf");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String stream = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            stream = Base64.getEncoder().encodeToString(bytes);
+        }
+        byte[] newBytes = new byte[0];
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            newBytes = Base64.getDecoder().decode(stream);
+        }
+        try {
+            convertByteArrayToDoc("/storage/emulated/0/DCIM/PDFTicket/Ticket.pdf", newBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+         //this.SendDataByte(newBytes);
+        this.SendDataString("ssdas");
 
 
     }
