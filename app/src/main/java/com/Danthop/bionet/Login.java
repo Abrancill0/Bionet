@@ -40,12 +40,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.logging.LogRecord;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.nio.file.*;
+
 
 import static com.android.volley.Request.Method;
 
@@ -66,6 +69,8 @@ public class Login extends Activity {
     private JSONArray jsonArray;
     private static final int REQUEST_CODE = 999;
     private static String Token;
+    private byte data[];
+
 
     private int[][] u_infor;
     // static UsbController  usbCtrl = null;
@@ -444,8 +449,12 @@ public class Login extends Activity {
             e.printStackTrace();
         }
 
-         //this.SendDataByte(newBytes);
-        this.SendDataString("ssdas");
+        //String datastring = bytesToHex(bytes);
+        //this.SendDataString("datastring");
+        this.SendDataByte(bytes);
+
+
+
 
 
     }
@@ -630,6 +639,49 @@ public class Login extends Activity {
     public void onDestroy() {
         super.onDestroy();
         usbCtrl.close();
+    }
+
+    private static byte[] convertPDFToByteArray(String ruta) {
+
+        InputStream inputStream = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+
+            inputStream = new FileInputStream(ruta);
+
+            byte[] buffer = new byte[1024];
+            baos = new ByteArrayOutputStream();
+
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                baos.write(buffer, 0, bytesRead);
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return baos.toByteArray();
+    }
+
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    public static String bytesToHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for ( int j = 0; j < bytes.length; j++ ) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
     }
 
 }
