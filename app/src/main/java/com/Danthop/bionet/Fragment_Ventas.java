@@ -207,6 +207,14 @@ public class Fragment_Ventas extends Fragment {
     private float ImpuestosTotal=0;
 
     private String NomPromoCredito;
+    private String SKU_product;
+    private String Resptresmeses;
+    private String Respseismeses;
+    private String Respuestamenor;
+    private TextView textViewNombre;
+    private String value;
+    private Double TarjetaCredito = 0.0;
+    private Double TarjetaDebito = 0.0;
 
     private int[][] u_infor;
     static UsbController usbCtrl = null;
@@ -301,8 +309,6 @@ public class Fragment_Ventas extends Fragment {
 
 
       // usbCtrl = new UsbController(this,mHandler);
-
-       // Buscar_promociones();
 
         return v;
     }
@@ -1037,30 +1043,6 @@ public class Fragment_Ventas extends Fragment {
                                          //==========================================================
 
 
-                                            dialog.setContentView(R.layout.pop_up_ventas_meses_acredito);
-                                            dialog.show();
-                                            progreso.show();
-                                            tabla_selecciona_meses = dialog.findViewById(R.id.tabla_seleccionar_meses);
-                                            tabla_selecciona_meses.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
-
-                                            Button cerrarPopUp = dialog.findViewById(R.id.btntachita);
-                                            cerrarPopUp.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    dialog.hide();
-                                                }
-                                            });
-
-                                            Buscar_promociones();
-
-                                            Button btnacpetar = dialog.findViewById(R.id.aceptar_mes);
-                                            btnacpetar.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                  //
-                                                }
-                                            });
-
                                         }
 
 
@@ -1069,10 +1051,9 @@ public class Fragment_Ventas extends Fragment {
                                             TarjetaDebito = Double.parseDouble(cantPago);
                                         }
 
-                                        if(tipo_pago.equals("Efectivo")){
-
+                                        if(tipo_pago.equals("Efectivo"))
+                                        {
                                             PagosEfectivo +=Double.parseDouble(cantPago);
-
                                         }
 
                                         totalsumaimportes += Double.parseDouble(cantPago);
@@ -1123,8 +1104,63 @@ public class Fragment_Ventas extends Fragment {
                                     if (valorTarjetas > 0)
                                     {
 
-                                        Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
-                                        Bundle mBundle = new Bundle();
+
+                                        promociones_credito();
+                                        dialog.setContentView(R.layout.pop_up_ventas_meses_acredito);
+                                        dialog.show();
+                                        progreso.show();
+                                        tabla_selecciona_meses = dialog.findViewById(R.id.tabla_seleccionar_meses);
+                                        tabla_selecciona_meses.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
+
+                                        textViewNombre = dialog.findViewById(R.id.textViewNombre);
+                                        textViewNombre.setText(NomPromoCredito);
+
+                                        Button cerrarPop = dialog.findViewById(R.id.btntachita);
+                                        cerrarPop.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialog.hide();
+                                            }
+                                        });
+
+                                        Button cancelar_mes = dialog.findViewById( R.id.cancelar_mes );
+                                        cancelar_mes.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialog.hide();
+                                            }
+                                        });
+
+                                        Button btnacpetar = dialog.findViewById(R.id.aceptar_mes);
+                                        double finalTarjetaCredito = TarjetaCredito;
+                                        double finalTarjetaDebito = TarjetaDebito;
+                                        btnacpetar.setOnClickListener( new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
+                                                Bundle mBundle = new Bundle();
+                                                mBundle.putDouble("TC", finalTarjetaCredito );
+                                                mBundle.putDouble("TD", finalTarjetaDebito );
+                                                mBundle.putString( "Ticket",TicketIDVenta );
+                                                mBundle.putString("Sucursal",ticket_de_venta.getTic_id_sucursal());
+
+                                                mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
+
+                                                for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
+                                                    mBundle.putInt("fpa_id"+i, Integer.parseInt( ListaDePagos_a_utilizar.get(i).getId()));
+                                                    mBundle.putString("valor"+i,ListaDePagos_a_utilizar.get(i).getCantidad());
+                                                }
+
+                                                myIntent.putExtras(mBundle);
+
+                                                getActivity().startActivity(myIntent);
+                                            }
+                                        });
+
+                                        //Parte Bundle
+                                       /*Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
+                                       Bundle mBundle = new Bundle();
                                         mBundle.putDouble("TC",TarjetaCredito);
                                         mBundle.putDouble("TD",TarjetaDebito);
                                         mBundle.putString( "Ticket",TicketIDVenta );
@@ -1139,43 +1175,54 @@ public class Fragment_Ventas extends Fragment {
 
                                         myIntent.putExtras(mBundle);
 
-                                        getActivity().startActivity(myIntent);
+                                        getActivity().startActivity(myIntent);*/
+
+
+
                                     }
                                     else
                                     {
-                                        dialog.dismiss();
-                                        dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
-                                        dialog.show();
-
-                                        Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
-                                        cerrarPopUp.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-
-                                                loadTicket();
                                                 dialog.dismiss();
+                                                dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
+                                                dialog.show();
 
-                                            }
-                                        });
+                                                Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                                                cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
 
-                                        TextView importe_venta = dialog.findViewById(R.id.importe_venta);
-                                        TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
-                                        TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
+                                                        loadTicket();
+                                                        dialog.dismiss();
 
-                                        FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
+                                                    }
+                                                });
 
-                                        Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
-                                        aceptar.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
+                                                TextView importe_venta = dialog.findViewById(R.id.importe_venta);
+                                                TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
+                                                TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
 
-                                                loadTicket();
-                                                dialog.dismiss();
+                                                FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
 
-                                            }
-                                        });
+                                                Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                                                aceptar.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+
+                                                        loadTicket();
+                                                        dialog.dismiss();
+
+                                                    }
+                                                });
+
                                     }
 
+                                   /* TableDataClickListener<PromocionesModel> tablaListenermeses = new TableDataClickListener<PromocionesModel>() {
+                                        @Override
+                                        public void onDataClicked(int rowIndex, final PromocionesModel clickedData) {
+                                            dialog.dismiss();
+                                        }
+                                    };
+                                    tabla_selecciona_meses.addDataClickListener(tablaListenermeses);*/
 
 
                                 }
@@ -1734,6 +1781,7 @@ public class Fragment_Ventas extends Fragment {
                         for (int j = 0; j < NodoArticuloTicket.length(); j++) {
                             JSONObject nodo = NodoArticuloTicket.getJSONObject(j);
 
+                            SKU_product = nodo.getString("art_sku");
                             float numero_de_productos = Float.parseFloat((nodo.getString("tar_cantidad")));
 
                             float PrecioSubTotalProducto = 0;
@@ -2861,7 +2909,7 @@ public class Fragment_Ventas extends Fragment {
 
 //------------------------------------------
 
-    public void Buscar_promociones(){
+    public void promociones_credito(){
 
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/articulos/promociones/consultar_promociones_articulo_sku_app";
@@ -2870,7 +2918,7 @@ public class Fragment_Ventas extends Fragment {
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
-            request.put("sku","NE3234432423");
+            request.put("sku",SKU_product);
             request.put("suc_id", valueIdSuc);
 
         }catch (JSONException e){
@@ -2895,25 +2943,79 @@ public class Fragment_Ventas extends Fragment {
                     if (status == 1) {
                         Resultado = response.getJSONObject("resultado");
                         Promociones = Resultado.getJSONObject("promociones");
-                        Credito = Promociones.getJSONObject("credito");
-                        Paquetes = Promociones.getJSONObject("paquetes");
+                        Iterator y = Promociones.keys();
 
+                        while (y.hasNext()) {
+                            String key = (String) y.next();
+                            value = String.valueOf(Promociones.get(key));
 
-                        Credito = Promociones.getJSONObject("credito");
-                        for (int y = 0; y < Credito.length(); y++){
-                            JSONObject elemento = Credito.getJSONObject( String.valueOf( y ) );
+                            int Respcredito = key.compareTo("credito");
+                            if (Respcredito == 0){
+                                int Resp = value.compareTo("[]");
+                                if (Resp == 0){
+                                    Toast toast1 = Toast.makeText(getContext(), "No existen promociones", Toast.LENGTH_LONG);
+                                    toast1.show();
 
-                             NomPromoCredito = elemento.getString("pro_nombre");
+                                    double finalTarjetaCredito = TarjetaCredito;
+                                    double finalTarjetaDebito = TarjetaDebito;
 
+                                    Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
+                                    Bundle mBundle = new Bundle();
+                                    mBundle.putDouble("TC", finalTarjetaCredito );
+                                    mBundle.putDouble("TD", finalTarjetaDebito );
+                                    mBundle.putString( "Ticket",TicketIDVenta );
+                                    mBundle.putString("Sucursal",ticket_de_venta.getTic_id_sucursal());
 
+                                    mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
-                            final PromocionesModel tickets = new PromocionesModel(
-                                    NomPromoCredito,"","","");
-                            Meses.add(tickets);
+                                    for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
+                                        mBundle.putInt("fpa_id"+i, Integer.parseInt( ListaDePagos_a_utilizar.get(i).getId()));
+                                        mBundle.putString("valor"+i,ListaDePagos_a_utilizar.get(i).getCantidad());
+                                    }
 
+                                    myIntent.putExtras(mBundle);
+
+                                    getActivity().startActivity(myIntent);
+                                }else {
+
+                                    Credito = Promociones.getJSONObject("credito");
+
+                                    JSONObject ResultadoCredito = Credito.getJSONObject("1");
+                                    Iterator x = ResultadoCredito.keys();
+                                    while (x.hasNext()) {
+                                        String key2 = (String) x.next();
+                                        NomPromoCredito = ResultadoCredito.getString( "pro_nombre" );
+
+                                        Boolean tresmeses = ResultadoCredito.getBoolean( "apr_tres_meses" );
+                                        if (tresmeses == true) {
+                                            Resptresmeses = "Aplica 3 meses sin intereses";
+                                        } else {
+                                            // Resptresmeses = "no aplica ";
+                                        }
+
+                                        Boolean seismeses = ResultadoCredito.getBoolean( "apr_seis_meses" );
+                                        if (tresmeses == true) {
+                                            Respseismeses = "Aplica 6 meses sin intereses";
+                                        } else {
+                                            //Respseismeses = "no aplica ";
+                                        }
+
+                                        int Resultadomenor = Resptresmeses.compareTo( Respseismeses ); //menor a la segunda sera -entero
+
+                                        if (Resultadomenor < 0) {
+                                            Respuestamenor = "Aplica 3 meses sin intereses";
+                                        }
+
+                                        Boolean nuevemeses = ResultadoCredito.getBoolean( "apr_nueve_meses" );
+                                        Boolean docemeses = ResultadoCredito.getBoolean( "apr_doce_meses" );
+                                    }
+                            }
+                            }
                         }
 
-
+                        final PromocionesModel tickets = new PromocionesModel(
+                                Respuestamenor,"","","");
+                        Meses.add(tickets);
 
                         final SeleccionarMesesCreditoAdapter MesesCreditoAdapter = new SeleccionarMesesCreditoAdapter(getContext(), Meses, tabla_selecciona_meses);
                         tabla_selecciona_meses.setDataAdapter(MesesCreditoAdapter);

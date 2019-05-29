@@ -26,12 +26,12 @@ public class SortableSeleccionarPromocionTable extends SortableTableView<Promoci
     public SortableSeleccionarPromocionTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Promocion");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Meses a Crédito");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(1);
-        tableColumnWeightModel.setColumnWeight(0, 2);
+        tableColumnWeightModel.setColumnWeight(0,2);
 
         setColumnModel(tableColumnWeightModel);
 
