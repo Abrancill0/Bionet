@@ -210,9 +210,12 @@ public class Fragment_Ventas extends Fragment {
     private String SKU_product;
     private String Resptresmeses;
     private String Respseismeses;
+    private String Respnuevemeses;
+    private String Respdocemeses;
     private String Respuestamenor;
     private TextView textViewNombre;
     private String value;
+    private int Resp;
     private Double TarjetaCredito = 0.0;
     private Double TarjetaDebito = 0.0;
 
@@ -309,7 +312,7 @@ public class Fragment_Ventas extends Fragment {
 
 
       // usbCtrl = new UsbController(this,mHandler);
-
+        promociones_credito();
         return v;
     }
 
@@ -1043,6 +1046,7 @@ public class Fragment_Ventas extends Fragment {
                                          //==========================================================
 
 
+
                                         }
 
 
@@ -1057,7 +1061,6 @@ public class Fragment_Ventas extends Fragment {
                                         }
 
                                         totalsumaimportes += Double.parseDouble(cantPago);
-
                                     }
 
                                     //Validar montos antes de pasar de pantallas
@@ -1101,70 +1104,20 @@ public class Fragment_Ventas extends Fragment {
 
                                     valorTarjetas = TarjetaCredito + TarjetaDebito;
 
-                                    if (valorTarjetas > 0)
-                                    {
+                                    if (valorTarjetas > 0) {
 
-
-                                        promociones_credito();
-                                        dialog.setContentView(R.layout.pop_up_ventas_meses_acredito);
-                                        dialog.show();
-                                        progreso.show();
-                                        tabla_selecciona_meses = dialog.findViewById(R.id.tabla_seleccionar_meses);
-                                        tabla_selecciona_meses.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
-
-                                        textViewNombre = dialog.findViewById(R.id.textViewNombre);
-                                        textViewNombre.setText(NomPromoCredito);
-
-                                        Button cerrarPop = dialog.findViewById(R.id.btntachita);
-                                        cerrarPop.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                dialog.hide();
-                                            }
-                                        });
-
-                                        Button cancelar_mes = dialog.findViewById( R.id.cancelar_mes );
-                                        cancelar_mes.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                dialog.hide();
-                                            }
-                                        });
-
-                                        Button btnacpetar = dialog.findViewById(R.id.aceptar_mes);
-                                        double finalTarjetaCredito = TarjetaCredito;
-                                        double finalTarjetaDebito = TarjetaDebito;
-                                        btnacpetar.setOnClickListener( new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-
-                                                Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
-                                                Bundle mBundle = new Bundle();
-                                                mBundle.putDouble("TC", finalTarjetaCredito );
-                                                mBundle.putDouble("TD", finalTarjetaDebito );
-                                                mBundle.putString( "Ticket",TicketIDVenta );
-                                                mBundle.putString("Sucursal",ticket_de_venta.getTic_id_sucursal());
-
-                                                mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
-
-                                                for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
-                                                    mBundle.putInt("fpa_id"+i, Integer.parseInt( ListaDePagos_a_utilizar.get(i).getId()));
-                                                    mBundle.putString("valor"+i,ListaDePagos_a_utilizar.get(i).getCantidad());
-                                                }
-
-                                                myIntent.putExtras(mBundle);
-
-                                                getActivity().startActivity(myIntent);
-                                            }
-                                        });
-
+                                        //promociones_credito();
                                         //Parte Bundle
-                                       /*Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
-                                       Bundle mBundle = new Bundle();
+                                        Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
+                                        Bundle mBundle = new Bundle();
                                         mBundle.putDouble("TC",TarjetaCredito);
                                         mBundle.putDouble("TD",TarjetaDebito);
                                         mBundle.putString( "Ticket",TicketIDVenta );
                                         mBundle.putString("Sucursal",ticket_de_venta.getTic_id_sucursal());
+                                        mBundle.putString( "03meses",Resptresmeses);
+                                        mBundle.putString( "06meses",Respseismeses);
+                                        mBundle.putString( "09meses",Respnuevemeses);
+                                        mBundle.putString( "12meses",Respdocemeses);
 
                                         mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
@@ -1174,11 +1127,61 @@ public class Fragment_Ventas extends Fragment {
                                         }
 
                                         myIntent.putExtras(mBundle);
-
-                                        getActivity().startActivity(myIntent);*/
-
+                                        getActivity().startActivity(myIntent);
 
 
+                                        //parte de pop_meses_credito
+                                       /* dialog.setContentView( R.layout.pop_up_ventas_meses_acredito );
+                                        dialog.show();
+                                        progreso.show();
+                                        tabla_selecciona_meses = dialog.findViewById( R.id.tabla_seleccionar_meses );
+                                        tabla_selecciona_meses.setEmptyDataIndicatorView( dialog.findViewById( R.id.Tabla_vacia ) );
+
+                                        textViewNombre = dialog.findViewById( R.id.textViewNombre );
+                                        textViewNombre.setText( NomPromoCredito );
+
+                                        Button cerrarPop = dialog.findViewById( R.id.btntachita );
+                                        cerrarPop.setOnClickListener( new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialog.hide();
+                                            }
+                                        } );
+
+                                        Button cancelar_mes = dialog.findViewById( R.id.cancelar_mes );
+                                        cancelar_mes.setOnClickListener( new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialog.hide();
+                                            }
+                                        } );
+
+                                        //Button btnacpetar = dialog.findViewById( R.id.aceptar_mes );
+                                        double finalTarjetaCredito = TarjetaCredito;
+                                        double finalTarjetaDebito = TarjetaDebito;
+                                        btnacpetar.setOnClickListener( new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                Intent myIntent = new Intent( getActivity(), Feenicia_Transaction_Bluetooth.class );
+                                                Bundle mBundle = new Bundle();
+                                                mBundle.putDouble( "TC", finalTarjetaCredito );
+                                                mBundle.putDouble( "TD", finalTarjetaDebito );
+                                                mBundle.putString( "Ticket", TicketIDVenta );
+                                                mBundle.putString( "Sucursal", ticket_de_venta.getTic_id_sucursal() );
+
+                                                mBundle.putInt( "Tamano", ListaDePagos_a_utilizar.size() );
+
+                                                for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
+                                                    mBundle.putInt( "fpa_id" + i, Integer.parseInt( ListaDePagos_a_utilizar.get( i ).getId() ) );
+                                                    mBundle.putString( "valor" + i, ListaDePagos_a_utilizar.get( i ).getCantidad() );
+                                                }
+
+                                                myIntent.putExtras( mBundle );
+
+                                                getActivity().startActivity( myIntent );
+                                            }
+                                        } );*/
                                     }
                                     else
                                     {
@@ -1223,7 +1226,6 @@ public class Fragment_Ventas extends Fragment {
                                         }
                                     };
                                     tabla_selecciona_meses.addDataClickListener(tablaListenermeses);*/
-
 
                                 }
                             });
@@ -2951,31 +2953,14 @@ public class Fragment_Ventas extends Fragment {
 
                             int Respcredito = key.compareTo("credito");
                             if (Respcredito == 0){
-                                int Resp = value.compareTo("[]");
+                                Resp = value.compareTo("[]");
                                 if (Resp == 0){
+
                                     Toast toast1 = Toast.makeText(getContext(), "No existen promociones", Toast.LENGTH_LONG);
                                     toast1.show();
 
-                                    double finalTarjetaCredito = TarjetaCredito;
-                                    double finalTarjetaDebito = TarjetaDebito;
+                                    Respuestamenor = "No aplica meses sin interes a Crédito";
 
-                                    Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
-                                    Bundle mBundle = new Bundle();
-                                    mBundle.putDouble("TC", finalTarjetaCredito );
-                                    mBundle.putDouble("TD", finalTarjetaDebito );
-                                    mBundle.putString( "Ticket",TicketIDVenta );
-                                    mBundle.putString("Sucursal",ticket_de_venta.getTic_id_sucursal());
-
-                                    mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
-
-                                    for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
-                                        mBundle.putInt("fpa_id"+i, Integer.parseInt( ListaDePagos_a_utilizar.get(i).getId()));
-                                        mBundle.putString("valor"+i,ListaDePagos_a_utilizar.get(i).getCantidad());
-                                    }
-
-                                    myIntent.putExtras(mBundle);
-
-                                    getActivity().startActivity(myIntent);
                                 }else {
 
                                     Credito = Promociones.getJSONObject("credito");
@@ -2989,25 +2974,72 @@ public class Fragment_Ventas extends Fragment {
                                         Boolean tresmeses = ResultadoCredito.getBoolean( "apr_tres_meses" );
                                         if (tresmeses == true) {
                                             Resptresmeses = "Aplica 3 meses sin intereses";
-                                        } else {
-                                            // Resptresmeses = "no aplica ";
+                                        }else {
+                                            Resptresmeses = "No Aplica meses sin intereses";
                                         }
 
                                         Boolean seismeses = ResultadoCredito.getBoolean( "apr_seis_meses" );
-                                        if (tresmeses == true) {
+                                        if (seismeses == true) {
                                             Respseismeses = "Aplica 6 meses sin intereses";
-                                        } else {
-                                            //Respseismeses = "no aplica ";
-                                        }
-
-                                        int Resultadomenor = Resptresmeses.compareTo( Respseismeses ); //menor a la segunda sera -entero
-
-                                        if (Resultadomenor < 0) {
-                                            Respuestamenor = "Aplica 3 meses sin intereses";
+                                        }else {
+                                            Respseismeses = "No Aplica meses sin intereses";
                                         }
 
                                         Boolean nuevemeses = ResultadoCredito.getBoolean( "apr_nueve_meses" );
+                                        if ( nuevemeses == true){
+                                            Respnuevemeses = "Aplica 9 meses sin intereses";
+                                        }else {
+                                            Respnuevemeses = "No Aplica meses sin intereses";
+                                        }
+
                                         Boolean docemeses = ResultadoCredito.getBoolean( "apr_doce_meses" );
+                                        if (docemeses == true){
+                                            Respdocemeses = "Aplica 12 meses sin intereses";
+                                        }else {
+                                            Respdocemeses = "No Aplica meses sin intereses";
+                                        }
+
+                                        //Respuesta menor
+                                        int Resultadomenor1 = Resptresmeses.compareTo(Respseismeses); //menor a la segunda sera -entero
+                                        if (Resultadomenor1 < 0) {
+                                            Respuestamenor = "Aplica 3 meses sin intereses";
+                                        }else {
+                                            Respuestamenor = "Aplica 6 meses sin intereses";
+                                        }
+
+
+                                        int Resultadomenor2 = Resptresmeses.compareTo(Respnuevemeses);
+                                        if (Resultadomenor2 < 0) {
+                                            Respuestamenor = "Aplica 3 meses sin intereses";
+                                        }else {
+                                            Respuestamenor = "Aplica 9 meses sin intereses";
+                                        }
+
+
+                                        int Resultadomenor3 = Resptresmeses.compareTo(Respdocemeses);
+                                        if (Resultadomenor3 < 0) {
+                                            Respuestamenor = "Aplica 3 meses sin intereses";
+                                        }else {
+                                            Respuestamenor = "Aplica 12 meses sin intereses";
+                                        }
+
+                                        //Respuesta menor
+                                       /* int Resulmenor1 = Respdocemeses.compareTo(Resptresmeses); //menor a la segunda sera -entero
+                                        int Resulmenor2 = Respdocemeses.compareTo(Respseismeses);
+                                        int Resulmenor3 = Respdocemeses.compareTo(Respnuevemeses);
+
+                                        if (Resulmenor1 < 0) {
+                                            Respuestamenor = "Aplica 12 meses sin intereses";
+                                        }
+
+                                        if (Resulmenor2 < 0) {
+                                            Respuestamenor = "Aplica 12 meses sin intereses";
+                                        }
+
+                                        if (Resulmenor3 < 0) {
+                                            Respuestamenor = "Aplica 12 meses sin intereses";
+                                        }*/
+
                                     }
                             }
                             }

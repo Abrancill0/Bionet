@@ -118,6 +118,11 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     public static String Ticket;
     public static String Sucursal;
 
+    public static String Tresmeses;
+    public static String Seismeses;
+    public static String nuevemeses;
+    public static String docemeses;
+
     public static int Contador;
     public static String Mensaje;
 
@@ -154,10 +159,13 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         Bundle bundle = getIntent().getExtras();
         TarjetaCredito = bundle.getDouble( "TC");
         TarjetaDebio = bundle.getDouble( "TD");
-        tamano = bundle.getInt( "Tamano");
-        Ticket = bundle.getString( "Ticket");
+        tamano = bundle.getInt("Tamano");
+        Ticket = bundle.getString("Ticket");
         Sucursal = bundle.getString( "Sucursal");
-
+        Tresmeses = bundle.getString("03meses");
+        Seismeses = bundle.getString("06meses");
+        nuevemeses = bundle.getString("09meses");
+        docemeses = bundle.getString("12meses");
 
         ListaDePagos_a_utilizar  = new ArrayList<>();
 
@@ -830,6 +838,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                         mBundle.putDouble("IV",  ImporteVenta  );
                         mBundle.putString("Sucursal",  Sucursal  );
                         mBundle.putString("Ticket",  Ticket  );
+
 
                         myIntent.putExtras(mBundle);
 

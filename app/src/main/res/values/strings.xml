@@ -76,6 +76,7 @@
     <string name="text_not_devices_encontrados">NINGUN DISPOSITIVO ENCONTRADO</string>
 
     <!-- TIPOS DE VENTAS -->
+  //
     <string-array name="sale_array">
         <item>Venta Retail - Sin propina</item>
         <item>Venta Retail - Con propina</item>

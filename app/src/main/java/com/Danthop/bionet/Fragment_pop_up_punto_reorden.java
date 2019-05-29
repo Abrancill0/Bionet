@@ -35,7 +35,8 @@ public class Fragment_pop_up_punto_reorden extends DialogFragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    onDestroyView();
+
+                onDestroyView();
             }
         });
 
