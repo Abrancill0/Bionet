@@ -222,6 +222,7 @@ public class Fragment_Ventas extends Fragment {
     private int[][] u_infor;
     static UsbController usbCtrl = null;
     static UsbDevice dev = null;
+    private ProgressDialog progressDialog;
 
     private Button btn_imprimir;
 
@@ -234,6 +235,9 @@ public class Fragment_Ventas extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ventas, container, false);
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.show();
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
@@ -463,6 +467,7 @@ public class Fragment_Ventas extends Fragment {
                     int status = Integer.parseInt(response.getString("estatus"));
                     String Mensaje = response.getString("mensaje");
                     if (status == 1) {
+                        progressDialog.dismiss();
 
                         Respuesta = response.getJSONObject("resultado");
 
@@ -479,6 +484,7 @@ public class Fragment_Ventas extends Fragment {
                         SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, SucursalName));
 
                     } else {
+                        progressDialog.dismiss();
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 

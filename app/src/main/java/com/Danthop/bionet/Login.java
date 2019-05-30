@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.hardware.usb.UsbDevice;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -53,6 +54,8 @@ import java.nio.file.*;
 import static com.android.volley.Request.Method;
 
 import java.util.Base64;
+
+import zj.com.customize.sdk.Other;
 
 
 public class Login extends Activity {
@@ -641,48 +644,8 @@ public class Login extends Activity {
         usbCtrl.close();
     }
 
-    private static byte[] convertPDFToByteArray(String ruta) {
 
-        InputStream inputStream = null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
 
-            inputStream = new FileInputStream(ruta);
-
-            byte[] buffer = new byte[1024];
-            baos = new ByteArrayOutputStream();
-
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                baos.write(buffer, 0, bytesRead);
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return baos.toByteArray();
-    }
-
-    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
-    public static String bytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for ( int j = 0; j < bytes.length; j++ ) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
 
 }
 

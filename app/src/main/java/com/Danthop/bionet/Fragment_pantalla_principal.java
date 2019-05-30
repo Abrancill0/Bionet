@@ -1,4 +1,5 @@
 package com.Danthop.bionet;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -76,6 +77,7 @@ public class Fragment_pantalla_principal extends Fragment{
     private String tar_nombre_articulo;
     private int tic_importe_total;
     MediaPlayer mp = new MediaPlayer();
+    private ProgressDialog progressDialog;
 
     public Fragment_pantalla_principal() {
         // Required empty public constructor
@@ -83,6 +85,9 @@ public class Fragment_pantalla_principal extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pantalla_principal,container, false);
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.show();
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getContext().MODE_PRIVATE );
         String ImagenPerfil = sharedPref.getString( "usu_imagen_perfil", "" );
@@ -382,6 +387,7 @@ private void LoadMasVendidos(){
                 String Mensaje = response.getString("mensaje");
 
                 if (status == 1) {
+                    progressDialog.dismiss();
                     ResultadoProductos = response.getJSONArray("resultado");
 
                     for (int x = 0; x < ResultadoProductos.length(); x++) {
@@ -401,6 +407,10 @@ private void LoadMasVendidos(){
 
                     final TopvendidosAdapter TopVendidoseAdapter = new TopvendidosAdapter(getContext(), Productos ,tabla_productos);
                     tabla_productos.setDataAdapter(TopVendidoseAdapter);
+                }
+                else
+                {
+                    progressDialog.dismiss();
                 }
 
             } catch (JSONException e) {

@@ -77,6 +77,7 @@ public class Fragment_clientes extends Fragment {
     private  FragmentTransaction fr;
     private TableDataClickListener<ClienteModel> tablaListener;
     private SortableClientesHistorialTable HistorialTable;
+    private ProgressDialog progressDialog;
 
     private List<ClienteModel> clientes;
     private List<CompraModel> HistorialCompras;
@@ -92,6 +93,9 @@ public class Fragment_clientes extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_clientes,container, false);
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.show();
 
         tabla_clientes = (SortableClientesTable) v.findViewById(R.id.tabla_clientes);
         ver_cliente_dialog=new Dialog(getContext());
@@ -176,6 +180,7 @@ public class Fragment_clientes extends Fragment {
 
                     if (status == 1)
                     {
+                        progressDialog.dismiss();
                         Respuesta = response.getJSONObject("resultado");
 
                         RespuestaNodoClientes = Respuesta.getJSONArray("aClientes");
@@ -287,6 +292,7 @@ public class Fragment_clientes extends Fragment {
                     }
                     else
                     {
+                        progressDialog.dismiss();
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
                         toast1.show();

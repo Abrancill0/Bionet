@@ -86,6 +86,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     private View layoutCerrar;
     private TextView btn_cerrar_ecommerce;
     private Dialog cerrar_sesion_ecommerce;
+    private ProgressDialog progressDialog;
 
     private WifiManager wifiManager;
 
@@ -597,6 +598,8 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
             }
         }
     };
+
+
 
 
 }

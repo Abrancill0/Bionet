@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.os.Environment;
@@ -63,6 +65,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -73,6 +76,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.codecrafters.tableview.listeners.TableDataClickListener;
+import zj.com.customize.sdk.Other;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -150,6 +154,8 @@ public class Fragment_ventas_transacciones extends Fragment {
     private String Total = "";
     private String ImpuestosTicket="";
     private float ImpuestosTotal=0;
+    private ProgressDialog progressDialog;
+    private String contenidoImprimir;
 
     private List<ArticuloModel> ListaArticulosTicket = new ArrayList<>();
 
@@ -196,6 +202,10 @@ public class Fragment_ventas_transacciones extends Fragment {
         View v = inflater.inflate(R.layout.fragment_ventas_transacciones,container, false);
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
+
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.show();
 
 
         fr = getFragmentManager().beginTransaction();
@@ -384,7 +394,7 @@ public class Fragment_ventas_transacciones extends Fragment {
 
     public void Layouts()
     {
-        layout_movimientos.setVisibility(View.GONE);
+        layout_movimientos.setVisibility(View.VISIBLE);
         layout_apartado.setVisibility(View.GONE);
         layout_ordenes.setVisibility(View.GONE);
         layout_fechas.setVisibility(View.INVISIBLE);
@@ -856,9 +866,6 @@ public class Fragment_ventas_transacciones extends Fragment {
 
     public void LoadMovimientos(){
         Lista_de_movimientos.clear();
-        final ProgressDialog progressDialog=new ProgressDialog(getContext());
-        progressDialog.setMessage("Espere un momento por favor");
-        progressDialog.show();
         if(FormaPagoName.isEmpty()&&UsuarioVentaName.isEmpty()) {
             try {
 
@@ -946,6 +953,13 @@ public class Fragment_ventas_transacciones extends Fragment {
 
                                         SpinnerUsuarioVenta.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, UsuarioVentaName));
 
+                                        progressDialog.dismiss();
+                                    }
+                                    else
+                                    {
+                                        Toast toast1 =
+                                                Toast.makeText(getContext(), EstatusApi, Toast.LENGTH_LONG);
+                                        toast1.show();
                                         progressDialog.dismiss();
                                     }
                                 } catch (JSONException e) {
@@ -1267,7 +1281,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                             "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
                                             "<style type=\"text/css\" media=\"all\">\n" +
                                             "#tblTicketTemplate {\n" +
-                                            "  width: 100%;\n" +
+                                            "  width: 70%;\n" +
                                             "  font-size: 10px;\n" +
                                             "  font-family: \"Courier New\";\n" +
                                             "  text-transform: uppercase;\n" +
@@ -1474,6 +1488,8 @@ public class Fragment_ventas_transacciones extends Fragment {
                                     final ProgressDialog progressDialog=new ProgressDialog(getContext());
                                     progressDialog.setMessage("Espere un momento por favor");
                                     progressDialog.show();
+
+
                                     PdfView.createWebPrintJob(getActivity(), webView, directory, fileName, new PdfView.Callback() {
 
                                         @Override
@@ -1494,6 +1510,34 @@ public class Fragment_ventas_transacciones extends Fragment {
                                     ImprimirTick.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+                                            String cadenaArticulosImprimir="";
+                                            for(int j=0; j<ListaArticulosTicket.size();j++)
+                                            {
+                                                double PrecioArticulo = Double.parseDouble(ListaArticulosTicket.get(j).getarticulo_Precio());
+                                                double ImporteArticulo = Double.parseDouble(ListaArticulosTicket.get(j).getArticulo_importe());
+
+
+                                                cadenaArticulosImprimir=cadenaArticulosImprimir+
+                                                        ("\n"+
+                                                                ListaArticulosTicket.get(j).getArticulo_cantidad()+"\t"+
+                                                                ListaArticulosTicket.get(j).getarticulo_Nombre()+"\t"+
+                                                                formatter.format( PrecioArticulo )+"\t"+
+                                                                formatter.format( ImporteArticulo));
+                                            }
+
+
+
+                                            contenidoImprimir =
+                                                    "\t"+RazonSocial+ "\n"+
+                                                            "\t"+RFC+ "\n"+
+                                                            "FEC./HR./:"+FechaCreacion+ "\n"+
+                                                            "Ticket:"+NumeroTicket+"\n"+
+                                                            "Vendedor: "+NombreVendedor + "\n"+
+                                                            "Cliente: "+NombreCliente + "\n"+
+                                                            "C.\tArticulo\tP.U.\tImporte"+
+                                                            cadenaArticulosImprimir;
+
+                                                    ;
                                             PDFIMprime(directory.getAbsolutePath()+"/"+fileName);
                                         }
                                     });
@@ -1573,14 +1617,20 @@ public class Fragment_ventas_transacciones extends Fragment {
             e.printStackTrace();
         }
 
-        // String lang = this.getString(2130968583);
-        //  if (lang.compareTo("en") == 0) {
-        msg = "Division I is a research and development, production and services in one high-tech research and development, production-oriented enterprises, specializing in POS terminals finance, retail, restaurants, bars, songs and other areas, computer terminals, self-service terminal peripheral equipment R & D, manufacturing and sales! \n company's organizational structure concise and practical, pragmatic style of rigorous, efficient operation. Integrity, dedication, unity, and efficient is the company's corporate philosophy, and constantly strive for today, vibrant, the company will be strong scientific and technological strength, eternal spirit of entrepreneurship, the pioneering and innovative attitude, confidence towards the international information industry, with friends to create brilliant information industry !!! \n\n\n";
-        this.SendDataByte(newBytes);
-        //   } else if (lang.compareTo("ch") == 0) {
-        //  msg = "我司是一家集科研开发、生产经营和服务于一体的高技术研发、生产型企业，专业从事金融、商业零售、餐饮、酒吧、歌吧等领域的POS终端、计算机终端、自助终端周边配套设备的研发、制造及销售！\n公司的组织机构简练实用，作风务实严谨，运行高效。诚信、敬业、团结、高效是公司的企业理念和不断追求今天，朝气蓬勃，公司将以雄厚的科技力量，永恒的创业精神，不断开拓创新的姿态，充满信心的朝着国际化信息产业领域，与朋友们携手共创信息产业的辉煌!!!\n\n\n";
-        //this.SendDataString(msg);
-        //   }
+        try {
+            URL url = new URL(getString(R.string.Url)+LogoNegocio);
+            Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            byte[] Data = POS_PrintBMP(image,384,0);
+            this.SendDataByte(Data);
+            this.SendDataString(contenidoImprimir);
+        } catch(IOException e) {
+            System.out.println(e);
+        }
+
+
+
+
+
 
     }
 
@@ -1628,6 +1678,26 @@ public class Fragment_ventas_transacciones extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         usbCtrl.close();
+    }
+
+    public static byte[] POS_PrintBMP(Bitmap mBitmap, int nWidth, int nMode) {
+        // 先转黑白，再调用函数缩放位图
+        int width = ((nWidth + 7) / 8) * 8;
+        int height = mBitmap.getHeight() * width / mBitmap.getWidth();
+        height = ((height + 7) / 8) * 8;
+
+        Bitmap rszBitmap = mBitmap;
+        if (mBitmap.getWidth() != width){
+            rszBitmap = Other.resizeImage(mBitmap, width, height);
+        }
+
+        Bitmap grayBitmap = Other.toGrayscale(rszBitmap);
+
+        byte[] dithered = Other.thresholdToBWPic(grayBitmap);
+
+        byte[] data = Other.eachLinePixToCmd(dithered, width, nMode);
+
+        return data;
     }
 
 

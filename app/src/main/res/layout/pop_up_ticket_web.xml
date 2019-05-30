@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="620dp"
+    android:layout_width="372dp"
     android:layout_height="450dp"
     android:layout_gravity="center"
     android:gravity="center_vertical|center_horizontal"
@@ -35,13 +35,13 @@
             style="@android:style/Widget.Holo.Light.Button"
             android:layout_width="150dp"
             android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
             android:background="@color/colorPrimaryDark"
             android:text="Imprimir"
             android:textColor="@color/white"
             android:textSize="17sp"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp" />
+            android:textStyle="bold" />
 
     </LinearLayout>
 </LinearLayout>
