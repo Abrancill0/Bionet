@@ -86,6 +86,7 @@ public class Fragment_inventarios extends Fragment {
     private String suc_numero_sucursal_destino;
     private String suc_numero_sucursal_origen;
     private String tra_motivo;
+
     public Fragment_inventarios() {
         // Required empty public constructor
     }
@@ -111,17 +112,16 @@ public class Fragment_inventarios extends Fragment {
         inventarios = new ArrayList<>();
 
         tabla_inventario = (SortableInventariosTable) v.findViewById(R.id.tabla_inventario);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Artículo", "Código de barras", "Categoría", "Sucursal", "Almacén", "Existencias");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Artículo", "Código de barras", "Categoría", "Almacén", "Existencias");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(7);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
         tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 2);
         tableColumnWeightModel.setColumnWeight(2, 3);
         tableColumnWeightModel.setColumnWeight(3, 2);
         tableColumnWeightModel.setColumnWeight(4, 2);
-        tableColumnWeightModel.setColumnWeight(5, 2);
-        tableColumnWeightModel.setColumnWeight(6, 3);
+        tableColumnWeightModel.setColumnWeight(5, 3);
 
         tabla_inventario.setHeaderAdapter(simpleHeader);
         tabla_inventario.setColumnModel(tableColumnWeightModel);
@@ -331,6 +331,7 @@ public class Fragment_inventarios extends Fragment {
                     }
                 }
         );
+        getRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
     }
 //------------------------------------------------------------------------------------------------------------------------

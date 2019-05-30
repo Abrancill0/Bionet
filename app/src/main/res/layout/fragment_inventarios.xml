@@ -71,51 +71,67 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@color/white"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight=".8"
+            android:layout_height="350dp"
+            android:layout_weight=".9"
             android:background="@drawable/pestanas_desplegables"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="610dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="10dp">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
+                        android:text="Inventario."
                         android:textSize="17dp"
-                        android:text="Inventario."/>
+                        android:textStyle="bold" />
+
                     <TextView
+                        android:layout_width="350dp"
+                        android:layout_height="wrap_content"
+                        android:text="Verifica y ajusta el inventarios de los artículos."
+                        android:textSize="15dp"
+                        android:textStyle="normal" />
+                </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textStyle="normal"
-                        android:textSize="15dp"
-                        android:text="Verifica y ajusta el inventarios de los artículos."/>
+                        android:orientation="horizontal"
+                        android:padding="20dp">
 
                     <SearchView
                         android:id="@+id/search_inventario"
-                        android:layout_width="match_parent"
+                        android:layout_width="300dp"
                         android:layout_height="34dp"
-                        android:layout_marginVertical="60dp"
+                        android:layout_marginVertical="10dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
                         android:background="#E5E7E9"
                         android:queryHint="Buscar"
+                        android:layout_gravity="left"
                         android:iconifiedByDefault="false" />
 
                     <Spinner
                         android:id="@+id/categoria_inventario"
-                        android:layout_width="match_parent"
+                        android:layout_width="300dp"
                         android:layout_height="34dp"
+                        android:layout_marginVertical="10dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_gravity="left"
                         android:background="@drawable/spinner_giro" />
                 </LinearLayout>
 
@@ -137,7 +153,7 @@
                 android:layout_weight=".7"
                 android:visibility="visible"
                 app:tableView_headerColor="@color/white"
-                table:tableView_columnCount="7">
+                table:tableView_columnCount="6">
             </com.Danthop.bionet.Tables.SortableInventariosTable>
 
 

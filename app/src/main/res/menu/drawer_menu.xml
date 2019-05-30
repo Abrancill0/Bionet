@@ -7,8 +7,7 @@
         <item android:id="@+id/nav_home"
             android:icon="@drawable/ic_home_menu"
             android:title="Home"
-            android:iconTint="@color/colorPrimaryDark"
-            />
+            android:iconTint="@color/colorPrimaryDark" />
         <item android:id="@+id/nav_notificaciones"
             android:icon="@drawable/ic_notificacion_menu"
             android:title="Notificaciones"
@@ -31,6 +30,8 @@
         <item android:id="@+id/nav_ecommerce"
             android:icon="@drawable/ic_ecommerce_menu"
             android:title="E-commerce"/>
+
+
     </group>
     <group android:checkableBehavior="none">
         <item android:id="@+id/nav_cerrar_sesion"

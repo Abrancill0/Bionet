@@ -10,7 +10,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="280dp"
         android:layout_weight=".85"
         android:background="@color/fondo_azul"
         android:gravity="center_vertical|center_horizontal"
@@ -18,15 +18,15 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="200dp"
             android:layout_weight=".95"
             android:gravity="start"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/atras"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center"
                 android:layout_weight=".9"
                 android:background="@color/fondo_azul"
@@ -36,7 +36,7 @@
                 android:src="@drawable/ic_back"
                 android:textAllCaps="false"
                 android:textColor="#fff"
-                android:textSize="22dp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -50,21 +50,12 @@
             <TextView
                 android:id="@+id/textView50"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="200dp"
                 android:layout_marginLeft="5dp"
                 android:layout_weight=".5"
                 android:text="Crear Cliente"
                 android:textSize="24sp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textView51"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_weight=".5"
-                android:text="Llena los campos del cliente"
-                android:textSize="15sp" />
 
         </LinearLayout>
     </LinearLayout>
@@ -483,7 +474,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="72dp"
-                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginHorizontal="10dp"
                         android:layout_weight=".7"
                         android:gravity="center_vertical"
                         android:orientation="vertical">
@@ -493,9 +484,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:gravity="center"
+                            android:gravity="right"
                             android:text="Selecciona una opción "
-                            android:textSize="18sp" />
+                            android:textSize="24sp" />
 
                     </LinearLayout>
 
@@ -553,7 +544,7 @@
                             android:padding="10dp"
                             android:text="Dirección Fiscal"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="18sp" />
+                            android:textSize="24sp" />
 
                     </LinearLayout>
 
@@ -582,7 +573,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
                                 android:text="CP"
-                                android:textSize="22sp" />
+                                android:textSize="18sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_cp_facturacion"
@@ -607,14 +598,15 @@
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
                                 android:text="Estado"
-                                android:textSize="22sp" />
+                                android:textSize="18sp" />
 
                             <Spinner
                                 android:id="@+id/Text_cliente_estado_facturacion"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="5dp"
-                                android:layout_weight="1"></Spinner>
+                                android:layout_weight="1">
+                            </Spinner>
 
                         </LinearLayout>
 
@@ -629,7 +621,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
                                 android:text="Municipio"
-                                android:textSize="22sp" />
+                                android:textSize="18sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_municipio_facturacion"
@@ -654,7 +646,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
                                 android:text="Colonia"
-                                android:textSize="22sp" />
+                                android:textSize="18sp" />
 
                             <Spinner
                                 android:id="@+id/Text_cliente_colonia_facturacion"
@@ -674,7 +666,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight=".5"
                         android:orientation="vertical"
-                        android:padding="20dp">
+                        android:padding="18dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -687,7 +679,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
                                 android:text="Calle"
-                                android:textSize="22sp" />
+                                android:textSize="18sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_calle_facturacion"
@@ -713,7 +705,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
                                 android:text="Num. Ext."
-                                android:textSize="22sp" />
+                                android:textSize="18sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_num_ext_facturacion"
@@ -738,7 +730,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
                                 android:text="Num Int"
-                                android:textSize="22sp" />
+                                android:textSize="18sp" />
 
                             <EditText
                                 android:id="@+id/Text_cliente_num_int_facturacion"
@@ -776,7 +768,7 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="10dp">
-                        '
+
 
                         <ImageView
                             android:id="@+id/imageView10"
@@ -792,7 +784,7 @@
                             android:padding="10dp"
                             android:text="E-mail personal:"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="22sp" />
+                            android:textSize="18sp" />
 
                         <EditText
                             android:id="@+id/Text_cliente_correo_facturacion"
@@ -828,7 +820,7 @@
                     android:padding="0dp"
                     android:text="Guardar"
                     android:textColor="#ffffff"
-                    android:textSize="14sp" />
+                    android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

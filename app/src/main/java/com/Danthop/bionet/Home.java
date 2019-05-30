@@ -247,14 +247,17 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
         switch (menuItem.getItemId()) {
+            case R.id.nav_home:
+                home();
+                break;
             case R.id.nav_notificaciones:
                 notificaciones();
                 break;
             case R.id.nav_Ventas:
                 ventas();
                 break;
-            case R.id.nav_home:
-                home();
+            case R.id.nav_inventario:
+                inventario();
                 break;
             case R.id.nav_clientes:
                 clientes();
@@ -262,15 +265,9 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
             case R.id.nav_lealtad:
                 lealtad();
                 break;
-
             case R.id.nav_ecommerce:
                 ecomerce();
                 break;
-
-            case R.id.nav_inventario:
-                inventario();
-                break;
-
             case R.id.nav_cerrar_sesion:
                 cerrar_sesion();
                 break;

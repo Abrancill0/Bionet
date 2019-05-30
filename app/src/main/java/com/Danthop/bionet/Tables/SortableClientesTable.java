@@ -26,14 +26,16 @@ public class SortableClientesTable extends SortableTableView<ClienteModel> {
     public SortableClientesTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nombre", "Correo Eléctronico", "Teléfono");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nombre", "Correo Eléctronico", "Teléfono", "Última Visita", "Consumo Promedio");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(3);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
         tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 2);
         tableColumnWeightModel.setColumnWeight(2, 2);
+        tableColumnWeightModel.setColumnWeight(3, 2);
+        tableColumnWeightModel.setColumnWeight(4, 2);
         setColumnModel(tableColumnWeightModel);
 
         setColumnComparator(0, ComparatorCliente.getClienteNameComparator());
