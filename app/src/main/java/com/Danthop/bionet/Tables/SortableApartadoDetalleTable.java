@@ -22,9 +22,9 @@ public class SortableApartadoDetalleTable extends SortableTableView<ArticuloApar
 
     public SortableApartadoDetalleTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
-
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Articulo", "Cant", "Importe Total", "Importe Restante");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        simpleHeader.setTextSize( 18 );
         setHeaderAdapter(simpleHeader);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);

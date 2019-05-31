@@ -114,6 +114,7 @@ public class Fragment_inventarios extends Fragment {
         tabla_inventario = (SortableInventariosTable) v.findViewById(R.id.tabla_inventario);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Artículo", "Código de barras", "Categoría", "Almacén", "Existencias");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        simpleHeader.setTextSize( 18 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
         tableColumnWeightModel.setColumnWeight(0, 2);

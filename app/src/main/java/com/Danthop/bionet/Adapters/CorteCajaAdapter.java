@@ -18,7 +18,7 @@ import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class CorteCajaAdapter extends LongPressAwareTableDataAdapter<CorteCajaModel> {
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
 
     public CorteCajaAdapter(final Context context, final List<CorteCajaModel> data, final SortableCorteCajaTable tableView) {
         super(context, data, tableView);

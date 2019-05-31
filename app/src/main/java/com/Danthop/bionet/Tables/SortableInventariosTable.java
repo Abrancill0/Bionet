@@ -24,6 +24,7 @@ public class SortableInventariosTable extends SortableTableView<InventarioModel>
 
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "SKU", "Artículo", "Código de barras", "Categoría", "Sucursal", "Almacén", "Existencias");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        simpleHeader.setTextSize( 18 );
         setHeaderAdapter(simpleHeader);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(7);

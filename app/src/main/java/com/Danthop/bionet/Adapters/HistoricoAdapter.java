@@ -14,7 +14,7 @@ import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class HistoricoAdapter extends LongPressAwareTableDataAdapter<HistoricoModel> {
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
 
     public HistoricoAdapter(final Context context, final List<HistoricoModel> data, final SortableHistoricoTable tableView) {
         super(context, data, tableView);

@@ -29,6 +29,7 @@ public class SortableArticulosTable extends SortableTableView<ArticuloModel> {
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Artículo", "Precio", "Existencias");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
+        simpleHeader.setTextSize( 18 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(3);
         tableColumnWeightModel.setColumnWeight(0, 4);

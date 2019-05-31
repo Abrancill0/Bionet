@@ -25,6 +25,7 @@ public class SortableClienteFrecuenteTable extends SortableTableView<ClienteFrec
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Cliente");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
+        simpleHeader.setTextSize( 18 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(1);
         tableColumnWeightModel.setColumnWeight(0, 2);

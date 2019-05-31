@@ -2191,7 +2191,7 @@ public class Fragment_Ventas extends Fragment {
                                     num_int_fiscal,
                                     correo_igual,
                                     direccion_igual,
-                                    HistorialCompras
+                                    HistorialCompras,"",""
                             );
                             clientes.add(cliente);
                         }

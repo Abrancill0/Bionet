@@ -154,6 +154,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
         tabla_Listarcorte = (SortableCorteCajaTable) v.findViewById(R.id.tabla_corte);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Usuario", "Monto Total", "Efectivo", "Monedero electrónico","Dinero electrónico","Vales de despensa","Fecha", "Hora");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        simpleHeader.setTextSize( 14 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(8);
         tableColumnWeightModel.setColumnWeight(0, 1);

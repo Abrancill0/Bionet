@@ -19,7 +19,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class ArticuloAdapter extends LongPressAwareTableDataAdapter<ArticuloModel> {
 
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
 
 

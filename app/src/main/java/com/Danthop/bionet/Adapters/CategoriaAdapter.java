@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
 
+
     private Context mContext;
     private int mResource;
     private TextView nombre;

@@ -73,6 +73,8 @@ public class Fragment_clientes extends Fragment {
     private String correo_igual;
     private String direccion_igual;
     private String Estatus;
+    private String UltimaCompra;
+    private String ConsumoPromedio;
     private Dialog ver_cliente_dialog;
     private  FragmentTransaction fr;
     private TableDataClickListener<ClienteModel> tablaListener;
@@ -219,6 +221,9 @@ public class Fragment_clientes extends Fragment {
                             calle_fiscal = RespuestaNodoDireccion.getString("cli_calle");
                             num_ext_fiscal = RespuestaNodoDireccion.getString("cli_numero_exterior");
                             num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
+                            UltimaCompra = elemento.getString( "cli_ultima_compra" );
+                            ConsumoPromedio = elemento.getString( "cli_promedio_compra" );
+
 
                             HistorialCompras = new ArrayList<>();
                             JSONArray comprasNodo = elemento.getJSONArray("ventas");
@@ -283,7 +288,9 @@ public class Fragment_clientes extends Fragment {
                                     num_int_fiscal,
                                     correo_igual,
                                     direccion_igual,
-                                    HistorialCompras
+                                    HistorialCompras,
+                                    UltimaCompra,
+                                    ConsumoPromedio
                             );
                             clientes.add(cliente);
                         }

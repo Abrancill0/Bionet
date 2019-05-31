@@ -138,6 +138,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
         tabla_traslados = (SortableTrasladosTable) v.findViewById(R.id.tabla_traslados);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Origen", "Destino", "Estatus", "Fecha de solicitud");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        simpleHeader.setTextSize( 16 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
         tableColumnWeightModel.setColumnWeight(0, 2);

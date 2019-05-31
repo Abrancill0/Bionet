@@ -58,6 +58,7 @@ public class Fragment_pantalla_principal extends Fragment{
     private Toast backToast;
     private SortableInventariosTable tabla_inventario;
     private SortableClienteFrecuenteTable tabla_clientes;
+    private SortableClienteFrecuenteTable tabla_notificacion;
     private SortableClienteFrecuenteTable tabla_productos;
     private String[][] inventarioModel;
     private List<InventarioModel> inventarios;
@@ -123,7 +124,7 @@ public class Fragment_pantalla_principal extends Fragment{
         tabla_productos = (SortableClienteFrecuenteTable) v.findViewById(R.id.tablaProductos_sucursales);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Producto", "Ventas");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        simpleHeader.setTextSize(12);
+        simpleHeader.setTextSize( 14 );
         simpleHeader.setPaddings(10,10,10,10);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(2);
@@ -139,22 +140,24 @@ public class Fragment_pantalla_principal extends Fragment{
 
 //--------------------------------------------------------------------------------------------------
 
-        final TableView tabla_Notificaciones = (TableView) v.findViewById(R.id.tablaNotificaciones);
+        tabla_notificacion = (SortableClienteFrecuenteTable) v.findViewById(R.id.tablaNotificaciones);
         final SimpleTableHeaderAdapter simpleHeader2 = new SimpleTableHeaderAdapter(getContext(), "Notificación");
-        final SimpleTableDataAdapter simpleTableDataAdapter2 = new SimpleTableDataAdapter(getContext(),DATA_TO_SHOW2);
         simpleHeader2.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        simpleHeader2.setTextSize(12);
+        simpleHeader2.setTextSize( 14 );
         simpleHeader2.setPaddings(10,10,10,10);
-        simpleTableDataAdapter2.setTextSize(12);
-        simpleTableDataAdapter2.setPaddingLeft(0);
-        simpleTableDataAdapter2.setPaddingRight(0);
+
+        final TableColumnWeightModel tableColumnWeightModel2 = new TableColumnWeightModel(1);
+        tableColumnWeightModel2.setColumnWeight(0, 2);
+
+        tabla_notificacion.setHeaderAdapter(simpleHeader2);
+        tabla_notificacion.setColumnModel(tableColumnWeightModel2);
 
 //--------------------------------------------------------------------------------------------------
 
         tabla_inventario = (SortableInventariosTable) v.findViewById(R.id.tablaPocas_Existencias);
         final SimpleTableHeaderAdapter simpleHeader3 = new SimpleTableHeaderAdapter(getContext(), "Producto", "Sucursal","Existencia");
         simpleHeader3.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        simpleHeader3.setTextSize(12);
+        simpleHeader3.setTextSize( 14 );
         simpleHeader3.setPaddings(10,10,10,10);
 
         final TableColumnWeightModel tableColumnWeightModel3 = new TableColumnWeightModel(3);
@@ -171,7 +174,7 @@ public class Fragment_pantalla_principal extends Fragment{
         tabla_clientes = (SortableClienteFrecuenteTable) v.findViewById(R.id.tablaClientesFrecuentes);
         final SimpleTableHeaderAdapter simpleHeader4 = new SimpleTableHeaderAdapter(getContext(), "Cliente", "Compras realizadas");
         simpleHeader4.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        simpleHeader4.setTextSize(12);
+        simpleHeader4.setTextSize( 14 );
         simpleHeader4.setPaddings(10,10,10,10);
 
         final TableColumnWeightModel tableColumnWeightModel4 = new TableColumnWeightModel(2);
@@ -186,10 +189,6 @@ public class Fragment_pantalla_principal extends Fragment{
         TopClienteMax = new ArrayList<>();
 
 //--------------------------------------------------------------------------------------------------
-
-        tabla_Notificaciones.setHeaderAdapter(simpleHeader2);
-        tabla_Notificaciones.setDataAdapter(simpleTableDataAdapter2);
-
 
         //=====Programación del carrousel=====
         final int[] sampleImages = {R.drawable.store2, R.drawable.store, R.drawable.museum_store, R.drawable.store3};

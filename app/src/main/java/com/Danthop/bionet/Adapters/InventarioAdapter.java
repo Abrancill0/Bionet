@@ -20,7 +20,7 @@ import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class InventarioAdapter extends LongPressAwareTableDataAdapter<InventarioModel> {
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
 
     public InventarioAdapter(final Context context, final List<InventarioModel> data, final SortableInventariosTable tableView) {
         super(context, data, tableView);
@@ -75,6 +75,7 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
         editText.setText(Inventario.getNombre_sucursal());
         editText.setPadding(20, 10, 20, 10);
         editText.setTextSize(TEXT_SIZE);
+
         editText.setSingleLine();
         editText.addTextChangedListener(new InventarioAdapter.OrdenNameUpdater(Inventario));
         return editText;

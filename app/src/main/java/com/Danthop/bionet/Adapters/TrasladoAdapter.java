@@ -23,7 +23,7 @@ import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioModel> {
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
     private int CantidadTraspaso[] = new int[10000];
 
     private final List<InventarioModel> ArticulosTraslados;

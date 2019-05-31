@@ -17,7 +17,7 @@ import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class TrasladoenvioAdapter extends LongPressAwareTableDataAdapter<InventarioModel> {
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
 
     public TrasladoenvioAdapter(final Context context, final List<InventarioModel> data, final SortableTrasladosTable tableView) {
         super(context, data, tableView);

@@ -25,7 +25,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class SucursalAdapter extends LongPressAwareTableDataAdapter<SucursalModel> {
 
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
 
     public SucursalAdapter(final Context context, final List<SucursalModel> data, final SortableSucursalTable tableView) {
         super(context, data, tableView);

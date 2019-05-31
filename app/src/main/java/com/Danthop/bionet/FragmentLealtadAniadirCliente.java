@@ -209,7 +209,7 @@ public class FragmentLealtadAniadirCliente extends Fragment {
                                     "",
                                     "",
                                     "",
-                                    HistorialCompras
+                                    HistorialCompras,"",""
 
                             );
                             clientes.add(cliente);
