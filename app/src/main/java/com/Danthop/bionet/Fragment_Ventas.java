@@ -62,6 +62,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -82,6 +83,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.codecrafters.tableview.listeners.TableDataClickListener;
+
+import static com.mercadolibre.android.sdk.internal.ApiPoolManager.cancelAll;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -315,6 +318,30 @@ public class Fragment_Ventas extends Fragment {
         LoadButtons();
 
 
+        SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                InstanciarModeloTicket();
+                ArticulosVenta.clear();
+                Imagenes.clear();
+                ListaDeArticulosApartados.clear();
+                ListaDeArticulosOrdenados.clear();
+                final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
+                        total, descuento, impuesto, subtotal,
+                        carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,btn_ordenar,btn_apartar,btn_finalizar);
+                articuloAdapter.notifyDataSetChanged();
+                tabla_venta_articulos.setDataAdapter(articuloAdapter);
+                LoadImages();
+
+
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+
+
       // usbCtrl = new UsbController(this,mHandler);
         promociones_credito();
         return v;
@@ -324,6 +351,7 @@ public class Fragment_Ventas extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         usbCtrl.close();
+        cancelAll();
     }
 
     @SuppressLint("HandlerLeak") private final  Handler mHandler = new Handler() {
@@ -494,6 +522,7 @@ public class Fragment_Ventas extends Fragment {
                     }
 
                 } catch (JSONException e) {
+                    progressDialog.dismiss();
 
                     Toast toast1 =
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
@@ -509,6 +538,7 @@ public class Fragment_Ventas extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
                         Toast toast1 =
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
 
