@@ -565,6 +565,8 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                     }
                 }
         );
+        postRequest.setShouldCache(false);
+
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
@@ -879,6 +881,8 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                     }
                 }
         );
+        postRequest.setShouldCache(false);
+
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
         LoadImages();
     }

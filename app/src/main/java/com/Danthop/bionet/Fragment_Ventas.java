@@ -208,11 +208,11 @@ public class Fragment_Ventas extends Fragment {
 
     private String NomPromoCredito;
     private String SKU_product;
-    private String Resptresmeses;
-    private String Respseismeses;
-    private String Respnuevemeses;
-    private String Respdocemeses;
-    private String Respuestamenor;
+    private String Resptresmeses="";
+    private String Respseismeses="";
+    private String Respnuevemeses="";
+    private String Respdocemeses="";
+    private String Respuestamenor="";
     private TextView textViewNombre;
     private String value;
     private int Resp;
@@ -316,7 +316,7 @@ public class Fragment_Ventas extends Fragment {
 
 
       // usbCtrl = new UsbController(this,mHandler);
-        promociones_credito();
+        //promociones_credito();
         return v;
     }
 
@@ -340,8 +340,6 @@ public class Fragment_Ventas extends Fragment {
             }
         }
     };
-
-
 
 
     public void LoadAutocomplete() {
@@ -518,7 +516,7 @@ public class Fragment_Ventas extends Fragment {
                     }
                 }
         );
-
+        postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
 
@@ -598,6 +596,8 @@ public class Fragment_Ventas extends Fragment {
                 }
         );
 
+        postRequest.setShouldCache(false);
+
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
     }
@@ -628,8 +628,6 @@ public class Fragment_Ventas extends Fragment {
 
 
     }
-
-
 
     public void LoadButtons() {
 
@@ -771,6 +769,7 @@ public class Fragment_Ventas extends Fragment {
             @Override
             public void onClick(View v) {
                 ticketid=ticket_de_venta.getTic_id();
+
                 if (ArticulosVenta.isEmpty()) {
                     dialog.setContentView(R.layout.pop_up_venta_finalizar_sin_articulos);
                     dialog.show();
@@ -789,6 +788,9 @@ public class Fragment_Ventas extends Fragment {
                         }
                     });
                 } else if (false == ArticulosVenta.isEmpty()) {
+
+                    //gpromociones_credito
+
                     dialog.setContentView(R.layout.pop_up_ventas_facturar);
                     dialog.show();
                     Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
@@ -1033,11 +1035,9 @@ public class Fragment_Ventas extends Fragment {
                                  //Aqui se realizan las validaciones cuando no lleva factura
 
                                     double totalsumaimportes = 0;
-
                                     double TarjetaCredito = 0;
                                     double TarjetaDebito = 0;
                                     double PagosEfectivo = 0;
-
 
 
                                     for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
@@ -1048,13 +1048,7 @@ public class Fragment_Ventas extends Fragment {
                                         if (tipo_pago.equals("Tarjeta de crédito"))
                                         {
                                             TarjetaCredito = Double.parseDouble(cantPago);
-
-                                         //==========================================================
-
-
-
                                         }
-
 
                                         if (tipo_pago.equals("Tarjeta débito"))
                                         {
@@ -1478,6 +1472,7 @@ public class Fragment_Ventas extends Fragment {
                         }
                     }
             );
+
             postRequest.setShouldCache(false);
             VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
         }
@@ -2195,6 +2190,7 @@ public class Fragment_Ventas extends Fragment {
                     }
                 }
         );
+        postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
@@ -2323,6 +2319,7 @@ public class Fragment_Ventas extends Fragment {
     private void CargaMetodosPago() {
 
         ListaDePagosDisponibles.clear();
+        ListaDePagos_a_utilizar.clear();
 
         ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
         JSONObject request = new JSONObject();
@@ -2464,6 +2461,7 @@ public class Fragment_Ventas extends Fragment {
                     }
                 }
         );
+        postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
@@ -2531,11 +2529,11 @@ public class Fragment_Ventas extends Fragment {
                     }
                 }
         );
+        postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
-    private void AniadirCFDI()
-    {
+    private void AniadirCFDI() {
         JSONObject request = new JSONObject();
         try {
             request.put("usu_id", usu_id);
@@ -2591,9 +2589,9 @@ public class Fragment_Ventas extends Fragment {
                     }
                 }
         );
+        postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
-
 
     private void BuscarPorSKU(String SKU) {
         dialog.setContentView(R.layout.pop_up_ventas_verificar_articulo);
@@ -2909,7 +2907,7 @@ public class Fragment_Ventas extends Fragment {
                     }
                 }
         );
-
+        postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
     }
@@ -3059,8 +3057,8 @@ public class Fragment_Ventas extends Fragment {
                         tabla_selecciona_meses.setDataAdapter(MesesCreditoAdapter);
 
                     }else {
-                        Toast toast1 = Toast.makeText(getContext(), "No existen tickets en el periodo seleccionado.", Toast.LENGTH_LONG);
-                        toast1.show();
+                       // Toast toast1 = Toast.makeText(getContext(), "No existen tickets en el periodo seleccionado.", Toast.LENGTH_LONG);
+                       // toast1.show();
                     }
                 } catch (JSONException e) {
                     Toast toast1 = Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
@@ -3076,6 +3074,8 @@ public class Fragment_Ventas extends Fragment {
                     }
                 }
         );
+
+        posRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( posRequest );
     }
     //______________________________________________

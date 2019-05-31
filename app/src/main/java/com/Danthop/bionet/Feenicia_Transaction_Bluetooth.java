@@ -167,6 +167,18 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         nuevemeses = bundle.getString("09meses");
         docemeses = bundle.getString("12meses");
 
+        try {
+
+            Log.i("3 meses",Tresmeses);
+            Log.i("6 meses",Seismeses);
+            Log.i("9 meses",nuevemeses);
+            Log.i("12 meses",docemeses);
+            }
+            catch (Exception e){
+            Log.e("Error feenicia bundle", e.toString());
+            }
+
+
         ListaDePagos_a_utilizar  = new ArrayList<>();
 
         for (int i = 0; i < tamano; i++) {
