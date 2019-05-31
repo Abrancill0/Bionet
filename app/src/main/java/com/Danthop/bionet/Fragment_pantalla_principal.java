@@ -414,6 +414,7 @@ private void LoadMasVendidos(){
                 }
 
             } catch (JSONException e) {
+                progressDialog.dismiss();
                 Toast toast1 =
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                 toast1.show();
@@ -423,6 +424,7 @@ private void LoadMasVendidos(){
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    progressDialog.dismiss();
                     Toast toast1 =
                             Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
                     toast1.show();

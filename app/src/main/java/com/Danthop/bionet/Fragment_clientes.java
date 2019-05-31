@@ -299,6 +299,7 @@ public class Fragment_clientes extends Fragment {
                     }
 
                 } catch (JSONException e) {
+                    progressDialog.dismiss();
                     Toast toast1 =
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                     toast1.show();
@@ -310,6 +311,7 @@ public class Fragment_clientes extends Fragment {
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
                         Toast toast1 =
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
                         toast1.show();
