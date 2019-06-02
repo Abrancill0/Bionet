@@ -99,7 +99,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Solicita y verifica los traslados."
-                    android:textSize="15dp"
+                    android:textSize="17dp"
                     android:textStyle="normal" />
 
                 <Spinner

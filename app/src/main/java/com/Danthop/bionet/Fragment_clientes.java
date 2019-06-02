@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,6 +103,7 @@ public class Fragment_clientes extends Fragment {
         tabla_clientes = (SortableClientesTable) v.findViewById(R.id.tabla_clientes);
         ver_cliente_dialog=new Dialog(getContext());
         ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
+
         fr = getFragmentManager().beginTransaction();
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
@@ -533,5 +535,6 @@ public class Fragment_clientes extends Fragment {
             }
         };
     }
+
 
 }

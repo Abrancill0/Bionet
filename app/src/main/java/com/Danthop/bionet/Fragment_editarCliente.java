@@ -122,6 +122,13 @@ public class Fragment_editarCliente extends Fragment {
 
     ProgressDialog progreso;
 
+    private TextView RFCCliente;
+    private String codigo;
+    private String determinacion;
+    private String mensaje;
+    private String valido;
+    private String valor;
+
 
 
     public Fragment_editarCliente() {
@@ -289,7 +296,7 @@ public class Fragment_editarCliente extends Fragment {
             @Override
             public void onClick(View v) {
 
-                GuardarCliente();
+                ValidacionRfc();
 
             }
         });
@@ -915,6 +922,72 @@ public class Fragment_editarCliente extends Fragment {
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
     }
+
+    //---------------------------------------------------------------------------------------------
+
+    private void ValidacionRfc() {
+
+        JSONObject request = new JSONObject();
+
+
+        try {
+
+            request.put("rfc",TextRfc.getText());
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+        String ApiPath = url + "/api/validar-rfc";
+
+        JsonObjectRequest postRequets = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Resultado = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        Resultado = response.getJSONObject("resultado");
+
+                        codigo = Resultado.getString("codigo");
+                        determinacion = Resultado.getString("determinacion");
+                        mensaje = Resultado.getString("mensaje");
+                        valido = Resultado.getString("valido");
+                        valor = Resultado.getString("valor");
+                        GuardarCliente();
+
+                    }else {
+                        Toast toast1 =
+                                Toast.makeText( getContext(), "El RFC ingresado es inválido, no se encuentra en la lista de RFCs inscritos y no cancelados del SAT", Toast.LENGTH_LONG );
+                        toast1.show();
+                        return ;
+                    }
+
+                }catch (JSONException e) {
+                    Toast toast1 = Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequets);
+    }
+    //----------------------------------------------------------------------------------
 
 
 }

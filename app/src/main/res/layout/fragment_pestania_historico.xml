@@ -85,7 +85,7 @@
             android:layout_width="459dp"
             android:layout_height="wrap_content"
             android:text="Verifica los movimientos del inventario."
-            android:textSize="15dp"
+            android:textSize="17dp"
             android:textStyle="normal" />
     </LinearLayout>
 

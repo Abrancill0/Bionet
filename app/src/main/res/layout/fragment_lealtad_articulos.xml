@@ -132,9 +132,10 @@
 
                         <Spinner
                             android:id="@+id/Sucursal_lealtad"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="5dp"></Spinner>
+                            android:layout_width="300dp"
+                            android:layout_height="34dp"
+                            android:layout_marginHorizontal="5dp"
+                            android:background="@drawable/spinner_giro"></Spinner>
 
                     </LinearLayout>
                 </LinearLayout>

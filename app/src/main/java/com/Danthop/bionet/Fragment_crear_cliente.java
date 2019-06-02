@@ -183,6 +183,7 @@ public class Fragment_crear_cliente extends DialogFragment {
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 ValidacionRfc();
             }
         });

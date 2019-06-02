@@ -115,11 +115,12 @@
 
                     <Spinner
                         android:id="@+id/Sucursal_lealtad"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_width="300dp"
+                        android:layout_height="34dp"
                         android:layout_gravity="center"
                         android:layout_marginHorizontal="30dp"
-                        android:layout_weight="1"></Spinner>
+                        android:layout_weight="1"
+                        android:background="@drawable/spinner_giro"></Spinner>
                 </LinearLayout>
 
                 <LinearLayout
@@ -141,14 +142,15 @@
                             android:id="@+id/vencen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Los puntos vencen" />
+                            android:text="Los puntos vencen"
+                            android:layout_marginLeft="20dp"/>
 
                         <TextView
                             android:id="@+id/abrir_calendario"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="10dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="20dp"
                             android:background="@color/colorPrimaryDark"
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="5dp"
@@ -160,7 +162,7 @@
                             android:id="@+id/CheckBox_pt_maximos"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="20dp"
                             android:text="Máximo de puntos por compra"
                             android:textColor="@color/gray" />
 
@@ -176,13 +178,16 @@
                         <Button
                             android:id="@+id/crear_configuracion"
                             style="@android:style/Widget.Holo.Light.Button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="34dp"
+                            android:layout_width="150dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="20dp"
                             android:background="@color/colorPrimaryDark"
                             android:paddingHorizontal="20dp"
-                            android:text="Crear Configuración"
+                            android:text="Crear"
                             android:textColor="@color/white"
-                            android:textSize="14sp" />
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                 </LinearLayout>

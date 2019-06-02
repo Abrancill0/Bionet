@@ -157,14 +157,14 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
         simpleHeader.setTextSize( 14 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(8);
-        tableColumnWeightModel.setColumnWeight(0, 1);
+        tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 2);
-        tableColumnWeightModel.setColumnWeight(2, 1);
+        tableColumnWeightModel.setColumnWeight(2, 2);
         tableColumnWeightModel.setColumnWeight(3, 2);
         tableColumnWeightModel.setColumnWeight(4, 2);
         tableColumnWeightModel.setColumnWeight(5, 2);
-        tableColumnWeightModel.setColumnWeight(6, 1);
-        tableColumnWeightModel.setColumnWeight(7, 1);
+        tableColumnWeightModel.setColumnWeight(6, 2);
+        tableColumnWeightModel.setColumnWeight(7, 2);
 
         tabla_Listarcorte.setHeaderAdapter(simpleHeader);
         tabla_Listarcorte.setColumnModel(tableColumnWeightModel);

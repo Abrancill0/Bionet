@@ -132,9 +132,11 @@
 
                         <Spinner
                             android:id="@+id/Sucursal_lealtad"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="5dp"></Spinner>
+                            android:layout_width="300dp"
+                            android:layout_height="34dp"
+                            android:layout_marginHorizontal="5dp"
+                            android:background="@drawable/spinner_giro">
+                        </Spinner>
 
                     </LinearLayout>
                 </LinearLayout>
@@ -173,7 +175,7 @@
                     android:layout_weight=".7"
                     android:visibility="visible"
                     app:tableView_headerColor="@color/white"
-                    table:tableView_columnCount="5"
+                    table:tableView_columnCount="4"
                     >
 
                 </com.Danthop.bionet.Tables.SortableLealtadInscribirTable>
@@ -197,6 +199,9 @@
                         android:text="No existen datos"
                         android:textColor="@color/gray" />
                 </LinearLayout>
+
+
+
                 <LinearLayout
                     android:id="@+id/todos_aplican"
                     android:layout_width="match_parent"
@@ -220,43 +225,57 @@
 
             </LinearLayout>
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight=".8"
+                android:orientation="horizontal">
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
                 android:layout_weight=".6"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="50dp"
                     android:layout_weight=".8"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:id="@+id/AniadirTodos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="50dp"
-                        android:text="Todos los clientes aplican para el programa de Lealtad" />
+                    android:gravity="center_horizontal">
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="50dp"
                     android:layout_weight=".8"
                     android:gravity="center_horizontal">
 
                     <Button
                         android:id="@+id/aniadir_cliente"
                         style="@android:style/Widget.Holo.Light.Button"
-                        android:layout_width="160dp"
-                        android:layout_height="27dp"
-                        android:layout_marginBottom="1dp"
-                        android:background="@drawable/shape_gray"
-                        android:padding="0dp"
+                        android:layout_gravity="right"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="150dp"
+                        android:layout_height="25dp"
+                        android:background="@color/colorPrimaryDark"
                         android:text="Agregar cliente"
-                        android:textSize="14sp" />
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/AniadirTodos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="50dp"
+                        android:layout_gravity="right"
+                        android:text="Todos los clientes aplican para el programa de Lealtad" />
+
+
+
                 </LinearLayout>
 
 
