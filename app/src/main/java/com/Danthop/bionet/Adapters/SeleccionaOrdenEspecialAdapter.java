@@ -40,7 +40,7 @@ import static android.text.InputType.TYPE_CLASS_NUMBER;
 
 public class SeleccionaOrdenEspecialAdapter extends LongPressAwareTableDataAdapter<OrdenEspecialArticuloModel> {
 
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
     private List<OrdenEspecialArticuloModel> ArticulosOrdenados;
     private TicketModel Ticket;

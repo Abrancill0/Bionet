@@ -222,6 +222,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
         tabla_Generarcorte = (SortableCorteCajaTable) v.findViewById(R.id.tabla_corte);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Id_venta", "Total", "Forma de pago", "Fecha", "Hora", "Usuario");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        simpleHeader.setTextSize( 15 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
         tableColumnWeightModel.setColumnWeight(0, 1);

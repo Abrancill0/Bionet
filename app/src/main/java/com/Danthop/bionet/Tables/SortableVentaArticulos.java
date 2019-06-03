@@ -26,9 +26,10 @@ public class SortableVentaArticulos extends SortableTableView<ArticuloModel> {
     public SortableVentaArticulos(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Artículo", "SKU","Cant","Precio", "Desc","Importe","Promo", "");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Artículo", "SKU","Cant","Precio", "Desc","Importe", "","");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
+        simpleHeader.setTextSize( 18 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(8);
         tableColumnWeightModel.setColumnWeight(0, 3);
@@ -37,7 +38,7 @@ public class SortableVentaArticulos extends SortableTableView<ArticuloModel> {
         tableColumnWeightModel.setColumnWeight(3, 2);
         tableColumnWeightModel.setColumnWeight(4, 2);
         tableColumnWeightModel.setColumnWeight(5, 2);
-        tableColumnWeightModel.setColumnWeight(6, 2);
+        tableColumnWeightModel.setColumnWeight(6, 1);
         tableColumnWeightModel.setColumnWeight(7, 1);
         setColumnModel(tableColumnWeightModel);
 

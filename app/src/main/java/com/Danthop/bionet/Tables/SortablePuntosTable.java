@@ -29,9 +29,10 @@ public class SortablePuntosTable extends SortableTableView<Puntos_acumulados_mod
     public SortablePuntosTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  " ","Nombre", "Correo", "Acumulado");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  " ","Nombre", "Correo", "Puntos");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
+        simpleHeader.setTextSize( 18 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
         tableColumnWeightModel.setColumnWeight(0, 1);

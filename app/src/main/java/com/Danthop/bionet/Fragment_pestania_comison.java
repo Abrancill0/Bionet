@@ -157,6 +157,7 @@ public class Fragment_pestania_comison extends Fragment {
         tabla_comisiones = (SortableCorteCajaTable) v.findViewById(R.id.tabla_comisiones);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Nombre Vendedor", "Monto Acumulado", "Monto Pagado", "Monto Pendiente");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        simpleHeader.setTextSize( 18 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
         tableColumnWeightModel.setColumnWeight(0, 2);

@@ -131,6 +131,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         tabla_inventario = (SortableInventariosTable) v.findViewById(R.id.tabla_articulos);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "", "Artículo", "Categoría", "Sucursal", "Existencias", "Cantidad");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        simpleHeader.setTextSize( 18 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
         tableColumnWeightModel.setColumnWeight(0, 1);

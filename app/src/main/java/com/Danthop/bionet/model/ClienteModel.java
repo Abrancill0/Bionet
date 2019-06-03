@@ -1,7 +1,5 @@
 package com.Danthop.bionet.model;
 
-import com.Danthop.bionet.Tables.ComparatorPreguntas;
-
 import java.util.List;
 
 public class ClienteModel {
@@ -40,7 +38,8 @@ public class ClienteModel {
     private String Direccion_igual;
     private List<CompraModel> Compras;
 
-
+    private String UltimaCompra;
+    private String ConsumoPromedio;
 
 
     public ClienteModel(String cliente_UUID,String cliente_Nombre,
@@ -66,7 +65,9 @@ public class ClienteModel {
                         String num_int_fiscal,
                         String correo_igual,
                         String direccion_igual,
-                        List<CompraModel> compras)
+                        List<CompraModel> compras,
+                        String UltimaCompra,
+                        String ConsumoPromedio)
     {
         this.cliente_UUID = cliente_UUID;
         this.cliente_Nombre = cliente_Nombre;
@@ -99,6 +100,9 @@ public class ClienteModel {
         this.Compras=compras;
         Correo_igual = correo_igual;
         Direccion_igual = direccion_igual;
+
+        this.UltimaCompra = UltimaCompra;
+        this.ConsumoPromedio = ConsumoPromedio;
 
     }
 
@@ -159,6 +163,12 @@ public class ClienteModel {
     public String getcliente_razon_social() {
         return cliente_razon_social;
     }
+
+    public String getUltimaCompra() { return  UltimaCompra; }
+
+    public String getConsumoPromedio() { return  ConsumoPromedio; }
+
+
 
     public void setCliente_UUID(String cliente_UUID) {
         this.cliente_UUID = cliente_UUID;
@@ -312,9 +322,7 @@ public class ClienteModel {
         return Direccion_igual;
     }
 
-    public void setDireccion_igual(String direccion_igual) {
-        this.Direccion_igual = direccion_igual;
-    }
+    public void setDireccion_igual(String direccion_igual) { this.Direccion_igual = direccion_igual; }
 
     public List<CompraModel> getCompras() {
         return Compras;
@@ -323,4 +331,8 @@ public class ClienteModel {
     public void setCompras(List<CompraModel> compras) {
         Compras = compras;
     }
+
+    public void setUltimaCompra(String UltimaCompra) { this.UltimaCompra = UltimaCompra;  }
+
+    public void setConsumoPromedio(String ConsumoPromedio) { this.ConsumoPromedio = ConsumoPromedio; }
 }

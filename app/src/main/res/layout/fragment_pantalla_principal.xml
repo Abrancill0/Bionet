@@ -85,12 +85,12 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:background="@color/fondo_azul"
-                    android:text="Centro de Mensajes"
+                    android:text="Notificación"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:padding="5dp"/>
 
-                <de.codecrafters.tableview.TableView
+                <com.Danthop.bionet.Tables.SortableClienteFrecuenteTable
                     android:id="@+id/tablaNotificaciones"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

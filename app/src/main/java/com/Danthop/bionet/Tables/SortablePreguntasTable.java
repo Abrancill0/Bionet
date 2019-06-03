@@ -31,6 +31,7 @@ public class SortablePreguntasTable extends SortableTableView<Preguntas_Model> {
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Pregunta", "Comprador", "Título");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
+        simpleHeader.setTextSize( 18 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(3);
         tableColumnWeightModel.setColumnWeight(0, 4);

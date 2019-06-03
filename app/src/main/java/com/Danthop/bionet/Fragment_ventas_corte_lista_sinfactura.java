@@ -172,16 +172,17 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         tabla_ListarTickets = (SortableCorteCajaTable) v.findViewById(R.id.tabla_corte);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "", "Id Venta", "Monto Total", "Efectivo", "Monedero electrónico","Dinero electrónico","Vales de despensa","Fecha");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        simpleHeader.setTextSize( 14 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(8);
         tableColumnWeightModel.setColumnWeight(0, 1);
-        tableColumnWeightModel.setColumnWeight(1, 1);
+        tableColumnWeightModel.setColumnWeight(1, 2);
         tableColumnWeightModel.setColumnWeight(2, 2);
-        tableColumnWeightModel.setColumnWeight(3, 1);
+        tableColumnWeightModel.setColumnWeight(3, 2);
         tableColumnWeightModel.setColumnWeight(4, 2);
         tableColumnWeightModel.setColumnWeight(5, 2);
         tableColumnWeightModel.setColumnWeight(6, 2);
-        tableColumnWeightModel.setColumnWeight(7, 1);
+        tableColumnWeightModel.setColumnWeight(7, 2);
 
         tabla_ListarTickets.setHeaderAdapter(simpleHeader);
         tabla_ListarTickets.setColumnModel(tableColumnWeightModel);

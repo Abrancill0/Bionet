@@ -100,14 +100,15 @@ public class Fragment_pestania_historico extends Fragment {
         tabla_historico = (SortableHistoricoTable) v.findViewById(R.id.tabla_historico);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Movimiento", "Cantidad", "Observaciones", "Fecha y hora");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        simpleHeader.setTextSize( 18 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
         tableColumnWeightModel.setColumnWeight(0, 2);
-        tableColumnWeightModel.setColumnWeight(1, 1);
+        tableColumnWeightModel.setColumnWeight(1, 2);
         tableColumnWeightModel.setColumnWeight(2, 2);
-        tableColumnWeightModel.setColumnWeight(3, 1);
-        tableColumnWeightModel.setColumnWeight(4, 1);
-        tableColumnWeightModel.setColumnWeight(5, 1);
+        tableColumnWeightModel.setColumnWeight(3, 2);
+        tableColumnWeightModel.setColumnWeight(4, 2);
+        tableColumnWeightModel.setColumnWeight(5, 2);
 
         tabla_historico.setHeaderAdapter(simpleHeader);
         tabla_historico.setColumnModel(tableColumnWeightModel);

@@ -271,7 +271,7 @@ public class FragmentLealtadInscribir extends Fragment {
                                     "",
                                     "",
                                     "",
-                                    HistorialCompras
+                                    HistorialCompras,"",""
                             );
                             clientes.add(cliente);
                         }

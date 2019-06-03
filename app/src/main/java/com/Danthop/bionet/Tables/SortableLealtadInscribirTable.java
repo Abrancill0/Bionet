@@ -26,16 +26,16 @@ public class SortableLealtadInscribirTable extends SortableTableView<ClienteMode
     public SortableLealtadInscribirTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nombre", "Correo Eléctronico", "Teléfono","Última Visita","Consumo Promedio");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nombre", "Correo Eléctronico", "Teléfono","Última Compra");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
+        simpleHeader.setTextSize( 18 );
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
         tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 2);
         tableColumnWeightModel.setColumnWeight(2, 2);
         tableColumnWeightModel.setColumnWeight(3, 2);
-        tableColumnWeightModel.setColumnWeight(4, 2);
         setColumnModel(tableColumnWeightModel);
 
         setColumnComparator(0, ComparatorCliente.getClienteNameComparator());

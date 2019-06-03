@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.Danthop.bionet.Adapters.ApartadoAdapter;
 import com.Danthop.bionet.Adapters.DetalleApartadoAdapter;
 import com.Danthop.bionet.Adapters.DetalleOrdenEspecialAdapter;
+import com.Danthop.bionet.Adapters.LealtadInscribirAdapter;
 import com.Danthop.bionet.Adapters.MetodoPagoAdapter;
 import com.Danthop.bionet.Adapters.MovimientoAdapter;
 import com.Danthop.bionet.Adapters.OrdenEspecialAdapter;
@@ -158,6 +159,7 @@ public class Fragment_ventas_transacciones extends Fragment {
     private float ImpuestosTotal=0;
     private ProgressDialog progressDialog;
     private String contenidoImprimir;
+    Handler handler;
 
     private List<ArticuloModel> ListaArticulosTicket = new ArrayList<>();
 
@@ -204,9 +206,11 @@ public class Fragment_ventas_transacciones extends Fragment {
         View v = inflater.inflate(R.layout.fragment_ventas_transacciones,container, false);
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
+        handler= new Handler();
 
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
 
@@ -532,6 +536,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                     }
                     else
                     {
+                        progressDialog.dismiss();
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
@@ -542,6 +547,7 @@ public class Fragment_ventas_transacciones extends Fragment {
 
                 } catch (JSONException e) {
 
+                    progressDialog.dismiss();
                     Toast toast1 =
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
 
@@ -561,6 +567,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
 
 
                     }
@@ -955,19 +962,35 @@ public class Fragment_ventas_transacciones extends Fragment {
 
                                         SpinnerUsuarioVenta.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, UsuarioVentaName));
 
-                                        progressDialog.dismiss();
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                progressDialog.dismiss();
+                                            }
+                                        }, 3000);
                                     }
                                     else
                                     {
                                         Toast toast1 =
                                                 Toast.makeText(getContext(), EstatusApi, Toast.LENGTH_LONG);
                                         toast1.show();
-                                        progressDialog.dismiss();
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                progressDialog.dismiss();
+                                            }
+                                        }, 3000);
                                     }
                                 } catch (JSONException e) {
                                     Toast toast1 =
                                             Toast.makeText(getContext(),
                                                     String.valueOf(e), Toast.LENGTH_LONG);
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            progressDialog.dismiss();
+                                        }
+                                    }, 3000);
                                 }
                             }
                         },
@@ -977,6 +1000,12 @@ public class Fragment_ventas_transacciones extends Fragment {
                                 Toast toast1 =
                                         Toast.makeText(getContext(),
                                                 String.valueOf(error), Toast.LENGTH_LONG);
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressDialog.dismiss();
+                                    }
+                                }, 3000);
                             }
                         }
                 );
@@ -985,6 +1014,12 @@ public class Fragment_ventas_transacciones extends Fragment {
                 VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
             } catch (Error e) {
                 e.printStackTrace();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                }, 3000);
             }
 
         }
@@ -1052,12 +1087,31 @@ public class Fragment_ventas_transacciones extends Fragment {
                                         movimientoAdapter.notifyDataSetChanged();
                                         TablaMovimientos.setDataAdapter(movimientoAdapter);
 
-                                        progressDialog.dismiss();
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                progressDialog.dismiss();
+                                            }
+                                        }, 3000);
+                                    }
+                                    else {
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                progressDialog.dismiss();
+                                            }
+                                        }, 3000);
                                     }
                                 } catch (JSONException e) {
                                     Toast toast1 =
                                             Toast.makeText(getContext(),
                                                     String.valueOf(e), Toast.LENGTH_LONG);
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            progressDialog.dismiss();
+                                        }
+                                    }, 3000);
                                 }
                             }
                         },
@@ -1067,6 +1121,12 @@ public class Fragment_ventas_transacciones extends Fragment {
                                 Toast toast1 =
                                         Toast.makeText(getContext(),
                                                 String.valueOf(error), Toast.LENGTH_LONG);
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressDialog.dismiss();
+                                    }
+                                }, 3000);
                             }
                         }
                 );
@@ -1075,6 +1135,12 @@ public class Fragment_ventas_transacciones extends Fragment {
                 VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
             } catch (Error e) {
                 e.printStackTrace();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                }, 3000);
             }
 
         }
@@ -1173,6 +1239,7 @@ public class Fragment_ventas_transacciones extends Fragment {
 
         final ProgressDialog progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
         webView = (WebView) dialog.findViewById(R.id.simpleWebView);

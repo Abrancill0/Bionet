@@ -25,7 +25,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class LealtadAniadirClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel> {
 
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
     private FragmentTransaction fr;
     private ArrayList<String> clientes_id;

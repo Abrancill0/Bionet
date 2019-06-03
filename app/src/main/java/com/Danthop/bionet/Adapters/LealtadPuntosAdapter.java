@@ -43,7 +43,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class LealtadPuntosAdapter extends LongPressAwareTableDataAdapter<Puntos_acumulados_model> {
 
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
 
     private String[][] clienteModel;
 

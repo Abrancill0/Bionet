@@ -28,6 +28,7 @@ public class SortableLealtadArticulosTable extends SortableTableView<LealtadArti
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nombre", "Descripción","Categoría");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
+        simpleHeader.setTextSize( 18 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(3);
         tableColumnWeightModel.setColumnWeight(0, 2);

@@ -29,6 +29,7 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +43,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel> {
 
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
 
     private String[][] clienteModel;
 
@@ -68,6 +69,9 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
     private String num_int_fiscal;
     private String direccion_fiscal;
     private String email_fiscal;
+
+    private String UltimaCompra;
+    private String ConsumoPromedio;
 
 
     private String UsuarioID;
@@ -96,6 +100,12 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                 break;
             case 2:
                 renderedView = renderClienteTelefono(cliente);
+                break;
+            case 3:
+                renderedView = renderUltimaCompra(cliente);
+                break;
+            case 4:
+                renderedView = renderConsumoPromedio(cliente);
                 break;
         }
 
@@ -139,10 +149,24 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
         return renderString(cliente.getCliente_Telefono());
     }
 
-    private View renderClienteUltimaVisita(final ClienteModel cliente) {
-        return renderString(cliente.getCliente_Ultima_Visita());
+    private View renderUltimaCompra(final ClienteModel cliente) {
+        return renderString(cliente.getUltimaCompra());
     }
 
+    private View renderConsumoPromedio(final ClienteModel cliente) {
+        return renderString( cliente.getConsumoPromedio());
+
+        /*double Consumo = Double.parseDouble( String.valueOf( cliente.getConsumoPromedio() ) );
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+        final TextView textView = new TextView( getContext() );
+        textView.setText( formatter.format( Consumo ) );
+        textView.setPadding( 20, 10, 20, 10 );
+        textView.setTextSize( TEXT_SIZE );
+
+        return textView;*/
+    }
 
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
@@ -305,7 +329,8 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
 
 
 
-                            final ClienteModel cliente = new ClienteModel(UUID,
+                            final ClienteModel cliente = new ClienteModel(
+                                    UUID,
                                     nombre,
                                     correo_electronico,
                                     telefono,
@@ -331,7 +356,9 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                                     num_int_fiscal,
                                     "",
                                     "",
-                                    HistorialCompras
+                                    HistorialCompras,
+                                    UltimaCompra,
+                                    ConsumoPromedio
                             );
                             clientes.add(cliente);
                         }

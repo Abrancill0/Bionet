@@ -86,7 +86,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="610dp"
+                    android:layout_width="600dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="10dp">
@@ -95,14 +95,14 @@
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:text="Inventario."
-                        android:textSize="17dp"
+                        android:textSize="18dp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="350dp"
                         android:layout_height="wrap_content"
                         android:text="Verifica y ajusta el inventarios de los artículos."
-                        android:textSize="15dp"
+                        android:textSize="17dp"
                         android:textStyle="normal" />
                 </LinearLayout>
 

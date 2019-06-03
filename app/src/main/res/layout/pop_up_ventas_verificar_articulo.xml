@@ -189,20 +189,6 @@
         android:layout_weight=".8">
 
         <Button
-            android:id="@+id/eliminar_articulo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/btn"
-            android:gravity="center"
-            android:onClick="Cancelar"
-            android:padding="10dp"
-            android:text="Eliminar"
-            android:textAllCaps="false"
-            android:textColor="#fff"
-            android:textSize="22dp" />
-
-        <Button
             android:id="@+id/Guardar_cantidad"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

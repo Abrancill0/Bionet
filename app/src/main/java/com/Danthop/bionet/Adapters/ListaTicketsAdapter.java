@@ -21,7 +21,7 @@ import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class ListaTicketsAdapter extends LongPressAwareTableDataAdapter<CorteCajaModel> {
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
     private final List<CorteCajaModel> TicketsFactura;
 
     public ListaTicketsAdapter(final Context context, final List<CorteCajaModel> data, final SortableCorteCajaTable tableView, List<CorteCajaModel> ticketsfactura) {

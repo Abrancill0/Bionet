@@ -37,7 +37,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 import static com.itextpdf.text.factories.RomanAlphabetFactory.getString;
 
 public class ComisionesAdapter extends LongPressAwareTableDataAdapter<CorteCajaModel> {
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
     private String Usu_id;
     private String valueIdSuc;
     private String tic_id;

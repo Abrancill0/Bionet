@@ -19,7 +19,7 @@ import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class HomeExistenciasAdapter extends LongPressAwareTableDataAdapter<InventarioModel> {
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
 
     public HomeExistenciasAdapter(final Context context, final List<InventarioModel> data, final SortableInventariosTable tableView) {
         super(context, data, tableView);

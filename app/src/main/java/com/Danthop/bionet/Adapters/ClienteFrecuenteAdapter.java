@@ -18,7 +18,7 @@ import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class ClienteFrecuenteAdapter extends LongPressAwareTableDataAdapter<ClienteFrecuenteModel> {
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
 
     public ClienteFrecuenteAdapter(final Context context, final List<ClienteFrecuenteModel> data, final SortableClienteFrecuenteTable tableView) {
         super(context, data, tableView);

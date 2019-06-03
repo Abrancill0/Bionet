@@ -577,6 +577,7 @@ public class Login extends Activity {
 
                     progreso = new ProgressDialog(dialog.getContext());
                     progreso.setMessage("Enviando correo...");
+                    progreso.setCanceledOnTouchOutside(false);
                     progreso.show();
                     JSONObject request = new JSONObject();
                     try {

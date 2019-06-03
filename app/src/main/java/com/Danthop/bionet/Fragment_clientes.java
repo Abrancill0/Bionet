@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,6 +74,8 @@ public class Fragment_clientes extends Fragment {
     private String correo_igual;
     private String direccion_igual;
     private String Estatus;
+    private String UltimaCompra;
+    private String ConsumoPromedio;
     private Dialog ver_cliente_dialog;
     private  FragmentTransaction fr;
     private TableDataClickListener<ClienteModel> tablaListener;
@@ -95,11 +98,13 @@ public class Fragment_clientes extends Fragment {
         View v = inflater.inflate(R.layout.fragment_clientes,container, false);
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
         tabla_clientes = (SortableClientesTable) v.findViewById(R.id.tabla_clientes);
         ver_cliente_dialog=new Dialog(getContext());
         ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
+
         fr = getFragmentManager().beginTransaction();
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
@@ -219,6 +224,9 @@ public class Fragment_clientes extends Fragment {
                             calle_fiscal = RespuestaNodoDireccion.getString("cli_calle");
                             num_ext_fiscal = RespuestaNodoDireccion.getString("cli_numero_exterior");
                             num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
+                            UltimaCompra = elemento.getString( "cli_ultima_compra" );
+                            ConsumoPromedio = elemento.getString( "cli_promedio_compra" );
+
 
                             HistorialCompras = new ArrayList<>();
                             JSONArray comprasNodo = elemento.getJSONArray("ventas");
@@ -283,7 +291,9 @@ public class Fragment_clientes extends Fragment {
                                     num_int_fiscal,
                                     correo_igual,
                                     direccion_igual,
-                                    HistorialCompras
+                                    HistorialCompras,
+                                    UltimaCompra,
+                                    ConsumoPromedio
                             );
                             clientes.add(cliente);
                         }
@@ -526,5 +536,6 @@ public class Fragment_clientes extends Fragment {
             }
         };
     }
+
 
 }

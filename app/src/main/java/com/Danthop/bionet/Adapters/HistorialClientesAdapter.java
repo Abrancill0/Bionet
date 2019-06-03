@@ -44,7 +44,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class HistorialClientesAdapter extends LongPressAwareTableDataAdapter<CompraModel> {
 
-    int TEXT_SIZE = 12;
+    int TEXT_SIZE = 16;
 
     public HistorialClientesAdapter(final Context context, final List<CompraModel> data, final SortableClientesHistorialTable tableView) {
         super(context, data, tableView);

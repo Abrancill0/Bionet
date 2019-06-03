@@ -40,7 +40,7 @@ import static android.text.InputType.TYPE_CLASS_NUMBER;
 
 public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<ArticuloApartadoModel> {
 
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 16;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
     private List<ArticuloApartadoModel> ArticulosApartados;
     private TicketModel Ticket;
