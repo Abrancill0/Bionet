@@ -28,6 +28,7 @@
                 android:layout_margin="0dp"
                 android:background="@color/fondo_azul"
                 android:fontFamily="@font/muli"
+                android:textSize="17dp"
                 android:text="Ventas"
                 android:textAllCaps="false" />
         </LinearLayout>
@@ -45,6 +46,7 @@
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
+                android:textSize="17dp"
                 android:text="Transacciones"
                 android:textAllCaps="false" />
         </LinearLayout>
@@ -62,6 +64,7 @@
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
+                android:textSize="17dp"
                 android:text="Corte Caja"
                 android:textAllCaps="false" />
         </LinearLayout>
@@ -79,6 +82,7 @@
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
+                android:textSize="17dp"
                 android:text="Comisiones"
                 android:textAllCaps="false" />
         </LinearLayout>

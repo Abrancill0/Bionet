@@ -112,17 +112,18 @@ public class Fragment_inventarios extends Fragment {
         inventarios = new ArrayList<>();
 
         tabla_inventario = (SortableInventariosTable) v.findViewById(R.id.tabla_inventario);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Artículo", "Código de barras", "Categoría", "Almacén", "Existencias");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Artículo", "Código de barras", "Categoría", "Almacén", "Existencias", "Sucursal");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader.setTextSize( 18 );
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(7);
         tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 2);
-        tableColumnWeightModel.setColumnWeight(2, 3);
+        tableColumnWeightModel.setColumnWeight(2, 2);
         tableColumnWeightModel.setColumnWeight(3, 2);
         tableColumnWeightModel.setColumnWeight(4, 2);
-        tableColumnWeightModel.setColumnWeight(5, 3);
+        tableColumnWeightModel.setColumnWeight(5, 2);
+        tableColumnWeightModel.setColumnWeight(6, 2);
 
         tabla_inventario.setHeaderAdapter(simpleHeader);
         tabla_inventario.setColumnModel(tableColumnWeightModel);
@@ -209,7 +210,7 @@ public class Fragment_inventarios extends Fragment {
                             categoria = elemento.getString("cat_nombre");
                             articulo_descripcion = elemento.getString("art_descripcion");
                             art_tipo = elemento.getString("art_tipo");
-                            nombre_sucursal = elemento.getString("suc_numero");
+                            nombre_sucursal = elemento.getString("suc_nombre");
                             codigoBarras = elemento.getString("exi_codigo_barras");
                             almacen = elemento.getString("alm_nombre");
 

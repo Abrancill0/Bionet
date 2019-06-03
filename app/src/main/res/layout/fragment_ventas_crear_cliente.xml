@@ -48,6 +48,14 @@
             android:padding="2dp">
 
             <TextView
+                android:id="@+id/text50"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/textView50"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -56,13 +64,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView51"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="Llena los campos del cliente"
-                android:textSize="15sp" />
+
 
         </LinearLayout>
     </LinearLayout>

@@ -27,7 +27,9 @@
                 android:background="@drawable/pestanas_desplegables"
                 android:text="Ventas"
                 android:textAllCaps="false"
-                android:fontFamily="@font/muli" />
+                android:fontFamily="@font/muli"
+                android:textSize="17dp"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -44,7 +46,8 @@
                 android:background="@drawable/pestanas_desplegables"
                 android:text="Transacciones"
                 android:textAllCaps="false"
-                android:fontFamily="@font/muli"/>
+                android:fontFamily="@font/muli"
+                android:textSize="17dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -60,6 +63,7 @@
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
+                android:textSize="17dp"
                 android:text="Corte de caja"
                 android:textAllCaps="false" />
         </LinearLayout>
@@ -76,6 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
                 android:fontFamily="@font/muli"
+                android:textSize="17dp"
                 android:background="@color/fondo_azul"
                 android:text="Comisiones"
                 android:textAllCaps="false" />

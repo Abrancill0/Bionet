@@ -30,6 +30,7 @@
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
+                android:textSize="17dp"
                 android:text="Venta"
                 android:textAllCaps="false" />
         </LinearLayout>
@@ -47,6 +48,7 @@
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
+                android:textSize="17dp"
                 android:text="Transacciones"
                 android:textAllCaps="false" />
         </LinearLayout>
@@ -64,6 +66,7 @@
                 android:layout_margin="0dp"
                 android:background="@color/fondo_azul"
                 android:fontFamily="@font/muli"
+                android:textSize="17dp"
                 android:text="Corte de Caja"
                 android:textAllCaps="false" />
         </LinearLayout>
@@ -81,6 +84,7 @@
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
+                android:textSize="17dp"
                 android:text="Comisiones"
                 android:textAllCaps="false" />
         </LinearLayout>
@@ -235,7 +239,7 @@
 
                 <EditText
                     android:id="@+id/btnfechainicio"
-                    android:layout_width="140dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:inputType="date"
                     android:focusable="false"
@@ -253,7 +257,7 @@
 
                 <EditText
                     android:id="@+id/btnfechafin"
-                    android:layout_width="140dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:inputType="date"
                     android:focusable="false"

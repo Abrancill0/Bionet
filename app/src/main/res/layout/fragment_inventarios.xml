@@ -28,7 +28,8 @@
                 android:background="@color/fondo_azul"
                 android:text="Listado de inventario"
                 android:textAllCaps="false"
-                android:fontFamily="@font/muli" />
+                android:fontFamily="@font/muli"
+                android:textSize="17dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -45,7 +46,8 @@
                 android:background="@drawable/pestanas_desplegables"
                 android:text="Traslados"
                 android:textAllCaps="false"
-                android:fontFamily="@font/muli"/>
+                android:fontFamily="@font/muli"
+                android:textSize="17dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -62,7 +64,8 @@
                 android:background="@drawable/pestanas_desplegables"
                 android:text="Histórico"
                 android:textAllCaps="false"
-                android:fontFamily="@font/muli"/>
+                android:fontFamily="@font/muli"
+                android:textSize="17dp"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -153,7 +156,7 @@
                 android:layout_weight=".7"
                 android:visibility="visible"
                 app:tableView_headerColor="@color/white"
-                table:tableView_columnCount="6">
+                table:tableView_columnCount="7">
             </com.Danthop.bionet.Tables.SortableInventariosTable>
 
 

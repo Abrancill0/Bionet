@@ -28,7 +28,8 @@
                 android:background="@drawable/pestanas_desplegables"
                 android:text="Listado de inventario"
                 android:textAllCaps="false"
-                android:fontFamily="@font/muli" />
+                android:fontFamily="@font/muli"
+                android:textSize="17dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -45,7 +46,8 @@
                 android:background="@drawable/pestanas_desplegables"
                 android:text="Traslados"
                 android:textAllCaps="false"
-                android:fontFamily="@font/muli"/>
+                android:fontFamily="@font/muli"
+                android:textSize="17dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -62,17 +64,21 @@
                 android:background="@color/fondo_azul"
                 android:fontFamily="@font/muli"
                 android:text="Histórico"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                android:textSize="17dp"/>
         </LinearLayout>
     </LinearLayout>
 
-
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="10dp">
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="146dp"
@@ -89,7 +95,33 @@
             android:textStyle="normal" />
     </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="600dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+        </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <SearchView
+            android:id="@+id/search_inventario"
+            android:layout_width="300dp"
+            android:layout_height="34dp"
+            android:layout_marginVertical="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="8dp"
+            android:background="#E5E7E9"
+            android:queryHint="Buscar"
+            android:layout_gravity="left"
+            android:iconifiedByDefault="false" />
+
+    </LinearLayout>
+
+</LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

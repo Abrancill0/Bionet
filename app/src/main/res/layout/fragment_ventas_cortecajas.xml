@@ -235,7 +235,7 @@
 
                 <EditText
                     android:id="@+id/btnfechainicio"
-                    android:layout_width="140dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:inputType="date"
                     android:focusable="false"
@@ -253,7 +253,7 @@
 
                 <EditText
                     android:id="@+id/btnfechafin"
-                    android:layout_width="140dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:inputType="date"
                     android:focusable="false"

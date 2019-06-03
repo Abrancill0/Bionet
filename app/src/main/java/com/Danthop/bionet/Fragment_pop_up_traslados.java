@@ -11,6 +11,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,6 +110,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     private List<InventarioModel> inventarios;
     private TrasladoAdapter TrasladoAdapter;
     private String FechaApi;
+    private String FechaInicio;
 
     private JSONObject RespuestaTodo = null;
 
@@ -182,6 +184,27 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         observaciones=(EditText)v.findViewById(R.id.editObservaciones);
         //CantidadSolicitada=(ElegantNumberButton)v.findViewById(R.id.art_cantidad);
         Fecha=(EditText) v.findViewById(R.id.Fecha);
+
+        Time today = new Time( Time.getCurrentTimezone() );
+        today.setToNow();
+        int year = today.year;
+        String dia;
+        String mes;
+        if(today.monthDay < 10){
+            dia = "0" + today.monthDay;
+        }else {
+            dia = String.valueOf( today.monthDay );
+        }
+        if(today.month + 1 < 10){
+            mes = "0" + (today.month + 1);
+        }else {
+            mes = String.valueOf(today.month + 1);
+
+        }
+
+        String fechausuario = (dia + "/" + mes + "/" + year );
+        Fecha.setText( fechausuario );
+        FechaApi = year + "/" + mes + "/" + dia;
 
         Fecha.setOnClickListener( new View.OnClickListener() {
             @Override

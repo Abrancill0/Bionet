@@ -156,7 +156,7 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
     private View renderConsumoPromedio(final ClienteModel cliente) {
         return renderString( cliente.getConsumoPromedio());
 
-        /*double Consumo = Double.parseDouble( String.valueOf( cliente.getConsumoPromedio() ) );
+       /* Double  Consumo = Double.valueOf( cliente.getConsumoPromedio() );
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
