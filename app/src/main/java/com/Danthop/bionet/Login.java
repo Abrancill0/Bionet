@@ -1,6 +1,11 @@
 package com.Danthop.bionet;
 
 import android.Manifest;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -42,6 +47,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -57,6 +66,8 @@ import java.util.Base64;
 
 import zj.com.customize.sdk.Other;
 
+//import org.sdf.danielsz.OAuth2Client;
+//import org.sdf.danielsz.Token;
 
 public class Login extends Activity {
 
@@ -81,8 +92,10 @@ public class Login extends Activity {
 
     static UsbController usbCtrl = null;
 
-
-
+    private String clientid = "danthop-dev";
+    private String clientsecret = "001824";
+    private String redirectUri = "http://187.189.192.150:8010";
+    private String UrlSend = " http://sso-dev.biocheck.net/oauth/token";
 
     @SuppressLint({"HandlerLeak"})
     private final Handler mHandler = new Handler() {
@@ -112,6 +125,26 @@ public class Login extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        AccountManager am = AccountManager.get(this);
+        Bundle options = new Bundle();
+
+     //   options.putString( "Grant Type",TicketIDVenta );
+     //   options.putString( "Grant Type",TicketIDVenta );
+
+
+        //OAuth2Client client = new OAuth2Client("username", "password", "app-id", "app-secret", "site");
+       // Token token = client.getAccessToken();
+
+       // token.getResource(client, token, "/path/to/resource?name=value");
+
+      //  am.getAuthToken(am,"implicit",options,this, new OnTokenAcquired(),null  );
+
+        //am.getAuthToken('',)
+
+      //  AccountManager am = AccountManager.get(activity);
+
 
         progreso = new ProgressDialog(this);
 
@@ -152,6 +185,28 @@ public class Login extends Activity {
 
     }
 
+
+    private class OnTokenAcquired implements AccountManagerCallback<Bundle> {
+        @Override
+        public void run(AccountManagerFuture<Bundle> result) {
+            // Get the result of the operation from the AccountManagerFuture.
+            Bundle bundle = null;
+            try {
+                bundle = result.getResult();
+            } catch (AuthenticatorException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (OperationCanceledException e) {
+                e.printStackTrace();
+            }
+
+            // The token is a named value in the bundle. The name of the value
+            // is stored in the constant AccountManager.KEY_AUTHTOKEN.
+            String token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+
+        }
+    }
 
     private void Login(){
         progreso.setMessage("Iniciando sesion...");

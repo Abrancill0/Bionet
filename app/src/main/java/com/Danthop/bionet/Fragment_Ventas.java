@@ -211,10 +211,10 @@ public class Fragment_Ventas extends Fragment {
 
     private String NomPromoCredito;
     private String SKU_product;
-    private String Resptresmeses="";
-    private String Respseismeses="";
-    private String Respnuevemeses="";
-    private String Respdocemeses="";
+    private int Resptresmeses = 0;
+    private int Respseismeses = 0;
+    private int Respnuevemeses = 0;
+    private int Respdocemeses = 0;
     private String Respuestamenor="";
     private TextView textViewNombre;
     private String value;
@@ -819,7 +819,17 @@ public class Fragment_Ventas extends Fragment {
                     });
                 } else if (false == ArticulosVenta.isEmpty()) {
 
-                    //gpromociones_credito
+                  String SucursalID =  ticket_de_venta.getTic_id_sucursal();
+
+                    for(int x=0; x<ArticulosVenta.size();x++)
+                    {
+                       String Sku = ArticulosVenta.get(x).getArticulo_sku();
+
+                        promociones_credito(Sku,SucursalID);
+                    }
+
+
+
 
                     dialog.setContentView(R.layout.pop_up_ventas_facturar);
                     dialog.show();
@@ -974,6 +984,11 @@ public class Fragment_Ventas extends Fragment {
                                                 mBundle.putDouble("TD",TarjetaDebito);
                                                 mBundle.putString( "Ticket",TicketIDVenta );
                                                 mBundle.putString("Sucursal",ticket_de_venta.getTic_id_sucursal());
+                                                mBundle.putInt( "03meses",Resptresmeses);
+                                                mBundle.putInt( "06meses",Respseismeses);
+                                                mBundle.putInt( "09meses",Respnuevemeses);
+                                                mBundle.putInt( "12meses",Respdocemeses);
+
 
                                                 mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
@@ -1136,7 +1151,6 @@ public class Fragment_Ventas extends Fragment {
 
                                     if (valorTarjetas > 0) {
 
-                                        //promociones_credito();
                                         //Parte Bundle
                                         Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
                                         Bundle mBundle = new Bundle();
@@ -1144,10 +1158,10 @@ public class Fragment_Ventas extends Fragment {
                                         mBundle.putDouble("TD",TarjetaDebito);
                                         mBundle.putString( "Ticket",TicketIDVenta );
                                         mBundle.putString("Sucursal",ticket_de_venta.getTic_id_sucursal());
-                                        mBundle.putString( "03meses",Resptresmeses);
-                                        mBundle.putString( "06meses",Respseismeses);
-                                        mBundle.putString( "09meses",Respnuevemeses);
-                                        mBundle.putString( "12meses",Respdocemeses);
+                                        mBundle.putInt( "03meses",Resptresmeses);
+                                        mBundle.putInt( "06meses",Respseismeses);
+                                        mBundle.putInt( "09meses",Respnuevemeses);
+                                        mBundle.putInt( "12meses",Respdocemeses);
 
                                         mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
@@ -2945,7 +2959,7 @@ public class Fragment_Ventas extends Fragment {
 
 //------------------------------------------
 
-    public void promociones_credito(){
+    public void promociones_credito(String Sku,String SucursalID){
 
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/articulos/promociones/consultar_promociones_articulo_sku_app";
@@ -2954,8 +2968,8 @@ public class Fragment_Ventas extends Fragment {
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
-            request.put("sku",SKU_product);
-            request.put("suc_id", valueIdSuc);
+            request.put("sku", Sku);
+            request.put("suc_id", SucursalID);
 
         }catch (JSONException e){
             e.printStackTrace();
@@ -2979,6 +2993,7 @@ public class Fragment_Ventas extends Fragment {
                     if (status == 1) {
                         Resultado = response.getJSONObject("resultado");
                         Promociones = Resultado.getJSONObject("promociones");
+
                         Iterator y = Promociones.keys();
 
                         while (y.hasNext()) {
@@ -2995,96 +3010,68 @@ public class Fragment_Ventas extends Fragment {
 
                                     Respuestamenor = "No aplica meses sin interes a Crédito";
 
-                                }else {
+                                }
+                                else
+                                    {
 
                                     Credito = Promociones.getJSONObject("credito");
 
-                                    JSONObject ResultadoCredito = Credito.getJSONObject("1");
-                                    Iterator x = ResultadoCredito.keys();
-                                    while (x.hasNext()) {
-                                        String key2 = (String) x.next();
-                                        NomPromoCredito = ResultadoCredito.getString( "pro_nombre" );
+                                        for(int i=0;i<Credito.length();i++) {
 
-                                        Boolean tresmeses = ResultadoCredito.getBoolean( "apr_tres_meses" );
-                                        if (tresmeses == true) {
-                                            Resptresmeses = "Aplica 3 meses sin intereses";
-                                        }else {
-                                            Resptresmeses = "No Aplica meses sin intereses";
+                                            JSONObject ResultadoCredito = Credito.getJSONObject( String.valueOf( i + 1) );
+
+                                            NomPromoCredito = ResultadoCredito.getString( "pro_nombre" );
+
+                                            Boolean tresmeses = ResultadoCredito.getBoolean( "apr_tres_meses" );
+                                            if (tresmeses == true) {
+                                                if (Resptresmeses !=2)
+                                                {
+                                                    Resptresmeses = 1;
+                                                }
+
+                                            }else {
+                                                Resptresmeses = 2;
+                                            }
+
+                                            Boolean seismeses = ResultadoCredito.getBoolean( "apr_seis_meses" );
+                                            if (seismeses == true) {
+
+                                                if (Respseismeses !=2)
+                                                {
+                                                    Respseismeses = 1;
+                                                }
+                                            }else {
+                                                Respseismeses = 2;
+                                            }
+
+                                            Boolean nuevemeses = ResultadoCredito.getBoolean( "apr_nueve_meses" );
+                                            if ( nuevemeses == true){
+                                                if (Respnuevemeses !=2)
+                                                {
+                                                    Respnuevemeses = 1;
+                                                }
+                                            }else {
+                                                Respnuevemeses = 2;
+                                            }
+
+                                            Boolean docemeses = ResultadoCredito.getBoolean( "apr_doce_meses" );
+                                            if (docemeses == true){
+
+                                                if (Respdocemeses !=2)
+                                                {
+                                                    Respdocemeses = 1;
+                                                }
+
+                                            }else {
+                                                Respdocemeses = 2;
+                                            }
+
+
                                         }
 
-                                        Boolean seismeses = ResultadoCredito.getBoolean( "apr_seis_meses" );
-                                        if (seismeses == true) {
-                                            Respseismeses = "Aplica 6 meses sin intereses";
-                                        }else {
-                                            Respseismeses = "No Aplica meses sin intereses";
-                                        }
-
-                                        Boolean nuevemeses = ResultadoCredito.getBoolean( "apr_nueve_meses" );
-                                        if ( nuevemeses == true){
-                                            Respnuevemeses = "Aplica 9 meses sin intereses";
-                                        }else {
-                                            Respnuevemeses = "No Aplica meses sin intereses";
-                                        }
-
-                                        Boolean docemeses = ResultadoCredito.getBoolean( "apr_doce_meses" );
-                                        if (docemeses == true){
-                                            Respdocemeses = "Aplica 12 meses sin intereses";
-                                        }else {
-                                            Respdocemeses = "No Aplica meses sin intereses";
-                                        }
-
-                                        //Respuesta menor
-                                        int Resultadomenor1 = Resptresmeses.compareTo(Respseismeses); //menor a la segunda sera -entero
-                                        if (Resultadomenor1 < 0) {
-                                            Respuestamenor = "Aplica 3 meses sin intereses";
-                                        }else {
-                                            Respuestamenor = "Aplica 6 meses sin intereses";
-                                        }
-
-
-                                        int Resultadomenor2 = Resptresmeses.compareTo(Respnuevemeses);
-                                        if (Resultadomenor2 < 0) {
-                                            Respuestamenor = "Aplica 3 meses sin intereses";
-                                        }else {
-                                            Respuestamenor = "Aplica 9 meses sin intereses";
-                                        }
-
-
-                                        int Resultadomenor3 = Resptresmeses.compareTo(Respdocemeses);
-                                        if (Resultadomenor3 < 0) {
-                                            Respuestamenor = "Aplica 3 meses sin intereses";
-                                        }else {
-                                            Respuestamenor = "Aplica 12 meses sin intereses";
-                                        }
-
-                                        //Respuesta menor
-                                       /* int Resulmenor1 = Respdocemeses.compareTo(Resptresmeses); //menor a la segunda sera -entero
-                                        int Resulmenor2 = Respdocemeses.compareTo(Respseismeses);
-                                        int Resulmenor3 = Respdocemeses.compareTo(Respnuevemeses);
-
-                                        if (Resulmenor1 < 0) {
-                                            Respuestamenor = "Aplica 12 meses sin intereses";
-                                        }
-
-                                        if (Resulmenor2 < 0) {
-                                            Respuestamenor = "Aplica 12 meses sin intereses";
-                                        }
-
-                                        if (Resulmenor3 < 0) {
-                                            Respuestamenor = "Aplica 12 meses sin intereses";
-                                        }*/
-
-                                    }
                             }
                             }
                         }
-
-                        final PromocionesModel tickets = new PromocionesModel(
-                                Respuestamenor,"","","");
-                        Meses.add(tickets);
-
-                        final SeleccionarMesesCreditoAdapter MesesCreditoAdapter = new SeleccionarMesesCreditoAdapter(getContext(), Meses, tabla_selecciona_meses);
-                        tabla_selecciona_meses.setDataAdapter(MesesCreditoAdapter);
 
                     }else {
                        // Toast toast1 = Toast.makeText(getContext(), "No existen tickets en el periodo seleccionado.", Toast.LENGTH_LONG);
