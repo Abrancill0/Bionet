@@ -320,8 +320,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight=".4"
-                        android:orientation="horizontal"
-                        android:gravity="end">
+                        android:gravity="end"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/subtotal_text"
@@ -334,9 +334,11 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/IVA_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -345,11 +347,11 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/textView44s2"
+                            android:id="@+id/nombreIVA"
                             android:layout_width="75dp"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="10dp"
-                            android:text="Impuestos"
+                            android:text="IVA"
                             android:textColor="@color/colorPrimaryDark" />
                     </LinearLayout>
 
@@ -357,11 +359,89 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight=".4"
-                        android:orientation="horizontal"
-                        android:gravity="end">
+                        android:gravity="end"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/iva_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:text="$0.00" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ISR_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".6"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/nombreISR"
+                            android:layout_width="75dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:text="ISR"
+                            android:textColor="@color/colorPrimaryDark" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".4"
+                        android:gravity="end"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/isr_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:text="$0.00" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/IEPS_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".6"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/nombreIEPS"
+                            android:layout_width="75dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:text="IEPS"
+                            android:textColor="@color/colorPrimaryDark" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".4"
+                        android:gravity="end"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/ieps_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="10dp"
@@ -449,7 +529,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".3"
+                android:layout_weight=".4"
                 android:orientation="vertical">
 
                 <Button

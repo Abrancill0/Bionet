@@ -7,6 +7,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbDevice;
 import android.media.Image;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -76,13 +79,23 @@ import com.zj.usbsdk.UsbController;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
 
 import de.codecrafters.tableview.listeners.TableDataClickListener;
+import zj.com.customize.sdk.Other;
 
 import static com.mercadolibre.android.sdk.internal.ApiPoolManager.cancelAll;
 
@@ -204,10 +217,12 @@ public class Fragment_Ventas extends Fragment {
     private String NombreVendedor="";
     private String NombreCliente="";
     private String NumeroTicket="";
-    private String Subtotal = "";
-    private String Total = "";
-    private String ImpuestosTicket="";
+    private float Subtotal = 0;
+    private float Total = 0;
     private float ImpuestosTotal=0;
+    private ProgressDialog progressDialog;
+    private String contenidoImprimir;
+    private String ImpuestosTicket="";
 
     private String NomPromoCredito;
     private String SKU_product;
@@ -225,7 +240,7 @@ public class Fragment_Ventas extends Fragment {
     private int[][] u_infor;
     static UsbController usbCtrl = null;
     static UsbDevice dev = null;
-    private ProgressDialog progressDialog;
+
 
     private Button btn_imprimir;
 
@@ -240,6 +255,7 @@ public class Fragment_Ventas extends Fragment {
         View v = inflater.inflate(R.layout.fragment_ventas, container, false);
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
@@ -324,6 +340,12 @@ public class Fragment_Ventas extends Fragment {
                 InstanciarModeloTicket();
                 ArticulosVenta.clear();
                 Imagenes.clear();
+                total.setText("");
+                subtotal.setText("");
+                descuento.setText("");
+                impuesto.setText("");
+                btn_agregar_vendedor.setText("Vendedor");
+                btn_agregar_cliente.setText("Cliente");
                 ListaDeArticulosApartados.clear();
                 ListaDeArticulosOrdenados.clear();
                 final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
@@ -368,6 +390,14 @@ public class Fragment_Ventas extends Fragment {
             }
         }
     };
+
+    private void closeKeyboard() {
+        View view = getView();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 
 
     public void LoadAutocomplete() {
@@ -791,6 +821,7 @@ public class Fragment_Ventas extends Fragment {
                                     long id) {
                 Aniadir_a_venta(String.valueOf(Buscar.getText()), "1");
                 Buscar.setText("");
+                closeKeyboard();
 
             }
         });
@@ -3112,6 +3143,16 @@ public class Fragment_Ventas extends Fragment {
 
     private void loadTicket()
     {
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.pop_up_ticket_web);
+        dialog.show();
+
+        final ProgressDialog progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
+        webView = (WebView) dialog.findViewById(R.id.simpleWebView);
         try {
 
             String url = getString(R.string.Url);
@@ -3134,6 +3175,7 @@ public class Fragment_Ventas extends Fragment {
                                 int EstatusApi = Integer.parseInt(response.getString("estatus"));
 
                                 if (EstatusApi == 1) {
+                                    progressDialog.dismiss();
 
                                     JSONObject RespuestaResultado = response.getJSONObject("resultado");
 
@@ -3148,9 +3190,17 @@ public class Fragment_Ventas extends Fragment {
                                     JSONObject NodoTicket = RespuestaResultado.getJSONObject("aTicket");
                                     FechaCreacion = NodoTicket.getString("tic_fecha_hora_creo");
                                     NombreVendedor = NodoTicket.getString("tic_nombre_vendedor");
+                                    if(NombreVendedor.equals("null"))
+                                    {
+                                        NombreVendedor="";
+                                    }
                                     NombreCliente = NodoTicket.getString("tic_nombre_cliente");
-                                    Subtotal = NodoTicket.getString("tic_importe_subtotal");
-                                    Total = NodoTicket.getString("tic_importe_total");
+                                    if(NombreCliente.equals("null"))
+                                    {
+                                        NombreCliente="";
+                                    }
+                                    Subtotal = Float.parseFloat(NodoTicket.getString("tic_importe_subtotal"));
+                                    Total = Float.parseFloat(NodoTicket.getString("tic_importe_total"));
                                     JSONArray ArregloArticulos = NodoTicket.getJSONArray("aArticulos");
                                     JSONArray NodoImpuestos = RespuestaResultado.getJSONArray("aTicketImpuestos");
 
@@ -3220,7 +3270,7 @@ public class Fragment_Ventas extends Fragment {
                                             "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
                                             "<style type=\"text/css\" media=\"all\">\n" +
                                             "#tblTicketTemplate {\n" +
-                                            "  width: 100%;\n" +
+                                            "  width: 70%;\n" +
                                             "  font-size: 10px;\n" +
                                             "  font-family: \"Courier New\";\n" +
                                             "  text-transform: uppercase;\n" +
@@ -3414,35 +3464,19 @@ public class Fragment_Ventas extends Fragment {
                                             "</table>\n"+
                                             "</body>\n"+
                                             "</html>";
-                                    SendDataString(content);
-                                    Dialog dialog = new Dialog(getContext());
-                                    dialog.setContentView(R.layout.pop_up_ticket_web);
-                                    webView = (WebView) dialog.findViewById(R.id.simpleWebView);
-                                    btn_imprimir = (Button)dialog.findViewById(R.id.btn_imprimir);
-
-                                    btn_imprimir.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            //
-                                        }
-                                    });
 
                                     // displaying text in WebView
                                     webView.loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
-                                    dialog.show();
 
                                     File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "/PDFTicket/");
                                     final String fileName="Ticket.pdf";
 
-                                    final ProgressDialog progressDialog=new ProgressDialog(getContext());
-                                    progressDialog.setMessage("Espere un momento por favor");
-                                    progressDialog.show();
                                     PdfView.createWebPrintJob(getActivity(), webView, directory, fileName, new PdfView.Callback() {
 
                                         @Override
                                         public void success(String path) {
                                             progressDialog.dismiss();
-                                            PdfView.openPdfFile(getActivity(),getString(R.string.app_name),"¿Desea abrir el archivo pdf?"+fileName,path);
+                                            //PdfView.openPdfFile(getActivity(),getString(R.string.app_name),"¿Desea abrir el archivo pdf?"+fileName,path);
                                         }
 
                                         @Override
@@ -3452,10 +3486,60 @@ public class Fragment_Ventas extends Fragment {
                                         }
                                     });
 
+                                    //Boton para imprimir le manda el archivo PDF---------------------------------------------------------------------
+                                    Button ImprimirTick = dialog.findViewById(R.id.btn_imprimir);
+                                    ImprimirTick.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            String cadenaArticulosImprimir="";
+                                            for(int j=0; j<ListaArticulosTicket.size();j++)
+                                            {
+                                                double PrecioArticulo = Double.parseDouble(ListaArticulosTicket.get(j).getarticulo_Precio());
+                                                double ImporteArticulo = Double.parseDouble(ListaArticulosTicket.get(j).getArticulo_importe());
+
+
+                                                cadenaArticulosImprimir=cadenaArticulosImprimir+
+                                                        ("\n"+
+                                                                ListaArticulosTicket.get(j).getArticulo_cantidad()+" "+
+                                                                ListaArticulosTicket.get(j).getarticulo_Nombre()+"\n                  "+
+                                                                formatter.format( ImporteArticulo));
+                                            }
+
+
+
+                                            contenidoImprimir =
+                                                    "      "+RazonSocial+ "\n"+
+                                                            "      "+RFC+ "\n"+
+                                                            "FEC./HR./:"+FechaCreacion+ "\n"+
+                                                            "TICKET:"+NumeroTicket+"\n"+
+                                                            "VENDEDOR: "+NombreVendedor + "\n"+
+                                                            "CLIENTE: "+NombreCliente + "\n"+
+                                                            "C.  ARTICULO       IMPORTE"+
+                                                            cadenaArticulosImprimir+"\n\n\n"+
+                                                            "SUBTOTAL:         "+formatter.format(Subtotal)+"\n"+
+                                                            "IMPUESTOS:        "+formatter.format( ImpuestosTotal)+"\n"+
+                                                            "TOTAL:            "+formatter.format( Total)+"\n\n"+
+                                                            "     ESTE TICKET FUE CREADO  \n"+
+                                                            "     DESDE BIO-NET PUNTO DE  \n"+
+                                                            "     VENTA, EL MEJOR SISTEMA \n"+
+                                                            "     PARA TU NEGOCIO, PARA   \n"+
+                                                            "     MAS INFORMACION VISITA  \n"+
+                                                            "         BIONETPOS.COM\n\n\n"
+
+                                            ;
+                                            PDFIMprime(directory.getAbsolutePath()+"/"+fileName);
+                                        }
+                                    });
+
 
 
                                 }
+                                else
+                                {
+                                    progressDialog.dismiss();
+                                }
                             } catch (JSONException e) {
+                                progressDialog.dismiss();
                                 Toast toast1 =
                                         Toast.makeText(getContext(),
                                                 String.valueOf(e), Toast.LENGTH_LONG);
@@ -3465,6 +3549,7 @@ public class Fragment_Ventas extends Fragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            progressDialog.dismiss();
                             Toast toast1 =
                                     Toast.makeText(getContext(),
                                             String.valueOf(error), Toast.LENGTH_LONG);
@@ -3482,10 +3567,163 @@ public class Fragment_Ventas extends Fragment {
 
     }
 
-   private void SendDataString(String data){
-       /*  if(data.length()>0)
-            usbCtrl.sendMsg(data, "GBK", dev);  //*/
+    public void PDFIMprime (String ruta)
+    {
+        usbCtrl.close();
+
+        // int i =0;
+
+        for(int i = 0; i < 8; ++i) {
+            dev = usbCtrl.getDev(this.u_infor[i][0], this.u_infor[i][1]);
+            if (dev != null) {
+                break;
+            }
+        }
+
+        if (dev != null) {
+            if (!usbCtrl.isHasPermission(dev)) {
+                usbCtrl.getPermission(dev);
+            } else {
+                // Toast.makeText(this.getApplicationContext(), this.getString(2130968584), 0).show();
+
+            }
+        }
+
+        String msg = "";
+
+        byte[] bytes = new byte[0];
+        try {
+            bytes = convertDocToByteArray(ruta);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String stream = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            stream = Base64.getEncoder().encodeToString(bytes);
+        }
+        byte[] newBytes = new byte[0];
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            newBytes = Base64.getDecoder().decode(stream);
+        }
+        try {
+            convertByteArrayToDoc(ruta, newBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            URL url = new URL(getString(R.string.Url)+LogoNegocio);
+            Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            byte[] Data = POS_PrintBMP(image,384,0);
+            this.SendDataByte(Data);
+            this.SendDataString(contenidoImprimir);
+        } catch(IOException e) {
+            System.out.println(e);
+        }
+
+
+
+
+
+
     }
+
+    public static byte[] convertDocToByteArray(String path)throws FileNotFoundException, IOException {
+        File file = new File(path);
+
+        FileInputStream fis = new FileInputStream(file);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] buf = new byte[1024];
+        try {
+            for (int readNum; (readNum = fis.read(buf)) != -1;) {
+                bos.write(buf, 0, readNum);
+            }
+        } catch (IOException ex) {
+            // Logger.getLogger(genJpeg.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        byte[] bytes = bos.toByteArray();
+        return bytes;
+    }
+
+    public static void convertByteArrayToDoc(String path, byte[] bytes)throws FileNotFoundException, IOException {
+        File someFile = new File(path);
+        FileOutputStream fos = new FileOutputStream(someFile);
+        fos.write(bytes);
+        fos.flush();
+        fos.close();
+    }
+
+    //Este metodo se debe de llevar al fracgment de ventas
+    private void SendDataString(String data) {
+        if (data.length() > 0) {
+            usbCtrl.sendMsg(data, "GBK", dev);
+        }
+
+    }
+
+    //Este metodo se debe de llevar al fracgment de ventas
+    private void SendDataByte(byte[] data){
+        if(data.length>0)
+            usbCtrl.sendByte(data, dev);
+    }
+
+    public static byte[] POS_PrintBMP(Bitmap mBitmap, int nWidth, int nMode) {
+        // 先转黑白，再调用函数缩放位图
+        int width = ((nWidth + 7) / 8) * 8;
+        int height = mBitmap.getHeight() * width / mBitmap.getWidth();
+        height = ((height + 7) / 8) * 8;
+
+        Bitmap rszBitmap = mBitmap;
+        if (mBitmap.getWidth() != width){
+            rszBitmap = Other.resizeImage(mBitmap, width, height);
+        }
+
+        Bitmap grayBitmap = Other.toGrayscale(rszBitmap);
+
+        byte[] dithered = Other.thresholdToBWPic(grayBitmap);
+
+        byte[] data = Other.eachLinePixToCmd(dithered, width, nMode);
+
+        return data;
+    }
+
+    public static byte[] POS_Set_Font(String str, int bold, int font, int widthsize, int heigthsize){
+
+        if(str.length() == 0 | widthsize<0 | widthsize >4 | heigthsize<0 | heigthsize>4
+                | font<0 | font>1)
+            return null;
+
+        byte[] strData = null;
+        try
+        {
+            strData = str.getBytes("GBK");
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+
+        byte[] command = new byte[strData.length + 9];
+
+        byte[] intToWidth = { 0x00, 0x10, 0x20, 0x30 };//最大四倍宽
+        byte[] intToHeight = { 0x00, 0x01, 0x02, 0x03 };//最大四倍高
+
+        command[0] = 27;
+        command[1] = 69;
+        command[2] = ((byte)bold);
+        command[3] = 27;
+        command[4] = 77;
+        command[5] = ((byte)font);
+        command[6] = 29;
+        command[7] = 33;
+        command[8] = (byte) (intToWidth[widthsize] + intToHeight[heigthsize]);
+
+        System.arraycopy(strData, 0, command, 9, strData.length);
+        return command;
+    }
+
 
 
 

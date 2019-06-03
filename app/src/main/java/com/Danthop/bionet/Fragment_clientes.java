@@ -98,6 +98,7 @@ public class Fragment_clientes extends Fragment {
         View v = inflater.inflate(R.layout.fragment_clientes,container, false);
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
         tabla_clientes = (SortableClientesTable) v.findViewById(R.id.tabla_clientes);

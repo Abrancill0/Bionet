@@ -88,6 +88,7 @@ public class Fragment_pantalla_principal extends Fragment{
         View v = inflater.inflate(R.layout.fragment_pantalla_principal,container, false);
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getContext().MODE_PRIVATE );
