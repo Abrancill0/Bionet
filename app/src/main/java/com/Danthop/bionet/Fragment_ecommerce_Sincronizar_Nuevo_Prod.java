@@ -2,7 +2,6 @@ package com.Danthop.bionet;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,6 +22,7 @@ import com.Danthop.bionet.Adapters.CategoriaAdapter;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.CategoriaModel;
 import com.Danthop.bionet.model.VolleySingleton;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -39,7 +38,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Console;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -304,6 +302,12 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
             }
         }, new Response.ErrorListener() {
             @Override    public void onErrorResponse(VolleyError error) {
+
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null && networkResponse.statusCode == 400) {
+                    // HTTP Status Code: 401 Unauthorized
+                }
+
                 Toast.makeText(getContext(),  error.toString(), Toast.LENGTH_LONG).show();
                 progreso.hide();
             }
@@ -322,6 +326,12 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                             requestBody, "utf-8");
                     return null;
                 }
+            }
+
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                int mStatusCode = response.statusCode;
+                return super.parseNetworkResponse(response);
             }
         };
         requestQueue.add(jsonObjectRequest);
