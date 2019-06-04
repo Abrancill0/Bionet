@@ -158,22 +158,6 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
         tabla_traslados.setHeaderAdapter(simpleHeader);
         tabla_traslados.setColumnModel(tableColumnWeightModel);
 
-
-        Spinner spinner = (Spinner) v.findViewById(R.id.categoria_sku);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.SKU, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        spinner.setAdapter(adapter);
-
-        Spinner spinner2 = (Spinner) v.findViewById(R.id.categoria_categoria);
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getContext(), R.array.Categoría, android.R.layout.simple_spinner_item);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        spinner2.setAdapter(adapter2);
-
-        Spinner spinner3 = (Spinner) v.findViewById(R.id.categoria_producto);
-        ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(getContext(), R.array.Producto, android.R.layout.simple_spinner_item);
-        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        spinner3.setAdapter(adapter3);
-
         Traslados_Recibidas();
         return v;
     }

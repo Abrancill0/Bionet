@@ -76,53 +76,6 @@
         android:background="@color/white"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight=".8"
-            android:background="@drawable/pestanas_desplegables"
-            android:orientation="vertical"
-            android:paddingHorizontal="10dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight=".3"
-                android:orientation="vertical"
-                android:paddingVertical="20dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Traslados."
-                    android:textSize="17dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Solicita y verifica los traslados."
-                    android:textSize="17dp"
-                    android:textStyle="normal" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight=".6"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".5"
-                    android:orientation="vertical"></LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -172,6 +125,14 @@
                         android:textAllCaps="false"
                         android:textSize="17dp"/>
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".3"
+                    android:orientation="vertical">
+
                     <Button
                         android:id="@+id/pop_up_traslados"
                         android:layout_width="match_parent"
@@ -185,9 +146,10 @@
                         android:textAllCaps="false"
                         android:textColor="@color/gray"
                         android:textStyle="bold" />
+                </LinearLayout>
+
 
                 </LinearLayout>
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
