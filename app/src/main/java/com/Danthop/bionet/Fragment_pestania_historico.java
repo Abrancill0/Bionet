@@ -106,7 +106,7 @@ public class Fragment_pestania_historico extends Fragment {
         historico = new ArrayList<>();
 
         tabla_historico = (SortableHistoricoTable) v.findViewById(R.id.tabla_historico);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Movimiento", "Cantidad", "Observaciones", "Fecha y hora");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Movimiento", "Cantidad", "Observaciones", "Fecha");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader.setTextSize( 18 );
 

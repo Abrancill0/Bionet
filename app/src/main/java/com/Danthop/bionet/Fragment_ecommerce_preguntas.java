@@ -112,7 +112,6 @@ public class Fragment_ecommerce_preguntas extends Fragment {
         try {
             JSONObject obj = new JSONObject( json );
             CargaDatos( obj );
-            progressDialog.dismiss();
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -132,7 +131,6 @@ public class Fragment_ecommerce_preguntas extends Fragment {
                     public void run() {
                         Preguntas.clear();
                         LoadTable();
-                        progressDialog.dismiss();
                         refreshIndicator.hide();
                     }
                 }, 2000 );
@@ -145,6 +143,8 @@ public class Fragment_ecommerce_preguntas extends Fragment {
     }
 
     private void LoadListenerTable(){
+
+        progressDialog.dismiss();
         tablaListener = new TableDataClickListener<Preguntas_Model>() {
             @Override
             public void onDataClicked(int rowIndex, final Preguntas_Model clickedData) {

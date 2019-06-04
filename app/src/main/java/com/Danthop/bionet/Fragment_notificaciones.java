@@ -2,6 +2,7 @@ package com.Danthop.bionet;
 
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ public class Fragment_notificaciones extends Fragment {
     private View v;
     private TextView NumNotificaciones;
     private Dialog pop_detail_notification;
+    private ProgressDialog progressDialog;
 
 
     String text = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.";
@@ -64,6 +66,12 @@ public class Fragment_notificaciones extends Fragment {
         NumNotificaciones = v.findViewById(R.id.num_notificaciones);
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
+
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         LoadNotificaciones();
 
 
@@ -114,6 +122,7 @@ public class Fragment_notificaciones extends Fragment {
 
                             if (status == 1)
                             {
+                                progressDialog.dismiss();
                                 for(int i = 0;i<posicionesDelete.size();i++){
                                     removeItem(posicionesDelete.get(i));
                                     refresh();
@@ -193,6 +202,8 @@ public class Fragment_notificaciones extends Fragment {
                                 int EstatusApi = Integer.parseInt(response.getString("estatus"));
 
                                 if (EstatusApi == 1) {
+
+                                    progressDialog.dismiss();
 
                                     JSONObject resultado = response.getJSONObject("resultado");
                                     JSONArray NodoNotificaciones = resultado.getJSONArray("aNotificaciones");

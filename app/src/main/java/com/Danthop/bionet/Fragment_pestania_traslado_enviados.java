@@ -144,15 +144,16 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
         traslados = new ArrayList<>();
 
         tabla_traslados = (SortableTrasladosTable) v.findViewById(R.id.tabla_traslados);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Origen", "Destino", "Estatus", "Fecha de solicitud");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Origen", "Destino", "Estatus","Motivo","Fecha de solicitud");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader.setTextSize( 16 );
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
         tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 2);
         tableColumnWeightModel.setColumnWeight(2, 2);
         tableColumnWeightModel.setColumnWeight(3, 2);
+        tableColumnWeightModel.setColumnWeight(4, 2);
 
         tabla_traslados.setHeaderAdapter(simpleHeader);
         tabla_traslados.setColumnModel(tableColumnWeightModel);
@@ -208,6 +209,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
                             RecibidasDestino = elemento.getString("suc_nombre_sucursal_destino");
                             suc_numero_sucursal_destino = elemento.getString("suc_numero_sucursal_destino");
                             tra_nombre_estatus = elemento.getString("tra_nombre_estatus");
+                            tra_motivo = elemento.getString("tra_motivo");
 
                             String SucursalCodigoOrigen;
                             String SucursalCodigoDestino;

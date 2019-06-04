@@ -621,7 +621,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                         String FechaDeCreacion = elemento.getString("apa_fecha_hora_creo");
                                         String Estatus = elemento.getString("apa_estatus");
 
-                                        String SucursalClave = Sucursal + (NumSucursal);
+                                        String SucursalClave = Sucursal + "(" + NumSucursal + ")" ;
                                         List<ArticuloApartadoModel> ListaDeArticulosApartados = new ArrayList<>();
                                         JSONArray Articulos = elemento.getJSONArray("aArticulosApartados");
                                         for(int i= 0; i<Articulos.length(); i++)
