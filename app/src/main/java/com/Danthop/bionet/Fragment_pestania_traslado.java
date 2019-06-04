@@ -1,4 +1,5 @@
 package com.Danthop.bionet;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -70,6 +71,7 @@ public class Fragment_pestania_traslado extends Fragment {
     private String suc_numero_sucursal_origen = "";
     private String fechaSolicitud = "";
     private String tra_motivo = "";
+    private ProgressDialog progressDialog;
 
     public Fragment_pestania_traslado() {
         // Required empty public constructor
@@ -112,6 +114,12 @@ public class Fragment_pestania_traslado extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
+
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         traslados = new ArrayList<>();
 
         tabla_traslados = (SortableTrasladosTable) v.findViewById(R.id.tabla_traslados);
@@ -194,6 +202,7 @@ public  void Traslados_Recibidas(){
                 String Mensaje = response.getString("mensaje");
 
                 if (status == 1) {
+                    progressDialog.dismiss();
                     Resultado = response.getJSONObject("resultado");
                     RespuestaTraslados = Resultado.getJSONObject("aTraslados");
                     RespuestaSolicitudesRecibidas = RespuestaTraslados.getJSONArray("aSolicitudesRecibidas");

@@ -105,27 +105,6 @@
                     android:textSize="17dp"
                     android:textStyle="normal" />
 
-                <Spinner
-                    android:id="@+id/categoria_sku"
-                    android:layout_width="match_parent"
-                    android:layout_height="34dp"
-                    android:layout_marginVertical="20dp"
-                    android:background="@drawable/spinner_giro" />
-
-                <Spinner
-                    android:id="@+id/categoria_categoria"
-                    android:layout_width="match_parent"
-                    android:layout_height="34dp"
-                    android:layout_marginVertical="20dp"
-                    android:background="@drawable/spinner_giro" />
-
-                <Spinner
-                    android:id="@+id/categoria_producto"
-                    android:layout_width="match_parent"
-                    android:layout_height="34dp"
-                    android:layout_marginVertical="20dp"
-                    android:background="@drawable/spinner_giro" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -134,20 +113,6 @@
                 android:layout_weight=".6"
                 android:orientation="vertical"
                 android:padding="20dp">
-
-                <Button
-                    android:id="@+id/pop_up_traslados"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginVertical="10dp"
-                    android:layout_weight=".5"
-                    android:background="@drawable/shape_gray"
-                    android:fontFamily="@font/muli"
-                    android:padding="5dp"
-                    android:text="Solicitar Traslado"
-                    android:textAllCaps="false"
-                    android:textColor="@color/gray"
-                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -206,6 +171,21 @@
                         android:text="Enviados"
                         android:textAllCaps="false"
                         android:textSize="17dp"/>
+
+                    <Button
+                        android:id="@+id/pop_up_traslados"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:layout_weight=".5"
+                        android:background="@drawable/shape_gray"
+                        android:fontFamily="@font/muli"
+                        android:padding="5dp"
+                        android:text="Solicitar Traslado"
+                        android:textAllCaps="false"
+                        android:textColor="@color/gray"
+                        android:textStyle="bold" />
+
                 </LinearLayout>
             </LinearLayout>
 

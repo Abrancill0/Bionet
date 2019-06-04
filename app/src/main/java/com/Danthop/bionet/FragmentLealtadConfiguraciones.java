@@ -2,6 +2,7 @@ package com.Danthop.bionet;
 
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -87,6 +88,7 @@ public class FragmentLealtadConfiguraciones extends Fragment{
 
 
     private List<ConfiguracionLealtadModel> Configuraciones;
+    private ProgressDialog progressDialog;
 
 
     public FragmentLealtadConfiguraciones() {
@@ -101,6 +103,12 @@ public class FragmentLealtadConfiguraciones extends Fragment{
         fr = getFragmentManager().beginTransaction();
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
+
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         Configuraciones = new ArrayList<>();
         SucursalName=new ArrayList<>();
         SucursalID = new ArrayList<>();
@@ -199,9 +207,8 @@ public class FragmentLealtadConfiguraciones extends Fragment{
                                     if (status == 1)
                                     {
 
-                                        Toast toast1 =
-                                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-
+                                        progressDialog.dismiss();
+                                        Toast toast1 = Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
                                         toast1.show();
                                         crearConfiguracion.dismiss();
                                         Configuraciones.clear();
@@ -289,6 +296,7 @@ public class FragmentLealtadConfiguraciones extends Fragment{
                     if (status == 1)
                     {
 
+                        progressDialog.dismiss();
                         Respuesta = response.getJSONObject("resultado");
                             NodoConfiguraciones = Respuesta.getJSONArray("aConfiguracionProgramaLealtad");
                             for(int y = 0; y < NodoConfiguraciones.length();y++)

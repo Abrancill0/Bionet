@@ -2,6 +2,7 @@ package com.Danthop.bionet;
 
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -53,8 +54,7 @@ public class FragmentLealtadArticulo extends Fragment {
     private Spinner SpinnerSucursal;
     private Dialog dialog;
     private ImageLoader imageLoader = ImageLoader.getInstance();
-
-
+    private ProgressDialog progressDialog;
     private String usu_id;
 
 
@@ -76,6 +76,12 @@ public class FragmentLealtadArticulo extends Fragment {
         fr = getFragmentManager().beginTransaction();
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
+
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         articulos = new ArrayList<>();
         SucursalName=new ArrayList<>();
         SucursalID = new ArrayList<>();
@@ -240,6 +246,7 @@ public class FragmentLealtadArticulo extends Fragment {
                     if (status == 1)
                     {
 
+                        progressDialog.dismiss();
                         Respuesta = response.getJSONArray("resultado");
 
                         for(int x = 0; x < Respuesta.length(); x++){

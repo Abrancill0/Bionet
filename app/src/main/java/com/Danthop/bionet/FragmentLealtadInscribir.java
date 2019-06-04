@@ -157,7 +157,7 @@ public class FragmentLealtadInscribir extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 clientes.clear();
-                progreso.setMessage("Iniciando sesion...");
+                progreso.setMessage("Espere un momento por favor");
                 progreso.show();
                 handler.postDelayed(new Runnable() {
                     @Override

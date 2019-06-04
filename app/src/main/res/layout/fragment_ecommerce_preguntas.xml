@@ -31,6 +31,7 @@
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
+                android:textSize="17dp"
                 android:text="Órdenes"
                 android:textAllCaps="false" />
         </LinearLayout>
@@ -48,6 +49,7 @@
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
                 android:fontFamily="@font/muli"
+                android:textSize="17dp"
                 android:text="Sincronizar"
                 android:textAllCaps="false" />
         </LinearLayout>
@@ -65,6 +67,7 @@
                 android:layout_margin="0dp"
                 android:background="#C9D7E1"
                 android:fontFamily="@font/muli"
+                android:textSize="17dp"
                 android:text="Preguntas"
                 android:textAllCaps="false" />
         </LinearLayout>

@@ -16,6 +16,7 @@ import android.media.MediaPlayer;
 
 import com.Danthop.bionet.Adapters.ClienteFrecuenteAdapter;
 import com.Danthop.bionet.Adapters.HomeExistenciasAdapter;
+import com.Danthop.bionet.Adapters.TopNotificacionAdapter;
 import com.Danthop.bionet.Adapters.TopvendidosAdapter;
 import com.Danthop.bionet.Tables.SortableClienteFrecuenteTable;
 import com.Danthop.bionet.Tables.SortableInventariosTable;
@@ -34,18 +35,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
-import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
-
-import static java.util.stream.Collectors.counting;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,6 +58,7 @@ public class Fragment_pantalla_principal extends Fragment{
     private List<InventarioModel> inventarios;
     private List<ClienteFrecuenteModel>Clientes;
     private List<ClienteFrecuenteModel>Productos;
+    private List<ClienteFrecuenteModel> Notificaciones;
     private List<ClienteFrecuenteModel>Clientes2;
     private List<ClienteFrecuenteModel>TopClienteMax;
     private List<ClienteFrecuenteModel>Top;
@@ -142,16 +137,18 @@ public class Fragment_pantalla_principal extends Fragment{
 //--------------------------------------------------------------------------------------------------
 
         tabla_notificacion = (SortableClienteFrecuenteTable) v.findViewById(R.id.tablaNotificaciones);
-        final SimpleTableHeaderAdapter simpleHeader2 = new SimpleTableHeaderAdapter(getContext(), "Notificación");
+        final SimpleTableHeaderAdapter simpleHeader2 = new SimpleTableHeaderAdapter(getContext(), "Notificación", "Fecha");
         simpleHeader2.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader2.setTextSize( 14 );
         simpleHeader2.setPaddings(10,10,10,10);
 
-        final TableColumnWeightModel tableColumnWeightModel2 = new TableColumnWeightModel(1);
+        final TableColumnWeightModel tableColumnWeightModel2 = new TableColumnWeightModel(2);
         tableColumnWeightModel2.setColumnWeight(0, 2);
+        tableColumnWeightModel2.setColumnWeight(1, 2);
 
         tabla_notificacion.setHeaderAdapter(simpleHeader2);
         tabla_notificacion.setColumnModel(tableColumnWeightModel2);
+        Notificaciones = new ArrayList<ClienteFrecuenteModel>();
 
 //--------------------------------------------------------------------------------------------------
 
@@ -210,6 +207,7 @@ public class Fragment_pantalla_principal extends Fragment{
         LoadMasVendidos();
         LoadPocasExistencias();
         LoadClientesFrecuentes();
+        LoadNotificaciones();
         return v;
     }
 
@@ -339,7 +337,7 @@ private void LoadClientesFrecuentes(){
                             String nombre_cliente = elemento.getString("tic_id_nombre");
                             String compras = elemento.getString("compras");
 
-                           final ClienteFrecuenteModel Nombrecliente = new ClienteFrecuenteModel(nombre_cliente,compras,"","", "");
+                           final ClienteFrecuenteModel Nombrecliente = new ClienteFrecuenteModel(nombre_cliente,compras,"","", "","","");
                            Clientes.add(Nombrecliente);
                         }
                     }
@@ -400,7 +398,7 @@ private void LoadMasVendidos(){
 
 
 
-                            final ClienteFrecuenteModel Topvendidos = new ClienteFrecuenteModel("",NumTicket,"", tar_nombre_articulo, "");
+                            final ClienteFrecuenteModel Topvendidos = new ClienteFrecuenteModel("",NumTicket,"", tar_nombre_articulo, "","","");
                             Productos.add(Topvendidos);
                         }
                     }
@@ -435,6 +433,71 @@ private void LoadMasVendidos(){
     VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( postRequest );
 }
 
+//--------------------------------------------------------------------------------------------------
+public void LoadNotificaciones() {
+    try {
+        String ApiPath = "http://187.189.192.150:8010/api/notificaciones/index?usu_id=" + usu_id + "&esApp=1";
+
+        // prepare the Request
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+
+                            int EstatusApi = Integer.parseInt(response.getString("estatus"));
+
+                            if (EstatusApi == 1) {
+
+                                JSONObject resultado = response.getJSONObject("resultado");
+                                JSONArray NodoNotificaciones = resultado.getJSONArray("aNotificaciones");
+                                for(int x=0;x<NodoNotificaciones.length();x++)
+                                {
+                                    JSONObject elemento = NodoNotificaciones.getJSONObject(x);
+                                    JSONObject NodoID = elemento.getJSONObject("nen_id");
+                                    String ID = NodoID.getString("uuid");
+                                    String Titulo = elemento.getString("nen_titulo");
+                                    String Fecha = elemento.getString("nen_fecha_hora_creo");
+
+
+
+                                    final ClienteFrecuenteModel Notificacion = new ClienteFrecuenteModel(
+                                            "",
+                                             "",
+                                            "",
+                                             "",
+                                            "",Titulo,Fecha);
+
+                                    Notificaciones.add(Notificacion);
+                                }
+
+                                final TopNotificacionAdapter NotificacionAdapter = new TopNotificacionAdapter(getContext(), Notificaciones ,tabla_notificacion);
+                                tabla_notificacion.setDataAdapter(NotificacionAdapter);
+
+                            }
+                        } catch (JSONException e) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf(e), Toast.LENGTH_LONG);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(),
+                                        String.valueOf(error), Toast.LENGTH_LONG);
+                    }
+                }
+        );
+        getRequest.setShouldCache(false);
+
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+    } catch (Error e) {
+        e.printStackTrace();
+    }
+}
 
 }
 

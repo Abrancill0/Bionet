@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="20dp"
                     app:tableView_headerColor="@color/white"
-                    table:tableView_columnCount="1" />
+                    table:tableView_columnCount="2" />
 
             </LinearLayout>
 
