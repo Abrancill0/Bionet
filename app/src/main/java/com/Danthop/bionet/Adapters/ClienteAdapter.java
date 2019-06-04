@@ -4,7 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -37,9 +39,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
+
 
 public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel> {
 
@@ -76,7 +77,7 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
 
     private String UsuarioID;
 
-    public ClienteAdapter(final Context context, final List<ClienteModel> data, final SortableClientesTable tableView,FragmentTransaction gr) {
+    public ClienteAdapter(final Context context, final List<ClienteModel> data, final SortableClientesTable tableView, FragmentTransaction gr) {
         super(context, data, tableView);
 
         if (tabla_clientes ==null ){

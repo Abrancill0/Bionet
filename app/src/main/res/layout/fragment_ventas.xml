@@ -126,11 +126,10 @@
                         android:background="@drawable/pestanas_desplegables"
                         android:drawableLeft="@drawable/ic_agregar_producto"
                         android:drawablePadding="15dp"
-                        android:padding="30dp"
+                        android:padding="15dp"
                         android:text="Artículo"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp"
-                        android:textStyle="bold"/>
+                        android:textSize="13sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -149,11 +148,10 @@
                         android:background="@drawable/pestanas_desplegables"
                         android:drawableLeft="@drawable/ic_agregar_vendedor"
                         android:drawablePadding="15dp"
-                        android:padding="30dp"
+                        android:padding="15dp"
                         android:text="Vendedor"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp"
-                        android:textStyle="bold"/>
+                        android:textSize="13sp" />
 
                 </LinearLayout>
 
@@ -173,11 +171,10 @@
                         android:background="@drawable/pestanas_desplegables"
                         android:drawableLeft="@drawable/ic_agregar_cliente"
                         android:drawablePadding="15dp"
-                        android:padding="30dp"
+                        android:padding="15dp"
                         android:text="Cliente"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp"
-                        android:textStyle="bold"/>
+                        android:textSize="13sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -274,13 +271,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".8"
-            android:background="#F8F9F9"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".3"
+                android:layout_weight=".7"
                 android:orientation="vertical">
 
                 <com.synnapps.carouselview.CarouselView
@@ -298,7 +295,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".4"
+                android:layout_weight=".6"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
@@ -341,120 +338,15 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/IVA_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
-                    <LinearLayout
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerImpuestos"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".6"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/nombreIVA"
-                            android:layout_width="75dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="10dp"
-                            android:text="IVA"
-                            android:textColor="@color/colorPrimaryDark" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".4"
-                        android:gravity="end"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/iva_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="10dp"
-                            android:text="$0.00" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ISR_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".6"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/nombreISR"
-                            android:layout_width="75dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="10dp"
-                            android:text="ISR"
-                            android:textColor="@color/colorPrimaryDark" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".4"
-                        android:gravity="end"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/isr_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="10dp"
-                            android:text="$0.00" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/IEPS_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".6"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/nombreIEPS"
-                            android:layout_width="75dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="10dp"
-                            android:text="IEPS"
-                            android:textColor="@color/colorPrimaryDark" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".4"
-                        android:gravity="end"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/ieps_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="10dp"
-                            android:text="$0.00" />
-                    </LinearLayout>
-
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -481,8 +373,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight=".4"
-                        android:orientation="horizontal"
-                        android:gravity="end">
+                        android:gravity="end"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/descuento_text"
@@ -518,8 +410,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight=".4"
-                        android:orientation="horizontal"
-                        android:gravity="end">
+                        android:gravity="end"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/total_text"
@@ -536,7 +428,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".4"
+                android:layout_weight=".7"
                 android:orientation="vertical">
 
                 <Button
@@ -562,7 +454,7 @@
                     android:padding="0dp"
                     android:text="Apartar"
                     android:textColor="@color/gray"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     android:visibility="invisible" />
 
                 <Button
@@ -571,11 +463,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="34dp"
                     android:layout_margin="5dp"
-                    android:background="@color/colorPrimaryDark"
+                    android:background="@drawable/shape_gray"
                     android:padding="0dp"
-                    android:text="Cobrar"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:text="Finalizar Compra"
+                    android:textColor="@color/gray"
+                    android:textSize="14sp"
                     android:visibility="invisible" />
 
 

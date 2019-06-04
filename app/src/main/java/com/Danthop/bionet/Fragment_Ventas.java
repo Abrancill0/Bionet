@@ -17,6 +17,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +36,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ClienteAdapter;
+import com.Danthop.bionet.Adapters.ImpuestoAdapter;
 import com.Danthop.bionet.Adapters.ListaTicketsAdapter;
 import com.Danthop.bionet.Adapters.MetodoPagoAdapter;
+import com.Danthop.bionet.Adapters.NotificacionAdapter;
 import com.Danthop.bionet.Adapters.SeleccionaApartadoAdapter;
 import com.Danthop.bionet.Adapters.SeleccionaOrdenEspecialAdapter;
 import com.Danthop.bionet.Adapters.SeleccionarArticuloVentaAdapter;
@@ -242,6 +246,11 @@ public class Fragment_Ventas extends Fragment {
     static UsbDevice dev = null;
 
 
+    private RecyclerView RecyclerImpuesto;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private NumberFormat formatter;
+
+
     private Button btn_imprimir;
 
     public Fragment_Ventas() {
@@ -258,6 +267,7 @@ public class Fragment_Ventas extends Fragment {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
+        formatter =  NumberFormat.getCurrencyInstance();
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
         cca_id_sucursal = sharedPref.getString("cca_id_sucursal", "");
@@ -300,7 +310,12 @@ public class Fragment_Ventas extends Fragment {
         descuento = v.findViewById(R.id.descuento_text);
         total = v.findViewById(R.id.total_text);
         subtotal = v.findViewById(R.id.subtotal_text);
-        impuesto = v.findViewById(R.id.iva_text);
+
+
+        RecyclerImpuesto = v.findViewById(R.id.recyclerImpuestos);
+        RecyclerImpuesto.setHasFixedSize(true);
+
+
         VendedorName = new ArrayList<>();
         VendedorID = new ArrayList<>();
         progreso = new ProgressDialog(getContext());
@@ -323,6 +338,7 @@ public class Fragment_Ventas extends Fragment {
         ArticulosApartados = new ArrayList<>();
         ArticulosOrdenados = new ArrayList<>();
 
+
         Meses = new ArrayList<>();
 
         tabla_venta_articulos = v.findViewById(R.id.tabla_venta_articulos);
@@ -340,17 +356,17 @@ public class Fragment_Ventas extends Fragment {
                 InstanciarModeloTicket();
                 ArticulosVenta.clear();
                 Imagenes.clear();
-                total.setText("");
-                subtotal.setText("");
-                descuento.setText("");
-                impuesto.setText("");
+                total.setText("$0.00");
+                subtotal.setText("$0.00");
+                descuento.setText("$0.00");
                 btn_agregar_vendedor.setText("Vendedor");
                 btn_agregar_cliente.setText("Cliente");
                 ListaDeArticulosApartados.clear();
                 ListaDeArticulosOrdenados.clear();
                 final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
                         total, descuento, impuesto, subtotal,
-                        carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,btn_ordenar,btn_apartar,btn_finalizar);
+                        carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,btn_ordenar,btn_apartar,btn_finalizar,
+                        RecyclerImpuesto);
                 articuloAdapter.notifyDataSetChanged();
                 tabla_venta_articulos.setDataAdapter(articuloAdapter);
                 LoadImages();
@@ -1757,7 +1773,8 @@ public class Fragment_Ventas extends Fragment {
                         Imagenes.clear();
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
                                 total, descuento, impuesto, subtotal,
-                                carouselView, Imagenes,ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,btn_ordenar,btn_apartar,btn_finalizar);
+                                carouselView, Imagenes,ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,btn_ordenar,btn_apartar,btn_finalizar,
+                                RecyclerImpuesto);
                         articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                         LoadImages();
@@ -1847,10 +1864,28 @@ public class Fragment_Ventas extends Fragment {
                         float ImpuestoTotal = 0;
                         float Subtotal = 0;
                         JSONArray tic_impuestos = RespuestaNodoTicket.getJSONArray("tic_impuestos");
+                        List<Impuestos> ImpuestosList = new ArrayList<>();
                         for (int f = 0; f < tic_impuestos.length(); f++) {
                             JSONObject nodo_impuestos = tic_impuestos.getJSONObject(f);
-                            ImpuestoTotal = Float.parseFloat(nodo_impuestos.getString("valor"));
+                            String ValorImpuesto = nodo_impuestos.getString("valor");
+                            double ValorEnPesos = Double.parseDouble(ValorImpuesto);
+                            if(ValorEnPesos<0)
+                            {
+                                ValorEnPesos=ValorEnPesos*-1;
+                            }
+                            ValorImpuesto= String.valueOf(formatter.format(ValorEnPesos));
+                            Impuestos impuesto = new Impuestos("",ValorImpuesto);
+                            impuesto.setNombreImpuesto(nodo_impuestos.getString("nombre"));
+                            ImpuestosList.add(impuesto);
                         }
+
+                        ImpuestoAdapter mAdapter = new ImpuestoAdapter(ImpuestosList);
+                        RecyclerImpuesto.setHasFixedSize(true);
+                        mLayoutManager = new LinearLayoutManager(getContext());
+                        RecyclerImpuesto.setLayoutManager(mLayoutManager);
+                        RecyclerImpuesto.setAdapter(mAdapter);
+
+
                         float DescuentoTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_descuentos"));
                         float PrecioTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_total"));
 
@@ -1986,16 +2021,11 @@ public class Fragment_Ventas extends Fragment {
                         ticket_de_venta.setTic_impuestos(String.valueOf(ImpuestoTotal));
 
 
-                        NumberFormat formatter = NumberFormat.getCurrencyInstance();
-
                         double Price = Double.parseDouble(ticket_de_venta.getTic_importe_total());
                         total.setText(formatter.format(Price));
 
                         double descu = Double.parseDouble(ticket_de_venta.getTic_importe_descuentos());
                         descuento.setText(formatter.format(descu));
-
-                        double Iva = Double.parseDouble(ticket_de_venta.getTic_impuestos());
-                        impuesto.setText(formatter.format(Iva));
 
                         double sub = Double.parseDouble(String.valueOf(Subtotal));
                         subtotal.setText(formatter.format(sub));
@@ -2043,7 +2073,8 @@ public class Fragment_Ventas extends Fragment {
 
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
                                 total, descuento, impuesto, subtotal,
-                                carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,btn_ordenar,btn_apartar,btn_finalizar);
+                                carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,btn_ordenar,btn_apartar,btn_finalizar,
+                                RecyclerImpuesto);
                         articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                         LoadImages();

@@ -106,6 +106,10 @@ dependencies {
 
     implementation 'com.itextpdf:itextg:5.5.10'
 
+    implementation 'com.sortabletableview.recyclerview:sortabletableview:3.2.0'
+
+    implementation fileTree(dir: 'libs', include: 'sortabletableview-license.jar')
+
 }
 
     apply plugin: 'com.google.gms.google-services'

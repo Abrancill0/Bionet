@@ -8,7 +8,6 @@ import com.Danthop.bionet.R;
 import com.Danthop.bionet.model.ClienteModel;
 
 import de.codecrafters.tableview.SortableTableView;
-import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 

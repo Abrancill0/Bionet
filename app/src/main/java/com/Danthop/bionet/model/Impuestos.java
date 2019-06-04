@@ -3,6 +3,7 @@ package com.Danthop.bionet.model;
 public class Impuestos {
         String ImpuestosID;
         String ValorImpuesto;
+        String NombreImpuesto;
 
         public Impuestos(String impuestosID, String valorImpuesto) {
             ImpuestosID = impuestosID;
@@ -25,4 +26,11 @@ public class Impuestos {
             ValorImpuesto = valorImpuesto;
         }
 
+        public String getNombreImpuesto() {
+            return NombreImpuesto;
+        }
+
+        public void setNombreImpuesto(String nombreImpuesto) {
+            NombreImpuesto = nombreImpuesto;
+        }
 }

@@ -19,7 +19,8 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url "https://jitpack.io" }
+        maven {
+                url "https://mymavenrepo.com/repo/JSorCmGW2Cshv9VKlxqN/"}
     }
 }
 

@@ -1,6 +1,8 @@
 package com.Danthop.bionet.Adapters;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -67,6 +69,10 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     private Button ApartarButton;
     private Button FinalizarButton;
 
+    private RecyclerView RecyclerImpuesto;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private NumberFormat formatter;
+
     private LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
 
@@ -79,7 +85,8 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                 List<OrdenEspecialArticuloModel> listaDeArticulosOrdenados,
                                 Button ordenarButton,
                                 Button apartarButton,
-                                Button finalizarButton) {
+                                Button finalizarButton,
+                                RecyclerView reciclerImpuesto) {
         super(context, data, tableView);
         Articulos = data;
         tabla_venta_articulos = tableView;
@@ -98,6 +105,8 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
         OrdenarButton = ordenarButton;
         ApartarButton = apartarButton;
         FinalizarButton = finalizarButton;
+        RecyclerImpuesto = reciclerImpuesto;
+        formatter = NumberFormat.getCurrencyInstance();
     }
 
     @Override
@@ -223,7 +232,6 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     private View renderDescuento(final ArticuloModel articulo) {
         double Descuento = Double.parseDouble( articulo.getArticulo_descuento() );
 
-        NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
         final TextView textView = new TextView( getContext() );
         textView.setText( formatter.format( Descuento ) );
@@ -235,7 +243,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     private View renderImporte(final ArticuloModel articulo) {
         double Importe = Double.parseDouble( articulo.getArticulo_importe() );
 
-        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        formatter = NumberFormat.getCurrencyInstance();
 
         final TextView textView = new TextView( getContext() );
         textView.setText( formatter.format( Importe ) );
@@ -342,11 +350,27 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                         float Subtotal = 0;
                         float ImpuestoTotal = 0;
                         JSONArray tic_impuestos = RespuestaNodoTicket.getJSONArray("tic_impuestos");
-                        for (int f=0; f<tic_impuestos.length();f++)
-                        {
+                        List<Impuestos> ImpuestosList = new ArrayList<>();
+                        for (int f = 0; f < tic_impuestos.length(); f++) {
                             JSONObject nodo_impuestos = tic_impuestos.getJSONObject(f);
-                            ImpuestoTotal= Float.parseFloat(nodo_impuestos.getString("valor"));
+                            String ValorImpuesto = nodo_impuestos.getString("valor");
+                            double ValorEnPesos = Double.parseDouble((ValorImpuesto));
+                            if(ValorEnPesos<0)
+                            {
+                                ValorEnPesos=ValorEnPesos*-1;
+                            }
+                            ValorImpuesto= String.valueOf(formatter.format(ValorEnPesos));
+                            Impuestos impuesto = new Impuestos("",ValorImpuesto);
+                            impuesto.setNombreImpuesto(nodo_impuestos.getString("nombre"));
+                            ImpuestosList.add(impuesto);
                         }
+
+                        ImpuestoAdapter mAdapter = new ImpuestoAdapter(ImpuestosList);
+                        RecyclerImpuesto.setHasFixedSize(true);
+                        mLayoutManager = new LinearLayoutManager(getContext());
+                        RecyclerImpuesto.setLayoutManager(mLayoutManager);
+                        RecyclerImpuesto.setAdapter(mAdapter);
+
                         float DescuentoTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_descuentos"));
                         float PrecioTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_total"));
 
@@ -488,9 +512,6 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                         double descu = Double.parseDouble( TicketVenta.getTic_importe_descuentos() );
                         descuento.setText( formatter.format( descu ) );
 
-                        double Iva = Double.parseDouble( TicketVenta.getTic_impuestos() );
-                        impuesto.setText( formatter.format( Iva ) );
-
                         double sub = Double.parseDouble(String.valueOf(Subtotal));
                         subtotal.setText( formatter.format( sub ) );
 
@@ -534,7 +555,8 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), Articulos, tabla_venta_articulos, TicketVenta, Usu_id,
                                 total, descuento, impuesto, subtotal,
-                                carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,OrdenarButton,ApartarButton,FinalizarButton);
+                                carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,OrdenarButton,ApartarButton,FinalizarButton,
+                                RecyclerImpuesto);
                         articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                         LoadImages();
@@ -618,11 +640,27 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                         float ImpuestoTotal = 0;
                         float Subtotal = 0;
                         JSONArray tic_impuestos = RespuestaNodoTicket.getJSONArray("tic_impuestos");
-                        for (int f=0; f<tic_impuestos.length();f++)
-                        {
+                        List<Impuestos> ImpuestosList = new ArrayList<>();
+                        for (int f = 0; f < tic_impuestos.length(); f++) {
                             JSONObject nodo_impuestos = tic_impuestos.getJSONObject(f);
-                            ImpuestoTotal= Float.parseFloat(nodo_impuestos.getString("valor"));
+                            String ValorImpuesto = nodo_impuestos.getString("valor");
+                            double ValorEnPesos = Double.parseDouble(ValorImpuesto);
+                            if(ValorEnPesos<0)
+                            {
+                                ValorEnPesos=ValorEnPesos*-1;
+                            }
+                            ValorImpuesto= String.valueOf(formatter.format(ValorEnPesos));
+                            Impuestos impuesto = new Impuestos("",ValorImpuesto);
+                            impuesto.setNombreImpuesto(nodo_impuestos.getString("nombre"));
+                            ImpuestosList.add(impuesto);
                         }
+
+                        ImpuestoAdapter mAdapter = new ImpuestoAdapter(ImpuestosList);
+                        RecyclerImpuesto.setHasFixedSize(true);
+                        mLayoutManager = new LinearLayoutManager(getContext());
+                        RecyclerImpuesto.setLayoutManager(mLayoutManager);
+                        RecyclerImpuesto.setAdapter(mAdapter);
+
                         float DescuentoTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_descuentos"));
                         float PrecioTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_total"));
 
@@ -764,9 +802,6 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                         double descu = Double.parseDouble( TicketVenta.getTic_importe_descuentos() );
                         descuento.setText( formatter.format( descu ) );
 
-                        double Iva = Double.parseDouble( TicketVenta.getTic_impuestos() );
-                        impuesto.setText( formatter.format( Iva ) );
-
                         double sub = Double.parseDouble(String.valueOf(Subtotal));
                         subtotal.setText( formatter.format( sub ) );
 
@@ -812,7 +847,8 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), Articulos, tabla_venta_articulos, TicketVenta, Usu_id,
                                 total, descuento, impuesto, subtotal,
                                 carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,
-                                OrdenarButton,ApartarButton,FinalizarButton);
+                                OrdenarButton,ApartarButton,FinalizarButton,
+                                RecyclerImpuesto);
                         articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                         LoadImages();

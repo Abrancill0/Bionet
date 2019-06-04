@@ -29,6 +29,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.sortabletableview.recyclerview.toolkit.FilterHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -145,6 +146,8 @@ public class Fragment_clientes extends Fragment {
         tabla_clientes.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
         tabla_clientes.addDataClickListener(tablaListener);
 
+        //FilterHelper<ClienteModel> filterHelper = new FilterHelper<>(tabla_clientes);
+        //filterHelper.setFilter(new FiltroClientes(""));
 
         return v;
 
@@ -538,4 +541,17 @@ public class Fragment_clientes extends Fragment {
     }
 
 
+}
+
+final class FiltroClientes implements FilterHelper.Filter<ClienteModel> {
+    private final String query;
+    FiltroClientes(final String query) {
+        this.query = query;
+    }
+    @Override
+    public boolean apply(final ClienteModel cliente) {
+        final String NameLowerCase = cliente.getCliente_Nombre().toLowerCase();
+        final String queryLowerCase = query.toLowerCase();
+        return NameLowerCase.contains(queryLowerCase);
+    }
 }
