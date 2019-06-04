@@ -613,6 +613,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                         String IDCliente = NodoIDCliente.getString("uuid");
                                         String Cliente = elemento.getString("cli_nombre");
                                         String Sucursal = elemento.getString("suc_nombre");
+                                        String NumSucursal = elemento.getString( "suc_numero" );
                                         String FechaDeApartado = elemento.getString("apa_fecha_hora_creo");
                                         String MontoPagado = elemento.getString("apa_importe_pagado");
                                         String MontoRestante = elemento.getString("apa_importe_restante");
@@ -620,6 +621,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                         String FechaDeCreacion = elemento.getString("apa_fecha_hora_creo");
                                         String Estatus = elemento.getString("apa_estatus");
 
+                                        String SucursalClave = Sucursal + (NumSucursal);
                                         List<ArticuloApartadoModel> ListaDeArticulosApartados = new ArrayList<>();
                                         JSONArray Articulos = elemento.getJSONArray("aArticulosApartados");
                                         for(int i= 0; i<Articulos.length(); i++)
@@ -676,7 +678,6 @@ public class Fragment_ventas_transacciones extends Fragment {
                                                     ArticuloPrecio
                                             );
                                             ListaDeArticulosApartados.add(ArticuloApartado);
-
                                         }
 
                                         ApartadoModel Apartado = new ApartadoModel(
@@ -684,7 +685,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                                 IDCliente,
                                                 Cliente,
                                                 IDSucursal,
-                                                Sucursal,
+                                                SucursalClave,
                                                 MontoPagado,
                                                 MontoRestante,
                                                 FechaDeVencimiento,

@@ -1,5 +1,6 @@
 package com.Danthop.bionet;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -62,6 +63,7 @@ public class Fragment_pestania_historico extends Fragment {
     private String his_observaciones;
     private String observacion;
     private String his_fecha_hora_creo;
+    private ProgressDialog progressDialog;
 
     public Fragment_pestania_historico() {
         // Required empty public constructor
@@ -95,6 +97,12 @@ public class Fragment_pestania_historico extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
+
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         historico = new ArrayList<>();
 
         tabla_historico = (SortableHistoricoTable) v.findViewById(R.id.tabla_historico);
@@ -157,6 +165,7 @@ public class Fragment_pestania_historico extends Fragment {
                     String Mensaje = response.getString("mensaje");
 
                     if (status == 1) {
+                        progressDialog.dismiss();
                         Resultado = response.getJSONObject("resultado");
 //---------------------------------------------------------------------------------------
                         aHistoricos = Resultado.getJSONArray("aHistoricos");

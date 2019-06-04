@@ -79,6 +79,7 @@ public class Fragment_ecommerce_preguntas extends Fragment {
     private TableDataClickListener<Preguntas_Model> tablaListener;
     private Dialog pop_up1;
     private TextView Respuesta;
+    private ProgressDialog progressDialog;
 
     public Fragment_ecommerce_preguntas() {
         // Required empty public constructor
@@ -98,6 +99,11 @@ public class Fragment_ecommerce_preguntas extends Fragment {
         TokenLife = sharedPref.getString( "TokenLifetime", "" );
         usu_id = sharedPref.getString( "usu_id", "" );
 
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         Bundle bundle = getArguments();
 
         String json = bundle.getString( "Resultado" );
@@ -106,6 +112,7 @@ public class Fragment_ecommerce_preguntas extends Fragment {
         try {
             JSONObject obj = new JSONObject( json );
             CargaDatos( obj );
+            progressDialog.dismiss();
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -125,6 +132,7 @@ public class Fragment_ecommerce_preguntas extends Fragment {
                     public void run() {
                         Preguntas.clear();
                         LoadTable();
+                        progressDialog.dismiss();
                         refreshIndicator.hide();
                     }
                 }, 2000 );
@@ -145,6 +153,8 @@ public class Fragment_ecommerce_preguntas extends Fragment {
                 pop_up1=new Dialog(getContext());
                 pop_up1.setContentView(R.layout.pop_up_ecommerce_contestar_pregunta );
                 pop_up1.show();
+
+                progressDialog.dismiss();
 
                 TextView ArticuloPregunta = pop_up1.findViewById(R.id.text_pregunta_articulo);
                 TextView Pregunta = pop_up1.findViewById(R.id.text_pregunta);
@@ -240,6 +250,7 @@ public class Fragment_ecommerce_preguntas extends Fragment {
                                     EliminaPreguntaBloquearUsuario(UserML,clickedData.getIDComprador(),clickedData.gettoken());
 
                                     progreso.hide();
+                                    progressDialog.dismiss();
 
                                 }
 
@@ -591,6 +602,7 @@ public class Fragment_ecommerce_preguntas extends Fragment {
             public void onClick(View v) {
 
                 Bundle bundle = new Bundle();
+                progressDialog.dismiss();
 
                 if (RespuestaTodoJSON != null) {
                     bundle.putString( "Resultado", String.valueOf( RespuestaTodoJSON ) );

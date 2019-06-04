@@ -1,5 +1,6 @@
 package com.Danthop.bionet;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -86,6 +87,7 @@ public class Fragment_inventarios extends Fragment {
     private String suc_numero_sucursal_destino;
     private String suc_numero_sucursal_origen;
     private String tra_motivo;
+    private ProgressDialog progressDialog;
 
     public Fragment_inventarios() {
         // Required empty public constructor
@@ -109,6 +111,12 @@ public class Fragment_inventarios extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
+
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         inventarios = new ArrayList<>();
 
         tabla_inventario = (SortableInventariosTable) v.findViewById(R.id.tabla_inventario);
@@ -195,6 +203,7 @@ public class Fragment_inventarios extends Fragment {
                     String Mensaje = response.getString("mensaje");
 
                     if (status == 1) {
+                        progressDialog.dismiss();
                         Resultado = response.getJSONObject("resultado");
 
                         Articulo = Resultado.getJSONArray("aArticuloExistencias");

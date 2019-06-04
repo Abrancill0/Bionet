@@ -41,16 +41,14 @@ public class FragmentLealtad extends Fragment {
     private Button Inscribir;
     private Button Articulos;
     ProgressDialog progreso;
-
-
     private String nombre;
     private String cli_numero;
     private String correo_electronico;
     private String puntos;
 
     private String usu_id;
-
     private List<Puntos_acumulados_model> clientes;
+    private ProgressDialog progressDialog;
 
 
 
@@ -69,8 +67,12 @@ public class FragmentLealtad extends Fragment {
 
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
-
         usu_id = sharedPref.getString("usu_id","");
+
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
 
         clientes = new ArrayList<>();
 
@@ -142,13 +144,11 @@ public class FragmentLealtad extends Fragment {
                     int status = Integer.parseInt(response.getString("estatus"));
                     String Mensaje = response.getString("mensaje");
 
-                    if (status == 1)
-                    {
+                    if (status == 1) {
 
+                        progressDialog.dismiss();
                         Respuesta = response.getJSONObject("resultado");
-
                         RespuestaNodoClientes = Respuesta.getJSONArray("aClientes");
-
 
                         for(int x = 0; x < RespuestaNodoClientes.length(); x++){
                             JSONObject elemento = RespuestaNodoClientes.getJSONObject(x);
@@ -162,7 +162,8 @@ public class FragmentLealtad extends Fragment {
 
 
 
-                            final Puntos_acumulados_model cliente = new Puntos_acumulados_model(cli_numero,
+                            final Puntos_acumulados_model cliente = new Puntos_acumulados_model(
+                                    cli_numero,
                                     nombre,
                                     correo_electronico,
                                     puntos

@@ -75,6 +75,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
     Dialog FichaTecnica;
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private List<SincronizarModel> Sincronizaciones;
+    private ProgressDialog progressDialog;
 
     public Fragment_ecommerce_Sincronizar() {
         // Required empty public constructor
@@ -275,7 +276,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
         try {
 
             progreso = new ProgressDialog(getContext());
-            progreso.setMessage("Cargando...");
+            progreso.setMessage("Espere un momento por favor");
             progreso.show();
 
             tabla_sincronizar = (SortableSincronizarTable) v.findViewById(R.id.tabla_sincronizar);
@@ -377,7 +378,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
     public int LoadTable() {
 
         progreso = new ProgressDialog(getContext());
-        progreso.setMessage("Cargando...");
+        progreso.setMessage("Espere un momento por favor");
         progreso.show();
 
         try {
@@ -414,6 +415,8 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
                         int EstatusApi = Integer.parseInt(response.getString("estatus"));
 
                         if (EstatusApi == 1) {
+
+                            progreso.dismiss();
                             RespuestaTodoJSON = response;
                             RespuestaDatos = response.getJSONArray("aDatos");
 

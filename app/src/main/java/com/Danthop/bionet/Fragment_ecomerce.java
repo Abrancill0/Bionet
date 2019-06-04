@@ -75,6 +75,11 @@ public class Fragment_ecomerce extends Fragment {
         TokenLife = sharedPref.getString( "TokenLifetime", "" );
         usu_id = sharedPref.getString( "usu_id", "" );
 
+        progreso=new ProgressDialog(getContext());
+        progreso.setMessage("Espere un momento por favor");
+        progreso.setCanceledOnTouchOutside(false);
+        progreso.show();
+
         Bundle bundle = getArguments();
 
         if (bundle != null) {
@@ -303,10 +308,6 @@ public class Fragment_ecomerce extends Fragment {
 
             tabla_ecomerce = (SortableOrdenEcommerceTable) v.findViewById( R.id.tabla_ecommerce );
 
-            progreso = new ProgressDialog( getContext() );
-            progreso.setMessage( "Cargando..." );
-            progreso.show();
-
             JSONObject RespuestaHistorial = null;
             JSONArray RespuestaHistorialResult = null;
             JSONObject RespuestaBuyer = null;
@@ -329,9 +330,12 @@ public class Fragment_ecomerce extends Fragment {
 
             try {
 
+
                 int EstatusApi = Integer.parseInt( Datos.getString( "estatus" ) );
 
                 RespuestaHistorial = Datos.getJSONObject( "aHistorial" );
+
+                progreso.dismiss();
 
                 RespuestaTodo = Datos;
 
@@ -434,10 +438,6 @@ public class Fragment_ecomerce extends Fragment {
 
             tabla_ecomerce = (SortableOrdenEcommerceTable) v.findViewById( R.id.tabla_ecommerce );
 
-            progreso = new ProgressDialog( getContext() );
-            progreso.setMessage( "Cargando..." );
-            progreso.show();
-
             String url = getString( R.string.Url );
 
             final String ApiPath = url + "/api/ecommerce/inicio_app/?accesstoken=" + AccesToken + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
@@ -473,6 +473,8 @@ public class Fragment_ecomerce extends Fragment {
                                 int EstatusApi = Integer.parseInt( response.getString( "estatus" ) );
 
                                 if (EstatusApi == 1) {
+
+                                    progreso.dismiss();
 
                                     RespuestaHistorial = response.getJSONObject( "aHistorial" );
 

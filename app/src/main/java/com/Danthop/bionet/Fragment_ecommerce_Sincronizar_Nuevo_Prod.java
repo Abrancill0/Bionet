@@ -85,6 +85,8 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private ImageLoader imageLoader2 = ImageLoader.getInstance();
     private String Remaining_listings;
 
+    private ProgressDialog progressDialog;
+
     private String Sucursal;
     private String Sucursal_UUID;
     private String Exi_ID;
@@ -128,6 +130,11 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         AccesToken = sharedPref.getString( "AccessToken", "" );
         TokenLife = sharedPref.getString( "TokenLifetime", "" );
         usu_id = sharedPref.getString("usu_id","");
+
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
 
         FotoArticulo1 = (ImageView) v.findViewById(R.id.foto_articulo1);
         FotoArticulo2 = (ImageView) v.findViewById(R.id.foto_articulo2);
@@ -199,6 +206,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                             int EstatusApi = Integer.parseInt( response.getString("estatus") );
                             if (EstatusApi == 1) {
 
+                                progressDialog.dismiss();
                                 RespuestaCategoria = response.getJSONArray("aCategorias");
                                 ArrayList arrayList = new ArrayList<>();
 
