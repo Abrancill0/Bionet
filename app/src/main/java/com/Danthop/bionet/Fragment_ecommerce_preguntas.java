@@ -86,9 +86,13 @@ public class Fragment_ecommerce_preguntas extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate( R.layout.fragment_ecommerce_preguntas, container, false );
+
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
 
         Preguntas = new ArrayList<>();
 
@@ -98,11 +102,6 @@ public class Fragment_ecommerce_preguntas extends Fragment {
         AccesToken = sharedPref.getString( "AccessToken", "" );
         TokenLife = sharedPref.getString( "TokenLifetime", "" );
         usu_id = sharedPref.getString( "usu_id", "" );
-
-        progressDialog=new ProgressDialog(getContext());
-        progressDialog.setMessage("Espere un momento por favor");
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
 
         Bundle bundle = getArguments();
 

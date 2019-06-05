@@ -145,6 +145,7 @@
                         android:layout_marginLeft="50dp"
                         android:gravity="center"
                         android:text="Corte de Caja"
+                        android:textSize="15dp"
                         android:textColor="@color/colorPrimaryDark" />
                 </LinearLayout>
 
@@ -162,6 +163,7 @@
                         android:layout_marginLeft="50dp"
                         android:gravity="center"
                         android:text="Listado de Corte"
+                        android:textSize="15dp"
                         android:textColor="@color/colorPrimaryDark" />
                 </LinearLayout>
 
@@ -179,6 +181,7 @@
                         android:layout_marginLeft="50dp"
                         android:gravity="center"
                         android:text="Factura Ventas"
+                        android:textSize="15dp"
                         android:textColor="@color/colorPrimaryDark" />
                 </LinearLayout>
 

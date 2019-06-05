@@ -243,20 +243,12 @@ public class Fragment_pestania_cortecaja extends Fragment {
                 int resultado = FechaInicio.compareTo( FechaFin );
                     if (resultado == 0 || resultado < 0) {
 
-                        if (resultado < 0) {
-
                             corte_caja();
 
                         } else {
-                            Toast toast1 = Toast.makeText( getContext(), "Fecha de inicio debe ser diferente a la fecha final", Toast.LENGTH_SHORT );
+                            Toast toast1 = Toast.makeText( getContext(), "Fecha de inicio debe ser menor a la fecha final", Toast.LENGTH_SHORT );
                             toast1.show();
                         }
-                    } else {
-                        Toast toast1 = Toast.makeText( getContext(), "Fecha de inicio debe ser menor a la de final", Toast.LENGTH_SHORT );
-                        toast1.show();
-                    }
-
-
             }
         });
 

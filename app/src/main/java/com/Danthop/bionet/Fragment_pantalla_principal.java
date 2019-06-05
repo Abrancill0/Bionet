@@ -332,14 +332,12 @@ private void LoadClientesFrecuentes(){
                         JSONObject elemento = Resultado.getJSONObject(x);
                         String cliente = elemento.getString("tic_id_cliente");
 
-
-                        if (cliente != "null"){
                             String nombre_cliente = elemento.getString("tic_id_nombre");
                             String compras = elemento.getString("compras");
 
                            final ClienteFrecuenteModel Nombrecliente = new ClienteFrecuenteModel(nombre_cliente,compras,"","", "","","");
                            Clientes.add(Nombrecliente);
-                        }
+
                     }
 
                     final ClienteFrecuenteAdapter FrecuenteAdapter = new ClienteFrecuenteAdapter(getContext(), Clientes,tabla_clientes);

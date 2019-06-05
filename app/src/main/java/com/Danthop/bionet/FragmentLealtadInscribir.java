@@ -21,6 +21,7 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.ClienteAdapter;
 import com.Danthop.bionet.Adapters.LealtadConfiguracionesAdapter;
 import com.Danthop.bionet.Adapters.LealtadInscribirAdapter;
 import com.Danthop.bionet.Tables.SortableLealtadInscribirTable;
@@ -58,6 +59,7 @@ public class FragmentLealtadInscribir extends Fragment {
     private String nombre;
     private String UUID;
     private String telefono;
+    private String UltimaCompra;
     private String correo_electronico;
     private String calle;
     private String cli_id;
@@ -89,6 +91,9 @@ public class FragmentLealtadInscribir extends Fragment {
     private Button eliminar;
     private TableDataClickListener<ClienteModel> tablaListener;
     private Button cancelarEliminar;
+    private ProgressDialog progressDialog;
+    private String[][] clienteModel;
+    private List<ClienteModel> clientes;
 
     private String correo_igual;
     private String direccion_igual;
@@ -104,8 +109,6 @@ public class FragmentLealtadInscribir extends Fragment {
     Handler handler;
     ProgressDialog progreso;
 
-    private List<ClienteModel> clientes;
-
     public FragmentLealtadInscribir() {
         // Required empty public constructor
     }
@@ -113,6 +116,8 @@ public class FragmentLealtadInscribir extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_lealtad_inscribir,container, false);
+
+
         fr = getFragmentManager().beginTransaction();
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
@@ -241,6 +246,7 @@ public class FragmentLealtadInscribir extends Fragment {
                             nombre = elemento.getString("cli_nombre");
                             correo_electronico = elemento.getString("cli_correo_electronico");
                             telefono = elemento.getString("cli_telefono");
+                            //UltimaCompra = elemento.getString( "cli_ultima_compra" );
 
                             List<CompraModel> HistorialCompras = new ArrayList<>();
 
@@ -320,6 +326,7 @@ public class FragmentLealtadInscribir extends Fragment {
 
 
     }
+
 
     private void LoadSpinnerSucursal(){
 

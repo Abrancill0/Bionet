@@ -1,4 +1,5 @@
 package com.Danthop.bionet;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -42,6 +43,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
     private String[][] ArticuloModel;
     private FragmentTransaction fr;
     SortableArticulosTable tb;
+    private ProgressDialog progressDialog;
 
     public Fragment_ecommerce_Sincronizar_Articulos() {
         // Required empty public constructor
@@ -50,6 +52,11 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_ecommerce_seleccionarticulos, container, false);
+
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", getActivity().MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
@@ -141,6 +148,7 @@ public class Fragment_ecommerce_Sincronizar_Articulos extends Fragment {
 
                         if (EstatusApi == 1) {
 
+                            progressDialog.dismiss();
                             RespuestaArticulos = response.getJSONArray("aArticulos");
 
                             for (int x = 0; x < RespuestaArticulos.length(); x++) {

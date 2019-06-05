@@ -44,6 +44,8 @@ public class LealtadInscribirAdapter extends LongPressAwareTableDataAdapter<Clie
             case 2:
                 renderedView = renderClienteTelefono(cliente);
                 break;
+            case 3:  renderedView = renderClienteUltimaVisita(cliente);
+                break;
         }
 
         return renderedView;

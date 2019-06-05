@@ -301,8 +301,7 @@ public class FragmentLealtadArticulo extends Fragment {
                     }
                     else
                     {
-                        Toast toast1 =
-                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        Toast toast1 = Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
                         toast1.show();
 

@@ -44,12 +44,9 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
                 renderedView = rendercategoria(Invetario);
                 break;
             case 4:
-                renderedView = renderalmacen(Invetario);
-                break;
-            case 5:
                 renderedView = renderexistencia(Invetario);
                 break;
-            case 6:
+            case 5:
                 renderedView = rendersucursal(Invetario);
                 break;
 
@@ -102,10 +99,6 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
 
     private View rendercodigoBarras(final InventarioModel Inventario) {
         return renderString(Inventario.getcodigoBarras());
-    }
-
-    private View renderalmacen(final InventarioModel Inventario) {
-        return renderString(Inventario.getalmacen());
     }
 
     private View rendersucursal(final InventarioModel Inventario) {
