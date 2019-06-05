@@ -84,7 +84,6 @@ public class Fragment_clientes extends Fragment {
     private Dialog ver_cliente_dialog;
     private  FragmentTransaction fr;
     private TableDataClickListener<ClienteModel> tablaListener;
-    private SortableClientesHistorialTable HistorialTable;
     private ProgressDialog progressDialog;
     private EditText BuscarCliente;
     private ClienteAdapter clienteAdapter;
@@ -379,7 +378,22 @@ public class Fragment_clientes extends Fragment {
                 ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
                 ver_cliente_dialog.show();
 
+                HistorialCompras = new ArrayList<>();
+                for(int d=0; d<clickedData.getCompras().size();d++)
+                {
+                    String NoTicket = clickedData.getCompras().get(d).getNumero();
+                    String Importe = clickedData.getCompras().get(d).getImporte();
+                    String Fecha = clickedData.getCompras().get(d).getFechaCompra();
+                    CompraModel compra = new CompraModel(NoTicket,Importe,Fecha);
+                    HistorialCompras.add(compra);
+                }
+
+
+                SortableClientesHistorialTable HistorialTable;
                 HistorialTable = ver_cliente_dialog.findViewById(R.id.historial_compras);
+                HistorialClientesAdapter historialAdapter = new HistorialClientesAdapter(getContext(), HistorialCompras, HistorialTable);
+                HistorialTable.setDataAdapter(historialAdapter);
+
 
                 TextView NameCliente = ver_cliente_dialog.findViewById(R.id.cliente_nombre);
                 TextView CorreoCliente = ver_cliente_dialog.findViewById(R.id.email_cliente);
@@ -419,6 +433,7 @@ public class Fragment_clientes extends Fragment {
 
                 DireccionFiscal.setText(clickedData.getCliente_direccion_fiscal());
                 EmailFiscal.setText(clickedData.getCliente_email_facturacion());
+
 //
                 Button editarCliente = ver_cliente_dialog.findViewById(R.id.editar_cliente);
                 editarCliente.setOnClickListener(new View.OnClickListener() {
@@ -435,7 +450,7 @@ public class Fragment_clientes extends Fragment {
                         bundle.putString( "estado", clickedData.getcliente_estado() );
                         bundle.putString( "municipio", clickedData.getcliente_municipio() );
                         bundle.putString( "colonia", clickedData.getcliente_colonia() );
-                        bundle.putString( "calle", "");
+                        bundle.putString( "calle", clickedData.getCliente_calle());
                         bundle.putString( "numero_interior", clickedData.getcliente_num_int() );
                         bundle.putString( "numero_exterior", clickedData.getcliente_num_ext() );
                         bundle.putString( "sucursal","");
@@ -569,8 +584,6 @@ public class Fragment_clientes extends Fragment {
                     }
                 });
 
-                final HistorialClientesAdapter historialAdapter = new HistorialClientesAdapter(getContext(), clickedData.getCompras(), HistorialTable);
-                HistorialTable.setDataAdapter(historialAdapter);
             }
         };
     }

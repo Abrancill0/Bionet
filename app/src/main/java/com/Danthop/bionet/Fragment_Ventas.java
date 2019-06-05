@@ -250,6 +250,9 @@ public class Fragment_Ventas extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private NumberFormat formatter;
 
+    private ImpuestoAdapter mAdapter;
+    private List<Impuestos> ImpuestosList;
+
 
     private Button btn_imprimir;
 
@@ -1786,7 +1789,15 @@ public class Fragment_Ventas extends Fragment {
                         descuento.setText("$0.00");
                         total.setText("$0.00");
                         subtotal.setText("$0.00");
-                        impuesto.setText("$0.00");
+                        btn_agregar_cliente.setText("Cliente");
+                        btn_agregar_vendedor.setText("Vendedor");
+                        ImpuestosList.clear();
+                        mAdapter = new ImpuestoAdapter(ImpuestosList);
+                        RecyclerImpuesto.setAdapter(mAdapter);
+                        btn_apartar.setVisibility(View.INVISIBLE);
+                        btn_ordenar.setVisibility(View.INVISIBLE);
+                        btn_finalizar.setVisibility(View.INVISIBLE);
+
 
                     } else {
                         Toast toast1 =
@@ -1817,6 +1828,7 @@ public class Fragment_Ventas extends Fragment {
 
     private void Aniadir_a_venta(String nombre_articulo, String Cantidad) {
 
+        progressDialog.show();
         ArticulosVenta.clear();
         ArticulosConExistencias.clear();
         ListaDeArticulosApartados.clear();
@@ -1864,7 +1876,7 @@ public class Fragment_Ventas extends Fragment {
                         float ImpuestoTotal = 0;
                         float Subtotal = 0;
                         JSONArray tic_impuestos = RespuestaNodoTicket.getJSONArray("tic_impuestos");
-                        List<Impuestos> ImpuestosList = new ArrayList<>();
+                        ImpuestosList = new ArrayList<>();
                         for (int f = 0; f < tic_impuestos.length(); f++) {
                             JSONObject nodo_impuestos = tic_impuestos.getJSONObject(f);
                             String ValorImpuesto = nodo_impuestos.getString("valor");
@@ -1879,7 +1891,7 @@ public class Fragment_Ventas extends Fragment {
                             ImpuestosList.add(impuesto);
                         }
 
-                        ImpuestoAdapter mAdapter = new ImpuestoAdapter(ImpuestosList);
+                        mAdapter = new ImpuestoAdapter(ImpuestosList);
                         RecyclerImpuesto.setHasFixedSize(true);
                         mLayoutManager = new LinearLayoutManager(getContext());
                         RecyclerImpuesto.setLayoutManager(mLayoutManager);
@@ -2078,6 +2090,7 @@ public class Fragment_Ventas extends Fragment {
                         articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                         LoadImages();
+                        progressDialog.dismiss();
 
                         if(ListaDeArticulosOrdenados.isEmpty())
                         {

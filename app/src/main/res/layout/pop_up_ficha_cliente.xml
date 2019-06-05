@@ -335,7 +335,8 @@
                                 <com.Danthop.bionet.Tables.SortableClientesHistorialTable
                                     android:id="@+id/historial_compras"
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent"/>
+                                    android:layout_height="match_parent"
+                                    app:tableView_headerColor="@color/white"/>
 
 
                             </LinearLayout>

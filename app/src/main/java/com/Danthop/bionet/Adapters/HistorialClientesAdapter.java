@@ -1,10 +1,13 @@
 package com.Danthop.bionet.Adapters;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -22,7 +25,6 @@ import com.Danthop.bionet.Numero_sucursal;
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableClientesHistorialTable;
 import com.Danthop.bionet.Tables.SortableClientesTable;
-import com.Danthop.bionet.model.ApartadoModel;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.CompraModel;
 import com.Danthop.bionet.model.VolleySingleton;
@@ -31,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,16 +41,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
+
 
 public class HistorialClientesAdapter extends LongPressAwareTableDataAdapter<CompraModel> {
 
     int TEXT_SIZE = 16;
 
+    private String[][] clienteModel;
+
+    private SortableClientesHistorialTable tabla_clientes;
+
+    private ProgressDialog progressDialog;
+
     public HistorialClientesAdapter(final Context context, final List<CompraModel> data, final SortableClientesHistorialTable tableView) {
         super(context, data, tableView);
+
+        if (tabla_clientes == null ){
+            tabla_clientes = tableView;
+        }
+
 
     }
 
@@ -58,13 +71,13 @@ public class HistorialClientesAdapter extends LongPressAwareTableDataAdapter<Com
 
         switch (columnIndex) {
             case 0:
-                renderedView = renderNo(compra);
+                renderedView = renderNumeroCompra(compra);
                 break;
             case 1:
                 renderedView = renderImporte(compra);
                 break;
             case 2:
-                renderedView = renderFechaCompra(compra);
+                renderedView = renderFecha(compra);
                 break;
         }
 
@@ -74,21 +87,25 @@ public class HistorialClientesAdapter extends LongPressAwareTableDataAdapter<Com
     @Override
     public View getLongPressCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
         final CompraModel compra = getRowData(rowIndex);
+        View renderedView = null;
 
-        return renderString("");
+        switch (columnIndex) {
+            case 1:
+
+            default:
+
+        }
+
+        return renderedView;
     }
 
-    private View renderEditableClienteName(final CompraModel compra) {
+    private View renderEditableClienteName(final ClienteModel cliente) {
         final EditText editText = new EditText(getContext());
-        editText.setText(compra.getNumero());
-        editText.setPadding(20, 10, 20, 10);
-        editText.setTextSize(TEXT_SIZE);
-        editText.setSingleLine();
-        editText.addTextChangedListener(new ClienteNameUpdater(compra));
+
         return editText;
     }
 
-    private View renderNo(final CompraModel compra) {
+    private View renderNumeroCompra(final CompraModel compra) {
         return renderString(compra.getNumero());
     }
 
@@ -96,10 +113,9 @@ public class HistorialClientesAdapter extends LongPressAwareTableDataAdapter<Com
         return renderString(compra.getImporte());
     }
 
-    private View renderFechaCompra(final CompraModel compra) {
+    private View renderFecha(final CompraModel compra) {
         return renderString(compra.getFechaCompra());
     }
-
 
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
@@ -111,9 +127,9 @@ public class HistorialClientesAdapter extends LongPressAwareTableDataAdapter<Com
 
     private static class ClienteNameUpdater implements TextWatcher {
 
-        private CompraModel compra;
+        private ClienteModel clienteToUpdate;
 
-        public ClienteNameUpdater(CompraModel compra) {
+        public ClienteNameUpdater(ClienteModel clienteToUpdate) {
 
         }
 

@@ -211,7 +211,6 @@ public class Fragment_ventas_transacciones extends Fragment {
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
 
 
         fr = getFragmentManager().beginTransaction();
@@ -352,6 +351,7 @@ public class Fragment_ventas_transacciones extends Fragment {
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
+                progressDialog.show();
                 LoadApartados();
                 LoadOrdenes();
                 LoadMovimientos();
@@ -365,7 +365,7 @@ public class Fragment_ventas_transacciones extends Fragment {
         SpinnerFormaPago.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-
+                progressDialog.show();
                 LoadApartados();
                 LoadOrdenes();
                 LoadMovimientos();
@@ -379,6 +379,7 @@ public class Fragment_ventas_transacciones extends Fragment {
         SpinnerUsuarioVenta.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
+                progressDialog.show();
                 LoadApartados();
                 LoadOrdenes();
                 LoadMovimientos();
@@ -403,8 +404,8 @@ public class Fragment_ventas_transacciones extends Fragment {
         layout_movimientos.setVisibility(View.VISIBLE);
         layout_apartado.setVisibility(View.GONE);
         layout_ordenes.setVisibility(View.GONE);
-        layout_fechas.setVisibility(View.INVISIBLE);
-        layout_movimientos_spinners.setVisibility(View.INVISIBLE);
+        layout_fechas.setVisibility(View.VISIBLE);
+        layout_movimientos_spinners.setVisibility(View.VISIBLE);
 
     }
 
