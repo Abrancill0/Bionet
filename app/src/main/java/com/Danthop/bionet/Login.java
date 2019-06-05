@@ -127,8 +127,8 @@ public class Login extends Activity {
         super.onCreate(savedInstanceState);
 
 
-        AccountManager am = AccountManager.get(this);
-        Bundle options = new Bundle();
+     //   AccountManager am = AccountManager.get(this);
+     //   Bundle options = new Bundle();
 
      //   options.putString( "Grant Type",TicketIDVenta );
      //   options.putString( "Grant Type",TicketIDVenta );

@@ -2652,7 +2652,7 @@ public class Fragment_Ventas extends Fragment {
 
         String url = getString(R.string.Url);
 
-        String ApiPath = url + "/api/ventas/tickets/update_uso_cfdi";
+        String ApiPath = url + "/api/ventas/tickets/update-uso-cfdi";
 
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
             @Override

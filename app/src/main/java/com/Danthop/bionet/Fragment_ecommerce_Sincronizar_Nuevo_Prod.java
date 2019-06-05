@@ -185,6 +185,9 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                 CargaCategorias();
             }
         });
+
+        progressDialog.hide();
+
             return v;
     }
 

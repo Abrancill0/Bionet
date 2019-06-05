@@ -8,12 +8,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,6 +86,8 @@ public class Fragment_clientes extends Fragment {
     private TableDataClickListener<ClienteModel> tablaListener;
     private SortableClientesHistorialTable HistorialTable;
     private ProgressDialog progressDialog;
+    private EditText BuscarCliente;
+    private ClienteAdapter clienteAdapter;
 
     private List<ClienteModel> clientes;
     private List<CompraModel> HistorialCompras;
@@ -106,6 +112,8 @@ public class Fragment_clientes extends Fragment {
         ver_cliente_dialog=new Dialog(getContext());
         ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
 
+        BuscarCliente = (EditText) v.findViewById(R.id.TextSearchClientes);
+
         fr = getFragmentManager().beginTransaction();
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
@@ -124,6 +132,33 @@ public class Fragment_clientes extends Fragment {
             public void onClick(View v) {
 
                 fr.replace(R.id.fragment_container,new Fragment_crear_cliente()).commit();
+            }
+        });
+
+        BuscarCliente.addTextChangedListener(new TextWatcher(){
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+               // for(String)
+
+               // clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes,fr);
+               // tabla_clientes.setDataAdapter(clienteAdapter);
+                    clienteAdapter.getFilter().filter(s);
+
+             //   clienteAdapter.getData().
+
+               // tabla_clientes.setDataAdapter(clienteAdapter);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -151,7 +186,6 @@ public class Fragment_clientes extends Fragment {
 
         return v;
 
-
     }
 
     private void Muestra_clientes()
@@ -171,6 +205,8 @@ public class Fragment_clientes extends Fragment {
         String url = getString(R.string.Url);
 
         String ApiPath = url + "/api/clientes/index_app";
+
+        //clienteAdapter.clear();
 
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>() {
             @Override
@@ -266,8 +302,6 @@ public class Fragment_clientes extends Fragment {
                             }
 
 
-
-
                             final ClienteModel cliente = new ClienteModel(UUID,
                                     nombre,
                                     correo_electronico,
@@ -300,7 +334,8 @@ public class Fragment_clientes extends Fragment {
                             );
                             clientes.add(cliente);
                         }
-                        final ClienteAdapter clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes,fr);
+
+                        clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes,fr);
                         tabla_clientes.setDataAdapter(clienteAdapter);
                     }
                     else

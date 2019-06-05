@@ -58,14 +58,16 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <SearchView
+            <EditText
+                android:id="@+id/TextSearchClientes"
                 android:layout_width="276dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/shape_gray"
                 android:hint="Busqueda"
+                android:iconifiedByDefault="false"
                 android:orientation="horizontal"
-                android:queryHint="Buscar"
-                android:iconifiedByDefault="false"/>
+                android:queryHint="Buscar" />
+
         </LinearLayout>
 
         <LinearLayout

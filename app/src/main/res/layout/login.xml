@@ -130,7 +130,8 @@
                 android:padding="0dp"
                 android:text="PDF"
                 android:textColor="#ffffff"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone"/>
 
 
             <Button
@@ -145,7 +146,8 @@
                 android:padding="0dp"
                 android:text="Iniciar Sesión"
                 android:textColor="#ffffff"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                />
 
             <Button
                 android:id="@+id/crear_btn"
@@ -158,7 +160,8 @@
                 android:onClick="CrearCuenta"
                 android:padding="0dp"
                 android:text="Crear una cuenta"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone"/>
 
 
         </LinearLayout>
