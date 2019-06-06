@@ -92,6 +92,15 @@ public class Fragment_pestania_historico extends Fragment {
             }
         });
 
+        Button btnInventariExistencias = (Button) v.findViewById(R.id.btnBuscarExistencias);
+        btnInventariExistencias.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_pestania_inventario_existencias()).commit();
+            }
+        });
+
         ver_producto_dialog=new Dialog(getContext());
         ver_producto_dialog.setContentView(R.layout.pop_up_ficha_articulos_historico);
 

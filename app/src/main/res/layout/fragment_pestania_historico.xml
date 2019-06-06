@@ -26,7 +26,25 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
-                android:text="Listado de inventario"
+                android:text="Consultar Disponibilidad"
+                android:textAllCaps="false"
+                android:fontFamily="@font/muli"
+                android:textSize="17dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnBuscarExistencias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:background="@drawable/pestanas_desplegables"
+                android:text="Existencias"
                 android:textAllCaps="false"
                 android:fontFamily="@font/muli"
                 android:textSize="17dp"/>

@@ -110,7 +110,6 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
             }
         });
 
-
 //--------------------------------------------------------------------------------------------------------------
         Button SolicitudesRecibidas = (Button) v.findViewById(R.id.traslados_recibidos);
         SolicitudesRecibidas.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
@@ -132,6 +131,14 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
             }
         });
 
+        Button btnInventariExistencias = (Button) v.findViewById(R.id.btnBuscarExistencias);
+        btnInventariExistencias.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_pestania_inventario_existencias()).commit();
+            }
+        });
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
