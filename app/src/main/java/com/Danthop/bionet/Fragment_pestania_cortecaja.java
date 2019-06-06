@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -38,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -552,7 +554,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
 
 
                            Map<String, List<FormaspagoModel>> GroupingFormasPago = null;
-                           if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                GroupingFormasPago = FormasPago.stream().collect(Collectors.groupingBy(FormaspagoModel::getid_pago));
 
                                GroupingFormasPago.keySet().forEach( employee -> {

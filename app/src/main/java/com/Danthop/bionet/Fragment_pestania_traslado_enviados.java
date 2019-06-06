@@ -111,6 +111,15 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
             }
         });
 
+        Button btnInventariExistencias = (Button) v.findViewById(R.id.btnBuscarExistencias);
+        btnInventariExistencias.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_pestania_inventario_existencias()).commit();
+            }
+        });
+
 
 //--------------------------------------------------------------------------------------------------------------
         Button SolicitudesRecibidas = (Button) v.findViewById(R.id.traslados_recibidos);

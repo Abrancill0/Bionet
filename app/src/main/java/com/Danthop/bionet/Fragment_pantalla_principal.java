@@ -376,7 +376,6 @@ private void LoadMasVendidos(){
         @Override
         public void onResponse(JSONObject response) {
             JSONArray ResultadoProductos = null;
-            JSONArray RespuestaProductos = null;
 
             try {
                 int status = Integer.parseInt(response.getString("estatus"));
@@ -387,18 +386,14 @@ private void LoadMasVendidos(){
                     ResultadoProductos = response.getJSONArray("resultado");
 
                     for (int x = 0; x < ResultadoProductos.length(); x++) {
-                        JSONArray elemento = ResultadoProductos.getJSONArray(x);
+                        JSONObject elemento = ResultadoProductos.getJSONObject(x);
 
-                        for (int y = 0; y < elemento.length(); y++) {
-                            JSONObject elemento2 = elemento.getJSONObject(y);
-                            tar_nombre_articulo = elemento2.getString("tar_nombre_articulo");
-                            NumTicket = elemento2.getString("cantidad");
-
-
+                        tar_nombre_articulo = elemento.getString( "tar_nombre_articulo" );
+                        NumTicket = elemento.getString("cantidad");
 
                             final ClienteFrecuenteModel Topvendidos = new ClienteFrecuenteModel("",NumTicket,"", tar_nombre_articulo, "","","");
                             Productos.add(Topvendidos);
-                        }
+
                     }
 
                     final TopvendidosAdapter TopVendidoseAdapter = new TopvendidosAdapter(getContext(), Productos ,tabla_productos);
