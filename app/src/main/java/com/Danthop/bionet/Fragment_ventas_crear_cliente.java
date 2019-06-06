@@ -93,6 +93,7 @@ public class Fragment_ventas_crear_cliente extends DialogFragment {
 
     private LinearLayout LayoutDireccionFiscal;
     private LinearLayout LayoutEmail;
+    private ProgressDialog progressDialog;
 
     private final static String[] opciones = { "N/A", "Email de Facturación", "Dirección Fiscal", "Ambas"};
 
@@ -107,6 +108,9 @@ public class Fragment_ventas_crear_cliente extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ventas_crear_cliente,container, false);
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
         EstadoName=new ArrayList<>();
         EstadoID = new ArrayList<>();
         SucursalName=new ArrayList<>();
@@ -536,6 +540,7 @@ public class Fragment_ventas_crear_cliente extends DialogFragment {
     }
 
     private void LoadSpinnerSucursal(){
+        progressDialog.show();
 
         JSONObject request = new JSONObject();
         try
@@ -582,6 +587,7 @@ public class Fragment_ventas_crear_cliente extends DialogFragment {
                             SucursalID.add(id);
                         }
                         SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,SucursalName));
+                        progressDialog.dismiss();
 
                     }
                     else

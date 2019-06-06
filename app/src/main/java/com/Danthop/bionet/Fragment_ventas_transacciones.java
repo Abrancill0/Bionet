@@ -406,6 +406,7 @@ public class Fragment_ventas_transacciones extends Fragment {
         layout_ordenes.setVisibility(View.GONE);
         layout_fechas.setVisibility(View.VISIBLE);
         layout_movimientos_spinners.setVisibility(View.VISIBLE);
+        btn_movimientos.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
 
     }
 
@@ -435,6 +436,9 @@ public class Fragment_ventas_transacciones extends Fragment {
             public void onClick(View v) {
                 if(layout_movimientos.getVisibility()==View.GONE)
                 {
+                    btn_movimientos.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+                    btn_apartado.setBackgroundColor(getResources().getColor(R.color.white));
+                    btn_ordenes_especiales.setBackgroundColor(getResources().getColor(R.color.white));
                     layout_movimientos.setVisibility(View.VISIBLE);
                     layout_fechas.setVisibility(View.VISIBLE);
                     layout_movimientos_spinners.setVisibility(View.VISIBLE);
@@ -453,6 +457,9 @@ public class Fragment_ventas_transacciones extends Fragment {
             public void onClick(View v) {
                 if(layout_apartado.getVisibility()==View.GONE)
                 {
+                    btn_movimientos.setBackgroundColor(getResources().getColor(R.color.white));
+                    btn_apartado.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+                    btn_ordenes_especiales.setBackgroundColor(getResources().getColor(R.color.white));
                     layout_movimientos.setVisibility(View.GONE);
                     layout_fechas.setVisibility(View.INVISIBLE);
                     layout_movimientos_spinners.setVisibility(View.INVISIBLE);
@@ -471,6 +478,9 @@ public class Fragment_ventas_transacciones extends Fragment {
             public void onClick(View v) {
                 if(layout_ordenes.getVisibility()==View.GONE)
                 {
+                    btn_movimientos.setBackgroundColor(getResources().getColor(R.color.white));
+                    btn_apartado.setBackgroundColor(getResources().getColor(R.color.white));
+                    btn_ordenes_especiales.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
                     layout_movimientos.setVisibility(View.GONE);
                     layout_fechas.setVisibility(View.INVISIBLE);
                     layout_movimientos_spinners.setVisibility(View.INVISIBLE);
@@ -1209,8 +1219,11 @@ public class Fragment_ventas_transacciones extends Fragment {
                 Calendar nextYear = Calendar.getInstance();
                 nextYear.add(Calendar.YEAR, 1);
 
-                Date today = new Date();
-                calendarView.init(FechaInicial, today).withSelectedDate(FechaInicial);
+                Calendar diaMaximo = Calendar.getInstance();
+                diaMaximo.add(Calendar.DAY_OF_YEAR,+1);
+
+
+                calendarView.init(FechaInicial, diaMaximo.getTime()).withSelectedDate(FechaInicial);
 
                 calendarView.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
                     @Override
@@ -1285,6 +1298,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                     JSONObject NodoTicket = RespuestaResultado.getJSONObject("aTicket");
                                     FechaCreacion = NodoTicket.getString("tic_fecha_hora_creo");
                                     NombreVendedor = NodoTicket.getString("tic_nombre_vendedor");
+                                    NumeroTicket = NodoTicket.getString("tic_numero");
                                         if(NombreVendedor.equals("null"))
                                         {
                                             NombreVendedor="";
@@ -1335,11 +1349,6 @@ public class Fragment_ventas_transacciones extends Fragment {
 
                                         ListaArticulosTicket.add(articulo);
                                     }
-
-
-
-                                    JSONObject NodoCuentasBioNet = RespuestaResultado.getJSONObject("aCuentasBioNet");
-                                    NumeroTicket = NodoCuentasBioNet.getString("cbn_numero_ticket");
 
                                     NumberFormat formatter = NumberFormat.getCurrencyInstance();
                                     String cadenaArticulos="";

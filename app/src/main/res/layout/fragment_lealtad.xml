@@ -104,7 +104,7 @@
             android:layout_weight=".8"
             android:gravity="end"
             android:orientation="horizontal"
-            android:padding="15dp"
+            android:padding="5dp"
             android:background="@drawable/pestanas_desplegables">
 
             <LinearLayout
@@ -113,7 +113,7 @@
                 android:layout_weight=".7"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
-                android:paddingHorizontal="50dp">
+                android:paddingHorizontal="25dp">
 
                 <TextView
                     android:layout_width="200dp"

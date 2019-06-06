@@ -128,6 +128,7 @@ public class Fragment_editarCliente extends Fragment {
     private String mensaje;
     private String valido;
     private String valor;
+    private ProgressDialog progressDialog;
 
 
 
@@ -140,6 +141,11 @@ public class Fragment_editarCliente extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_editar_cliente,container, false);
+
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
 
         EstadoName=new ArrayList<>();
         EstadoID = new ArrayList<>();
@@ -278,7 +284,6 @@ public class Fragment_editarCliente extends Fragment {
 
         TextFacturacionCp=(EditText)v.findViewById(R.id.Text_cliente_cp_facturacion);
 
-        LoadSpinnerFiscalColonias();
         TextFacturacionCp.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
@@ -527,7 +532,7 @@ public class Fragment_editarCliente extends Fragment {
                             SucursalID.add(id);
                         }
                         SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,SucursalName));
-
+                        progressDialog.dismiss();
                     }
                     else
                     {
