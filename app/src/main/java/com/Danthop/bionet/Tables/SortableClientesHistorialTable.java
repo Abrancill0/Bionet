@@ -27,7 +27,7 @@ public class SortableClientesHistorialTable extends SortableTableView<CompraMode
     public SortableClientesHistorialTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "#", "Importe", "Fecha Compra");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "#", "Importe", "Fecha");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
         simpleHeader.setTextSize( 18 );

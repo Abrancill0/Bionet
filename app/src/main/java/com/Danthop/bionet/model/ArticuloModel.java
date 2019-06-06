@@ -17,6 +17,7 @@ public class ArticuloModel {
     private String articulo_sucursal;
     private String articulo_sucursal_uuid;
     private String articulo_exi_id;
+    private String getArticulo_UM;
 
 
     public ArticuloModel(String articulo_UUID,String articulo_Nombre,String articulo_Descripcion ,String articulo_Precio,String articulo_Imagen1,
@@ -144,5 +145,11 @@ public class ArticuloModel {
 
     public void setArticulo_articulo_exi_id(String articulo_exi_id) { this.articulo_exi_id = articulo_exi_id; }
 
+    public String getGetArticulo_UM() {
+        return getArticulo_UM;
+    }
 
+    public void setGetArticulo_UM(String getArticulo_UM) {
+        this.getArticulo_UM = getArticulo_UM;
+    }
 }

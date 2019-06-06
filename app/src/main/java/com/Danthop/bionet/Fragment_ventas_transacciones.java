@@ -1162,13 +1162,16 @@ public class Fragment_ventas_transacciones extends Fragment {
                 calendario.show();
                 calendarView = calendario.findViewById(R.id.calendar_view);
                 Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.DAY_OF_YEAR, -1);
+                calendar.add(Calendar.DAY_OF_YEAR, 1);
+
+                Calendar Fecha_inicial_seleccionada = Calendar.getInstance();
+                Fecha_inicial_seleccionada.add(Calendar.DAY_OF_YEAR,0);
 
                 Calendar yearsAgo = Calendar.getInstance();
                 yearsAgo.add(Calendar.YEAR, -100);
 
                 Date today = new Date();
-                calendarView.init(yearsAgo.getTime(), today).withSelectedDate(calendar.getTime());
+                calendarView.init(yearsAgo.getTime(), calendar.getTime()).withSelectedDate(Fecha_inicial_seleccionada.getTime());
 
                 calendarView.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
                     @Override

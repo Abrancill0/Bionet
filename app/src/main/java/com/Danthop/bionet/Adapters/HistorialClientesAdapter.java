@@ -60,8 +60,6 @@ public class HistorialClientesAdapter extends LongPressAwareTableDataAdapter<Com
         if (tabla_clientes == null ){
             tabla_clientes = tableView;
         }
-
-
     }
 
     @Override

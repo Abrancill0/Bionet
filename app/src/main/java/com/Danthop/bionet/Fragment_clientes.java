@@ -22,7 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ClienteAdapter;
+import com.Danthop.bionet.Adapters.DetalleApartadoAdapter;
 import com.Danthop.bionet.Adapters.HistorialClientesAdapter;
+import com.Danthop.bionet.Tables.SortableApartadoDetalleTable;
 import com.Danthop.bionet.Tables.SortableClientesHistorialTable;
 import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.model.ClienteModel;
@@ -178,202 +180,14 @@ public class Fragment_clientes extends Fragment {
         });
 
         tabla_clientes.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
-        tabla_clientes.addDataClickListener(tablaListener);
 
         //FilterHelper<ClienteModel> filterHelper = new FilterHelper<>(tabla_clientes);
         //filterHelper.setFilter(new FiltroClientes(""));
 
-        return v;
-
-    }
-
-    private void Muestra_clientes()
-    {
-        JSONObject request = new JSONObject();
-        try
-        {
-            request.put("usu_id", usu_id);
-            request.put("esApp", "1");
-
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        String url = getString(R.string.Url);
-
-        String ApiPath = url + "/api/clientes/index_app";
-
-        //clienteAdapter.clear();
-
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-                JSONObject Respuesta = null;
-                JSONObject RespuestaNodoDireccion= null;
-                JSONObject ElementoUsuario=null;
-                JSONArray RespuestaNodoClientes= null;
-
-                try {
-
-                    int status = Integer.parseInt(response.getString("estatus"));
-                    String Mensaje = response.getString("mensaje");
-
-                    if (status == 1)
-                    {
-                        progressDialog.dismiss();
-                        Respuesta = response.getJSONObject("resultado");
-
-                        RespuestaNodoClientes = Respuesta.getJSONArray("aClientes");
-
-                        clienteModel = new String[RespuestaNodoClientes.length()][5];
-
-                        for(int x = 0; x < RespuestaNodoClientes.length(); x++){
-                            JSONObject elemento = RespuestaNodoClientes.getJSONObject(x);
-
-                            ElementoUsuario =  elemento.getJSONObject("cli_id");
-
-                            UUID = ElementoUsuario.getString( "uuid");
-                            nombre = elemento.getString("cli_nombre");
-                            correo_electronico = elemento.getString("cli_correo_electronico");
-
-                            telefono = elemento.getString("cli_telefono");
-                            RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion");
-                            calle = RespuestaNodoDireccion.getString("cli_calle");
-
-                            estado = RespuestaNodoDireccion.getString( "cli_estado");
-                            colonia = RespuestaNodoDireccion.getString( "cli_colonia");
-                            num_int = RespuestaNodoDireccion.getString( "cli_numero_interior");
-                            num_ext = RespuestaNodoDireccion.getString( "cli_numero_exterior");
-                            cp = RespuestaNodoDireccion.getString( "cli_codigo_postal");
-                            ciudad = RespuestaNodoDireccion.getString( "cli_ciudad");
-                            municipio = RespuestaNodoDireccion.getString( "cli_ciudad");
-
-                            rfc = elemento.getString( "cli_rfc");
-                            razon_social = elemento.getString( "cli_razon_social");
-
-                            RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion_fiscal");
-                            cp_fiscal = RespuestaNodoDireccion.getString("cli_codigo_postal");
-                            estado_fiscal = RespuestaNodoDireccion.getString("cli_estado");
-                            municipio_fiscal = RespuestaNodoDireccion.getString("cli_ciudad");
-                            colonia_fiscal = RespuestaNodoDireccion.getString("cli_colonia");
-                            calle_fiscal = RespuestaNodoDireccion.getString("cli_calle");
-                            num_ext_fiscal = RespuestaNodoDireccion.getString("cli_numero_exterior");
-                            num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
-                            UltimaCompra = elemento.getString( "cli_ultima_compra" );
-                            ConsumoPromedio = elemento.getString( "cli_promedio_compra" );
-
-
-                            HistorialCompras = new ArrayList<>();
-                            JSONArray comprasNodo = elemento.getJSONArray("ventas");
-                            for(int d=0; d<comprasNodo.length();d++)
-                            {
-                                JSONObject elementoCompra = comprasNodo.getJSONObject(d);
-                                String NoTicket = elementoCompra.getString("tic_numero");
-                                String Importe = elementoCompra.getString("tic_importe_total");
-                                String Fecha = elementoCompra.getString("fecha_hora_venta");
-                                CompraModel compra = new CompraModel(NoTicket,Importe,Fecha);
-                                HistorialCompras.add(compra);
-                            }
-
-
-                            direccion_igual = elemento.getString("cli_direcciones_iguales");
-                            if(direccion_igual.equals("false"))
-                            {
-                                direccion_fiscal = calle_fiscal + " " + num_ext_fiscal + " " + num_int_fiscal + " " +colonia_fiscal + " " + cp_fiscal + " " + estado_fiscal + " " + municipio_fiscal;
-                            }
-                            else if (direccion_igual.equals("true"))
-                            {
-                                direccion_fiscal = calle + " " + num_ext + " " + num_int + " " +colonia + " " + cp + " " + estado + " " + municipio;
-
-                            }
-
-                            correo_igual = elemento.getString("cli_correos_iguales");
-                            if(correo_igual.equals("false"))
-                            {
-                                email_fiscal = elemento.getString("cli_correo_electronico_facturacion");
-                            }
-                            else if (correo_igual.equals("true"))
-                            {
-                                email_fiscal = correo_electronico;
-                            }
-
-
-                            final ClienteModel cliente = new ClienteModel(UUID,
-                                    nombre,
-                                    correo_electronico,
-                                    telefono,
-                                    usu_id,
-                                    estado,
-                                    colonia,
-                                    calle,
-                                    num_int,
-                                    num_ext,
-                                    cp,
-                                    ciudad,
-                                    municipio,
-                                    rfc,
-                                    razon_social,
-                                    direccion_fiscal,
-                                    email_fiscal,
-                                    cp_fiscal,
-                                    estado_fiscal,
-                                    municipio_fiscal,
-                                    colonia_fiscal,
-                                    calle_fiscal,
-                                    num_ext_fiscal,
-                                    num_int_fiscal,
-                                    correo_igual,
-                                    direccion_igual,
-                                    HistorialCompras,
-                                    UltimaCompra,
-                                    ConsumoPromedio
-                            );
-                            clientes.add(cliente);
-                        }
-
-                        clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes,fr);
-                        tabla_clientes.setDataAdapter(clienteAdapter);
-                    }
-                    else
-                    {
-                        progressDialog.dismiss();
-                        Toast toast1 =
-                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-                        toast1.show();
-                    }
-
-                } catch (JSONException e) {
-                    progressDialog.dismiss();
-                    Toast toast1 =
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
-                    toast1.show();
-                }
-            }
-
-        },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        progressDialog.dismiss();
-                        Toast toast1 =
-                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
-                        toast1.show();
-                    }
-                }
-        );
-        postRequest.setShouldCache(false);
-        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
-    }
-
-    private void LoadListenerTable(){
         tablaListener = new TableDataClickListener<ClienteModel>() {
             @Override
             public void onDataClicked(int rowIndex, final ClienteModel clickedData) {
-                final Dialog ver_cliente_dialog;
+                Dialog ver_cliente_dialog;
                 ver_cliente_dialog=new Dialog(getContext());
                 ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
                 ver_cliente_dialog.show();
@@ -389,9 +203,8 @@ public class Fragment_clientes extends Fragment {
                 }
 
 
-                SortableClientesHistorialTable HistorialTable;
-                HistorialTable = ver_cliente_dialog.findViewById(R.id.historial_compras);
-                HistorialClientesAdapter historialAdapter = new HistorialClientesAdapter(getContext(), HistorialCompras, HistorialTable);
+                SortableClientesHistorialTable HistorialTable = ver_cliente_dialog.findViewById(R.id.historial_compras);
+                final HistorialClientesAdapter historialAdapter = new HistorialClientesAdapter(getContext(),HistorialCompras,HistorialTable);
                 HistorialTable.setDataAdapter(historialAdapter);
 
 
@@ -586,6 +399,197 @@ public class Fragment_clientes extends Fragment {
 
             }
         };
+
+        tabla_clientes.addDataClickListener(tablaListener);
+
+        return v;
+
+    }
+
+    private void Muestra_clientes()
+    {
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/clientes/index_app";
+
+        //clienteAdapter.clear();
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONObject RespuestaNodoDireccion= null;
+                JSONObject ElementoUsuario=null;
+                JSONArray RespuestaNodoClientes= null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1)
+                    {
+                        progressDialog.dismiss();
+                        Respuesta = response.getJSONObject("resultado");
+
+                        RespuestaNodoClientes = Respuesta.getJSONArray("aClientes");
+
+                        clienteModel = new String[RespuestaNodoClientes.length()][5];
+
+                        for(int x = 0; x < RespuestaNodoClientes.length(); x++){
+                            JSONObject elemento = RespuestaNodoClientes.getJSONObject(x);
+
+                            ElementoUsuario =  elemento.getJSONObject("cli_id");
+
+                            UUID = ElementoUsuario.getString( "uuid");
+                            nombre = elemento.getString("cli_nombre");
+                            correo_electronico = elemento.getString("cli_correo_electronico");
+
+                            telefono = elemento.getString("cli_telefono");
+                            RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion");
+                            calle = RespuestaNodoDireccion.getString("cli_calle");
+
+                            estado = RespuestaNodoDireccion.getString( "cli_estado");
+                            colonia = RespuestaNodoDireccion.getString( "cli_colonia");
+                            num_int = RespuestaNodoDireccion.getString( "cli_numero_interior");
+                            num_ext = RespuestaNodoDireccion.getString( "cli_numero_exterior");
+                            cp = RespuestaNodoDireccion.getString( "cli_codigo_postal");
+                            ciudad = RespuestaNodoDireccion.getString( "cli_ciudad");
+                            municipio = RespuestaNodoDireccion.getString( "cli_ciudad");
+
+                            rfc = elemento.getString( "cli_rfc");
+                            razon_social = elemento.getString( "cli_razon_social");
+
+                            RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion_fiscal");
+                            cp_fiscal = RespuestaNodoDireccion.getString("cli_codigo_postal");
+                            estado_fiscal = RespuestaNodoDireccion.getString("cli_estado");
+                            municipio_fiscal = RespuestaNodoDireccion.getString("cli_ciudad");
+                            colonia_fiscal = RespuestaNodoDireccion.getString("cli_colonia");
+                            calle_fiscal = RespuestaNodoDireccion.getString("cli_calle");
+                            num_ext_fiscal = RespuestaNodoDireccion.getString("cli_numero_exterior");
+                            num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
+                            UltimaCompra = elemento.getString( "cli_ultima_compra" );
+                            ConsumoPromedio = elemento.getString( "cli_promedio_compra" );
+
+
+                            HistorialCompras = new ArrayList<>();
+                            JSONArray comprasNodo = elemento.getJSONArray("ventas");
+                            for(int d=0; d<comprasNodo.length();d++)
+                            {
+                                JSONObject elementoCompra = comprasNodo.getJSONObject(d);
+                                String NoTicket = elementoCompra.getString("tic_numero");
+                                String Importe = elementoCompra.getString("tic_importe_total");
+                                String Fecha = elementoCompra.getString("fecha_hora_venta");
+                                CompraModel compra = new CompraModel(NoTicket,Importe,Fecha);
+                                HistorialCompras.add(compra);
+                            }
+
+
+                            direccion_igual = elemento.getString("cli_direcciones_iguales");
+                            if(direccion_igual.equals("false"))
+                            {
+                                direccion_fiscal = calle_fiscal + " " + num_ext_fiscal + " " + num_int_fiscal + " " +colonia_fiscal + " " + cp_fiscal + " " + estado_fiscal + " " + municipio_fiscal;
+                            }
+                            else if (direccion_igual.equals("true"))
+                            {
+                                direccion_fiscal = calle + " " + num_ext + " " + num_int + " " +colonia + " " + cp + " " + estado + " " + municipio;
+
+                            }
+
+                            correo_igual = elemento.getString("cli_correos_iguales");
+                            if(correo_igual.equals("false"))
+                            {
+                                email_fiscal = elemento.getString("cli_correo_electronico_facturacion");
+                            }
+                            else if (correo_igual.equals("true"))
+                            {
+                                email_fiscal = correo_electronico;
+                            }
+
+
+                            final ClienteModel cliente = new ClienteModel(UUID,
+                                    nombre,
+                                    correo_electronico,
+                                    telefono,
+                                    usu_id,
+                                    estado,
+                                    colonia,
+                                    calle,
+                                    num_int,
+                                    num_ext,
+                                    cp,
+                                    ciudad,
+                                    municipio,
+                                    rfc,
+                                    razon_social,
+                                    direccion_fiscal,
+                                    email_fiscal,
+                                    cp_fiscal,
+                                    estado_fiscal,
+                                    municipio_fiscal,
+                                    colonia_fiscal,
+                                    calle_fiscal,
+                                    num_ext_fiscal,
+                                    num_int_fiscal,
+                                    correo_igual,
+                                    direccion_igual,
+                                    HistorialCompras,
+                                    UltimaCompra,
+                                    ConsumoPromedio
+                            );
+                            clientes.add(cliente);
+                        }
+
+                        clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes,fr);
+                        tabla_clientes.setDataAdapter(clienteAdapter);
+                    }
+                    else
+                    {
+                        progressDialog.dismiss();
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    progressDialog.dismiss();
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
+    private void LoadListenerTable(){
+
     }
 
 

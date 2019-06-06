@@ -2059,6 +2059,7 @@ public class Fragment_Ventas extends Fragment {
                             String descuento = elemento.getString("art_importe_descuento");
                             String importe = elemento.getString("tar_importe_total");
                             String existencia = elemento.getString("art_id_existencia");
+                            String unidad_medida = elemento.getString("art_um_simbologia");
 
                             JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
                             for (int z = 0; z < RespuestaImagenes.length(); z++) {
@@ -2079,6 +2080,7 @@ public class Fragment_Ventas extends Fragment {
                                     "",
                                     importe,"","",existencia
                             );
+                            articulo.setGetArticulo_UM(unidad_medida);
                             ArticulosVenta.add(articulo);
 
                         }

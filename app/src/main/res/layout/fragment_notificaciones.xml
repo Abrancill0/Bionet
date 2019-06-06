@@ -13,11 +13,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginVertical="10dp"
             android:layout_weight=".8"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@drawable/pestanas_desplegables">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,7 +31,9 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:text="Nuevas notificaciones"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"/>
 
                 <TextView
                     android:id="@+id/num_notificaciones"

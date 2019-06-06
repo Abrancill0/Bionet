@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="right"
             android:layout_weight=".9"
-            android:background="@color/fondo_azul"
+            android:background="@drawable/pestanas_desplegables"
             android:foregroundGravity="right"
             android:gravity="right"
             android:padding="10dp"
@@ -39,12 +39,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:background="@color/fondo_azul"
+                android:background="@drawable/pestanas_desplegables"
                 android:text="Solicitud de traslado"
                 android:textAllCaps="false"
                 android:textSize="25dp"
                 android:layout_gravity="center"
-                android:fontFamily="@font/muli" />
+                android:fontFamily="@font/muli"
+                android:textColor="@color/gray"/>
         </LinearLayout>
     </LinearLayout>
 

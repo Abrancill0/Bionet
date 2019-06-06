@@ -108,10 +108,12 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight=".8"
                 android:gravity="end"
                 android:orientation="horizontal"
-                android:padding="20dp">
+                android:padding="20dp"
+                android:background="@drawable/pestanas_desplegables">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -119,13 +121,15 @@
                     android:layout_weight=".7"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
-                    android:paddingHorizontal="50dp">
+                    android:paddingHorizontal="40dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".7"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="40dp">
 
                         <TextView
                             android:id="@+id/textView2527"
@@ -136,11 +140,9 @@
 
                         <Spinner
                             android:id="@+id/Sucursal_lealtad"
-                            android:layout_width="300dp"
-                            android:layout_height="34dp"
-                            android:layout_marginHorizontal="5dp"
-                            android:background="@drawable/spinner_giro">
-                        </Spinner>
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="5dp"></Spinner>
 
                     </LinearLayout>
                 </LinearLayout>
@@ -168,7 +170,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".3"
+                android:layout_weight=".4"
                 android:orientation="vertical"
                 android:padding="20dp">
 
@@ -179,8 +181,7 @@
                     android:layout_weight=".7"
                     android:visibility="visible"
                     app:tableView_headerColor="@color/white"
-                    table:tableView_columnCount="4"
-                    >
+                    table:tableView_columnCount="4">
 
                 </com.Danthop.bionet.Tables.SortableLealtadInscribirTable>
 
@@ -203,7 +204,6 @@
                         android:text="No existen datos"
                         android:textColor="@color/gray" />
                 </LinearLayout>
-
 
 
                 <LinearLayout
@@ -234,36 +234,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".8"
-                android:orientation="horizontal">
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:layout_weight=".6"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_weight=".8"
-                    android:gravity="center_horizontal">
-                </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:layout_weight=".6"
+                    android:gravity="center_horizontal"></LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_weight=".8"
-                    android:gravity="center_horizontal">
+                    android:layout_height="match_parent"
+                    android:layout_weight=".4"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="30dp">
 
                     <Button
                         android:id="@+id/aniadir_cliente"
                         style="@android:style/Widget.Holo.Light.Button"
-                        android:layout_gravity="right"
-                        android:layout_marginLeft="10dp"
                         android:layout_width="150dp"
-                        android:layout_height="25dp"
+                        android:layout_height="match_parent"
                         android:background="@color/colorPrimaryDark"
                         android:text="Agregar cliente"
                         android:textColor="@color/white"
@@ -274,10 +265,8 @@
                         android:id="@+id/AniadirTodos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="50dp"
-                        android:layout_gravity="right"
-                        android:text="Todos los clientes aplican para el programa de Lealtad" />
-
+                        android:text="Todos los clientes aplican para el programa de Lealtad"
+                        android:layout_marginLeft="15dp"/>
 
 
                 </LinearLayout>

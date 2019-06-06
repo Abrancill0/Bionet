@@ -1,5 +1,6 @@
 package com.Danthop.bionet.Adapters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -72,6 +73,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     private RecyclerView RecyclerImpuesto;
     private RecyclerView.LayoutManager mLayoutManager;
     private NumberFormat formatter;
+    private ProgressDialog progressDialog;
 
     private LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
@@ -107,6 +109,9 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
         FinalizarButton = finalizarButton;
         RecyclerImpuesto = reciclerImpuesto;
         formatter = NumberFormat.getCurrencyInstance();
+        progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
     }
 
     @Override
@@ -142,21 +147,21 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
             case 3:
 
-                renderedView = renderPrecio(Articulo);
+                renderedView = renderUM(Articulo);
                 break;
 
             case 4:
 
-                renderedView = renderDescuento(Articulo);
+                renderedView = renderPrecio(Articulo);
                 break;
 
             case 5:
 
-                renderedView = renderImporte(Articulo);
+                renderedView = renderDescuento(Articulo);
                 break;
 
             case 6:
-                //renderedView = renderPromocion(Articulo);
+                renderedView = renderImporte(Articulo);
                 break;
 
             case 7:
@@ -229,6 +234,11 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
         });
         return cantidad;
     }
+
+    private View renderUM(final ArticuloModel articulo) {
+        return renderString(articulo.getGetArticulo_UM());
+    }
+
     private View renderDescuento(final ArticuloModel articulo) {
         double Descuento = Double.parseDouble( articulo.getArticulo_descuento() );
 
@@ -306,6 +316,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
     private void modificaCantidad(ArticuloModel articulo, String cantidad)
     {
+        progressDialog.show();
         Articulos.clear();
         ImpuestosDeArticuloApartado.clear();
         ListaDeArticulosApartados.clear();
@@ -529,6 +540,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                             String descuento = elemento.getString("art_importe_descuento");
                             String importe = elemento.getString("tar_importe_total");
                             String existencia = elemento.getString("art_id_existencia");
+                            String unidad_medida = elemento.getString("art_um_simbologia");
 
                             JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
                             for (int z = 0; z < RespuestaImagenes.length(); z++) {
@@ -549,6 +561,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                     "",
                                     importe,"","",existencia
                             );
+                            articulo.setGetArticulo_UM(unidad_medida);
                             Articulos.add(articulo);
 
                         }
@@ -560,6 +573,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                         articuloAdapter.notifyDataSetChanged();
                         tabla_venta_articulos.setDataAdapter(articuloAdapter);
                         LoadImages();
+                        progressDialog.dismiss();
 
                     }
                     else
@@ -594,6 +608,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
     private void EliminarArticulo(String taride,String nombre)
     {
+        progressDialog.show();
         ArticulosConExistencias.clear();
         ImpuestosDeArticuloApartado.clear();
         ListaDeArticulosApartados.clear();
@@ -820,6 +835,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                             String descuento = elemento.getString("art_importe_descuento");
                             String importe = elemento.getString("tar_importe_total");
                             String existencia = elemento.getString("art_id_existencia");
+                            String unidad_medida = elemento.getString("art_um_simbologia");
 
                             JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
                             for (int z = 0; z < RespuestaImagenes.length(); z++) {
@@ -840,6 +856,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                     "",
                                     importe,"","",existencia
                             );
+                            articulo.setGetArticulo_UM(unidad_medida);
                             Articulos.add(articulo);
 
                         }
@@ -890,6 +907,8 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                         {
                             FinalizarButton.setVisibility(View.VISIBLE);
                         }
+
+                        progressDialog.dismiss();
 
                     }
                     else
