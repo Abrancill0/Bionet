@@ -93,6 +93,8 @@ public class Fragment_pantalla_principal extends Fragment{
         usu_id = sharedPref.getString("usu_id","");
         suc_id = sharedPref.getString("cca_id_sucursal","");
 
+
+
         try {
             JSONArray jsonArray = new JSONArray(suc_id);
             //for (int i = 0; i < jsonArray.length(); i++){

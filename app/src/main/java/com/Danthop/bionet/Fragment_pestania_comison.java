@@ -204,6 +204,7 @@ public class Fragment_pestania_comison extends Fragment {
         progreso = new ProgressDialog(getContext());
         progreso.setMessage("Espere por Favor...");
         progreso.show();
+        ListComisiones.clear();
 
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/ventas/comisiones/index";

@@ -204,7 +204,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EliminarArticulo(articulo.getArticulo_tarID(),articulo.getarticulo_Nombre());
+                EliminarArticulo(articulo.getArticulo_tarID());
             }
         });
         return delete;
@@ -229,6 +229,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
         cantidad.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
             @Override
             public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
+                progressDialog.show();
                 modificaCantidad(articulo,cantidad.getNumber());
             }
         });
@@ -314,299 +315,288 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
         }
     }
 
-    private void modificaCantidad(ArticuloModel articulo, String cantidad)
-    {
-        progressDialog.show();
+    private void modificaCantidad(ArticuloModel articulo, String cantidad) {
         Articulos.clear();
         ImpuestosDeArticuloApartado.clear();
         ListaDeArticulosApartados.clear();
         ListaDeArticulosOrdenados.clear();
-        int CantidadAntigua=0;
 
-        JSONObject request = new JSONObject();
-        try
-        {
-            request.put("usu_id", Usu_id);
-            request.put("esApp", "1");
-            request.put("tar_id",articulo.getArticulo_tarID());
-            request.put("cantidad",cantidad);
+        int CantidadEnEntero = Integer.parseInt(cantidad);
 
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+        if (CantidadEnEntero != 0) {
+            JSONObject request = new JSONObject();
+            try {
+                request.put("usu_id", Usu_id);
+                request.put("esApp", "1");
+                request.put("tar_id", articulo.getArticulo_tarID());
+                request.put("cantidad", cantidad);
 
-
-        String ApiPath = "http://187.189.192.150:8010" + "/api/ventas/tickets/update-cantidad-articulo";
-
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-        {
-            @Override
-            public void onResponse(JSONObject response) {
-
-                JSONObject Respuesta = null;
-                JSONObject RespuestaNodoTicket= null;
-
-                try {
-
-                    int status = Integer.parseInt(response.getString("estatus"));
-                    String Mensaje = response.getString("mensaje");
-
-                    if (status == 1)
-                    {
-                        Respuesta = response.getJSONObject("resultado");
-                        RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
-
-                        float Subtotal = 0;
-                        float ImpuestoTotal = 0;
-                        JSONArray tic_impuestos = RespuestaNodoTicket.getJSONArray("tic_impuestos");
-                        List<Impuestos> ImpuestosList = new ArrayList<>();
-                        for (int f = 0; f < tic_impuestos.length(); f++) {
-                            JSONObject nodo_impuestos = tic_impuestos.getJSONObject(f);
-                            String ValorImpuesto = nodo_impuestos.getString("valor");
-                            double ValorEnPesos = Double.parseDouble((ValorImpuesto));
-                            if(ValorEnPesos<0)
-                            {
-                                ValorEnPesos=ValorEnPesos*-1;
-                            }
-                            ValorImpuesto= String.valueOf(formatter.format(ValorEnPesos));
-                            Impuestos impuesto = new Impuestos("",ValorImpuesto);
-                            impuesto.setNombreImpuesto(nodo_impuestos.getString("nombre"));
-                            ImpuestosList.add(impuesto);
-                        }
-
-                        ImpuestoAdapter mAdapter = new ImpuestoAdapter(ImpuestosList);
-                        RecyclerImpuesto.setHasFixedSize(true);
-                        mLayoutManager = new LinearLayoutManager(getContext());
-                        RecyclerImpuesto.setLayoutManager(mLayoutManager);
-                        RecyclerImpuesto.setAdapter(mAdapter);
-
-                        float DescuentoTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_descuentos"));
-                        float PrecioTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_total"));
-
-
-                        JSONArray NodoArticuloTicket = Respuesta.getJSONArray("aDetalleTicket");
-                        for(int j = 0; j < NodoArticuloTicket.length(); j++) {
-                            JSONObject nodo = NodoArticuloTicket.getJSONObject(j);
-
-                            float numero_de_productos = Float.parseFloat((nodo.getString("tar_cantidad")));
-
-                            float PrecioSubTotalProducto=0;
-
-
-                            //Sumar Subtotal
-                            float SubTot = Float.parseFloat(nodo.getString("art_precio_bruto"));
-                            PrecioSubTotalProducto = PrecioSubTotalProducto + SubTot;
-                            PrecioSubTotalProducto = PrecioSubTotalProducto * numero_de_productos;
-
-                            Subtotal = Subtotal + PrecioSubTotalProducto;
-
-                            String AplicaApartados = nodo.getString("art_aplica_apartados");
-                            String TieneExistencia = nodo.getString("art_id_existencia");
-
-                            if (AplicaApartados.equals("true")) {
-                                String ArticuloCantidad = nodo.getString("tar_cantidad");
-                                String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
-                                JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
-                                String ArticuloIDApartado = NodoIDApartado.getString("uuid");
-                                JSONObject NodoIDApartadoVariante = nodo.getJSONObject("tar_id_variante");
-                                String ArticuloIDApartadoVariante = NodoIDApartadoVariante.getString("uuid");
-                                String ArticuloIDApartadoModificador = nodo.getString("tar_id_modificador");
-                                String ArticuloApartadoImportePagado = nodo.getString("tar_importe_pagado");
-                                String ArticuloIDApartadoExistencia = nodo.getString("tar_id_existencia");
-                                String ArticuloApartadoAplicaDevolucion = nodo.getString("tar_aplica_para_devolucion");
-                                String ArticuloApartadoImporteDescuento = nodo.getString("tar_importe_descuento");
-                                String ArticuloApartadoTotal = nodo.getString("tar_importe_total");
-                                JSONObject nodoImpuestos = nodo.getJSONObject("tar_impuestos");
-                                Iterator keys = nodoImpuestos.keys();
-                                while (keys.hasNext()) {
-                                    Object key = keys.next();
-                                    String value = nodoImpuestos.getString((String) key);
-                                    Impuestos Impuesto = new Impuestos((String) key, value);
-                                    ImpuestosDeArticuloApartado.add(Impuesto);
-                                }
-                                String ArticuloApartadoPorcentajeDescuento = nodo.getString("tar_porcentaje_descuento");
-                                String ArticuloApartadoPrecio = nodo.getString("tar_precio_articulo");
-
-
-                                float importePagado = Float.parseFloat((ArticuloApartadoImportePagado));
-                                float importeTotal = Float.parseFloat((ArticuloApartadoTotal));
-                                float importeRestante = importeTotal - importePagado;
-
-                                ArticuloApartadoModel ArticuloApartado = new ArticuloApartadoModel(
-                                        ArticuloCantidad,
-                                        ArticuloIDApartado,
-                                        ArticuloIDApartadoVariante,
-                                        ArticuloIDApartadoModificador,
-                                        ArticuloApartadoImportePagado,
-                                        String.valueOf(importeRestante),
-                                        NombreArticuloApartado,
-                                        ArticuloIDApartadoExistencia,
-                                        ArticuloApartadoAplicaDevolucion,
-                                        ArticuloApartadoImporteDescuento,
-                                        ArticuloApartadoTotal,
-                                        ImpuestosDeArticuloApartado,
-                                        ArticuloApartadoPorcentajeDescuento,
-                                        ArticuloApartadoPrecio);
-                                ListaDeArticulosApartados.add(ArticuloApartado);
-                            }
-
-                            //ORDENES-------------------------------------------------------
-                            String AplicaOrdenes = nodo.getString("art_aplica_ordenes_especiales");
-                            if (AplicaOrdenes.equals("true")&&(TieneExistencia.equals(""))) {
-                                String ArticuloCantidad = nodo.getString("tar_cantidad");
-                                String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
-                                JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
-                                String ArticuloIDApartado = NodoIDApartado.getString("uuid");
-                                JSONObject NodoIDApartadoVariante = nodo.getJSONObject("tar_id_variante");
-                                String ArticuloIDApartadoVariante = NodoIDApartadoVariante.getString("uuid");
-                                String ArticuloIDApartadoModificador = nodo.getString("tar_id_modificador");
-                                String ArticuloApartadoImportePagado = nodo.getString("tar_importe_pagado");
-                                String ArticuloIDApartadoExistencia = nodo.getString("art_id_existencia");
-                                String ArticuloApartadoAplicaDevolucion = nodo.getString("tar_aplica_para_devolucion");
-                                String ArticuloApartadoImporteDescuento = nodo.getString("tar_importe_descuento");
-                                String ArticuloApartadoTotal = nodo.getString("tar_importe_total");
-                                JSONObject nodoImpuestos = nodo.getJSONObject("tar_impuestos");
-                                Iterator keys = nodoImpuestos.keys();
-                                while (keys.hasNext()) {
-                                    Object key = keys.next();
-                                    String value = nodoImpuestos.getString((String) key);
-                                    Impuestos Impuesto = new Impuestos((String) key, value);
-                                    ImpuestosDeArticuloOrdenado.add(Impuesto);
-                                }
-                                String ArticuloApartadoPorcentajeDescuento = nodo.getString("tar_porcentaje_descuento");
-                                String ArticuloApartadoPrecio = nodo.getString("tar_precio_articulo");
-
-
-                                float importePagado = Float.parseFloat((ArticuloApartadoImportePagado));
-                                float importeTotal = Float.parseFloat((ArticuloApartadoTotal));
-                                float importeRestante = importeTotal - importePagado;
-
-                                OrdenEspecialArticuloModel ArticuloOrdenado = new OrdenEspecialArticuloModel(
-                                        ArticuloCantidad,
-                                        ArticuloIDApartado,
-                                        ArticuloIDApartadoVariante,
-                                        ArticuloIDApartadoModificador,
-                                        ArticuloApartadoImportePagado,
-                                        String.valueOf(importeRestante),
-                                        NombreArticuloApartado,
-                                        ArticuloApartadoAplicaDevolucion,
-                                        ArticuloApartadoImporteDescuento,
-                                        ArticuloApartadoTotal,
-                                        ImpuestosDeArticuloOrdenado,
-                                        ArticuloApartadoPorcentajeDescuento,
-                                        ArticuloApartadoPrecio);
-                                ListaDeArticulosOrdenados.add(ArticuloOrdenado);
-                            }
-                            else {
-
-                            }
-                        }
-
-
-
-
-
-                        //Se modifican los datos del ticket de venta
-                        TicketVenta.setTic_importe_descuentos(String.valueOf(DescuentoTotal));
-                        TicketVenta.setTic_importe_total(String.valueOf(PrecioTotal));
-                        TicketVenta.setTic_impuestos(String.valueOf(ImpuestoTotal));
-
-
-
-                        NumberFormat formatter = NumberFormat.getCurrencyInstance();
-
-                        double Price = Double.parseDouble( TicketVenta.getTic_importe_total() );
-                        total.setText( formatter.format( Price ) );
-
-                        double descu = Double.parseDouble( TicketVenta.getTic_importe_descuentos() );
-                        descuento.setText( formatter.format( descu ) );
-
-                        double sub = Double.parseDouble(String.valueOf(Subtotal));
-                        subtotal.setText( formatter.format( sub ) );
-
-                        JSONArray NodoTicketArticulos = Respuesta.getJSONArray("aDetalleTicket");
-                        for (int x = 0; x < NodoTicketArticulos.length(); x++)
-                        {
-                            JSONObject elemento = NodoTicketArticulos.getJSONObject(x);
-                            String NombreArticulo = elemento.getString("tar_nombre_articulo");
-                            JSONObject NodoTarID = elemento.getJSONObject("tar_id");
-                            String tar_id = NodoTarID.getString("uuid");
-
-                            String SKUArticulo = elemento.getString("art_sku");
-                            String cantidad = elemento.getString("tar_cantidad");
-                            String precio = elemento.getString("tar_precio_articulo");
-                            String descuento = elemento.getString("art_importe_descuento");
-                            String importe = elemento.getString("tar_importe_total");
-                            String existencia = elemento.getString("art_id_existencia");
-                            String unidad_medida = elemento.getString("art_um_simbologia");
-
-                            JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
-                            for (int z = 0; z < RespuestaImagenes.length(); z++) {
-                                String RutaImagen = "http://192.168.100.192:8010" + RespuestaImagenes.getString(z);
-                                Imagenes.add(RutaImagen);
-                            }
-                            final ArticuloModel articulo = new ArticuloModel("",
-                                    NombreArticulo,
-                                    "",
-                                    precio,
-                                    "",
-                                    "",
-                                    SKUArticulo,
-                                    "",
-                                    cantidad,
-                                    tar_id,
-                                    descuento,
-                                    "",
-                                    importe,"","",existencia
-                            );
-                            articulo.setGetArticulo_UM(unidad_medida);
-                            Articulos.add(articulo);
-
-                        }
-
-                        final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), Articulos, tabla_venta_articulos, TicketVenta, Usu_id,
-                                total, descuento, impuesto, subtotal,
-                                carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,OrdenarButton,ApartarButton,FinalizarButton,
-                                RecyclerImpuesto);
-                        articuloAdapter.notifyDataSetChanged();
-                        tabla_venta_articulos.setDataAdapter(articuloAdapter);
-                        LoadImages();
-                        progressDialog.dismiss();
-
-                    }
-                    else
-                    {
-                        Toast toast1 =
-                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-                        toast1.show();
-                    }
-
-                } catch (JSONException e) {
-                    Toast toast1 =
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
-                    toast1.show();
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-        },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+
+            String ApiPath = "http://187.189.192.150:8010" + "/api/ventas/tickets/update-cantidad-articulo";
+
+            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    JSONObject Respuesta = null;
+                    JSONObject RespuestaNodoTicket = null;
+
+                    try {
+
+                        int status = Integer.parseInt(response.getString("estatus"));
+                        String Mensaje = response.getString("mensaje");
+
+                        if (status == 1) {
+                            Respuesta = response.getJSONObject("resultado");
+                            RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
+
+                            float Subtotal = 0;
+                            float ImpuestoTotal = 0;
+                            JSONArray tic_impuestos = RespuestaNodoTicket.getJSONArray("tic_impuestos");
+                            List<Impuestos> ImpuestosList = new ArrayList<>();
+                            for (int f = 0; f < tic_impuestos.length(); f++) {
+                                JSONObject nodo_impuestos = tic_impuestos.getJSONObject(f);
+                                String ValorImpuesto = nodo_impuestos.getString("valor");
+                                double ValorEnPesos = Double.parseDouble((ValorImpuesto));
+                                if (ValorEnPesos < 0) {
+                                    ValorEnPesos = ValorEnPesos * -1;
+                                }
+                                ValorImpuesto = String.valueOf(formatter.format(ValorEnPesos));
+                                Impuestos impuesto = new Impuestos("", ValorImpuesto);
+                                impuesto.setNombreImpuesto(nodo_impuestos.getString("nombre"));
+                                ImpuestosList.add(impuesto);
+                            }
+
+                            ImpuestoAdapter mAdapter = new ImpuestoAdapter(ImpuestosList);
+                            RecyclerImpuesto.setHasFixedSize(true);
+                            mLayoutManager = new LinearLayoutManager(getContext());
+                            RecyclerImpuesto.setLayoutManager(mLayoutManager);
+                            RecyclerImpuesto.setAdapter(mAdapter);
+
+                            float DescuentoTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_descuentos"));
+                            float PrecioTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_total"));
+
+
+                            JSONArray NodoArticuloTicket = Respuesta.getJSONArray("aDetalleTicket");
+                            for (int j = 0; j < NodoArticuloTicket.length(); j++) {
+                                JSONObject nodo = NodoArticuloTicket.getJSONObject(j);
+
+                                float numero_de_productos = Float.parseFloat((nodo.getString("tar_cantidad")));
+
+                                float PrecioSubTotalProducto = 0;
+
+
+                                //Sumar Subtotal
+                                float SubTot = Float.parseFloat(nodo.getString("art_precio_bruto"));
+                                PrecioSubTotalProducto = PrecioSubTotalProducto + SubTot;
+                                PrecioSubTotalProducto = PrecioSubTotalProducto * numero_de_productos;
+
+                                Subtotal = Subtotal + PrecioSubTotalProducto;
+
+                                String AplicaApartados = nodo.getString("art_aplica_apartados");
+                                String TieneExistencia = nodo.getString("art_id_existencia");
+
+                                if (AplicaApartados.equals("true")) {
+                                    String ArticuloCantidad = nodo.getString("tar_cantidad");
+                                    String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
+                                    JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
+                                    String ArticuloIDApartado = NodoIDApartado.getString("uuid");
+                                    JSONObject NodoIDApartadoVariante = nodo.getJSONObject("tar_id_variante");
+                                    String ArticuloIDApartadoVariante = NodoIDApartadoVariante.getString("uuid");
+                                    String ArticuloIDApartadoModificador = nodo.getString("tar_id_modificador");
+                                    String ArticuloApartadoImportePagado = nodo.getString("tar_importe_pagado");
+                                    String ArticuloIDApartadoExistencia = nodo.getString("tar_id_existencia");
+                                    String ArticuloApartadoAplicaDevolucion = nodo.getString("tar_aplica_para_devolucion");
+                                    String ArticuloApartadoImporteDescuento = nodo.getString("tar_importe_descuento");
+                                    String ArticuloApartadoTotal = nodo.getString("tar_importe_total");
+                                    JSONObject nodoImpuestos = nodo.getJSONObject("tar_impuestos");
+                                    Iterator keys = nodoImpuestos.keys();
+                                    while (keys.hasNext()) {
+                                        Object key = keys.next();
+                                        String value = nodoImpuestos.getString((String) key);
+                                        Impuestos Impuesto = new Impuestos((String) key, value);
+                                        ImpuestosDeArticuloApartado.add(Impuesto);
+                                    }
+                                    String ArticuloApartadoPorcentajeDescuento = nodo.getString("tar_porcentaje_descuento");
+                                    String ArticuloApartadoPrecio = nodo.getString("tar_precio_articulo");
+
+
+                                    float importePagado = Float.parseFloat((ArticuloApartadoImportePagado));
+                                    float importeTotal = Float.parseFloat((ArticuloApartadoTotal));
+                                    float importeRestante = importeTotal - importePagado;
+
+                                    ArticuloApartadoModel ArticuloApartado = new ArticuloApartadoModel(
+                                            ArticuloCantidad,
+                                            ArticuloIDApartado,
+                                            ArticuloIDApartadoVariante,
+                                            ArticuloIDApartadoModificador,
+                                            ArticuloApartadoImportePagado,
+                                            String.valueOf(importeRestante),
+                                            NombreArticuloApartado,
+                                            ArticuloIDApartadoExistencia,
+                                            ArticuloApartadoAplicaDevolucion,
+                                            ArticuloApartadoImporteDescuento,
+                                            ArticuloApartadoTotal,
+                                            ImpuestosDeArticuloApartado,
+                                            ArticuloApartadoPorcentajeDescuento,
+                                            ArticuloApartadoPrecio);
+                                    ListaDeArticulosApartados.add(ArticuloApartado);
+                                }
+
+                                //ORDENES-------------------------------------------------------
+                                String AplicaOrdenes = nodo.getString("art_aplica_ordenes_especiales");
+                                if (AplicaOrdenes.equals("true") && (TieneExistencia.equals(""))) {
+                                    String ArticuloCantidad = nodo.getString("tar_cantidad");
+                                    String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
+                                    JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
+                                    String ArticuloIDApartado = NodoIDApartado.getString("uuid");
+                                    JSONObject NodoIDApartadoVariante = nodo.getJSONObject("tar_id_variante");
+                                    String ArticuloIDApartadoVariante = NodoIDApartadoVariante.getString("uuid");
+                                    String ArticuloIDApartadoModificador = nodo.getString("tar_id_modificador");
+                                    String ArticuloApartadoImportePagado = nodo.getString("tar_importe_pagado");
+                                    String ArticuloIDApartadoExistencia = nodo.getString("art_id_existencia");
+                                    String ArticuloApartadoAplicaDevolucion = nodo.getString("tar_aplica_para_devolucion");
+                                    String ArticuloApartadoImporteDescuento = nodo.getString("tar_importe_descuento");
+                                    String ArticuloApartadoTotal = nodo.getString("tar_importe_total");
+                                    JSONObject nodoImpuestos = nodo.getJSONObject("tar_impuestos");
+                                    Iterator keys = nodoImpuestos.keys();
+                                    while (keys.hasNext()) {
+                                        Object key = keys.next();
+                                        String value = nodoImpuestos.getString((String) key);
+                                        Impuestos Impuesto = new Impuestos((String) key, value);
+                                        ImpuestosDeArticuloOrdenado.add(Impuesto);
+                                    }
+                                    String ArticuloApartadoPorcentajeDescuento = nodo.getString("tar_porcentaje_descuento");
+                                    String ArticuloApartadoPrecio = nodo.getString("tar_precio_articulo");
+
+
+                                    float importePagado = Float.parseFloat((ArticuloApartadoImportePagado));
+                                    float importeTotal = Float.parseFloat((ArticuloApartadoTotal));
+                                    float importeRestante = importeTotal - importePagado;
+
+                                    OrdenEspecialArticuloModel ArticuloOrdenado = new OrdenEspecialArticuloModel(
+                                            ArticuloCantidad,
+                                            ArticuloIDApartado,
+                                            ArticuloIDApartadoVariante,
+                                            ArticuloIDApartadoModificador,
+                                            ArticuloApartadoImportePagado,
+                                            String.valueOf(importeRestante),
+                                            NombreArticuloApartado,
+                                            ArticuloApartadoAplicaDevolucion,
+                                            ArticuloApartadoImporteDescuento,
+                                            ArticuloApartadoTotal,
+                                            ImpuestosDeArticuloOrdenado,
+                                            ArticuloApartadoPorcentajeDescuento,
+                                            ArticuloApartadoPrecio);
+                                    ListaDeArticulosOrdenados.add(ArticuloOrdenado);
+                                } else {
+
+                                }
+                            }
+
+
+                            //Se modifican los datos del ticket de venta
+                            TicketVenta.setTic_importe_descuentos(String.valueOf(DescuentoTotal));
+                            TicketVenta.setTic_importe_total(String.valueOf(PrecioTotal));
+                            TicketVenta.setTic_impuestos(String.valueOf(ImpuestoTotal));
+
+
+                            NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+                            double Price = Double.parseDouble(TicketVenta.getTic_importe_total());
+                            total.setText(formatter.format(Price));
+
+                            double descu = Double.parseDouble(TicketVenta.getTic_importe_descuentos());
+                            descuento.setText(formatter.format(descu));
+
+                            double sub = Double.parseDouble(String.valueOf(Subtotal));
+                            subtotal.setText(formatter.format(sub));
+
+                            JSONArray NodoTicketArticulos = Respuesta.getJSONArray("aDetalleTicket");
+                            for (int x = 0; x < NodoTicketArticulos.length(); x++) {
+                                JSONObject elemento = NodoTicketArticulos.getJSONObject(x);
+                                String NombreArticulo = elemento.getString("tar_nombre_articulo");
+                                JSONObject NodoTarID = elemento.getJSONObject("tar_id");
+                                String tar_id = NodoTarID.getString("uuid");
+
+                                String SKUArticulo = elemento.getString("art_sku");
+                                String cantidad = elemento.getString("tar_cantidad");
+                                String precio = elemento.getString("tar_precio_articulo");
+                                String descuento = elemento.getString("art_importe_descuento");
+                                String importe = elemento.getString("tar_importe_total");
+                                String existencia = elemento.getString("art_id_existencia");
+                                String unidad_medida = elemento.getString("art_um_simbologia");
+
+                                JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
+                                for (int z = 0; z < RespuestaImagenes.length(); z++) {
+                                    String RutaImagen = "http://192.168.100.192:8010" + RespuestaImagenes.getString(z);
+                                    Imagenes.add(RutaImagen);
+                                }
+                                final ArticuloModel articulo = new ArticuloModel("",
+                                        NombreArticulo,
+                                        "",
+                                        precio,
+                                        "",
+                                        "",
+                                        SKUArticulo,
+                                        "",
+                                        cantidad,
+                                        tar_id,
+                                        descuento,
+                                        "",
+                                        importe, "", "", existencia
+                                );
+                                articulo.setGetArticulo_UM(unidad_medida);
+                                Articulos.add(articulo);
+
+                            }
+
+                            final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), Articulos, tabla_venta_articulos, TicketVenta, Usu_id,
+                                    total, descuento, impuesto, subtotal,
+                                    carouselView, Imagenes, ImpuestosDeArticuloApartado, ListaDeArticulosApartados, ImpuestosDeArticuloOrdenado, ListaDeArticulosOrdenados, OrdenarButton, ApartarButton, FinalizarButton,
+                                    RecyclerImpuesto);
+                            articuloAdapter.notifyDataSetChanged();
+                            tabla_venta_articulos.setDataAdapter(articuloAdapter);
+                            LoadImages();
+                            progressDialog.dismiss();
+
+                        } else {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                            toast1.show();
+                        }
+
+                    } catch (JSONException e) {
                         Toast toast1 =
-                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                         toast1.show();
                     }
                 }
-        );
-        postRequest.setShouldCache(false);
 
-        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+            },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                            toast1.show();
+                        }
+                    }
+            );
+            postRequest.setShouldCache(false);
+
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+        }else
+        {
+            EliminarArticulo(articulo.getArticulo_tarID());
+        }
     }
 
-    private void EliminarArticulo(String taride,String nombre)
+    private void EliminarArticulo(String taride)
     {
         progressDialog.show();
         ArticulosConExistencias.clear();

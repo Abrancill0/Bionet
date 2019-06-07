@@ -2715,6 +2715,7 @@ public class Fragment_Ventas extends Fragment {
     }
 
     private void BuscarPorSKU(String SKU) {
+        progressDialog.show();
         dialog.setContentView(R.layout.pop_up_ventas_verificar_articulo);
         final TextView art_nombre = dialog.findViewById(R.id.art_name_articulo);
         final TextView art_categoria = dialog.findViewById(R.id.art_name_categoria);
@@ -2839,6 +2840,8 @@ public class Fragment_Ventas extends Fragment {
                                             dialog.dismiss();
                                         }
                                     });
+
+                                    progressDialog.dismiss();
 
 
                                 }

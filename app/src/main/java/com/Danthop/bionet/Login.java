@@ -22,7 +22,9 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -84,6 +86,7 @@ public class Login extends Activity {
     private static final int REQUEST_CODE = 999;
     private static String Token;
     private byte data[];
+    private String Sucursal;
 
 
     private int[][] u_infor;
@@ -127,6 +130,7 @@ public class Login extends Activity {
         super.onCreate(savedInstanceState);
 
 
+
      //   AccountManager am = AccountManager.get(this);
      //   Bundle options = new Bundle();
 
@@ -168,6 +172,14 @@ public class Login extends Activity {
         this.u_infor[7][0] = 1155;
         this.u_infor[7][1] = 22337;
         setContentView(R.layout.login);
+        findViewById(R.id.loginlayout).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                return true;
+            }
+        });
 
         TextUsuario = (EditText) findViewById(R.id.TextUsuario);
         TextPassword = (EditText) findViewById(R.id.TextPassword);
@@ -287,6 +299,13 @@ public class Login extends Activity {
                         Resultado.setUsuImagen( RespuestaObjeto.getString( "usu_imagen_perfil" ) );
                         Resultado.setUsu_activo( RespuestaObjeto.getString( "usu_activo" ) );
                         Resultado.setUsu_administrador( RespuestaObjeto.getString( "usu_administrador" ) );
+                        JSONObject SucursalesNodo = RespuestaObjeto.getJSONObject("usu_sucursales");
+                        JSONArray ArregloSucursales = SucursalesNodo.getJSONArray("values");
+                        Sucursal = ArregloSucursales.getString(0);
+
+
+
+
 
                         JSONObject tipo_id = Respuesta.getJSONObject( 0 );
 
@@ -305,6 +324,9 @@ public class Login extends Activity {
                             Resultado.setUsuImagen( tipo_id.getString( "usu_imagen_perfil" ) );
                             Resultado.setUsu_activo( tipo_id.getString( "usu_activo" ) );
                             Resultado.setUsu_administrador( tipo_id.getString( "usu_administrador" ) );
+                            JSONObject SucursalesNodo2 = RespuestaObjeto.getJSONObject("usu_sucursales");
+                            JSONArray ArregloSucursales2 = SucursalesNodo.getJSONArray("values");
+                            Sucursal = ArregloSucursales2.getString(0);
 
                             RespuestaNodoUsuID = RespuestaObjeto.getJSONObject( "usu_id" );
                             Resultado.setUsuId( RespuestaNodoUsuID.getString( "uuid" ) );

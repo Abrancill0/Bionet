@@ -123,6 +123,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
         fr = getFragmentManager().beginTransaction();
 
         btn_corte = (TextView) v.findViewById(R.id.btn_corte); //opcion 1
+        btn_corte.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
         btn_listado_corte = (TextView) v.findViewById(R.id.btn_listado_corte);
         btn_factura_ventas = (TextView) v.findViewById(R.id.btn_factura_ventas);
 

@@ -29,21 +29,30 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.OrdenEspecialAdapter;
+import com.Danthop.bionet.model.Impuestos;
 import com.Danthop.bionet.model.LoginModel;
 
+import com.Danthop.bionet.model.OrdenEspecialArticuloModel;
+import com.Danthop.bionet.model.OrdenEspecialModel;
+import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,8 +67,10 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 public class Home extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener, Fragment_pop_up_ProfilePhoto.OnPhotoSelectedListener {
@@ -87,6 +98,8 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     private TextView btn_cerrar_ecommerce;
     private Dialog cerrar_sesion_ecommerce;
     private ProgressDialog progressDialog;
+    private String SucursalSelect;
+    private String Logo;
 
     private WifiManager wifiManager;
 
@@ -133,6 +146,14 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
+        findViewById(R.id.layouthome).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                return true;
+            }
+        });
         wifiManager = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         layoutCerrar = findViewById(R.id.layout_cerrar_ecommerce);
 
@@ -158,6 +179,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         String Apellido = sharedPref.getString("usu_apellidos", "");
         String RutaImagenPerfil = sharedPref.getString("usu_imagen_perfil", "");
         String RutaLogoEmpresa = sharedPref.getString("logo_imagen", "");
+        SucursalSelect = sharedPref.getString("usu_sucursal","");
 
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.fragment_container, new Fragment_pantalla_principal());
@@ -460,6 +482,59 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
     }
 
+    private void loadLogoSuc()
+    {
+        try {
+
+            String url = getString(R.string.Url);
+
+            String ApiPath = url + "/api/configuracion/sucursales/select/" + SucursalSelect;
+
+            // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            try {
+
+                                int EstatusApi = Integer.parseInt(response.getString("estatus"));
+
+                                if (EstatusApi == 1) {
+                                    JSONObject Conf = response.getJSONObject("resultado");
+                                    Logo = Conf.getString("con_logo_negocio");
+
+
+
+
+                                }
+                            } catch (JSONException e) {
+                                Toast toast1 =
+                                        Toast.makeText(Home.this,
+                                                String.valueOf(e), Toast.LENGTH_LONG);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(Home.this,
+                                            String.valueOf(error), Toast.LENGTH_LONG);
+                        }
+                    }
+            );
+            getRequest.setShouldCache(false);
+
+            VolleySingleton.getInstanciaVolley(Home.this).addToRequestQueue(getRequest);
+        } catch (Error e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
     public void Cancelar(View view) {
         cerrar.dismiss();
     }
@@ -595,6 +670,8 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
             }
         }
     };
+
+
 
 
 

@@ -90,9 +90,9 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
         View v = inflater.inflate(R.layout.fragment_ventas_listadocortecajas,container, false);
         pestania_ventas = v.findViewById(R.id.btn_ventas);
         pestania_reporte = v.findViewById(R.id.btn_traslados);
-
         btn_corte = (TextView) v.findViewById(R.id.btn_corte);
         btn_listado_corte = (TextView) v.findViewById(R.id.btn_listado_corte);
+        btn_listado_corte.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
         btn_factura_ventas = (TextView) v.findViewById(R.id.btn_factura_ventas);
 
         Fechainicio=(EditText) v.findViewById(R.id.btnfechainicio);

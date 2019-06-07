@@ -12,12 +12,16 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/layouthome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/fondo"
         android:gravity="top"
         android:orientation="vertical"
         android:visibility="visible"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         >
 
         <LinearLayout

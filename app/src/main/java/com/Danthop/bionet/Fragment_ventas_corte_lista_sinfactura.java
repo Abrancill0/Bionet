@@ -101,6 +101,8 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         btn_corte = v.findViewById(R.id.btn_corte); //opcion 1
         btn_listado_corte = v.findViewById(R.id.btn_listado_corte);
         btn_factura_ventas = v.findViewById(R.id.btn_factura_ventas);
+        btn_factura_ventas.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+
 
         Fechainicio=(EditText) v.findViewById(R.id.btnfechainicio);
         Fechafin=(EditText) v.findViewById(R.id.btnfechafin);

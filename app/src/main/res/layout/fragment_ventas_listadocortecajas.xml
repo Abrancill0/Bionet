@@ -140,13 +140,13 @@
 
                     <TextView
                         android:id="@+id/btn_corte"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="50dp"
-                        android:gravity="center"
                         android:text="Corte de Caja"
-                        android:textSize="15dp"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:paddingLeft="50dp"
+                        android:paddingTop="20dp"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="15dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -158,12 +158,12 @@
 
                     <TextView
                         android:id="@+id/btn_listado_corte"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="50dp"
-                        android:gravity="center"
                         android:text="Listado de Corte"
                         android:textSize="15dp"
+                        android:paddingLeft="50dp"
+                        android:paddingTop="20dp"
                         android:textColor="@color/colorPrimaryDark" />
                 </LinearLayout>
 
@@ -176,18 +176,18 @@
 
                     <TextView
                         android:id="@+id/btn_factura_ventas"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="50dp"
-                        android:gravity="center"
                         android:text="Factura Ventas"
                         android:textSize="15dp"
+                        android:paddingLeft="50dp"
+                        android:paddingTop="20dp"
                         android:textColor="@color/colorPrimaryDark" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/layout_fechas"
-                    android:layout_width="match_parent"
+                    android:layout_width="200dp"
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
                     android:orientation="vertical"
@@ -196,7 +196,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="200dp"
                         android:layout_weight=".5"
                         android:orientation="vertical">
 
