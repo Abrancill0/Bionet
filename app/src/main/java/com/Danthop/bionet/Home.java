@@ -228,6 +228,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                 myDialogFragment.show(fm, "photo_dialog_fragment");
             }
         });
+        loadLogoSuc();
 
     }
 
@@ -488,7 +489,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
             String url = getString(R.string.Url);
 
-            String ApiPath = url + "/api/configuracion/sucursales/select/" + SucursalSelect;
+            String ApiPath = url + "/api/configuracion/sucursales/select/" + SucursalSelect +"?usu_id=" + usu_id + "&esApp=1";
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
@@ -503,6 +504,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                                 if (EstatusApi == 1) {
                                     JSONObject Conf = response.getJSONObject("resultado");
                                     Logo = Conf.getString("con_logo_negocio");
+                                    Picasso.with(getApplicationContext()).load(url + Logo).into(imgLogo_empresa);
 
 
 

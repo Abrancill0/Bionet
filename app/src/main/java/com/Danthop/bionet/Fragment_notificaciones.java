@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class Fragment_notificaciones extends Fragment {
 
-    private List<NotificacionModel> mNotificacionList = new ArrayList<>();;
+    private List<NotificacionModel> mNotificacionList;
     private RecyclerView mRecyclerView;
     private NotificacionAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -188,7 +188,7 @@ public class Fragment_notificaciones extends Fragment {
     }
 
     public void LoadNotificaciones() {
-        mNotificacionList.clear();
+        mNotificacionList = new ArrayList<>();
         try {
             String ApiPath = "http://187.189.192.150:8010/api/notificaciones/index?usu_id=" + usu_id + "&esApp=1";
 

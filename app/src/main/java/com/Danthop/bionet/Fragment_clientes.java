@@ -13,17 +13,21 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ClienteAdapter;
 import com.Danthop.bionet.Adapters.DetalleApartadoAdapter;
 import com.Danthop.bionet.Adapters.HistorialClientesAdapter;
+import com.Danthop.bionet.Adapters.VentaArticuloAdapter;
 import com.Danthop.bionet.Tables.SortableApartadoDetalleTable;
 import com.Danthop.bionet.Tables.SortableClientesHistorialTable;
 import com.Danthop.bionet.Tables.SortableClientesTable;
@@ -89,6 +93,9 @@ public class Fragment_clientes extends Fragment {
     private ProgressDialog progressDialog;
     private EditText BuscarCliente;
     private ClienteAdapter clienteAdapter;
+    private Spinner SpinnerSucursal;
+    private ArrayList<String> SucursalName;
+    private ArrayList<String> SucursalID;
 
     private List<ClienteModel> clientes;
     private List<CompraModel> HistorialCompras;
@@ -109,6 +116,10 @@ public class Fragment_clientes extends Fragment {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
+        SucursalName = new ArrayList<>();
+        SucursalID = new ArrayList<>();
+        SpinnerSucursal = (Spinner) v.findViewById(R.id.sucursal);
+
         tabla_clientes = (SortableClientesTable) v.findViewById(R.id.tabla_clientes);
         ver_cliente_dialog=new Dialog(getContext());
         ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
@@ -124,8 +135,19 @@ public class Fragment_clientes extends Fragment {
         clientes = new ArrayList<>();
 
 
-        Muestra_clientes();
-        LoadListenerTable();
+        LoadSucursales();
+        SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                Muestra_clientes();
+
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+
 
         Button btn_crear_cliente = (Button) v.findViewById(R.id.btn_crear_cliente);
         btn_crear_cliente.setOnClickListener(new View.OnClickListener() {
@@ -408,11 +430,13 @@ public class Fragment_clientes extends Fragment {
 
     private void Muestra_clientes()
     {
+        clientes.clear();
         JSONObject request = new JSONObject();
         try
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("usu_suc", SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
 
         }
         catch(Exception e)
@@ -442,7 +466,6 @@ public class Fragment_clientes extends Fragment {
 
                     if (status == 1)
                     {
-                        progressDialog.dismiss();
                         Respuesta = response.getJSONObject("resultado");
 
                         RespuestaNodoClientes = Respuesta.getJSONArray("aClientes");
@@ -555,6 +578,7 @@ public class Fragment_clientes extends Fragment {
 
                         clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes,fr);
                         tabla_clientes.setDataAdapter(clienteAdapter);
+                        progressDialog.dismiss();
                     }
                     else
                     {
@@ -589,6 +613,93 @@ public class Fragment_clientes extends Fragment {
     }
 
     private void LoadListenerTable(){
+
+    }
+
+
+    public void LoadSucursales() {
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/configuracion/sucursales/index_app";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONArray RespuestaNodoSucursales = null;
+                JSONObject RespuestaNodoID = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+                    if (status == 1) {
+                        progressDialog.dismiss();
+
+                        Respuesta = response.getJSONObject("resultado");
+
+                        RespuestaNodoSucursales = Respuesta.getJSONArray("aSucursales");
+
+                        for (int x = 0; x < RespuestaNodoSucursales.length(); x++) {
+                            JSONObject jsonObject1 = RespuestaNodoSucursales.getJSONObject(x);
+                            String sucursal = jsonObject1.getString("suc_nombre");
+                            SucursalName.add(sucursal);
+                            RespuestaNodoID = jsonObject1.getJSONObject("suc_id");
+                            String id = RespuestaNodoID.getString("uuid");
+                            SucursalID.add(id);
+                        }
+                        SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, SucursalName));
+
+                    } else {
+                        progressDialog.dismiss();
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+
+                } catch (JSONException e) {
+                    progressDialog.dismiss();
+
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+
+                }
+
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
 
     }
 

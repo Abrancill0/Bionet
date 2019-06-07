@@ -66,7 +66,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:background="@drawable/pestanas_desplegables">
 
                             <TextView
                                 android:id="@+id/textView15"
@@ -90,7 +91,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:background="@drawable/pestanas_desplegables">
 
                             <TextView
                                 android:id="@+id/textView22"
@@ -113,7 +115,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:background="@drawable/pestanas_desplegables">
 
                             <TextView
                                 android:id="@+id/textView23"
@@ -136,7 +139,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:background="@drawable/pestanas_desplegables">
 
                             <TextView
                                 android:id="@+id/textView24"
@@ -159,7 +163,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:background="@drawable/pestanas_desplegables">
 
                             <TextView
                                 android:id="@+id/textView2s4"
@@ -182,7 +187,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:background="@drawable/pestanas_desplegables">
 
                             <TextView
                                 android:id="@+id/textView2f4"
@@ -205,7 +211,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:background="@drawable/pestanas_desplegables">
 
                             <TextView
                                 android:id="@+id/textViesw24"
@@ -228,7 +235,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:background="@drawable/pestanas_desplegables">
 
                             <TextView
                                 android:id="@+id/textVieww24"
@@ -251,7 +259,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:background="@drawable/pestanas_desplegables">
 
                             <TextView
                                 android:id="@+id/textViewe24"
@@ -276,7 +285,8 @@
                         android:layout_height="331dp"
                         android:layout_weight=".5"
                         android:orientation="vertical"
-                        android:padding="20dp">
+                        android:padding="20dp"
+                        android:background="@drawable/pestanas_desplegables">
 
                         <LinearLayout
                             android:layout_width="match_parent"

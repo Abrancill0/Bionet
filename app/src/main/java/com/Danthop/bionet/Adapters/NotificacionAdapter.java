@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.Danthop.bionet.R;
@@ -101,6 +102,20 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
         {
             notificacionViewHolder.Fondo.setBackgroundResource(R.drawable.shape_gray);
         }
+
+        //in some cases, it will prevent unwanted situations
+        notificacionViewHolder.Box.setOnCheckedChangeListener(null);
+
+        //if true, your checkbox will be selected, else unselected
+        notificacionViewHolder.Box.setChecked(currentItem.isSeleccionado());
+
+        notificacionViewHolder.Box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //set your object's last status
+                currentItem.setSeleccionado(isChecked);
+            }
+        });
 
     }
 

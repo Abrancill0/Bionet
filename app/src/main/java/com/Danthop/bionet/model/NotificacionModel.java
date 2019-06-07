@@ -6,6 +6,7 @@ public class NotificacionModel {
     private String Fecha;
     private String Mensaje;
     private String Visto;
+    private Boolean seleccionado = false;
 
     public NotificacionModel(String titulo, String ID, String fecha, String mensaje,String visto) {
         Titulo = titulo;
@@ -53,5 +54,13 @@ public class NotificacionModel {
 
     public void setVisto(String visto) {
         Visto = visto;
+    }
+
+    public Boolean isSeleccionado() {
+        return seleccionado;
+    }
+
+    public void setSeleccionado(Boolean seleccionado) {
+        this.seleccionado = seleccionado;
     }
 }
