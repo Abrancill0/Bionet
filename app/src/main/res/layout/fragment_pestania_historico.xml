@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
-                android:text="Consultar Disponibilidad"
+                android:text="Listado de inventario"
                 android:textAllCaps="false"
                 android:fontFamily="@font/muli"
                 android:textSize="17dp"/>
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
                 android:background="@drawable/pestanas_desplegables"
-                android:text="Existencias"
+                android:text="Consultar Disponibilidad"
                 android:textAllCaps="false"
                 android:fontFamily="@font/muli"
                 android:textSize="17dp"/>

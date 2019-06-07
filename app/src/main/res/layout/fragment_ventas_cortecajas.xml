@@ -241,7 +241,7 @@
 
                 <EditText
                     android:id="@+id/btnfechafin"
-                    android:layout_width="120dp"
+                    android:layout_width="130dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="5dp"
                     android:background="@color/gray2"
@@ -260,7 +260,7 @@
 
                 <EditText
                     android:id="@+id/btnfechainicio"
-                    android:layout_width="120dp"
+                    android:layout_width="130dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="5dp"
                     android:background="@color/gray2"

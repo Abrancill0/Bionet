@@ -33,12 +33,15 @@ public class HistoricoAdapter extends LongPressAwareTableDataAdapter<HistoricoMo
                 renderedView = rendercat_nombre(Historico);
                 break;
             case 2:
-                renderedView = renderhis_tipo(Historico);
+                renderedView = rendersucursal(Historico);
                 break;
             case 3:
-                renderedView = renderhis_cantidad(Historico);
+                renderedView = renderhis_tipo(Historico);
                 break;
             case 4:
+                renderedView = renderhis_cantidad(Historico);
+                break;
+            case 5:
                 renderedView = renderobservacion(Historico);
                 break;
 
@@ -78,6 +81,10 @@ public class HistoricoAdapter extends LongPressAwareTableDataAdapter<HistoricoMo
 
     private View rendercat_nombre(final HistoricoModel Historico) {
         return renderString(Historico.getCat_nombre());
+    }
+
+    private View rendersucursal(final HistoricoModel Historico) {
+        return renderString(Historico.getNombre_sucursal());
     }
 
     private View renderhis_tipo(final HistoricoModel Historico) {
