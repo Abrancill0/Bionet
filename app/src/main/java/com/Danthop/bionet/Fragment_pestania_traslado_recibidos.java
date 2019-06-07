@@ -153,7 +153,7 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
         tabla_traslados = (SortableTrasladosTable) v.findViewById(R.id.tabla_traslados);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Origen", "Destino", "Estatus", "Motivo", "Fecha de solicitud");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        simpleHeader.setTextSize( 14 );
+        simpleHeader.setTextSize( 18 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
         tableColumnWeightModel.setColumnWeight(0, 1);
@@ -224,9 +224,9 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
                             String SucursalCodigoOrigen;
                             String SucursalCodigoDestino;
 
-                            SucursalCodigoOrigen = RecibidasOrigen + " " + suc_numero_sucursal_origen;
+                            SucursalCodigoOrigen = RecibidasOrigen + "(" + suc_numero_sucursal_origen + ")";
                             RecibidasOrigen = SucursalCodigoOrigen;
-                            SucursalCodigoDestino = RecibidasDestino + " " + suc_numero_sucursal_destino;
+                            SucursalCodigoDestino = RecibidasDestino + "(" + suc_numero_sucursal_destino + ")";
                             RecibidasDestino = SucursalCodigoDestino;
 
 

@@ -227,9 +227,12 @@ public class Fragment_inventarios extends Fragment {
                             categoria = elemento.getString("cat_nombre");
                             articulo_descripcion = elemento.getString("art_descripcion");
                             art_tipo = elemento.getString("art_tipo");
-                            nombre_sucursal = elemento.getString("suc_nombre");
                             codigoBarras = elemento.getString("exi_codigo_barras");
                             almacen = elemento.getString("alm_nombre");
+
+                            String suc_nombre = elemento.getString( "suc_nombre" );
+                            String suc_numero = elemento.getString( "suc_numero" );
+                            nombre_sucursal = suc_nombre + "(" + suc_numero + ")";
 
                             RespuestaExistencias = elemento.getJSONObject("exi_cantidad");
                             existencia = RespuestaExistencias.getString("value");

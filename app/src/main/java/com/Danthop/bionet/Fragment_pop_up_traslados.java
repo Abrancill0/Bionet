@@ -701,7 +701,10 @@ private void SpinnerSucursales() {
                             String UUID = RespuestaUUID.getString("uuid");
                             SucursalID.add(UUID);
 
-                            suc_nombre = elemento.getString("suc_nombre");
+                            String suc_numero = elemento.getString("suc_numero");
+                            String nombre = elemento.getString("suc_nombre");
+
+                            suc_nombre = suc_numero + "(" + nombre + ")";
                             SucursalName.add(suc_nombre);
 
                         }

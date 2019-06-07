@@ -223,13 +223,12 @@ public  void Traslados_Recibidas(){
                         tra_nombre_estatus = elemento.getString("tra_nombre_estatus");
                         tra_motivo = elemento.getString("tra_motivo");
 
-
                         String SucursalCodigoOrigen;
                         String SucursalCodigoDestino;
 
-                        SucursalCodigoOrigen = RecibidasOrigen + " " + suc_numero_sucursal_origen;
+                        SucursalCodigoOrigen = RecibidasOrigen + "(" + suc_numero_sucursal_origen + ")";
                         RecibidasOrigen = SucursalCodigoOrigen;
-                        SucursalCodigoDestino = RecibidasDestino + " " + suc_numero_sucursal_destino;
+                        SucursalCodigoDestino = RecibidasDestino + "(" + suc_numero_sucursal_destino + ")";
                         RecibidasDestino = SucursalCodigoDestino;
 
                         final InventarioModel traslado = new InventarioModel(

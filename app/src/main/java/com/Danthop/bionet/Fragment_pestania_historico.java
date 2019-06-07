@@ -63,6 +63,7 @@ public class Fragment_pestania_historico extends Fragment {
     private String his_observaciones;
     private String observacion;
     private String his_fecha_hora_creo;
+    private String Sucursal;
     private ProgressDialog progressDialog;
 
     public Fragment_pestania_historico() {
@@ -115,17 +116,18 @@ public class Fragment_pestania_historico extends Fragment {
         historico = new ArrayList<>();
 
         tabla_historico = (SortableHistoricoTable) v.findViewById(R.id.tabla_historico);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Movimiento", "Cantidad", "Observaciones", "Fecha");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Sucursal", "Movimiento", "Cantidad", "Observaciones", "Fecha");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader.setTextSize( 18 );
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(7);
         tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 2);
         tableColumnWeightModel.setColumnWeight(2, 2);
         tableColumnWeightModel.setColumnWeight(3, 2);
         tableColumnWeightModel.setColumnWeight(4, 2);
         tableColumnWeightModel.setColumnWeight(5, 2);
+        tableColumnWeightModel.setColumnWeight(6, 2);
 
         tabla_historico.setHeaderAdapter(simpleHeader);
         tabla_historico.setColumnModel(tableColumnWeightModel);
@@ -191,6 +193,10 @@ public class Fragment_pestania_historico extends Fragment {
                             his_tipo = elemento.getString("his_tipo");
                             his_cantidad = elemento.getString("his_cantidad");
 
+                            String his_nombre_sucursal = elemento.getString( "his_nombre_sucursal" );
+                            String his_numero_sucursal = elemento.getString( "his_numero_sucursal" );
+                            Sucursal = his_nombre_sucursal + "(" + his_numero_sucursal + ")";
+
                             String var = elemento.getString("his_observaciones");
                             if (var == "null"){
                                 observacion = "Sin observaciones";
@@ -204,7 +210,7 @@ public class Fragment_pestania_historico extends Fragment {
                                     existencia,
                                     categoria,
                                     modificadores,
-                                    nombre_sucursal,
+                                    Sucursal,
                                     suc_id,
                                     articulo_descripcion,
                                     art_tipo,
