@@ -74,7 +74,7 @@
 
             </LinearLayout>
 
-            <EditText
+            <SearchView
                 android:id="@+id/TextSearchClientes"
                 android:layout_width="276dp"
                 android:layout_height="wrap_content"

@@ -91,7 +91,7 @@ public class Fragment_clientes extends Fragment {
     private  FragmentTransaction fr;
     private TableDataClickListener<ClienteModel> tablaListener;
     private ProgressDialog progressDialog;
-    private EditText BuscarCliente;
+    private SearchView BuscarCliente;
     private ClienteAdapter clienteAdapter;
     private Spinner SpinnerSucursal;
     private ArrayList<String> SucursalName;
@@ -99,7 +99,6 @@ public class Fragment_clientes extends Fragment {
 
     private List<ClienteModel> clientes;
     private List<CompraModel> HistorialCompras;
-
 
     public Fragment_clientes() {
         // Required empty public constructor
@@ -124,7 +123,7 @@ public class Fragment_clientes extends Fragment {
         ver_cliente_dialog=new Dialog(getContext());
         ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
 
-        BuscarCliente = (EditText) v.findViewById(R.id.TextSearchClientes);
+        BuscarCliente = (SearchView) v.findViewById(R.id.TextSearchClientes);
 
         fr = getFragmentManager().beginTransaction();
 
@@ -158,30 +157,16 @@ public class Fragment_clientes extends Fragment {
             }
         });
 
-        BuscarCliente.addTextChangedListener(new TextWatcher(){
-
+        BuscarCliente.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+            public boolean onQueryTextSubmit(String query) {
+                return false;
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-               // for(String)
-
-               // clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes,fr);
-               // tabla_clientes.setDataAdapter(clienteAdapter);
-                    clienteAdapter.getFilter().filter(s);
-
-             //   clienteAdapter.getData().
-
-               // tabla_clientes.setDataAdapter(clienteAdapter);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
+            public boolean onQueryTextChange(String newText) {
+                clienteAdapter.getFilter().filter(newText);
+                return false;
             }
         });
 
