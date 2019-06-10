@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -108,6 +109,9 @@ public class FragmentLealtadInscribir extends Fragment {
     private ArrayList<String> SucursalID;
     Handler handler;
     ProgressDialog progreso;
+    private SearchView Buscar;
+
+    private LealtadInscribirAdapter clienteAdapter;
 
     public FragmentLealtadInscribir() {
         // Required empty public constructor
@@ -134,6 +138,7 @@ public class FragmentLealtadInscribir extends Fragment {
         AniadirTodos = v.findViewById(R.id.AniadirTodos);
         tabla_vacia = v.findViewById(R.id.Tabla_vacia);
         tabla_todos_aplican = v.findViewById(R.id.todos_aplican);
+        Buscar = v.findViewById(R.id.buscarCliente);
         handler= new Handler();
         progreso = new ProgressDialog( getContext() );
 
@@ -180,6 +185,19 @@ public class FragmentLealtadInscribir extends Fragment {
             public void onNothingSelected(AdapterView<?> parent)
             {
 
+            }
+        });
+
+        Buscar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                clienteAdapter.getFilter().filter(newText);
+                return false;
             }
         });
 
@@ -281,7 +299,7 @@ public class FragmentLealtadInscribir extends Fragment {
                             );
                             clientes.add(cliente);
                         }
-                        final LealtadInscribirAdapter clienteAdapter = new LealtadInscribirAdapter(getContext(), clientes, tabla_clientes,fr);
+                        clienteAdapter = new LealtadInscribirAdapter(getContext(), clientes, tabla_clientes,fr);
                         tabla_clientes.setDataAdapter(clienteAdapter);
 
                     }

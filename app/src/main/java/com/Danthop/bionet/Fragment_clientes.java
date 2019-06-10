@@ -690,16 +690,3 @@ public class Fragment_clientes extends Fragment {
 
 
 }
-
-final class FiltroClientes implements FilterHelper.Filter<ClienteModel> {
-    private final String query;
-    FiltroClientes(final String query) {
-        this.query = query;
-    }
-    @Override
-    public boolean apply(final ClienteModel cliente) {
-        final String NameLowerCase = cliente.getCliente_Nombre().toLowerCase();
-        final String queryLowerCase = query.toLowerCase();
-        return NameLowerCase.contains(queryLowerCase);
-    }
-}

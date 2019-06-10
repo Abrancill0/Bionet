@@ -6,6 +6,8 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import com.Danthop.bionet.Tables.SortableArticulosTable;
 import com.Danthop.bionet.Tables.SortableClientesTable;
@@ -16,14 +18,21 @@ import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.SucursalModel;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class InventarioAdapter extends LongPressAwareTableDataAdapter<InventarioModel> {
+public class InventarioAdapter extends LongPressAwareTableDataAdapter<InventarioModel> implements Filterable {
     int TEXT_SIZE = 16;
+
+    private List<InventarioModel> inventarioList;
+    private List<InventarioModel> inventarioListFull;
 
     public InventarioAdapter(final Context context, final List<InventarioModel> data, final SortableInventariosTable tableView) {
         super(context, data, tableView);
+        inventarioList=data;
+        inventarioListFull = new ArrayList<>(data);
+
     }
     @Override
     public View getDefaultCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
@@ -136,4 +145,41 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
         public void afterTextChanged(Editable s) {
             ordenToUpdate.setNombre_sucursal(s.toString());
         }
-    }}
+    }
+
+    @Override
+    public Filter getFilter() {
+        return InventarioFilter;
+    }
+
+    private Filter InventarioFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<InventarioModel> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(inventarioListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (InventarioModel item : inventarioList) {
+                    if (item.getProducto().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            inventarioList.clear();
+            inventarioList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+}

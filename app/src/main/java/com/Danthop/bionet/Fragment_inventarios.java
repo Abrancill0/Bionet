@@ -88,6 +88,8 @@ public class Fragment_inventarios extends Fragment {
     private String suc_numero_sucursal_origen;
     private String tra_motivo;
     private ProgressDialog progressDialog;
+    private InventarioAdapter inventarioAdapter;
+    private SearchView Buscar;
 
     public Fragment_inventarios() {
         // Required empty public constructor
@@ -98,8 +100,7 @@ public class Fragment_inventarios extends Fragment {
         View v = inflater.inflate(R.layout.fragment_inventarios, container, false);
         fr = getFragmentManager().beginTransaction();
 
-        SearchView Search = (SearchView) v.findViewById(R.id.search_inventario);
-        Search.setQueryHint("Buscar");
+        Buscar= (SearchView) v.findViewById(R.id.search_inventario);
 
         Spinner spinner = (Spinner) v.findViewById(R.id.categoria_inventario);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.Giros, android.R.layout.simple_spinner_item);
@@ -182,6 +183,19 @@ public class Fragment_inventarios extends Fragment {
 
         tabla_inventario.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
         tabla_inventario.addDataClickListener(tablaListener);
+
+        Buscar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                inventarioAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
 
         return v;
     }
@@ -334,8 +348,8 @@ public class Fragment_inventarios extends Fragment {
                                             fechaSolicitud,
                                             tra_motivo,"","","","","","");
                                     inventarios.add(inventario);
-                        }final InventarioAdapter InventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario);
-                        tabla_inventario.setDataAdapter(InventarioAdapter);
+                        }inventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario);
+                        tabla_inventario.setDataAdapter(inventarioAdapter);
                     }
                 } catch (JSONException e) {
                     Toast toast1 =

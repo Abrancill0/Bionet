@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ClienteAdapter;
@@ -45,6 +46,8 @@ public class FragmentLealtad extends Fragment {
     private String cli_numero;
     private String correo_electronico;
     private String puntos;
+    private SearchView Buscar;
+    private LealtadPuntosAdapter clienteAdapter;
 
     private String usu_id;
     private List<Puntos_acumulados_model> clientes;
@@ -64,6 +67,7 @@ public class FragmentLealtad extends Fragment {
         fr = getFragmentManager().beginTransaction();
         tabla_puntos = v.findViewById(R.id.tabla_puntos);
         tabla_puntos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
+        Buscar = v.findViewById(R.id.buscarPuntos);
 
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
@@ -107,6 +111,21 @@ public class FragmentLealtad extends Fragment {
 
             }
         });
+
+
+        Buscar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                clienteAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
         return v;
     }
 
@@ -170,7 +189,7 @@ public class FragmentLealtad extends Fragment {
                             );
                             clientes.add(cliente);
                         }
-                        final LealtadPuntosAdapter clienteAdapter = new LealtadPuntosAdapter(getContext(), clientes, tabla_puntos);
+                        clienteAdapter = new LealtadPuntosAdapter(getContext(), clientes, tabla_puntos);
                         tabla_puntos.setDataAdapter(clienteAdapter);
 
                     }

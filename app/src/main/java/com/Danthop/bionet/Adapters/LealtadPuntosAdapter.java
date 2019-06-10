@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,40 +43,22 @@ import org.json.JSONObject;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class LealtadPuntosAdapter extends LongPressAwareTableDataAdapter<Puntos_acumulados_model> {
+public class LealtadPuntosAdapter extends LongPressAwareTableDataAdapter<Puntos_acumulados_model> implements Filterable {
 
     int TEXT_SIZE = 16;
 
-    private String[][] clienteModel;
+    private List<Puntos_acumulados_model> PuntosList;
+    private List<Puntos_acumulados_model> PuntosListFull;
 
-    private SortableClientesTable tabla_clientes;
-
-    private List<ClienteModel> clientes;
-
-    private String nombre;
-    private String UUID;
-    private String telefono;
-    private String correo_electronico;
-    private String calle;
-    private Typeface s;
-    private FragmentTransaction fr;
-
-
-    private String cp_fiscal;
-    private String estado_fiscal;
-    private String municipio_fiscal;
-    private String colonia_fiscal;
-    private String calle_fiscal;
-    private String num_ext_fiscal;
-    private String num_int_fiscal;
-    private String direccion_fiscal;
-    private String email_fiscal;
 
 
     private String UsuarioID;
 
     public LealtadPuntosAdapter(final Context context, final List<Puntos_acumulados_model> data, final SortablePuntosTable tableView) {
         super(context, data, tableView);
+
+        PuntosList=data;
+        PuntosListFull= new ArrayList<>(data);
 
     }
 
@@ -162,6 +146,43 @@ public class LealtadPuntosAdapter extends LongPressAwareTableDataAdapter<Puntos_
             clienteToUpdate.setCliente_Nombre(s.toString());
         }
     }
+
+
+    @Override
+    public Filter getFilter() {
+        return PuntosFilter;
+    }
+
+    private Filter PuntosFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Puntos_acumulados_model> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(PuntosListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Puntos_acumulados_model item : PuntosListFull) {
+                    if (item.getNombre().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            PuntosList.clear();
+            PuntosList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
 
 

@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +58,8 @@ public class FragmentLealtadArticulo extends Fragment {
     private ProgressDialog progressDialog;
     private String usu_id;
 
+    private SearchView Buscar;
+    private LealtadArticuloAdapter articuloAdapter;
 
 
     public List<LealtadArticuloModel> articulos;
@@ -92,6 +95,7 @@ public class FragmentLealtadArticulo extends Fragment {
         Lealtad=v.findViewById(R.id.lealtad);
         Programas=v.findViewById(R.id.programas);
         Inscribir=v.findViewById(R.id.inscribir);
+        Buscar = v.findViewById(R.id.buscaArticulosLealtad);
 
         LoadPestanias();
         LoadSpinnerSucursal();
@@ -182,6 +186,20 @@ public class FragmentLealtadArticulo extends Fragment {
         };
 
         tabla_articulos.addDataClickListener(tablaListener);
+
+        Buscar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                articuloAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
 
         return v;
 
@@ -294,7 +312,7 @@ public class FragmentLealtadArticulo extends Fragment {
 
                            articulos.add(articulo);
                         }
-                       final LealtadArticuloAdapter articuloAdapter = new LealtadArticuloAdapter(getContext(), articulos, tabla_articulos);
+                       articuloAdapter = new LealtadArticuloAdapter(getContext(), articulos, tabla_articulos);
                        tabla_articulos.setDataAdapter(articuloAdapter);
 
 

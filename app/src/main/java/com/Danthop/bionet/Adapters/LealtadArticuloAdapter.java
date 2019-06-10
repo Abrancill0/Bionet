@@ -5,25 +5,35 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.Danthop.bionet.Tables.SortableLealtadArticulosTable;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.LealtadArticuloModel;
+import com.Danthop.bionet.model.Puntos_acumulados_model;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class LealtadArticuloAdapter extends LongPressAwareTableDataAdapter<LealtadArticuloModel> {
+public class LealtadArticuloAdapter extends LongPressAwareTableDataAdapter<LealtadArticuloModel> implements Filterable {
 
     int TEXT_SIZE = 16;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
 
+    private List<LealtadArticuloModel> articulosList;
+    private List<LealtadArticuloModel> articulosListFull;
+
 
     public LealtadArticuloAdapter(final Context context, final List<LealtadArticuloModel> data, final SortableLealtadArticulosTable tableView) {
         super(context, data, tableView);
+
+        articulosList=data;
+        articulosListFull = new ArrayList<>(data);
     }
 
     @Override
@@ -100,4 +110,44 @@ public class LealtadArticuloAdapter extends LongPressAwareTableDataAdapter<Lealt
         public void afterTextChanged(Editable s) {
             ordenToUpdate.getarticulo_Nombre();
         }
-    }}
+    }
+
+    @Override
+    public Filter getFilter() {
+        return articulosFilter;
+    }
+
+    private Filter articulosFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<LealtadArticuloModel> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(articulosListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (LealtadArticuloModel item : articulosListFull) {
+                    if (item.getArticuloNombre().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            articulosList.clear();
+            articulosList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
+}
+
+
