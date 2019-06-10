@@ -100,15 +100,14 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
             }
         });
 
-      /* Button trasladar = (Button) v.findViewById(R.id.pop_up_traslados);
+       Button trasladar = (Button) v.findViewById(R.id.pop_up_traslados);
         trasladar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment_pop_up_traslados dialog = new Fragment_pop_up_traslados();
-                dialog.setTargetFragment(Fragment_pestania_traslado_enviados.this, 1);
-                dialog.show(getFragmentManager(), "MyCustomDialog");
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container, new Fragment_pop_up_traslados()).commit();
             }
-        });*/
+        });
 
         Button btnInventariExistencias = (Button) v.findViewById(R.id.btnBuscarExistencias);
         btnInventariExistencias.setOnClickListener(new View.OnClickListener() {

@@ -104,9 +104,8 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
         trasladar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment_pop_up_traslados dialog = new Fragment_pop_up_traslados();
-                dialog.setTargetFragment(Fragment_pestania_traslado_recibidos.this, 1);
-                dialog.show(getFragmentManager(), "MyCustomDialog");
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container, new Fragment_pop_up_traslados()).commit();
             }
         });
 
