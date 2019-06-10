@@ -47,21 +47,19 @@
             android:padding="2dp">
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="25dp" />
+
+
+            <TextView
                 android:id="@+id/textView50"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:text="Crear Cliente"
                 android:textColor="@color/gray"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/textView51"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="Llena los campos del nuevo cliente"
-                android:textSize="18sp" />
+                android:textSize="24sp"
+                android:layout_gravity="center"/>
 
         </LinearLayout>
 
@@ -97,8 +95,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/colorPrimary"
                     android:textSize="24sp"
-                    app:fontFamily="@font/muli"
-                   />
+                    app:fontFamily="@font/muli" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -28,7 +28,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.codecrafters.tableview.model.TableColumnWeightModel;
@@ -70,7 +72,7 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
     private String tra_nombre_estatus = "";
     private String suc_numero_sucursal_destino = "";
     private String suc_numero_sucursal_origen = "";
-    private String fechaSolicitud = "";
+    private Long fechaSolicitud;
     private String tra_motivo = "";
     private ProgressDialog progressDialog;
     private SearchView BuscarTraslado;
@@ -223,9 +225,15 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
                             String UUID = RespuestaUUID.getString("uuid");
 
                             RespuestaFecha = elemento.getJSONObject("tra_fecha_hora_creo");
-                            fechaSolicitud = RespuestaFecha.getString("seconds");
-                            TypoFecha = RespuestaFecha.getJSONObject("type");
-                            //fechaSolicitud =  TypoFecha.getString("name");
+                            fechaSolicitud = RespuestaFecha.getLong("seconds");
+
+                            Timestamp ts = new Timestamp(fechaSolicitud);
+                            //Date date = new  Date (ts.getTime());
+                            Date date = ts;
+
+                            /*Timestamp TS = new Timestamp( timestamp);
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            formatter.format( TS );*/
 
                             RecibidasOrigen = elemento.getString("suc_nombre_sucursal_origen");
                             suc_numero_sucursal_origen = elemento.getString("suc_numero_sucursal_origen");
@@ -242,6 +250,9 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
                             RecibidasOrigen = SucursalCodigoOrigen;
                             SucursalCodigoDestino = RecibidasDestino + "(" + suc_numero_sucursal_destino + ")";
                             RecibidasDestino = SucursalCodigoDestino;
+
+
+
 
 
                             final InventarioModel traslado = new InventarioModel(
@@ -272,7 +283,7 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
                                     tra_nombre_estatus,
                                     suc_numero_sucursal_destino,
                                     suc_numero_sucursal_origen,
-                                    fechaSolicitud,
+                                    date,
                                     tra_motivo,"","","","","","");
                             traslados.add(traslado);
 

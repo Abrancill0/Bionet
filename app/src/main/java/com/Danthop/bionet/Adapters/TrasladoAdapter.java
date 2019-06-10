@@ -21,6 +21,7 @@ import com.Danthop.bionet.model.InventarioModel;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
@@ -28,6 +29,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioModel> implements Filterable {
     int TEXT_SIZE = 16;
     private int CantidadTraspaso[] = new int[10000];
+    private Date fechaSolicitud;
 
     private List<InventarioModel> InventarioList;
     private List<InventarioModel> InventarioListFull;
@@ -120,7 +122,7 @@ public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioMo
                             "","", "","","",
                             "","","", "","","",
                             "","", "","","",
-                            "", "",Inventario.getUUIDarticulo(),Inventario.getUUIDvariante(),Inventario.getUUIDmodificador(),Inventario.getUUIDexistencias(),String.valueOf(ElegantButtoncantidad),"");
+                            fechaSolicitud, "",Inventario.getUUIDarticulo(),Inventario.getUUIDvariante(),Inventario.getUUIDmodificador(),Inventario.getUUIDexistencias(),String.valueOf(ElegantButtoncantidad),"");
                     ArticulosTraslados.add(inventarioM);
 
                 }

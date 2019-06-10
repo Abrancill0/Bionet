@@ -48,6 +48,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,6 +97,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     private String UUIDarticulo;
     private String UUIDvariante;
     private String UUIDmodificador;
+    private Date fechaSolicitud;
     private Button btn_agregar_articulo;
     private LinearLayout LayoutFecha;
     private LinearLayout LayoutelegirArticulos;
@@ -418,7 +420,7 @@ private void MuestraArticulos(){
                                 "","", "","","",
                                 "","","", "","","",
                                 "","", "","","",
-                                "", "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,"");
+                                fechaSolicitud, "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,"");
                         inventarios.add(inventario);
                     }
 
@@ -545,7 +547,7 @@ private void MuestraArticulossinApi(){
                             "","", "","","",
                             "","","", "","","",
                             "","", "","","",
-                            "", "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,"");
+                            fechaSolicitud, "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,"");
                     inventarios.add(inventario);
             }
 

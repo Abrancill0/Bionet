@@ -1,6 +1,10 @@
 package com.Danthop.bionet.model;
 import android.print.PrinterId;
 
+import com.nostra13.universalimageloader.utils.L;
+
+import java.util.Date;
+
 public class InventarioModel {
 
     private String sku;
@@ -30,7 +34,7 @@ public class InventarioModel {
     private String tra_nombre_estatus;
     private String suc_numero_sucursal_destino;
     private String suc_numero_sucursal_origen;
-    private String fechaSolicitud;
+    private Date fechaSolicitud;
     private String tra_motivo;
     private String UUIDarticulo;
     private String UUIDvariante;
@@ -68,7 +72,7 @@ public class InventarioModel {
                            String tra_nombre_estatus,
                            String suc_numero_sucursal_destino,
                            String suc_numero_sucursal_origen,
-                           String fechaSolicitud,
+                           Date fechaSolicitud,
                            String tra_motivo,
                            String UUIDarticulo,
                            String UUIDvariante,
@@ -244,8 +248,8 @@ public class InventarioModel {
     public String getsuc_numero_sucursal_origen() {return suc_numero_sucursal_origen; }
     public void setsuc_numero_sucursal_origen(String suc_numero_sucursal_origen) { this.suc_numero_sucursal_origen = suc_numero_sucursal_origen; }
 
-    public String getfechaSolicitud() {return fechaSolicitud; }
-    public void setfechaSolicitud(String fechaSolicitud) { this.fechaSolicitud = fechaSolicitud; }
+    public Date getfechaSolicitud() {return fechaSolicitud; }
+    public void setfechaSolicitud(Date fechaSolicitud) { this.fechaSolicitud = fechaSolicitud; }
 
     public String gettra_motivo() {return tra_motivo; }
     public void settra_motivo(String tra_motivo) { this.tra_motivo = tra_motivo; }

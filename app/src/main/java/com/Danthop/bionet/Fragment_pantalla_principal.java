@@ -27,6 +27,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.nostra13.universalimageloader.utils.L;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
 
@@ -35,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -66,6 +68,7 @@ public class Fragment_pantalla_principal extends Fragment{
     private String existencia;
     private String nombre_cliente;
     private String nombre_sucursal;
+    private Date fechaSolicitud;
     private String producto;
     private String NumTicket;
     private String posicion;
@@ -282,7 +285,7 @@ private void LoadPocasExistencias(){
                                     "","", "","","",
                                     "","","", "","","",
                                     "","", "","","",
-                                    "", "","","","","","","");
+                                    fechaSolicitud, "","","","","","","");
                             inventarios.add(inventario);
                         }
                     }

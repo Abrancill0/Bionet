@@ -48,6 +48,9 @@ public class TrasladoEnvioRecibidoAdapter extends LongPressAwareTableDataAdapter
             case 3:
                 renderedView = renderMotivo(Invetario);
                 break;
+            case 4:
+                renderedView = renderFecha(Invetario);
+                break;
 
         }
         return renderedView;
@@ -94,6 +97,10 @@ public class TrasladoEnvioRecibidoAdapter extends LongPressAwareTableDataAdapter
 
     private View renderMotivo(final InventarioModel Inventario) {
         return renderString(Inventario.gettra_motivo());
+    }
+
+    private View renderFecha(final InventarioModel Inventario) {
+        return renderString( String.valueOf( Inventario.getfechaSolicitud() ) );
     }
 
 

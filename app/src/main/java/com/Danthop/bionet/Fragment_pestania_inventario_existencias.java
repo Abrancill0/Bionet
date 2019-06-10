@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.codecrafters.tableview.model.TableColumnWeightModel;
@@ -45,6 +46,7 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
     private String modificadores = "";
     private String existencia = "";
     private String nombre_sucursal = "";
+    private Date fechaSolicitud;
     private String producto = "";
     private String art_tipo = "";
     private String sku = "";
@@ -270,7 +272,7 @@ private void Load_ExistenciasInventario() {
                                 "",
                                 "",
                                 "",
-                                "",
+                                fechaSolicitud,
                                 "","","","","","","");
 
                         inventarios.add(inventario);

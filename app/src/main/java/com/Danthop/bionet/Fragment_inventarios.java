@@ -27,6 +27,7 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.utils.L;
 
 
 import org.json.JSONArray;
@@ -34,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
@@ -78,7 +80,7 @@ public class Fragment_inventarios extends Fragment {
     private String cat_nombre;
     private String his_tipo;
     private String his_cantidad;
-    private String fechaSolicitud;
+    private Date fechaSolicitud;
     private String his_observaciones;
     private String his_fecha_hora_creo;
     private String RecibidasOrigen;

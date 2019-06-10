@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -207,6 +208,8 @@ public class Fragment_pestania_historico extends Fragment {
                             Timestamp ts = new Timestamp(timestamp);
                             //Date date = new  Date (ts.getTime());
                             Date date = ts;
+
+                            long timestamp = date.getTime();
 
                             /*Timestamp TS = new Timestamp( timestamp);
                             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

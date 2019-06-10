@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.codecrafters.tableview.model.TableColumnWeightModel;
@@ -68,7 +69,7 @@ public class Fragment_pestania_traslado extends Fragment {
     private String tra_nombre_estatus = "";
     private String suc_numero_sucursal_destino = "";
     private String suc_numero_sucursal_origen = "";
-    private String fechaSolicitud = "";
+    private Date fechaSolicitud;
     private String tra_motivo = "";
     private ProgressDialog progressDialog;
     private SearchView BuscarTraslado;
@@ -228,8 +229,8 @@ public  void Traslados_Recibidas(){
                         String UUID = RespuestaUUID.getString("uuid");
 
                         RespuestaFecha = elemento.getJSONObject("tra_fecha_hora_creo");
-                        fechaSolicitud = RespuestaFecha.getString("seconds");
-                        TypoFecha = RespuestaFecha.getJSONObject("type");
+                        //fechaSolicitud = RespuestaFecha.getLong("seconds");
+                        //TypoFecha = RespuestaFecha.getJSONObject("type");
                         //fechaSolicitud =  TypoFecha.getString("name");
 
                         RecibidasOrigen = elemento.getString("suc_nombre_sucursal_origen");

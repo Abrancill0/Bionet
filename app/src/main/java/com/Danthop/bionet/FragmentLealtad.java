@@ -1,6 +1,7 @@
 package com.Danthop.bionet;
 
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,19 +12,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ClienteAdapter;
 import com.Danthop.bionet.Adapters.LealtadPuntosAdapter;
 import com.Danthop.bionet.Tables.SortablePuntosTable;
 import com.Danthop.bionet.model.ClienteModel;
+import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.Puntos_acumulados_model;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,11 +37,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
+import de.codecrafters.tableview.listeners.TableDataClickListener;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FragmentLealtad extends Fragment {
     private SortablePuntosTable tabla_puntos;
+    private TableDataClickListener<Puntos_acumulados_model> tablaListener;
     private FragmentTransaction fr;
     private Button Programas;
     private Button Inscribir;
@@ -45,6 +54,11 @@ public class FragmentLealtad extends Fragment {
     private String nombre;
     private String cli_numero;
     private String correo_electronico;
+    private String telefono;
+    private String direccion;
+    private String rfc;
+    private String razon_social;
+    private String direccion_fiscal;
     private String puntos;
     private SearchView Buscar;
     private LealtadPuntosAdapter clienteAdapter;
@@ -126,6 +140,26 @@ public class FragmentLealtad extends Fragment {
             }
         });
 
+
+        LoadListenerTable();
+
+        tabla_puntos.setSwipeToRefreshEnabled(true);
+        tabla_puntos.setSwipeToRefreshListener(new SwipeToRefreshListener() {
+            @Override
+            public void onRefresh(final RefreshIndicator refreshIndicator) {
+                tabla_puntos.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //inventarios.clear();
+                       // Muestra_Inventario();
+                        refreshIndicator.hide();
+                    }
+                }, 2000);
+            }
+        });
+
+        tabla_puntos.addDataClickListener(tablaListener);
+
         return v;
     }
 
@@ -154,9 +188,10 @@ public class FragmentLealtad extends Fragment {
             public void onResponse(JSONObject response) {
 
                 JSONObject Respuesta = null;
-                JSONObject RespuestaNodoDireccion= null;
                 JSONObject ElementoUsuario=null;
                 JSONArray RespuestaNodoClientes= null;
+                JSONObject RespuestaDireccion = null;
+                JSONObject RespuestaDireccionFiscal = null;
 
                 try {
 
@@ -177,16 +212,47 @@ public class FragmentLealtad extends Fragment {
                             cli_numero = elemento.getString( "cli_numero");
                             nombre = elemento.getString("cli_nombre");
                             correo_electronico = elemento.getString("cli_correo_electronico");
-                            puntos = elemento.getString("cli_puntos_disponibles");
+                            telefono = elemento.getString( "cli_telefono" );
 
+                            RespuestaDireccion = elemento.getJSONObject( "cli_direccion" );
+                            String Num_Int = RespuestaDireccion.getString( "cli_numero_interior" );
+                            String Num_Ext = RespuestaDireccion.getString( "cli_numero_exterior" );
+                            String Colonia = RespuestaDireccion.getString( "cli_colonia" );
+                            String Calle = RespuestaDireccion.getString( "cli_calle" );
+                            String Ciudad = RespuestaDireccion.getString( "cli_ciudad" );
+                            String Estado = RespuestaDireccion.getString( "cli_estado" );
+                            String Pais = RespuestaDireccion.getString( "cli_pais" );
+                            direccion = "No. Int.:" + Num_Int + "," +" "+ "No. Ext.:" + Num_Ext + "," + " " + "Col.:" + Colonia
+                                        + "," + " " + "Calle:" + Calle + "," + " " + "Ciudad:" + Ciudad + "," + " " + Estado + "," + " " + Pais;
+
+                            rfc = elemento.getString( "cli_rfc" );
+                            razon_social = elemento.getString( "cli_razon_social" );
+
+                            RespuestaDireccionFiscal = elemento.getJSONObject( "cli_direccion_fiscal" );
+                            String NumInt = RespuestaDireccionFiscal.getString( "cli_numero_interior" );
+                            String NumExt = RespuestaDireccionFiscal.getString( "cli_numero_exterior" );
+                            String Col = RespuestaDireccionFiscal.getString( "cli_colonia" );
+                            String Calles = RespuestaDireccionFiscal.getString( "cli_calle" );
+                            String Cd = RespuestaDireccionFiscal.getString( "cli_ciudad" );
+                            String Estad = RespuestaDireccionFiscal.getString( "cli_estado" );
+                            String NomPais = RespuestaDireccionFiscal.getString( "cli_pais" );
+                            direccion_fiscal = "No. Int.:" + NumInt + "," + " " + "No. Ext.:" + NumExt + "," + " " + "Col.:" + Col
+                                    + "," + " " + "Calle:" + Calles + "," + " " + "Ciudad:" + Cd + "," + " " + Estad + "," + " " + NomPais;
+
+
+                            puntos = elemento.getString("cli_puntos_disponibles");
 
 
                             final Puntos_acumulados_model cliente = new Puntos_acumulados_model(
                                     cli_numero,
                                     nombre,
                                     correo_electronico,
-                                    puntos
-                            );
+                                    telefono,
+                                    direccion,
+                                    rfc,
+                                    razon_social,
+                                    direccion_fiscal,
+                                    puntos );
                             clientes.add(cliente);
                         }
                         clienteAdapter = new LealtadPuntosAdapter(getContext(), clientes, tabla_puntos);
@@ -236,5 +302,37 @@ public class FragmentLealtad extends Fragment {
     }
 
 
+    private void LoadListenerTable(){
+        tablaListener = new TableDataClickListener<Puntos_acumulados_model>() {
+            @Override
+            public void onDataClicked(int rowIndex, final Puntos_acumulados_model clickedData) {
+                final Dialog ver_producto_dialog;
+                ver_producto_dialog = new Dialog(getContext());
+                ver_producto_dialog.setContentView(R.layout.pop_up_ficha_cliente_lealtad);
+                ver_producto_dialog.show();
+
+                TextView cliente_nombre = ver_producto_dialog.findViewById(R.id.cliente_nombre);
+                TextView numero_cliente = ver_producto_dialog.findViewById(R.id.numero_cliente);
+                TextView correo_electronico = ver_producto_dialog.findViewById(R.id.correo_electronico);
+                TextView telefono = ver_producto_dialog.findViewById(R.id.telefono);
+                TextView direccion = ver_producto_dialog.findViewById(R.id.direccion);
+                TextView rfc = ver_producto_dialog.findViewById(R.id.rfc);
+                TextView razon_social = ver_producto_dialog.findViewById(R.id.razon_social);
+                TextView direccion_fiscal = ver_producto_dialog.findViewById(R.id.direccion_fiscal);
+                TextView puntos_disponibles = ver_producto_dialog.findViewById(R.id.puntos_disponibles);
+
+                cliente_nombre.setText(clickedData.getNombre());
+                numero_cliente.setText(clickedData.getNumero_cliente());
+                correo_electronico.setText(clickedData.getCorreo_cliente());
+                telefono.setText(clickedData.getTelefono());
+                direccion.setText(clickedData.getrfc());
+                rfc.setText(clickedData.getrfc());
+                razon_social.setText(clickedData.getRazon_social());
+                direccion_fiscal.setText(clickedData.getDireccion_fiscal());
+                puntos_disponibles.setText(clickedData.getAcumulado());
+
+            }
+        };
+    }
 
 }

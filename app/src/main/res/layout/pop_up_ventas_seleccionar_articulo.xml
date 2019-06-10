@@ -44,7 +44,7 @@
                         android:id="@+id/textView29"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight=".6"
+                        android:layout_weight=".9"
                         android:gravity="center"
                         android:text="Seleccionar Artículo"
                         android:textColor="@color/gray"

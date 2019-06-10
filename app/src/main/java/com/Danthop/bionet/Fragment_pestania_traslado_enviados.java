@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.codecrafters.tableview.model.TableColumnWeightModel;
@@ -70,7 +71,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
     private String tra_nombre_estatus = "";
     private String suc_numero_sucursal_destino = "";
     private String suc_numero_sucursal_origen = "";
-    private String fechaSolicitud = "";
+    private Date fechaSolicitud;
     private String tra_motivo;
     private ProgressDialog progressDialog;
     private SearchView BuscarTraslado;

@@ -129,7 +129,7 @@
                         android:padding="15dp"
                         android:text="Artículo"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="13sp" />
+                        android:textSize="20dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -151,7 +151,7 @@
                         android:padding="15dp"
                         android:text="Vendedor"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="13sp" />
+                        android:textSize="20dp" />
 
                 </LinearLayout>
 
@@ -174,7 +174,7 @@
                         android:padding="15dp"
                         android:text="Cliente"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="13sp" />
+                        android:textSize="20dp" />
                 </LinearLayout>
 
             </LinearLayout>
