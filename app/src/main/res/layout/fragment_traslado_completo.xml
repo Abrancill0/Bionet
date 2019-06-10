@@ -9,11 +9,12 @@
     android:focusableInTouchMode="true">
 
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="41dp"
-        android:background="@color/white"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@drawable/pestanas_desplegables">
         <ImageView
             android:id="@+id/atras"
             android:layout_width="match_parent"
@@ -51,29 +52,41 @@
 
 
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".15">
+
+        <LinearLayout
+            android:id="@+id/Principal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@drawable/pestanas_desplegables">>
 
         <TextView
             android:id="@+id/SucOrigen"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight=".1"
             android:gravity="center"
             android:text="Sucursal Origen"
             android:textColor="@color/colorPrimary"
             android:textSize="17dp"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"/>
         <TextView
             android:id="@+id/SucDestino"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight=".1"
             android:layout_marginRight="10dp"
@@ -81,145 +94,156 @@
             android:text="Sucursal Destino"
             android:textColor="@color/colorPrimary"
             android:textSize="17dp"/>
-    </LinearLayout>
 
+        <TextView
+            android:id="@+id/text4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".1"
+            android:gravity="center"
+            android:text="Tipo de traslado"
+            android:textColor="@color/colorPrimary"
+            android:textSize="17dp"/>
+
+    </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:paddingTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:orientation="horizontal">
+        android:background="@drawable/pestanas_desplegables"
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
+
         <Spinner
             android:id="@+id/Sucursal_Origen"
-            android:layout_width="300dp"
-            android:layout_height="35dp"
-            android:layout_marginHorizontal="25dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight=".1"
             android:background="@drawable/spinner_giro"
             android:gravity="center"
             android:text="Sucursal Origen"
             android:textColor="@color/colorPrimary" />
+
         <Spinner
             android:id="@+id/Sucursal_Destino"
-            android:layout_width="300dp"
-            android:layout_height="35dp"
-            android:layout_marginHorizontal="25dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight=".1"
             android:background="@drawable/spinner_giro"
             android:gravity="center"
             android:text="Sucursal Destino"
             android:textColor="@color/colorPrimary" />
+
+        <Spinner
+            android:id="@+id/tipos_traslados"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight=".1"
+            android:background="@drawable/spinner_giro"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary" />
+
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:layout_gravity="center"
         android:orientation="horizontal"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        android:background="@drawable/pestanas_desplegables">
+
         <TextView
             android:id="@+id/text3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Motivo"
             android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
             android:padding="10dp"
             android:textSize="18sp" />
 
         <EditText
             android:id="@+id/editObservaciones"
-            android:layout_width="300dp"
-            android:layout_height="100dp"
-            android:layout_marginHorizontal="25dp"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/shape_gray"
             android:ems="80"
             android:gravity="left"
             android:inputType="text"
             android:padding="10dp"
+            android:layout_marginRight="10dp"
             android:textColor="@color/colorPrimary" />
-    </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/Layoutfecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:paddingTop="10dp">
         <TextView
-            android:id="@+id/text4"
+            android:id="@+id/textfecha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:padding="10dp"
-            android:layout_marginLeft="10dp"
-            android:text="Tipo de traslado" />
-        <Spinner
-            android:id="@+id/tipos_traslados"
-            android:layout_width="300dp"
-            android:layout_height="45dp"
-            android:layout_marginHorizontal="25dp"
+            android:text="Fecha de vencimiento" />
+
+        <EditText
+            android:id="@+id/Fecha"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/spinner_giro"
-            android:gravity="center"
-            android:textColor="@color/colorPrimary" />
+            android:background="@color/gray2"
+            android:gravity="left"
+            android:inputType="date"
+            android:padding="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:drawableLeft="@drawable/calend25" />
+
+            <SearchView
+                android:id="@+id/search_inventario"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:background="#E5E7E9"
+                android:queryHint="Buscar"
+                android:iconifiedByDefault="false"
+                android:layout_marginRight="10dp"
+                android:padding="10dp"/>
+
+        </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-
-
-
-        <LinearLayout
-            android:id="@+id/Layoutfecha"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_marginRight="10dp"
+            android:textSize="18sp"
+            android:text="Seleccionar artículos"
+            android:drawableLeft="@drawable/ic_agregar_producto"
             android:layout_marginLeft="10dp"
-            android:paddingTop="10dp">
-            <TextView
-                android:id="@+id/textfecha"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:padding="10dp"
-                android:layout_marginLeft="10dp"
-                android:text="Fecha de vencimiento" />
-
-            <EditText
-                android:id="@+id/Fecha"
-                android:layout_width="150dp"
-                android:layout_height="match_parent"
-                android:inputType="date"
-                android:focusable="false"
-                android:gravity="center"
-                android:drawableLeft="@drawable/calend25"
-                android:background="@color/gray2"/>
-        </LinearLayout>
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"/>
 
 
-
-    <LinearLayout
-        android:id="@+id/Layoutbtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:paddingTop="20dp">
 
     </LinearLayout>
 
@@ -230,17 +254,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@color/white"
         android:orientation="horizontal"
-        android:focusable="false">
+        android:focusable="false"
+        android:background="@drawable/pestanas_desplegables">
         <LinearLayout
             android:id="@+id/LayoutTabla"
             android:layout_width="500dp"
-            android:layout_height="match_parent"
+            android:layout_height="400dp"
             android:layout_weight=".3"
             android:orientation="vertical"
             android:background="@drawable/pestanas_desplegables"
             android:padding="20dp">
+
             <com.Danthop.bionet.Tables.SortableInventariosTable
                 android:id="@+id/tabla_articulos"
                 android:layout_width="match_parent"
@@ -248,35 +273,57 @@
                 android:layout_weight=".7"
                 android:visibility="visible"
                 app:tableView_headerColor="@color/white"
-                table:tableView_columnCount="4"
-                android:focusable="false">
+                table:tableView_columnCount="4">
             </com.Danthop.bionet.Tables.SortableInventariosTable>
         </LinearLayout>
     </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/Tabla_vacia"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:background="@color/white"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical"
+                android:visibility="visible">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginHorizontal="10dp"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/btnaceptar"
-                style="@android:style/Widget.Holo.Light.Button"
-                android:layout_width="150dp"
-                android:layout_height="27dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/colorPrimaryDark"
-                android:padding="5dp"
-                android:text="Solicitar"
-                android:textColor="#ffffff"
-                android:textSize="14sp" />
-        </LinearLayout>
-
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="No existen datos"
+                    android:textColor="@color/gray" />
+            </LinearLayout>
 
 
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginHorizontal="10dp"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btnaceptar"
+                    style="@android:style/Widget.Holo.Light.Button"
+                    android:layout_width="150dp"
+                    android:layout_height="27dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="end"
+                    android:background="@color/colorPrimaryDark"
+                    android:padding="5dp"
+                    android:text="Solicitar"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+
+    </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>

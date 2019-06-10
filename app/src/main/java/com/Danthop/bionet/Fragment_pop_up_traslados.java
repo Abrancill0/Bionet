@@ -123,8 +123,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_traslado_completo, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) { View v = inflater.inflate(R.layout.fragment_traslado_completo, container, false);
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
         dialog=new Dialog(getContext());
@@ -158,7 +157,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         });
         SucursalID = new ArrayList<>();
         SucursalName = new ArrayList<>();
-        text1=(TextView)v.findViewById(R.id.text1);
+        //text1=(TextView)v.findViewById(R.id.text1);
         text2=(TextView)v.findViewById(R.id.text2);
         SucOrigen=(TextView)v.findViewById(R.id.SucOrigen);
         SpinnerSucursal=(Spinner)v.findViewById(R.id.Sucursal_Origen);
@@ -254,9 +253,9 @@ public class Fragment_pop_up_traslados extends DialogFragment {
             }
         };
 
-        SpinnerFecha=(Spinner)v.findViewById(R.id.SpinnerFecha);
+        //SpinnerFecha=(Spinner)v.findViewById(R.id.SpinnerFecha);
         LayoutFecha = v.findViewById(R.id.Layoutfecha);
-        LayoutFecha.setVisibility(View.GONE);
+       // LayoutFecha.setVisibility(View.GONE);
         LayoutelegirArticulos = v.findViewById(R.id.LayoutelegirArticulos);
         btn_agregar_articulo = v.findViewById(R.id.btn_agregar_articulo);
 
@@ -268,7 +267,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         SpinnerTipoTraslado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                    VerificarTipoTraslado();
+                   // VerificarTipoTraslado();
 
             }
             public void onNothingSelected(AdapterView<?> parent) {
@@ -313,7 +312,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
             }
         });
 
-        VerificarTipoTraslado();
+        //VerificarTipoTraslado();
         LoadListenerTable();
         SpinnerSucursales();
 
@@ -347,6 +346,8 @@ private void MuestraArticulos(){
                 String Mensaje = response.getString("mensaje");
 
                 if (status == 1) {
+
+                    progreso.dismiss();
                     Resultado = response.getJSONObject("resultado");
 
                     Articulo = Resultado.getJSONArray("aArticuloExistencias");
@@ -436,7 +437,9 @@ private void MuestraArticulos(){
                     tabla_inventario.setDataAdapter(TrasladoAdapter);
 
                 }
+
             } catch (JSONException e) {
+                progreso.dismiss();
                 Toast toast1 =
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                 toast1.show();
@@ -469,8 +472,7 @@ private void MuestraArticulossinApi(){
         int status = 0;
 
                 status = Integer.parseInt(RespuestaTodo.getString("estatus"));
-
-            String Mensaje = RespuestaTodo.getString("mensaje");
+                String Mensaje = RespuestaTodo.getString("mensaje");
 
             if (status == 1) {
 
@@ -575,7 +577,7 @@ private void MuestraArticulossinApi(){
 
     }
 
-private void VerificarTipoTraslado (){
+/*private void VerificarTipoTraslado (){
         String opcion;
         opcion = SpinnerTipoTraslado.getSelectedItem().toString();
         if(opcion.equals("Traslado temporal")) {
@@ -585,7 +587,7 @@ private void VerificarTipoTraslado (){
             LayoutFecha.setVisibility(View.GONE);
             TipoTraslado = "false";
         }
-    }
+    }*/
 
 private void LoadListenerTable() {
     tablaElegirArticuloListener = new TableDataClickListener<InventarioModel>() {
@@ -600,6 +602,7 @@ private void LoadListenerTable() {
 }
 
 private void SolicitarTraslado(){
+
         progreso = new ProgressDialog(getContext());
         progreso.setMessage("Solicitando...");
         progreso.show();
@@ -669,7 +672,13 @@ private void SolicitarTraslado(){
     }
 
 private void SpinnerSucursales() {
-        JSONObject request = new JSONObject();
+
+    progreso=new ProgressDialog(getContext());
+    progreso.setMessage("Espere un momento por favor");
+    progreso.setCanceledOnTouchOutside(false);
+    progreso.show();
+
+    JSONObject request = new JSONObject();
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
@@ -691,6 +700,8 @@ private void SpinnerSucursales() {
                     String Mensaje = response.getString("mensaje");
 
                     if (status == 1) {
+
+                        progreso.dismiss();
                         Respuesta = response.getJSONObject("resultado");
                         RespuestaSucursales = Respuesta.getJSONArray("aSucursales");
 
@@ -714,11 +725,13 @@ private void SpinnerSucursales() {
                         MuestraArticulos();
                     }
                     else {
+                        progreso.dismiss();
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
                         toast1.show();
                     }
                 } catch (JSONException e) {
+                    progreso.dismiss();
                     Toast toast1 =
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                     toast1.show();

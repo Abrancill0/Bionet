@@ -11,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.Danthop.bionet.Adapters.HistoricoAdapter;
 import com.Danthop.bionet.Tables.SortableHistoricoTable;
@@ -26,9 +24,13 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
+
 import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
@@ -64,6 +66,7 @@ public class Fragment_pestania_historico extends Fragment {
     private String observacion;
     private String his_fecha_hora_creo;
     private String Sucursal;
+    private Long timestamp;
     private ProgressDialog progressDialog;
 
     public Fragment_pestania_historico() {
@@ -170,6 +173,7 @@ public class Fragment_pestania_historico extends Fragment {
                 JSONObject Resultado = null;
                 JSONArray aHistoricos = null;
                 JSONObject RespuestaUUID = null;
+                JSONObject RespuestaFecha = null;
 
                 try {
                     int status = Integer.parseInt(response.getString("estatus"));
@@ -196,6 +200,18 @@ public class Fragment_pestania_historico extends Fragment {
                             String his_nombre_sucursal = elemento.getString( "his_nombre_sucursal" );
                             String his_numero_sucursal = elemento.getString( "his_numero_sucursal" );
                             Sucursal = his_nombre_sucursal + "(" + his_numero_sucursal + ")";
+
+                            RespuestaFecha = elemento.getJSONObject("his_fecha_hora_creo");
+                            timestamp = RespuestaFecha.getLong("seconds");
+
+                            Timestamp ts = new Timestamp(timestamp);
+                            //Date date = new  Date (ts.getTime());
+                            Date date = ts;
+
+                            /*Timestamp TS = new Timestamp( timestamp);
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            formatter.format( TS );*/
+
 
                             String var = elemento.getString("his_observaciones");
                             if (var == "null"){
@@ -224,7 +240,7 @@ public class Fragment_pestania_historico extends Fragment {
                                     his_tipo,
                                     his_cantidad,
                                     observacion,
-                                    his_fecha_hora_creo);
+                                    date);
                             historico.add(historicos);
                         }
                         final HistoricoAdapter HistoricoAdapter = new HistoricoAdapter(getContext(), historico, tabla_historico);

@@ -80,8 +80,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
         // Required empty public constructor
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_pestania_traslados,container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) { View v = inflater.inflate(R.layout.fragment_pestania_traslados,container, false);
 
         Button btn_traslados = (Button) v.findViewById(R.id.btn_inventarios);
         btn_traslados.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +100,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
             }
         });
 
-        Button trasladar = (Button) v.findViewById(R.id.pop_up_traslados);
+      /* Button trasladar = (Button) v.findViewById(R.id.pop_up_traslados);
         trasladar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +108,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
                 dialog.setTargetFragment(Fragment_pestania_traslado_enviados.this, 1);
                 dialog.show(getFragmentManager(), "MyCustomDialog");
             }
-        });
+        });*/
 
         Button btnInventariExistencias = (Button) v.findViewById(R.id.btnBuscarExistencias);
         btnInventariExistencias.setOnClickListener(new View.OnClickListener() {

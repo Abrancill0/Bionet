@@ -100,7 +100,7 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
             }
         });
 
-        Button trasladar = (Button) v.findViewById(R.id.pop_up_traslados);
+       Button trasladar = (Button) v.findViewById(R.id.pop_up_traslados);
         trasladar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

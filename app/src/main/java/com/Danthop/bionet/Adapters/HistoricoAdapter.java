@@ -45,6 +45,9 @@ public class HistoricoAdapter extends LongPressAwareTableDataAdapter<HistoricoMo
                 renderedView = renderobservacion(Historico);
                 break;
 
+            case 6:
+                renderedView = renderFecha(Historico);
+                break;
         }
         return renderedView;
     }
@@ -96,6 +99,10 @@ public class HistoricoAdapter extends LongPressAwareTableDataAdapter<HistoricoMo
     }
     private View renderobservacion(final HistoricoModel Historico) {
         return renderString(Historico.getobservacion());
+    }
+
+    private View renderFecha(final HistoricoModel Historico) {
+        return renderString( String.valueOf( Historico.gethis_fecha_hora_creo() ) );
     }
 
 
