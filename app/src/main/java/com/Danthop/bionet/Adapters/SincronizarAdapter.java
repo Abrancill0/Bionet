@@ -8,25 +8,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableSincronizarTable;
+import com.Danthop.bionet.model.Ecommerce_orden_Model;
 import com.Danthop.bionet.model.SincronizarModel;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class SincronizarAdapter extends LongPressAwareTableDataAdapter<SincronizarModel> {
+public class SincronizarAdapter extends LongPressAwareTableDataAdapter<SincronizarModel> implements Filterable {
 
     int TEXT_SIZE = 16;
     //private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
-
+    private List<SincronizarModel> SincronizarList;
+    private List<SincronizarModel> SincronizarListFull;
 
     public SincronizarAdapter(final Context context, final List<SincronizarModel> data, final SortableSincronizarTable tableView) {
         super(context, data, tableView);
+        SincronizarList = data;
+        SincronizarListFull = new ArrayList<>(data);
     }
 
     @Override
@@ -179,6 +186,46 @@ public class SincronizarAdapter extends LongPressAwareTableDataAdapter<Sincroniz
         public void afterTextChanged(Editable s) {
             ordenToUpdate.setArticulo(s.toString());
         }
-    }}
+    }
+    @Override
+    public Filter getFilter() {
+        return OrdenFilter;
+    }
+
+    private Filter OrdenFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<SincronizarModel> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(SincronizarListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (SincronizarModel item : SincronizarListFull) {
+                    if (item.getArticulo().toLowerCase().contains(filterPattern)
+                            || item.getDisponible().toLowerCase().contains(filterPattern)
+                            || item.getEnvio_gratis().toLowerCase().contains(filterPattern)
+                            || item.getPrecio().toLowerCase().contains(filterPattern)){
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            SincronizarList.clear();
+            SincronizarList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
+}
 
 

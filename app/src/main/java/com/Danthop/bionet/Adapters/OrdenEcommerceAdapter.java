@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +18,7 @@ import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableOrdenEcommerceTable;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.Ecommerce_orden_Model;
+import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -25,6 +28,7 @@ import com.android.volley.request.JsonObjectRequest;
 import com.google.android.gms.common.api.Api;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.codecrafters.tableview.TableDataAdapter;
@@ -37,14 +41,19 @@ import org.json.JSONObject;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecommerce_orden_Model> {
+public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecommerce_orden_Model> implements Filterable {
 
     int TEXT_SIZE = 16;
     public Dialog pop_up1;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
 
+    private List<Ecommerce_orden_Model> OrdenList;
+    private List<Ecommerce_orden_Model> OrdenListFull;
+
     public OrdenEcommerceAdapter(final Context context, final List<Ecommerce_orden_Model> data, final SortableOrdenEcommerceTable tableView) {
         super( context, data, tableView );
+        OrdenList = data;
+        OrdenListFull = new ArrayList<>(data);
     }
 
     @Override
@@ -218,6 +227,46 @@ public class OrdenEcommerceAdapter extends LongPressAwareTableDataAdapter<Ecomme
             ordenToUpdate.setCliente( s.toString() );
         }
     }
+    @Override
+    public Filter getFilter() {
+        return OrdenFilter;
+    }
+
+    private Filter OrdenFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Ecommerce_orden_Model> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(OrdenListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Ecommerce_orden_Model item : OrdenListFull) {
+                    if (item.getCliente().toLowerCase().contains(filterPattern)
+                            || item.getArticulo().toLowerCase().contains(filterPattern)
+                            || item.getCantidad().toLowerCase().contains(filterPattern)
+                            || item.getEnvio().toLowerCase().contains(filterPattern)
+                            || item.getImporte().toLowerCase().contains(filterPattern)
+                            || item.getEstatus().toLowerCase().contains(filterPattern)){
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            OrdenList.clear();
+            OrdenList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 }
 
 

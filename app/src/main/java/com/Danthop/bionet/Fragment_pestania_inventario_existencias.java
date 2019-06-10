@@ -1,6 +1,5 @@
 package com.Danthop.bionet;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,18 +12,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.Danthop.bionet.Adapters.InventarioAdapter;
 import com.Danthop.bionet.Adapters.InventarioExistenciasAdapter;
-import com.Danthop.bionet.Adapters.TrasladoenvioAdapter;
 import com.Danthop.bionet.Tables.SortableInventariosTable;
-import com.Danthop.bionet.Tables.SortableTrasladosTable;
 import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;

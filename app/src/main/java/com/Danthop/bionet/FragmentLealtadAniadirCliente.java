@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,6 +74,11 @@ public class FragmentLealtadAniadirCliente extends Fragment {
     private ArrayList<String> clientes_id;
     private Button Aniadir;
 
+    private SearchView BuscarCliente;
+
+    private LealtadAniadirClienteAdapter clienteAdapter;
+
+
 
     public FragmentLealtadAniadirCliente() {
         // Required empty public constructor
@@ -89,6 +95,7 @@ public class FragmentLealtadAniadirCliente extends Fragment {
         tabla_clientes = v.findViewById(R.id.tabla_clientes);
         SpinnerSucursal=v.findViewById(R.id.Sucursal_lealtad);
         Aniadir=v.findViewById(R.id.aceptar_aniadir);
+        BuscarCliente = v.findViewById(R.id.buscarCliente);
         clientes = new ArrayList<>();
         SucursalName=new ArrayList<>();
         SucursalID = new ArrayList<>();
@@ -126,6 +133,19 @@ public class FragmentLealtadAniadirCliente extends Fragment {
             public void onNothingSelected(AdapterView<?> parent)
             {
 
+            }
+        });
+
+        BuscarCliente.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                clienteAdapter.getFilter().filter(newText);
+                return false;
             }
         });
         return v;
@@ -214,7 +234,7 @@ public class FragmentLealtadAniadirCliente extends Fragment {
                             );
                             clientes.add(cliente);
                         }
-                        final LealtadAniadirClienteAdapter clienteAdapter = new LealtadAniadirClienteAdapter(getContext(), clientes, tabla_clientes,fr,clientes_id);
+                        clienteAdapter = new LealtadAniadirClienteAdapter(getContext(), clientes, tabla_clientes,fr,clientes_id);
                         tabla_clientes.setDataAdapter(clienteAdapter);
                     }
                     else

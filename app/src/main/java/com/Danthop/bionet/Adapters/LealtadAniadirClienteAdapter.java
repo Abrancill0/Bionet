@@ -10,12 +10,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.Danthop.bionet.Tables.SortableLealtadAniadirCliente;
 import com.Danthop.bionet.Tables.SortableLealtadInscribirTable;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.InventarioModel;
+import com.Danthop.bionet.model.LealtadArticuloModel;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -23,17 +26,23 @@ import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class LealtadAniadirClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel> {
+public class LealtadAniadirClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel> implements Filterable {
 
     int TEXT_SIZE = 16;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
     private FragmentTransaction fr;
     private ArrayList<String> clientes_id;
 
+    private List<ClienteModel> ClientesList;
+    private List<ClienteModel> ClientesListFull;
+
     public LealtadAniadirClienteAdapter(final Context context, final List<ClienteModel> data, final SortableLealtadAniadirCliente tableView, FragmentTransaction gr,ArrayList<String> ids) {
         super(context, data, tableView);
         fr = gr;
         clientes_id = ids;
+
+        ClientesList = data;
+        ClientesListFull = new ArrayList<>(data);
     }
 
     @Override
@@ -140,6 +149,46 @@ public class LealtadAniadirClienteAdapter extends LongPressAwareTableDataAdapter
             clienteToUpdate.setCliente_Nombre(s.toString());
         }
     }
+
+
+    @Override
+    public Filter getFilter() {
+        return ClientesFilter;
+    }
+
+    private Filter ClientesFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<ClienteModel> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(ClientesListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (ClienteModel item : ClientesListFull) {
+                    if (item.getCliente_Nombre().toLowerCase().contains(filterPattern)
+                            || item.getCliente_Correo().toLowerCase().contains(filterPattern)
+                            || item.getCliente_Telefono().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            ClientesList.clear();
+            ClientesList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
 
 
 

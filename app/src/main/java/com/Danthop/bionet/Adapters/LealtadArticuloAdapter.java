@@ -128,7 +128,9 @@ public class LealtadArticuloAdapter extends LongPressAwareTableDataAdapter<Lealt
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
                 for (LealtadArticuloModel item : articulosListFull) {
-                    if (item.getArticuloNombre().toLowerCase().contains(filterPattern)) {
+                    if (item.getArticuloNombre().toLowerCase().contains(filterPattern)
+                            || item.getArticuloDescripcion().toLowerCase().contains(filterPattern)
+                            || item.getArticuloCategoria().toLowerCase().contains(filterPattern)) {
                         filteredList.add(item);
                     }
                 }

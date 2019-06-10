@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,6 +81,8 @@ public class Fragment_ecommerce_preguntas extends Fragment {
     private Dialog pop_up1;
     private TextView Respuesta;
     private ProgressDialog progressDialog;
+    private PreguntasAdapter preguntasAdapter;
+    private SearchView Buscar;
 
     public Fragment_ecommerce_preguntas() {
         // Required empty public constructor
@@ -137,6 +140,21 @@ public class Fragment_ecommerce_preguntas extends Fragment {
         } );
 
         tabla_preguntas.setEmptyDataIndicatorView( v.findViewById( R.id.Tabla_vacia ) );
+
+        Buscar = v.findViewById(R.id.BuscarPregunta);
+
+        Buscar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                preguntasAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
 
         return v;
     }
@@ -391,7 +409,7 @@ public class Fragment_ecommerce_preguntas extends Fragment {
 
             }
 
-            final PreguntasAdapter preguntasAdapter = new PreguntasAdapter( getContext(), Preguntas, tabla_preguntas );
+            preguntasAdapter = new PreguntasAdapter( getContext(), Preguntas, tabla_preguntas );
             tabla_preguntas.setDataAdapter( preguntasAdapter );
 
             progreso.hide();

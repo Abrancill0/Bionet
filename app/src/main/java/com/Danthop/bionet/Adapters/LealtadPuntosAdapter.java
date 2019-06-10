@@ -164,7 +164,10 @@ public class LealtadPuntosAdapter extends LongPressAwareTableDataAdapter<Puntos_
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
                 for (Puntos_acumulados_model item : PuntosListFull) {
-                    if (item.getNombre().toLowerCase().contains(filterPattern)) {
+                    if (item.getNombre().toLowerCase().contains(filterPattern)
+                            || item.getNumero_cliente().toLowerCase().contains(filterPattern)
+                            || item.getAcumulado().toLowerCase().contains(filterPattern)
+                            || item.getCorreo_cliente().toLowerCase().contains(filterPattern)) {
                         filteredList.add(item);
                     }
                 }

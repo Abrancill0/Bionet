@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortablePreguntasTable;
 import com.Danthop.bionet.model.Preguntas_Model;
+import com.Danthop.bionet.model.SincronizarModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -42,8 +44,14 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
     private String UserML;
     ProgressDialog progreso;
 
+    private List<Preguntas_Model> PreguntasList;
+    private List<Preguntas_Model> PreguntasListFull;
+
     public PreguntasAdapter(final Context context, final List<Preguntas_Model> data, final SortablePreguntasTable tableView) {
         super(context, data, tableView);
+
+        PreguntasList = data;
+        PreguntasListFull = new ArrayList<>(data);
     }
 
     @Override
@@ -131,7 +139,46 @@ public class PreguntasAdapter extends LongPressAwareTableDataAdapter<Preguntas_M
         public void afterTextChanged(Editable s) {
             ordenToUpdate.setPreguntas(s.toString());
         }
-    }}
+    }
+
+    @Override
+    public Filter getFilter() {
+        return OrdenFilter;
+    }
+
+    private Filter OrdenFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Preguntas_Model> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(PreguntasListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Preguntas_Model item : PreguntasListFull) {
+                    if (item.getPreguntas().toLowerCase().contains(filterPattern)
+                            || item.getComprador().toLowerCase().contains(filterPattern)
+                            || item.getTitulo().toLowerCase().contains(filterPattern)){
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            PreguntasList.clear();
+            PreguntasList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+}
 
 
 

@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,6 +77,8 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private List<SincronizarModel> Sincronizaciones;
     private ProgressDialog progressDialog;
+    private SincronizarAdapter sincronizarAdapter;
+    private SearchView Buscar;
 
     public Fragment_ecommerce_Sincronizar() {
         // Required empty public constructor
@@ -267,6 +270,20 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
             }
         });
 
+        Buscar = v.findViewById(R.id.BuscarSincronizar);
+
+        Buscar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                sincronizarAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
         return v;
     }
 
@@ -355,7 +372,7 @@ public class Fragment_ecommerce_Sincronizar extends Fragment {
 
                 }
 
-                final SincronizarAdapter sincronizarAdapter = new SincronizarAdapter(getContext(), Sincronizaciones, tabla_sincronizar);
+                sincronizarAdapter = new SincronizarAdapter(getContext(), Sincronizaciones, tabla_sincronizar);
                 tabla_sincronizar.setDataAdapter(sincronizarAdapter);
 
                 progreso.hide();

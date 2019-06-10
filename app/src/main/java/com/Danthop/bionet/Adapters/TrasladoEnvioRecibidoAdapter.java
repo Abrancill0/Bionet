@@ -6,21 +6,29 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.Danthop.bionet.Tables.SortableInventariosTable;
 import com.Danthop.bionet.Tables.SortableTrasladosTable;
 import com.Danthop.bionet.model.InventarioModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-public class TrasladoenvioAdapter extends LongPressAwareTableDataAdapter<InventarioModel> {
+public class TrasladoEnvioRecibidoAdapter extends LongPressAwareTableDataAdapter<InventarioModel> implements Filterable {
     int TEXT_SIZE = 16;
+    private List<InventarioModel> InventarioList;
+    private List<InventarioModel> InventarioListFull;
 
-    public TrasladoenvioAdapter(final Context context, final List<InventarioModel> data, final SortableTrasladosTable tableView) {
+    public TrasladoEnvioRecibidoAdapter(final Context context, final List<InventarioModel> data, final SortableTrasladosTable tableView) {
         super(context, data, tableView);
+
+        InventarioList = data;
+        InventarioListFull = new ArrayList<>(data);
+
     }
     @Override
     public View getDefaultCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
@@ -67,7 +75,7 @@ public class TrasladoenvioAdapter extends LongPressAwareTableDataAdapter<Inventa
         editText.setPadding(20, 10, 20, 10);
         editText.setTextSize(TEXT_SIZE);
         editText.setSingleLine();
-        editText.addTextChangedListener(new TrasladoenvioAdapter.OrdenNameUpdater(Inventario));
+        editText.addTextChangedListener(new TrasladoEnvioRecibidoAdapter.OrdenNameUpdater(Inventario));
         return editText;
     }
 
@@ -120,4 +128,44 @@ public class TrasladoenvioAdapter extends LongPressAwareTableDataAdapter<Inventa
         public void afterTextChanged(Editable s) {
             ordenToUpdate.setNombre_sucursal(s.toString());
         }
-    }}
+    }
+
+    @Override
+    public Filter getFilter() {
+        return InventarioFilter;
+    }
+
+    private Filter InventarioFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<InventarioModel> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(InventarioListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (InventarioModel item : InventarioListFull) {
+                    if (item.getRecibidasOrigen().toLowerCase().contains(filterPattern)
+                            || item.getRecibidasDestino().toLowerCase().contains(filterPattern)
+                            || item.gettra_nombre_estatus().toLowerCase().contains(filterPattern)
+                            || item.gettra_motivo().toLowerCase().contains(filterPattern)){
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            InventarioList.clear();
+            InventarioList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+}

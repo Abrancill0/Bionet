@@ -96,6 +96,7 @@
                 android:padding="20dp">
 
                 <SearchView
+                    android:id="@+id/BuscarOrden"
                     android:layout_width="276dp"
                     android:layout_height="33dp"
                     android:background="@drawable/shape_gray"

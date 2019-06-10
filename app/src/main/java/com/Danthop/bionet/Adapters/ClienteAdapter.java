@@ -205,7 +205,11 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
                 for (ClienteModel item : clientesListFull) {
-                    if (item.getCliente_Nombre().toLowerCase().contains(filterPattern)) {
+                    if (item.getCliente_Nombre().toLowerCase().contains(filterPattern)
+                            || item.getCliente_Correo().toLowerCase().contains(filterPattern)
+                            || item.getCliente_Telefono().toLowerCase().contains(filterPattern)
+                            || item.getUltimaCompra().toLowerCase().contains(filterPattern)
+                            || item.getConsumoPromedio().toLowerCase().contains(filterPattern)) {
                         filteredList.add(item);
                     }
                 }

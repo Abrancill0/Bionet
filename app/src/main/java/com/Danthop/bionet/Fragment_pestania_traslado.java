@@ -9,12 +9,11 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.Danthop.bionet.Adapters.TrasladoenvioAdapter;
+import com.Danthop.bionet.Adapters.TrasladoEnvioRecibidoAdapter;
 import com.Danthop.bionet.Tables.SortableTrasladosTable;
 import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.VolleySingleton;
@@ -72,6 +71,9 @@ public class Fragment_pestania_traslado extends Fragment {
     private String fechaSolicitud = "";
     private String tra_motivo = "";
     private ProgressDialog progressDialog;
+    private SearchView BuscarTraslado;
+
+    private TrasladoEnvioRecibidoAdapter TrasladoAdapter;
 
     public Fragment_pestania_traslado() {
         // Required empty public constructor
@@ -80,6 +82,7 @@ public class Fragment_pestania_traslado extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pestania_traslados,container, false);
 
+        BuscarTraslado=v.findViewById(R.id.buscar_traslados);
        Button btn_traslados = (Button) v.findViewById(R.id.btn_inventarios);
         btn_traslados.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,6 +172,19 @@ public class Fragment_pestania_traslado extends Fragment {
         });
 
         Traslados_Recibidas();
+
+        BuscarTraslado.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                TrasladoAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
         return v;
     }
 
@@ -264,7 +280,7 @@ public  void Traslados_Recibidas(){
                         traslados.add(traslado);
 
                     }
-                    final TrasladoenvioAdapter TrasladoAdapter = new TrasladoenvioAdapter(getContext(), traslados,tabla_traslados);
+                    TrasladoAdapter = new TrasladoEnvioRecibidoAdapter(getContext(), traslados,tabla_traslados);
                     tabla_traslados.setDataAdapter(TrasladoAdapter);
                 }
             } catch (JSONException e) {

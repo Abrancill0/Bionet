@@ -249,14 +249,35 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
                                         {
                                             if(ListaConfiguraciones.get(j).getTipo().equals("porcentaje"))
                                             {
-                                                cantidad.setHint("0 - 100%");
-                                                cantidad.setText(ValorTipo);
+                                                cantidad.setHint(ValorTipo+" - 100%");
                                             }
                                             else if (ListaConfiguraciones.get(j).getTipo().equals("monto"))
                                             {
-                                                cantidad.setHint(DesdePrecio+" - "+HastaPrecio);
+                                                cantidad.setHint(ValorTipo);
                                             }
-                                            cantidad.setFilters(new InputFilter[]{ new MinMaxFilter(DesdePrecio, HastaPrecio)});
+                                            int cantidadMinima = Integer.parseInt(ValorTipo);
+                                            cantidad.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                            @Override
+                                            public void onFocusChange(View v, boolean hasFocus) {
+                                                if (!hasFocus) {
+                                                    String cantidad_ingresada = String.valueOf(cantidad.getText());
+                                                        if(cantidad_ingresada.equals(""))
+                                                        {
+
+                                                        }else
+                                                        {
+                                                            int cant_int = Integer.parseInt(cantidad_ingresada);
+                                                            if(cant_int<cantidadMinima)
+                                                            {
+                                                                Toast toast1 =
+                                                                        Toast.makeText(getContext(), "cantidad menor a la requerida", Toast.LENGTH_LONG);
+                                                                toast1.show();
+                                                                cantidad.setText("");
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            });
                                         }
                                     }
 

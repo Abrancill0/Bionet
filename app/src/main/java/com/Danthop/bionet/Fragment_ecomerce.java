@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,8 @@ public class Fragment_ecomerce extends Fragment {
     private String TokenLife;
     private JSONObject RespuestaTodo = null;
     private String RespuestaTodoString;
+    private OrdenEcommerceAdapter ordenAdapter;
+    private SearchView Buscar;
 
     private List<Ecommerce_orden_Model> Ordenes;
     private TableDataClickListener<Ecommerce_orden_Model> tablaListener;
@@ -119,6 +122,21 @@ public class Fragment_ecomerce extends Fragment {
 
         tabla_ecomerce.setEmptyDataIndicatorView( v.findViewById( R.id.Tabla_vacia ) );
         tabla_ecomerce.addDataClickListener(tablaListener);
+
+        Buscar = v.findViewById(R.id.BuscarOrden);
+
+        Buscar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ordenAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
 
         return v;
     }
@@ -527,7 +545,7 @@ public class Fragment_ecomerce extends Fragment {
                                         final Ecommerce_orden_Model orden = new Ecommerce_orden_Model( Comprador, Descripcion, Cantidad, Envio, Importe, Estatus,TipoPago,Fecha,IDshipping,Vendedor,Nickname,AccesToken );
                                         Ordenes.add( orden );
                                     }
-                                    final OrdenEcommerceAdapter ordenAdapter = new OrdenEcommerceAdapter( getContext(), Ordenes, tabla_ecomerce );
+                                    ordenAdapter = new OrdenEcommerceAdapter( getContext(), Ordenes, tabla_ecomerce );
                                     tabla_ecomerce.setDataAdapter( ordenAdapter );
 
 

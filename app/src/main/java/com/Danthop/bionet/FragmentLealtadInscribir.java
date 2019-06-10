@@ -108,7 +108,7 @@ public class FragmentLealtadInscribir extends Fragment {
     private ArrayList<String> SucursalName;
     private ArrayList<String> SucursalID;
     Handler handler;
-    ProgressDialog progreso;
+    private ProgressDialog progreso;
     private SearchView Buscar;
 
     private LealtadInscribirAdapter clienteAdapter;
@@ -141,6 +141,8 @@ public class FragmentLealtadInscribir extends Fragment {
         Buscar = v.findViewById(R.id.buscarCliente);
         handler= new Handler();
         progreso = new ProgressDialog( getContext() );
+        progreso.setMessage("Espere un momento por favor");
+        progreso.setCanceledOnTouchOutside(false);
 
         LoadButtons();
         LoadSpinnerSucursal();

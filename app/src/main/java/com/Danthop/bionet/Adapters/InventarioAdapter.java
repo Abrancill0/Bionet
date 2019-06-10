@@ -163,7 +163,12 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
                 for (InventarioModel item : inventarioList) {
-                    if (item.getProducto().toLowerCase().contains(filterPattern)) {
+                    if (item.getProducto().toLowerCase().contains(filterPattern)
+                            ||item.getSku().toLowerCase().contains(filterPattern)
+                            ||item.getcodigoBarras().toLowerCase().contains(filterPattern)
+                            ||item.getCategoria().toLowerCase().contains(filterPattern)
+                            ||item.getExistencia().toLowerCase().contains(filterPattern)
+                            ||item.getNombre_sucursal().toLowerCase().contains(filterPattern)) {
                         filteredList.add(item);
                     }
                 }
