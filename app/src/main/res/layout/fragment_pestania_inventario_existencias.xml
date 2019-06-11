@@ -107,8 +107,9 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="600dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".6"
                     android:orientation="vertical"
                     android:padding="10dp">
 
@@ -120,8 +121,8 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:layout_width="450dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:text="Consulta la Disponibilidad de articulos en las Sucursales."
                         android:textSize="17dp"
                         android:textStyle="normal" />
@@ -131,25 +132,27 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".4"
                     android:orientation="horizontal"
                     android:padding="20dp">
 
                     <SearchView
                         android:id="@+id/search_inventario"
-                        android:layout_width="300dp"
+                        android:layout_width="match_parent"
                         android:layout_height="34dp"
+                        android:layout_gravity="right"
                         android:layout_marginVertical="10dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="8dp"
+                        android:layout_weight=".5"
                         android:background="#E5E7E9"
-                        android:queryHint="Buscar"
-                        android:layout_gravity="right"
-                        android:iconifiedByDefault="false" />
+                        android:iconifiedByDefault="false"
+                        android:queryHint="Buscar" />
 
 
                     <Button
                         android:id="@+id/btn_buscarexistencias"
-                        android:layout_width="98dp"
+                        android:layout_width="match_parent"
                         android:layout_height="34dp"
                         android:layout_gravity="right"
                         android:layout_marginTop="10dp"
@@ -159,7 +162,8 @@
                         android:text="Buscar"
                         android:textColor="@color/white"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="invisible" />
 
                 </LinearLayout>
 

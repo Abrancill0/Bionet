@@ -11,9 +11,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +66,11 @@ public class FragmentLealtad extends Fragment {
     private SearchView Buscar;
     private LealtadPuntosAdapter clienteAdapter;
 
+    private Spinner SpinnerSucursal;
+    private ArrayList<String> SucursalName;
+    private ArrayList<String> SucursalID;
+
+
     private String usu_id;
     private List<Puntos_acumulados_model> clientes;
     private ProgressDialog progressDialog;
@@ -92,9 +100,12 @@ public class FragmentLealtad extends Fragment {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
-        clientes = new ArrayList<>();
 
-        Muestra_clientes();
+        SucursalName = new ArrayList<>();
+        SucursalID = new ArrayList<>();
+        SpinnerSucursal = (Spinner) v.findViewById(R.id.sucursal);
+
+        clientes = new ArrayList<>();
 
         Programas=v.findViewById(R.id.programas);
         Programas.setOnClickListener(new View.OnClickListener() {
@@ -160,18 +171,33 @@ public class FragmentLealtad extends Fragment {
 
         tabla_puntos.addDataClickListener(tablaListener);
 
+        LoadSucursales();
+        SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                progressDialog.show();
+                Muestra_clientes();
+
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+
         return v;
     }
 
 
     private void Muestra_clientes()
     {
+        clientes.clear();
         JSONObject request = new JSONObject();
         try
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
-
+            request.put("suc_id",SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
         }
         catch(Exception e)
         {
@@ -200,7 +226,6 @@ public class FragmentLealtad extends Fragment {
 
                     if (status == 1) {
 
-                        progressDialog.dismiss();
                         Respuesta = response.getJSONObject("resultado");
                         RespuestaNodoClientes = Respuesta.getJSONArray("aClientes");
 
@@ -257,6 +282,7 @@ public class FragmentLealtad extends Fragment {
                         }
                         clienteAdapter = new LealtadPuntosAdapter(getContext(), clientes, tabla_puntos);
                         tabla_puntos.setDataAdapter(clienteAdapter);
+                        progressDialog.dismiss();
 
                     }
                     else
@@ -333,6 +359,92 @@ public class FragmentLealtad extends Fragment {
 
             }
         };
+    }
+
+    public void LoadSucursales() {
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/configuracion/sucursales/index_app";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONArray RespuestaNodoSucursales = null;
+                JSONObject RespuestaNodoID = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+                    if (status == 1) {
+                        progressDialog.dismiss();
+
+                        Respuesta = response.getJSONObject("resultado");
+
+                        RespuestaNodoSucursales = Respuesta.getJSONArray("aSucursales");
+
+                        for (int x = 0; x < RespuestaNodoSucursales.length(); x++) {
+                            JSONObject jsonObject1 = RespuestaNodoSucursales.getJSONObject(x);
+                            String sucursal = jsonObject1.getString("suc_nombre");
+                            SucursalName.add(sucursal);
+                            RespuestaNodoID = jsonObject1.getJSONObject("suc_id");
+                            String id = RespuestaNodoID.getString("uuid");
+                            SucursalID.add(id);
+                        }
+                        SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, SucursalName));
+
+                    } else {
+                        progressDialog.dismiss();
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+
+                } catch (JSONException e) {
+                    progressDialog.dismiss();
+
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+
+                }
+
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+
     }
 
 }

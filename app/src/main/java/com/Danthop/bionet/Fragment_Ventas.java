@@ -255,6 +255,7 @@ public class Fragment_Ventas extends Fragment {
 
 
     private Button btn_imprimir;
+    private Button btn_eliminar_cliente_ticket;
 
     public Fragment_Ventas() {
         // Required empty public constructor
@@ -416,6 +417,72 @@ public class Fragment_Ventas extends Fragment {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    public void EliminarClienteTicket(){
+
+        ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
+        //ArticulosVenta.clear();
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("tic_id", ticket_de_venta.getTic_id());
+            request.put("tic_id_sucursal", ticket_de_venta.getTic_id_sucursal());
+            request.put("tic_id_cliente", "");
+            request.put("tic_nombre_cliente", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/tickets/store-cliente";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray Respuesta = null;
+                JSONObject RespuestaNodoTicket = null;
+                JSONObject TicketID = null;
+                JSONArray NodoTicketArticulos = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    } else {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
     }
 
 
@@ -726,6 +793,7 @@ public class Fragment_Ventas extends Fragment {
 
                 clientes = new ArrayList<>();
                 crear_cliente = dialog.findViewById(R.id.btn_crear_cliente);
+                btn_eliminar_cliente_ticket = dialog.findViewById(R.id.btn_eliminar_Cliente);
                 tabla_clientes = dialog.findViewById(R.id.tabla_clientes);
                 tabla_clientes.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
                 Muestra_clientes();
@@ -743,6 +811,16 @@ public class Fragment_Ventas extends Fragment {
                 };
                 tabla_clientes.addDataClickListener(tablaListener);
 
+                btn_eliminar_cliente_ticket.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        ticket_de_venta.setTic_nombre_cliente("");
+                        ticket_de_venta.setTic_id_cliente("");
+                        btn_agregar_cliente.setText("Cliente");
+                        EliminarClienteTicket();
+                    }
+                });
 
                 crear_cliente.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -753,6 +831,8 @@ public class Fragment_Ventas extends Fragment {
                 });
             }
         });
+
+
 
         btn_agregar_vendedor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -3759,6 +3839,7 @@ public class Fragment_Ventas extends Fragment {
         System.arraycopy(strData, 0, command, 9, strData.length);
         return command;
     }
+
 
 
 

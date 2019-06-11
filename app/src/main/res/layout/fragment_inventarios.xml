@@ -107,8 +107,9 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="600dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".6"
                     android:orientation="vertical"
                     android:padding="10dp">
 
@@ -120,39 +121,42 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:layout_width="350dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:text="Listado de existencia actuales de artículos."
                         android:textSize="17dp"
                         android:textStyle="normal" />
                 </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="20dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".4"
+                    android:orientation="horizontal"
+                    android:padding="20dp">
 
                     <SearchView
                         android:id="@+id/search_inventario"
-                        android:layout_width="300dp"
+                        android:layout_width="match_parent"
                         android:layout_height="34dp"
+                        android:layout_gravity="left"
                         android:layout_marginVertical="10dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
+                        android:layout_weight=".5"
                         android:background="#E5E7E9"
-                        android:queryHint="Buscar"
-                        android:layout_gravity="left"
-                        android:iconifiedByDefault="false" />
+                        android:iconifiedByDefault="false"
+                        android:queryHint="Buscar" />
 
                     <Spinner
                         android:id="@+id/categoria_inventario"
-                        android:layout_width="300dp"
+                        android:layout_width="match_parent"
                         android:layout_height="34dp"
+                        android:layout_gravity="left"
                         android:layout_marginVertical="10dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
-                        android:layout_gravity="left"
+                        android:layout_weight=".5"
                         android:background="@drawable/spinner_giro" />
                 </LinearLayout>
 

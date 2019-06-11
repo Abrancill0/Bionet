@@ -110,7 +110,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".7"
+                android:layout_weight=".4"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
                 android:paddingHorizontal="25dp">
@@ -127,23 +127,32 @@
                     android:layout_height="wrap_content"
                     android:text="Listado de los clientes que cuentan con puntos de lealtad"
                     android:textSize="17dp"
-                    android:textStyle="normal"/>
+                    android:textStyle="normal" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".7"
+                android:layout_weight=".4"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="100dp">
+                android:paddingLeft="10dp"
+                android:paddingVertical="20dp">
+
+                <Spinner
+                    android:id="@+id/sucursal"
+                    style="@style/SpinnerTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="15dp"
+                    android:layout_weight=".5"></Spinner>
 
                 <SearchView
                     android:id="@+id/buscarPuntos"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".5"
                     android:background="@drawable/shape_gray"
                     android:hint="Busqueda"
                     android:iconifiedByDefault="false"

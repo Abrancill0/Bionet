@@ -984,7 +984,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                     else
                                     {
                                         Toast toast1 =
-                                                Toast.makeText(getContext(), EstatusApi, Toast.LENGTH_LONG);
+                                                Toast.makeText(getContext(), "", Toast.LENGTH_LONG);
                                         toast1.show();
                                         handler.postDelayed(new Runnable() {
                                             @Override

@@ -126,7 +126,7 @@ public class Fragment_pantalla_principal extends Fragment{
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Producto", "Ventas");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader.setTextSize( 14 );
-        simpleHeader.setPaddings(10,10,10,10);
+        simpleHeader.setPaddings(2,2,2,2);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(2);
         tableColumnWeightModel.setColumnWeight(0, 2);
@@ -145,7 +145,7 @@ public class Fragment_pantalla_principal extends Fragment{
         final SimpleTableHeaderAdapter simpleHeader2 = new SimpleTableHeaderAdapter(getContext(), "Notificación", "Fecha");
         simpleHeader2.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader2.setTextSize( 14 );
-        simpleHeader2.setPaddings(10,10,10,10);
+        simpleHeader2.setPaddings(2,2,2,2);
 
         final TableColumnWeightModel tableColumnWeightModel2 = new TableColumnWeightModel(2);
         tableColumnWeightModel2.setColumnWeight(0, 2);
@@ -161,7 +161,7 @@ public class Fragment_pantalla_principal extends Fragment{
         final SimpleTableHeaderAdapter simpleHeader3 = new SimpleTableHeaderAdapter(getContext(), "Producto", "Sucursal","Existencia");
         simpleHeader3.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader3.setTextSize( 14 );
-        simpleHeader3.setPaddings(10,10,10,10);
+        simpleHeader3.setPaddings(2,2,2,2);
 
         final TableColumnWeightModel tableColumnWeightModel3 = new TableColumnWeightModel(3);
         tableColumnWeightModel3.setColumnWeight(0, 2);
@@ -178,7 +178,7 @@ public class Fragment_pantalla_principal extends Fragment{
         final SimpleTableHeaderAdapter simpleHeader4 = new SimpleTableHeaderAdapter(getContext(), "Cliente", "Compras realizadas");
         simpleHeader4.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader4.setTextSize( 14 );
-        simpleHeader4.setPaddings(10,10,10,10);
+        simpleHeader4.setPaddings(2,2,2,2);
 
         final TableColumnWeightModel tableColumnWeightModel4 = new TableColumnWeightModel(2);
         tableColumnWeightModel4.setColumnWeight(0, 2);
