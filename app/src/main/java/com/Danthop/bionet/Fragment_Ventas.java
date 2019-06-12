@@ -257,6 +257,9 @@ public class Fragment_Ventas extends Fragment {
     private Button btn_imprimir;
     private Button btn_eliminar_cliente_ticket;
 
+    private Bundle bundle;
+
+
     public Fragment_Ventas() {
         // Required empty public constructor
     }
@@ -354,6 +357,7 @@ public class Fragment_Ventas extends Fragment {
         LoadButtons();
 
 
+
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
@@ -375,6 +379,15 @@ public class Fragment_Ventas extends Fragment {
                 tabla_venta_articulos.setDataAdapter(articuloAdapter);
                 LoadImages();
 
+                bundle = getArguments();
+                if(bundle!=null)
+                {
+                    ticket_de_venta.setTic_id(bundle.getString( "tic_id"));
+                    ticket_de_venta.setTic_id_sucursal(bundle.getString( "suc_id"));
+                    ticket_de_venta.setTic_apa_id(bundle.getString("apa_id"));
+                    VerificarTicket();
+                }
+
 
             }
             public void onNothingSelected(AdapterView<?> parent)
@@ -382,6 +395,7 @@ public class Fragment_Ventas extends Fragment {
 
             }
         });
+
 
 
       // usbCtrl = new UsbController(this,mHandler);
@@ -669,6 +683,7 @@ public class Fragment_Ventas extends Fragment {
     }
 
     public void LoadVendedores() {
+        progressDialog.show();
         JSONObject request = new JSONObject();
         try {
             request.put("usu_id", usu_id);
@@ -706,8 +721,9 @@ public class Fragment_Ventas extends Fragment {
                             VendedorID.add(id);
                         }
                         SpinnerVendedor.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, VendedorName));
-
+                        progressDialog.dismiss();
                     } else {
+                        progressDialog.dismiss();
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
@@ -888,7 +904,6 @@ public class Fragment_Ventas extends Fragment {
             public void onClick(View v) {
                 dialog.setContentView(R.layout.pop_up_ventas_seleccionar_articulo);
                 dialog.show();
-                progreso.show();
                 tabla_selecciona_articulo = dialog.findViewById(R.id.tabla_seleccionar_articulos);
                 tabla_selecciona_articulo.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
                 Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
@@ -990,7 +1005,8 @@ public class Fragment_Ventas extends Fragment {
 
                                 return;
                             }
-                            ticket_de_venta.setTic_facturar("True");
+                            ticket_de_venta.setTic_facturar("true");
+                            facturar(ticket_de_venta.getTic_facturar());
                             dialog.dismiss();
                             dialog.setContentView(R.layout.pop_up_ventas_uso_cfdi);
                             dialog.show();
@@ -1152,7 +1168,7 @@ public class Fragment_Ventas extends Fragment {
                                                 TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
                                                 TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
 
-                                                FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
+
 
                                                 Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
                                                 aceptar.setOnClickListener(new View.OnClickListener() {
@@ -1161,6 +1177,15 @@ public class Fragment_Ventas extends Fragment {
 
                                                         loadTicket();
                                                         dialog.dismiss();
+                                                        FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
+                                                        if(ticket_de_venta.getTic_apa_id().equals(""))
+                                                        {
+
+                                                        }else{
+                                                            bundle.putString("tic_id", "");
+                                                            bundle.putString("suc_id", "");
+                                                            bundle.putString("apa_id", "");
+                                                        }
                                                     }
                                                 });
                                             }
@@ -1179,8 +1204,9 @@ public class Fragment_Ventas extends Fragment {
                     no_facturar.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ticket_de_venta.setTic_facturar("False");
+                            ticket_de_venta.setTic_facturar("false");
                             dialog.dismiss();
+                            facturar(ticket_de_venta.getTic_facturar());
                             dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
                             dialog.show();
                             tabla_metodos_pago = dialog.findViewById(R.id.tabla_seleccionar_metodo_pago);
@@ -1378,7 +1404,7 @@ public class Fragment_Ventas extends Fragment {
                                                 TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
                                                 TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
 
-                                                FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
+
 
                                                 Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
                                                 aceptar.setOnClickListener(new View.OnClickListener() {
@@ -1387,6 +1413,15 @@ public class Fragment_Ventas extends Fragment {
 
                                                         loadTicket();
                                                         dialog.dismiss();
+                                                        FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
+                                                        if(ticket_de_venta.getTic_apa_id().equals(""))
+                                                        {
+
+                                                        }else{
+                                                            bundle.putString("tic_id", "");
+                                                            bundle.putString("suc_id", "");
+                                                            bundle.putString("apa_id", "");
+                                                        }
 
                                                     }
                                                 });
@@ -1793,6 +1828,7 @@ public class Fragment_Ventas extends Fragment {
 
     private void FinalizarTicket(final TextView importeCambio, final TextView importeRecibido, final TextView importeVenta) {
 
+        progressDialog.show();
         JSONArray arreglo = new JSONArray();
         try {
             for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
@@ -1877,9 +1913,9 @@ public class Fragment_Ventas extends Fragment {
                         btn_apartar.setVisibility(View.INVISIBLE);
                         btn_ordenar.setVisibility(View.INVISIBLE);
                         btn_finalizar.setVisibility(View.INVISIBLE);
-
-
+                        progressDialog.dismiss();
                     } else {
+                        progressDialog.dismiss();
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
                         toast1.show();
@@ -2240,6 +2276,7 @@ public class Fragment_Ventas extends Fragment {
     }
 
     private void Muestra_clientes() {
+        progressDialog.show();
         JSONObject request = new JSONObject();
         try {
             request.put("usu_id", usu_id);
@@ -2368,7 +2405,9 @@ public class Fragment_Ventas extends Fragment {
                         }
                         final ClienteAdapter clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes, fr);
                         tabla_clientes.setDataAdapter(clienteAdapter);
+                        progressDialog.dismiss();
                     } else {
+                        progressDialog.dismiss();
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
                         toast1.show();
@@ -2396,6 +2435,7 @@ public class Fragment_Ventas extends Fragment {
     }
 
     private void CargaArticulos() {
+        progressDialog.show();
 
         try {
 
@@ -2490,8 +2530,13 @@ public class Fragment_Ventas extends Fragment {
                                     }
                                     final SeleccionarArticuloVentaAdapter ArticuloAdapter = new SeleccionarArticuloVentaAdapter(getContext(), Articulos, tabla_selecciona_articulo);
                                     tabla_selecciona_articulo.setDataAdapter(ArticuloAdapter);
-                                    progreso.hide();
-
+                                    progressDialog.dismiss();
+                                }
+                                else{
+                                    progressDialog.dismiss();
+                                    Toast toast1 =
+                                            Toast.makeText(getContext(), "Error en el servidor", Toast.LENGTH_LONG);
+                                    toast1.show();
                                 }
                             } catch (JSONException e) {
                                 Toast toast1 =
@@ -2603,6 +2648,7 @@ public class Fragment_Ventas extends Fragment {
     }
 
     private void AniadirClienteTicket() {
+        progressDialog.show();
         ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
         //ArticulosVenta.clear();
         JSONObject request = new JSONObject();
@@ -2636,10 +2682,9 @@ public class Fragment_Ventas extends Fragment {
                     String Mensaje = response.getString("mensaje");
 
                     if (status == 1) {
-                        Toast toast1 =
-                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-                        toast1.show();
+                        progressDialog.dismiss();
                     } else {
+                        progressDialog.dismiss();
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
                         toast1.show();
@@ -2667,6 +2712,7 @@ public class Fragment_Ventas extends Fragment {
     }
 
     private void AniadirVendedorTicket(String Comision) {
+        progressDialog.show();
         ticket_de_venta.setTic_id_sucursal(SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
         ticket_de_venta.setTic_id_vendedor(VendedorID.get(SpinnerVendedor.getSelectedItemPosition()));
         ticket_de_venta.setTic_nombre_vendedor(String.valueOf(SpinnerVendedor.getSelectedItem()));
@@ -2704,10 +2750,9 @@ public class Fragment_Ventas extends Fragment {
                     String Mensaje = response.getString("mensaje");
 
                     if (status == 1) {
-                        Toast toast1 =
-                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-                        toast1.show();
+                        progressDialog.dismiss();
                     } else {
+                        progressDialog.dismiss();
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
                         toast1.show();
@@ -3838,6 +3883,409 @@ public class Fragment_Ventas extends Fragment {
 
         System.arraycopy(strData, 0, command, 9, strData.length);
         return command;
+    }
+
+    private void facturar(String opcion)
+    {
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("tic_id", ticket_de_venta.getTic_id());
+            request.put("tic_id_sucursal", ticket_de_venta.getTic_id_sucursal());
+            request.put("tic_facturar", opcion);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/tickets/store-facturar";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray Respuesta = null;
+                JSONObject RespuestaNodoTicket = null;
+                JSONObject TicketID = null;
+                JSONArray NodoTicketArticulos = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    } else {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
+    private void VerificarTicket()
+    {
+        if (ticket_de_venta.getTic_id().equals(""))
+        {
+
+        }
+        else
+        {
+            JSONObject request = new JSONObject();
+            try {
+                request.put("usu_id", usu_id);
+                request.put("esApp", "1");
+                request.put("tic_id", ticket_de_venta.getTic_id());
+                request.put("tic_id_sucursal", ticket_de_venta.getTic_id_sucursal());
+                request.put("tic_facturar", "false");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            String url = getString(R.string.Url);
+
+            String ApiPath = url + "/api/ventas/tickets/store-facturar";
+
+            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    JSONObject Respuesta = null;
+                    JSONObject RespuestaNodoTicket = null;
+                    JSONObject TicketID = null;
+                    JSONArray NodoTicketArticulos = null;
+
+
+                    try {
+
+                        int status = Integer.parseInt(response.getString("estatus"));
+                        String Mensaje = response.getString("mensaje");
+
+                        if (status == 1) {
+
+
+                            Respuesta = response.getJSONObject("resultado");
+                            RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
+                            TicketID = RespuestaNodoTicket.getJSONObject("tic_id");
+                            TicketIDVenta = TicketID.getString("uuid");
+
+
+                            float ImpuestoTotal = 0;
+                            float Subtotal = 0;
+                            JSONArray tic_impuestos = RespuestaNodoTicket.getJSONArray("tic_impuestos");
+                            ImpuestosList = new ArrayList<>();
+                            for (int f = 0; f < tic_impuestos.length(); f++) {
+                                JSONObject nodo_impuestos = tic_impuestos.getJSONObject(f);
+                                String ValorImpuesto = nodo_impuestos.getString("valor");
+                                double ValorEnPesos = Double.parseDouble(ValorImpuesto);
+                                if(ValorEnPesos<0)
+                                {
+                                    ValorEnPesos=ValorEnPesos*-1;
+                                }
+                                ValorImpuesto= String.valueOf(formatter.format(ValorEnPesos));
+                                Impuestos impuesto = new Impuestos("",ValorImpuesto);
+                                impuesto.setNombreImpuesto(nodo_impuestos.getString("nombre"));
+                                ImpuestosList.add(impuesto);
+                            }
+
+                            mAdapter = new ImpuestoAdapter(ImpuestosList);
+                            RecyclerImpuesto.setHasFixedSize(true);
+                            mLayoutManager = new LinearLayoutManager(getContext());
+                            RecyclerImpuesto.setLayoutManager(mLayoutManager);
+                            RecyclerImpuesto.setAdapter(mAdapter);
+
+
+                            float DescuentoTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_descuentos"));
+                            float PrecioTotal = Float.parseFloat(RespuestaNodoTicket.getString("tic_importe_total"));
+
+
+                            JSONArray NodoArticuloTicket = Respuesta.getJSONArray("aDetalleTicket");
+                            for (int j = 0; j < NodoArticuloTicket.length(); j++) {
+                                JSONObject nodo = NodoArticuloTicket.getJSONObject(j);
+
+                                SKU_product = nodo.getString("art_sku");
+                                float numero_de_productos = Float.parseFloat((nodo.getString("tar_cantidad")));
+
+                                float PrecioSubTotalProducto = 0;
+
+
+                                //Sumar Subtotal
+                                float SubTot = Float.parseFloat(nodo.getString("art_precio_bruto"));
+                                PrecioSubTotalProducto = PrecioSubTotalProducto + SubTot;
+                                PrecioSubTotalProducto = PrecioSubTotalProducto * numero_de_productos;
+
+                                Subtotal = Subtotal + PrecioSubTotalProducto;
+
+                                String AplicaApartados = nodo.getString("art_aplica_apartados");
+                                String TieneExistencia = nodo.getString("art_id_existencia");
+
+                                //APARTADOS--------------------------------------
+                                if (AplicaApartados.equals("false")||(TieneExistencia.equals(""))) {
+
+                                }
+                                else {
+                                    String ArticuloCantidad = nodo.getString("tar_cantidad");
+                                    String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
+                                    JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
+                                    String ArticuloIDApartado = NodoIDApartado.getString("uuid");
+                                    JSONObject NodoIDApartadoVariante = nodo.getJSONObject("tar_id_variante");
+                                    String ArticuloIDApartadoVariante = NodoIDApartadoVariante.getString("uuid");
+                                    String ArticuloIDApartadoModificador = nodo.getString("tar_id_modificador");
+                                    String ArticuloApartadoImportePagado = nodo.getString("tar_importe_pagado");
+                                    String ArticuloIDApartadoExistencia = nodo.getString("art_id_existencia");
+                                    String ArticuloApartadoAplicaDevolucion = nodo.getString("tar_aplica_para_devolucion");
+                                    String ArticuloApartadoImporteDescuento = nodo.getString("tar_importe_descuento");
+                                    String ArticuloApartadoTotal = nodo.getString("tar_importe_total");
+                                    JSONObject nodoImpuestos = nodo.getJSONObject("tar_impuestos");
+                                    Iterator keys = nodoImpuestos.keys();
+                                    while (keys.hasNext()) {
+                                        Object key = keys.next();
+                                        String value = nodoImpuestos.getString((String) key);
+                                        Impuestos Impuesto = new Impuestos((String) key, value);
+                                        ImpuestosDeArticuloApartado.add(Impuesto);
+                                    }
+                                    String ArticuloApartadoPorcentajeDescuento = nodo.getString("tar_porcentaje_descuento");
+                                    String ArticuloApartadoPrecio = nodo.getString("tar_precio_articulo");
+
+
+                                    float importePagado = Float.parseFloat((ArticuloApartadoImportePagado));
+                                    float importeTotal = Float.parseFloat((ArticuloApartadoTotal));
+                                    float importeRestante = importeTotal - importePagado;
+
+                                    ArticuloApartadoModel ArticuloApartado = new ArticuloApartadoModel(
+                                            ArticuloCantidad,
+                                            ArticuloIDApartado,
+                                            ArticuloIDApartadoVariante,
+                                            ArticuloIDApartadoModificador,
+                                            ArticuloApartadoImportePagado,
+                                            String.valueOf(importeRestante),
+                                            NombreArticuloApartado,
+                                            ArticuloIDApartadoExistencia,
+                                            ArticuloApartadoAplicaDevolucion,
+                                            ArticuloApartadoImporteDescuento,
+                                            ArticuloApartadoTotal,
+                                            ImpuestosDeArticuloApartado,
+                                            ArticuloApartadoPorcentajeDescuento,
+                                            ArticuloApartadoPrecio);
+                                    ListaDeArticulosApartados.add(ArticuloApartado);
+                                }
+
+                                //ORDENES-------------------------------------------------------
+                                String AplicaOrdenes = nodo.getString("art_aplica_ordenes_especiales");
+                                if (AplicaOrdenes.equals("true")&&(TieneExistencia.equals(""))) {
+                                    String ArticuloCantidad = nodo.getString("tar_cantidad");
+                                    String NombreArticuloApartado = nodo.getString("tar_nombre_articulo");
+                                    JSONObject NodoIDApartado = nodo.getJSONObject("tar_id_articulo");
+                                    String ArticuloIDApartado = NodoIDApartado.getString("uuid");
+                                    JSONObject NodoIDApartadoVariante = nodo.getJSONObject("tar_id_variante");
+                                    String ArticuloIDApartadoVariante = NodoIDApartadoVariante.getString("uuid");
+                                    String ArticuloIDApartadoModificador = nodo.getString("tar_id_modificador");
+                                    String ArticuloApartadoImportePagado = nodo.getString("tar_importe_pagado");
+                                    String ArticuloIDApartadoExistencia = nodo.getString("art_id_existencia");
+                                    String ArticuloApartadoAplicaDevolucion = nodo.getString("tar_aplica_para_devolucion");
+                                    String ArticuloApartadoImporteDescuento = nodo.getString("tar_importe_descuento");
+                                    String ArticuloApartadoTotal = nodo.getString("tar_importe_total");
+                                    JSONObject nodoImpuestos = nodo.getJSONObject("tar_impuestos");
+                                    Iterator keys = nodoImpuestos.keys();
+                                    while (keys.hasNext()) {
+                                        Object key = keys.next();
+                                        String value = nodoImpuestos.getString((String) key);
+                                        Impuestos Impuesto = new Impuestos((String) key, value);
+                                        ImpuestosDeArticuloOrdenado.add(Impuesto);
+                                    }
+                                    String ArticuloApartadoPorcentajeDescuento = nodo.getString("tar_porcentaje_descuento");
+                                    String ArticuloApartadoPrecio = nodo.getString("tar_precio_articulo");
+
+
+                                    float importePagado = Float.parseFloat((ArticuloApartadoImportePagado));
+                                    float importeTotal = Float.parseFloat((ArticuloApartadoTotal));
+                                    float importeRestante = importeTotal - importePagado;
+
+                                    OrdenEspecialArticuloModel ArticuloOrdenado = new OrdenEspecialArticuloModel(
+                                            ArticuloCantidad,
+                                            ArticuloIDApartado,
+                                            ArticuloIDApartadoVariante,
+                                            ArticuloIDApartadoModificador,
+                                            ArticuloApartadoImportePagado,
+                                            String.valueOf(importeRestante),
+                                            NombreArticuloApartado,
+                                            ArticuloApartadoAplicaDevolucion,
+                                            ArticuloApartadoImporteDescuento,
+                                            ArticuloApartadoTotal,
+                                            ImpuestosDeArticuloOrdenado,
+                                            ArticuloApartadoPorcentajeDescuento,
+                                            ArticuloApartadoPrecio);
+                                    ListaDeArticulosOrdenados.add(ArticuloOrdenado);
+                                }
+                                else {
+
+                                }
+                            }
+
+
+                            //Se modifican los datos del ticket de venta
+                            ticket_de_venta.setTic_id(TicketIDVenta);
+                            ticket_de_venta.setTic_importe_descuentos(String.valueOf(DescuentoTotal));
+                            ticket_de_venta.setTic_importe_total(String.valueOf(PrecioTotal));
+                            ticket_de_venta.setTic_impuestos(String.valueOf(ImpuestoTotal));
+
+
+                            double Price = Double.parseDouble(ticket_de_venta.getTic_importe_total());
+                            total.setText(formatter.format(Price));
+
+                            double descu = Double.parseDouble(ticket_de_venta.getTic_importe_descuentos());
+                            descuento.setText(formatter.format(descu));
+
+                            double sub = Double.parseDouble(String.valueOf(Subtotal));
+                            subtotal.setText(formatter.format(sub));
+
+
+
+                            NodoTicketArticulos = Respuesta.getJSONArray("aDetalleTicket");
+                            for (int x = 0; x < NodoTicketArticulos.length(); x++)
+                            {
+                                int Checador=0;
+                                JSONObject elemento = NodoTicketArticulos.getJSONObject(x);
+                                String NombreArticulo = elemento.getString("tar_nombre_articulo");
+                                JSONObject NodoTarID = elemento.getJSONObject("tar_id");
+                                String tar_id = NodoTarID.getString("uuid");
+
+                                String SKUArticulo = elemento.getString("art_sku");
+                                String cantidad = elemento.getString("tar_cantidad");
+                                String precio = elemento.getString("tar_precio_articulo");
+                                String descuento = elemento.getString("art_importe_descuento");
+                                String importe = elemento.getString("tar_importe_total");
+                                String existencia = elemento.getString("art_id_existencia");
+                                String unidad_medida = elemento.getString("art_um_simbologia");
+
+                                JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
+                                for (int z = 0; z < RespuestaImagenes.length(); z++) {
+                                    String RutaImagen = "http://192.168.100.192:8010" + RespuestaImagenes.getString(z);
+                                    Imagenes.add(RutaImagen);
+                                }
+                                final ArticuloModel articulo = new ArticuloModel("",
+                                        NombreArticulo,
+                                        "",
+                                        precio,
+                                        "",
+                                        "",
+                                        SKUArticulo,
+                                        "",
+                                        cantidad,
+                                        tar_id,
+                                        descuento,
+                                        "",
+                                        importe,"","",existencia
+                                );
+                                articulo.setGetArticulo_UM(unidad_medida);
+                                ArticulosVenta.add(articulo);
+
+                            }
+
+                            final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
+                                    total, descuento, impuesto, subtotal,
+                                    carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,btn_ordenar,btn_apartar,btn_finalizar,
+                                    RecyclerImpuesto);
+                            articuloAdapter.notifyDataSetChanged();
+                            tabla_venta_articulos.setDataAdapter(articuloAdapter);
+                            LoadImages();
+                            progressDialog.dismiss();
+
+                            if(ListaDeArticulosOrdenados.isEmpty())
+                            {
+                                btn_ordenar.setVisibility(View.INVISIBLE);
+                            }
+                            else
+                            {
+                                btn_ordenar.setVisibility(View.INVISIBLE);
+                            }
+
+                            if(ListaDeArticulosApartados.isEmpty())
+                            {
+                                btn_apartar.setVisibility(View.INVISIBLE);
+                            }
+                            else
+                            {
+                                btn_apartar.setVisibility(View.INVISIBLE);
+                            }
+
+                            for(int k=0; k<ArticulosVenta.size();k++)
+                            {
+                                if(ArticulosVenta.get(k).getArticulo_articulo_exi_id().equals("")){
+
+                                }
+                                else
+                                {
+                                    ArticulosConExistencias.add(ArticulosVenta.get(k).getarticulo_Nombre());
+                                }
+                            }
+
+                            btn_finalizar.setText("Concluir Apartado");
+                            if(ArticulosConExistencias.isEmpty())
+                            {
+                                btn_finalizar.setVisibility(View.VISIBLE); //Invisible
+
+                            }
+                            else
+                            {
+                                btn_finalizar.setVisibility(View.VISIBLE);
+                            }
+
+                            progressDialog.dismiss();
+                        }
+                        else
+                            {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                            toast1.show();
+                        }
+
+                    } catch (JSONException e) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+
+            },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                            toast1.show();
+                        }
+                    }
+            );
+            postRequest.setShouldCache(false);
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+        }
     }
 
 

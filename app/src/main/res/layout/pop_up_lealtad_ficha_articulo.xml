@@ -62,7 +62,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:background="@drawable/pestanas_desplegables">
+                        android:background="@drawable/pestanas_desplegables"
+                        android:paddingHorizontal="5dp">
 
                         <TextView
                             android:id="@+id/textView15"
@@ -87,7 +88,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:background="@drawable/pestanas_desplegables">
+                        android:background="@drawable/pestanas_desplegables"
+                        android:paddingHorizontal="5dp">
 
                         <TextView
                             android:id="@+id/textView22"
@@ -111,7 +113,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="vertical"
-                        android:background="@drawable/pestanas_desplegables">
+                        android:background="@drawable/pestanas_desplegables"
+                        android:paddingHorizontal="5dp">
 
                         <TextView
                             android:id="@+id/textView24"
@@ -135,7 +138,8 @@
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:background="@drawable/pestanas_desplegables">
+                        android:background="@drawable/pestanas_desplegables"
+                        android:paddingHorizontal="5dp">
 
                         <TextView
                             android:id="@+id/textView2s4"
@@ -159,7 +163,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="vertical"
-                        android:background="@drawable/pestanas_desplegables">
+                        android:background="@drawable/pestanas_desplegables"
+                        android:paddingHorizontal="5dp">
 
                         <TextView
                             android:id="@+id/wweqe"
@@ -183,7 +188,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:background="@drawable/pestanas_desplegables">
+                        android:background="@drawable/pestanas_desplegables"
+                        android:paddingHorizontal="5dp">
 
                         <TextView
                             android:id="@+id/textView2f4"
@@ -207,7 +213,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:background="@drawable/pestanas_desplegables">
+                        android:background="@drawable/pestanas_desplegables"
+                        android:paddingHorizontal="5dp">
 
                         <TextView
                             android:id="@+id/textViesw24"
@@ -231,7 +238,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:background="@drawable/pestanas_desplegables">
+                        android:background="@drawable/pestanas_desplegables"
+                        android:paddingHorizontal="5dp">
 
                         <TextView
                             android:id="@+id/textVieww24"
@@ -255,7 +263,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:background="@drawable/pestanas_desplegables">
+                        android:background="@drawable/pestanas_desplegables"
+                        android:paddingHorizontal="5dp">
 
                         <TextView
                             android:id="@+id/textViewe24"
@@ -282,7 +291,8 @@
                 android:layout_weight=".5"
                 android:orientation="vertical"
                 android:padding="20dp"
-                android:background="@drawable/pestanas_desplegables">
+                android:background="@drawable/pestanas_desplegables"
+                android:paddingHorizontal="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"

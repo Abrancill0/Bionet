@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Toast;
 import com.Danthop.bionet.Adapters.HistoricoAdapter;
 import com.Danthop.bionet.Tables.SortableHistoricoTable;
@@ -70,6 +71,9 @@ public class Fragment_pestania_historico extends Fragment {
     private Long timestamp;
     private ProgressDialog progressDialog;
 
+    private HistoricoAdapter HistoricoAdapter;
+    private SearchView Buscar;
+
     public Fragment_pestania_historico() {
         // Required empty public constructor
     }
@@ -103,6 +107,20 @@ public class Fragment_pestania_historico extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_inventario_existencias()).commit();
+            }
+        });
+
+        Buscar = v.findViewById(R.id.buscar_historico);
+        Buscar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                HistoricoAdapter.getFilter().filter(newText);
+                return false;
             }
         });
 
@@ -246,7 +264,7 @@ public class Fragment_pestania_historico extends Fragment {
                                     date);
                             historico.add(historicos);
                         }
-                        final HistoricoAdapter HistoricoAdapter = new HistoricoAdapter(getContext(), historico, tabla_historico);
+                        HistoricoAdapter = new HistoricoAdapter(getContext(), historico, tabla_historico);
                          tabla_historico.setDataAdapter(HistoricoAdapter);
                      }
                 } catch (JSONException e) {
