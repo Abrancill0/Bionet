@@ -28,6 +28,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -75,6 +77,8 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
     private String tra_motivo;
     private ProgressDialog progressDialog;
     private SearchView BuscarTraslado;
+    private Long timestamp;
+    private String FechaconFormato;
 
     private TrasladoEnvioRecibidoAdapter TrasladoAdapter;
 
@@ -216,7 +220,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
                         progressDialog.dismiss();
                         Resultado = response.getJSONObject("resultado");
                         RespuestaTraslados = Resultado.getJSONObject("aTraslados");
-                        aSolicitudesEnviadas = RespuestaTraslados.getJSONArray("aSolicitudesRecibidas");
+                        aSolicitudesEnviadas = RespuestaTraslados.getJSONArray("aSolicitudesEnviadas");
 
                         trasladoModel = new String[aSolicitudesEnviadas.length()][4];
                         for (int x = 0; x < aSolicitudesEnviadas.length(); x++) {
@@ -225,7 +229,16 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
                             RespuestaUUID = elemento.getJSONObject("tra_id");
                             String UUID = RespuestaUUID.getString("uuid");
 
-                            //
+                            RespuestaFecha = elemento.getJSONObject("tra_fecha_hora_creo");
+                            timestamp = RespuestaFecha.getLong("seconds");
+
+                            Timestamp stamp = new Timestamp(timestamp);
+                            Date date_f = new Date(stamp.getTime() * 1000L);
+
+                            String Formato = "dd/MM/yyyy";
+                            SimpleDateFormat formatter = new SimpleDateFormat(Formato);
+
+                            FechaconFormato = formatter.format(date_f.getTime());
 
                             RecibidasOrigen = elemento.getString("suc_nombre_sucursal_origen");
                             suc_numero_sucursal_origen = elemento.getString("suc_numero_sucursal_origen");
@@ -278,8 +291,9 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
                                     tra_nombre_estatus,
                                     suc_numero_sucursal_destino,
                                     suc_numero_sucursal_origen,
-                                    fechaSolicitud,
-                                    tra_motivo,"","","","","","");
+                                    FechaconFormato,
+                                    tra_motivo,"","","","","",
+                                    "","","");
                             traslados.add(traslado);
 
                         }

@@ -36,6 +36,7 @@ import org.w3c.dom.Text;
 
 import java.sql.Timestamp;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -54,6 +55,8 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
     private TableDataClickListener<InventarioModel> tableListener;
     private String[][] trasladoModel;
     private Dialog ver_dialog_traslado;
+    private Long timestamp;
+    private String FechaconFormato;
     private String usu_id;
     private String suc_id = "";
     private String modificadores = "";
@@ -89,7 +92,11 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
     private SearchView BuscarTraslado;
     private String UUID;
     private TextView UUIDarticulostraslados;
-    private Date date;
+    private String AceptarSolicitud;
+    private String CancelarSolicitud;
+    private String status_solicitud;
+    private String status_nombre;
+    private String tipo_traslado = "recibida";
 
     private TrasladoEnvioRecibidoAdapter TrasladoAdapter;
 
@@ -263,15 +270,15 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
                             UUID = RespuestaUUID.getString("uuid");
 
                             RespuestaFecha = elemento.getJSONObject("tra_fecha_hora_creo");
-                            fechaSolicitud = RespuestaFecha.getLong("seconds");
+                            timestamp = RespuestaFecha.getLong("seconds");
 
-                            Timestamp ts = new Timestamp(fechaSolicitud);
-                            //Date date = new  Date (ts.getTime());
-                            Date date = ts;
+                            Timestamp stamp = new Timestamp(timestamp);
+                            Date date_f = new Date(stamp.getTime() * 1000L);
 
-                            /*Timestamp TS = new Timestamp( timestamp);
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            formatter.format( TS );*/
+                            String Formato = "dd/MM/yyyy";
+                            SimpleDateFormat formatter = new SimpleDateFormat(Formato);
+
+                            FechaconFormato = formatter.format(date_f.getTime());
 
                             RecibidasOrigen = elemento.getString("suc_nombre_sucursal_origen");
                             suc_numero_sucursal_origen = elemento.getString("suc_numero_sucursal_origen");
@@ -295,7 +302,8 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
                             SucursalCodigoDestino = RecibidasDestino + "(" + suc_numero_sucursal_destino + ")";
                             RecibidasDestino = SucursalCodigoDestino;
 
-
+                            status_solicitud = elemento.getString("tra_id_estatus_type");
+                            status_nombre = elemento.getString( "tra_nombre_estatus");
 
 
 
@@ -327,8 +335,9 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
                                     tra_nombre_estatus,
                                     suc_numero_sucursal_destino,
                                     suc_numero_sucursal_origen,
-                                    date,
-                                    tra_motivo,UUID,"","","","","");
+                                    FechaconFormato,
+                                    tra_motivo,UUID,"","","","","",
+                                    status_solicitud,status_nombre);
                             traslados.add(traslado);
 
                         }
@@ -360,49 +369,48 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
         tableListener = new TableDataClickListener<InventarioModel>() {
             @Override
             public void onDataClicked(int rowIndex, final InventarioModel clickedData) {
-                final Dialog ver_dialog_traslado;
-                ver_dialog_traslado = new Dialog(getContext());
-                ver_dialog_traslado.setContentView(R.layout.pop_up_traslado_recibido);
-                ver_dialog_traslado.show();
 
-                TextView motivotraslado = ver_dialog_traslado.findViewById( R.id.motivotraslado );
-                motivotraslado.setText(clickedData.gettra_motivo());
+                    final Dialog ver_dialog_traslado;
+                    ver_dialog_traslado = new Dialog(getContext());
+                    ver_dialog_traslado.setContentView(R.layout.pop_up_traslado_recibido);
+                    ver_dialog_traslado.show();
 
-                TextView cantidadtraslado = ver_dialog_traslado.findViewById( R.id.cantidadtraslado );
+                    TextView motivotraslado = ver_dialog_traslado.findViewById( R.id.motivotraslado );
+                    motivotraslado.setText(clickedData.gettra_motivo());
 
-                UUIDarticulostraslados = ver_dialog_traslado.findViewById( R.id.articulostraslados );
-                UUIDarticulostraslados.setText(clickedData.getUUIDarticulo());
+                    TextView nombre_status = ver_dialog_traslado.findViewById( R.id.cantidadtraslado );
+                    nombre_status.setText(clickedData.getstatus_nombre());
 
-                //NumberFormat formatter = NumberFormat.getCurrencyInstance();
-                //formatter.setMaximumFractionDigits(2);
-                //TextView totalpago = ver_pago_comisiones.findViewById(R.id.text_importe_valor);
-                //totalpago.setText(String.valueOf( formatter.format(pago)));
+                    UUIDarticulostraslados = ver_dialog_traslado.findViewById( R.id.articulostraslados );
+                    UUIDarticulostraslados.setText(clickedData.getstatus_solicitud());
 
-                Button aceptar_solicitud = ver_dialog_traslado.findViewById(R.id.aceptar_solicitud);
-                aceptar_solicitud.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        responder_solicitud();
+                    Button aceptar_solicitud = ver_dialog_traslado.findViewById(R.id.aceptar_solicitud);
+                    aceptar_solicitud.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                    }
-                });
+                            responder_solicitud();
 
-                Button rechazar_solicitud = ver_dialog_traslado.findViewById(R.id.rechazar_solicitud);
-                rechazar_solicitud.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                        }
+                    });
+
+                    Button rechazar_solicitud = ver_dialog_traslado.findViewById(R.id.rechazar_solicitud);
+                    rechazar_solicitud.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+
+                    Button cerrar_ventana = ver_dialog_traslado.findViewById(R.id.cerrar_ventana);
+                    cerrar_ventana.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v){
+                            ver_dialog_traslado.dismiss();
+                        }
+                    });
 
 
-                    }
-                });
-
-                Button cerrar_ventana = ver_dialog_traslado.findViewById(R.id.cerrar_ventana);
-                cerrar_ventana.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v){
-                        ver_dialog_traslado.dismiss();
-                    }
-                });
             }
         };
     }
@@ -419,7 +427,7 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
             jsonBodyrequest.put("esApp", "1" );
             jsonBodyrequest.put("usu_id", usu_id);
             jsonBodyrequest.put("tra_id",UUIDarticulostraslados.getText());
-            jsonBodyrequest.put("tipo_traslado","enviada");
+            jsonBodyrequest.put("tipo_traslado",tipo_traslado);
             jsonBodyrequest.put("respuesta","cancelar");
 
 
@@ -472,8 +480,9 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
                                 tra_nombre_estatus,
                                 suc_numero_sucursal_destino,
                                 suc_numero_sucursal_origen,
-                                date,
-                                tra_motivo,"","","","","","");
+                                "",
+                                tra_motivo,"","","","","","",
+                                status_solicitud, status_nombre);
 
                        // pagocomision.add(comisiones);
 

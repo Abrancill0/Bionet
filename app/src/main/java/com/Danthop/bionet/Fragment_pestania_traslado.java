@@ -1,4 +1,5 @@
 package com.Danthop.bionet;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.TrasladoEnvioRecibidoAdapter;
@@ -27,10 +29,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
+import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 /**
@@ -50,6 +56,8 @@ public class Fragment_pestania_traslado extends Fragment {
     private String sku = "";
     private String codigoBarras = "";
     private String almacen = "";
+    private String FechaconFormato;
+    private Long timestamp;
     private String amo_activo="";
     private String articulo_descripcion;
     private String categoria;
@@ -73,6 +81,14 @@ public class Fragment_pestania_traslado extends Fragment {
     private String tra_motivo = "";
     private ProgressDialog progressDialog;
     private SearchView BuscarTraslado;
+    private TableDataClickListener<InventarioModel> tableListener;
+    private String UUID;
+    private TextView UUIDarticulostraslados;
+    private String AceptarSolicitud;
+    private String CancelarSolicitud;
+    private String status_solicitud;
+    private String status_nombre;
+    private String tipo_traslado = "recibida";
 
     private TrasladoEnvioRecibidoAdapter TrasladoAdapter;
 
@@ -186,6 +202,25 @@ public class Fragment_pestania_traslado extends Fragment {
                 return false;
             }
         });
+
+        LoadListenerTable();
+        tabla_traslados.setSwipeToRefreshEnabled(true);
+        tabla_traslados.setSwipeToRefreshListener(new SwipeToRefreshListener() {
+            @Override
+            public void onRefresh(final RefreshIndicator refreshIndicator) {
+                tabla_traslados.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        traslados.clear();
+                        refreshIndicator.hide();
+                    }
+                }, 2000);
+            }
+        });
+
+        tabla_traslados.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
+        tabla_traslados.addDataClickListener(tableListener);
+
         return v;
     }
 
@@ -226,12 +261,18 @@ public  void Traslados_Recibidas(){
                         JSONObject elemento = RespuestaSolicitudesRecibidas.getJSONObject(x);
 
                         RespuestaUUID = elemento.getJSONObject("tra_id");
-                        String UUID = RespuestaUUID.getString("uuid");
+                        UUID = RespuestaUUID.getString("uuid");
 
                         RespuestaFecha = elemento.getJSONObject("tra_fecha_hora_creo");
-                        //fechaSolicitud = RespuestaFecha.getLong("seconds");
-                        //TypoFecha = RespuestaFecha.getJSONObject("type");
-                        //fechaSolicitud =  TypoFecha.getString("name");
+                        timestamp = RespuestaFecha.getLong("seconds");
+
+                        Timestamp stamp = new Timestamp(timestamp);
+                        Date date_f = new Date(stamp.getTime() * 1000L);
+
+                        String Formato = "dd/MM/yyyy";
+                        SimpleDateFormat formatter = new SimpleDateFormat(Formato);
+
+                        FechaconFormato = formatter.format(date_f.getTime());
 
                         RecibidasOrigen = elemento.getString("suc_nombre_sucursal_origen");
                         suc_numero_sucursal_origen = elemento.getString("suc_numero_sucursal_origen");
@@ -254,6 +295,9 @@ public  void Traslados_Recibidas(){
                         RecibidasOrigen = SucursalCodigoOrigen;
                         SucursalCodigoDestino = RecibidasDestino + "(" + suc_numero_sucursal_destino + ")";
                         RecibidasDestino = SucursalCodigoDestino;
+
+                        status_solicitud = elemento.getString("tra_id_estatus_type");
+                        status_nombre = elemento.getString( "tra_nombre_estatus");
 
                         final InventarioModel traslado = new InventarioModel(
                                 sku,
@@ -283,8 +327,9 @@ public  void Traslados_Recibidas(){
                                 tra_nombre_estatus,
                                 suc_numero_sucursal_destino,
                                 suc_numero_sucursal_origen,
-                                fechaSolicitud,
-                                tra_motivo,"","","","","","");
+                                FechaconFormato,
+                                tra_motivo,UUID,"","",
+                                "","","",status_solicitud, status_nombre);
                         traslados.add(traslado);
 
                     }
@@ -310,5 +355,155 @@ public  void Traslados_Recibidas(){
     getRequest.setShouldCache(false);
     VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
 }
+
+
+    private void LoadListenerTable(){
+        tableListener = new TableDataClickListener<InventarioModel>() {
+            @Override
+            public void onDataClicked(int rowIndex, final InventarioModel clickedData) {
+
+                final Dialog ver_dialog_traslado;
+                ver_dialog_traslado = new Dialog(getContext());
+                ver_dialog_traslado.setContentView(R.layout.pop_up_traslado_recibido);
+                ver_dialog_traslado.show();
+
+                TextView motivotraslado = ver_dialog_traslado.findViewById( R.id.motivotraslado );
+                motivotraslado.setText(clickedData.gettra_motivo());
+
+                TextView nombre_status = ver_dialog_traslado.findViewById( R.id.articulostraslados );
+                nombre_status.setText(clickedData.getstatus_nombre());
+
+                UUIDarticulostraslados = ver_dialog_traslado.findViewById( R.id.cantidadtraslado );
+                UUIDarticulostraslados.setText(clickedData.getUUIDarticulo());
+
+                Button aceptar_solicitud = ver_dialog_traslado.findViewById(R.id.aceptar_solicitud);
+                aceptar_solicitud.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        responder_solicitud("aceptar");
+
+                    }
+                });
+
+                Button rechazar_solicitud = ver_dialog_traslado.findViewById(R.id.rechazar_solicitud);
+                rechazar_solicitud.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+
+                Button cerrar_ventana = ver_dialog_traslado.findViewById(R.id.cerrar_ventana);
+                cerrar_ventana.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v){
+                        ver_dialog_traslado.dismiss();
+                    }
+                });
+
+
+            }
+        };
+    }
+
+
+    private void responder_solicitud(String tipo) {
+
+        String tiporeturn = tipo;
+        String url = getString(R.string.Url);
+        String ApiPath = url + "api/inventario/responder_solicitud";
+
+
+        JSONObject jsonBodyrequest = new JSONObject();
+        try {
+            jsonBodyrequest.put("esApp", "1" );
+            jsonBodyrequest.put("usu_id", usu_id);
+            jsonBodyrequest.put("tra_id",UUIDarticulostraslados.getText());
+            jsonBodyrequest.put("tipo_traslado",tipo_traslado);
+            jsonBodyrequest.put("respuesta",tiporeturn);
+
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,jsonBodyrequest, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray Resultado = null;
+                try {
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 0){
+                        Toast.makeText(getContext(), "No se puede aceptar la solicitud", Toast.LENGTH_LONG).show();
+                    }
+
+                    if (status == 1){
+                        Resultado = response.getJSONArray( "resultado" );
+
+                        for (int n=0; n<Resultado.length(); n++){
+                            JSONObject elemento = Resultado.getJSONObject(n);
+
+                        }
+                        final InventarioModel comisiones = new InventarioModel(
+                                sku,
+                                producto,
+                                existencia,
+                                categoria,
+                                modificadores,
+                                nombre_sucursal,
+                                suc_id,
+                                articulo_descripcion,
+                                art_tipo,
+                                art_disponible_venta,
+                                art_disponible_compra,
+                                ava_aplica_apartados,
+                                ava_aplica_cambio_devolucion,
+                                aim_url,
+                                art_nombre,
+                                cat_nombre,
+                                his_tipo,
+                                his_cantidad,
+                                his_observaciones,
+                                his_fecha_hora_creo,
+                                codigoBarras,
+                                almacen,
+                                RecibidasOrigen,
+                                RecibidasDestino,
+                                tra_nombre_estatus,
+                                suc_numero_sucursal_destino,
+                                suc_numero_sucursal_origen,
+                                "",
+                                tra_motivo,"","","","","","",
+                                status_solicitud, status_nombre);
+
+                        // pagocomision.add(comisiones);
+
+
+                        //final ComisionesAdapter comisionAdapter = new ComisionesAdapter(getContext(), pagocomision, tabla_comisiones);
+                        // tabla_comisiones.setDataAdapter(comisionAdapter);
+
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 = Toast.makeText(getContext(), "Error de conexion", Toast.LENGTH_SHORT);
+                        toast1.show();
+                    }
+                }
+        );
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+    }
 
 }

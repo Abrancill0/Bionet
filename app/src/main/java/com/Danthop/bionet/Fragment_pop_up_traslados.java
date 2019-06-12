@@ -97,7 +97,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     private String UUIDarticulo;
     private String UUIDvariante;
     private String UUIDmodificador;
-    private Date fechaSolicitud;
+    private String fechaSolicitud;
     private Button btn_agregar_articulo;
     private LinearLayout LayoutFecha;
     private LinearLayout LayoutelegirArticulos;
@@ -420,7 +420,8 @@ private void MuestraArticulos(){
                                 "","", "","","",
                                 "","","", "","","",
                                 "","", "","","",
-                                fechaSolicitud, "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,"");
+                                "", "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,
+                                "","","");
                         inventarios.add(inventario);
                     }
 
@@ -550,7 +551,8 @@ private void MuestraArticulossinApi(){
                             "","", "","","",
                             "","","", "","","",
                             "","", "","","",
-                            fechaSolicitud, "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,"");
+                            fechaSolicitud, "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,
+                            "","","");
                     inventarios.add(inventario);
                     progreso.dismiss();
             }

@@ -347,8 +347,9 @@ public class Fragment_inventarios extends Fragment {
                                             tra_nombre_estatus,
                                             suc_numero_sucursal_destino,
                                             suc_numero_sucursal_origen,
-                                            fechaSolicitud,
-                                            tra_motivo,"","","","","","");
+                                            "",
+                                            tra_motivo,"","","","","",
+                                            "","","");
                                     inventarios.add(inventario);
                         }inventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario);
                         tabla_inventario.setDataAdapter(inventarioAdapter);
