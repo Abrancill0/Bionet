@@ -6,18 +6,26 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.TextView;
 import com.Danthop.bionet.Tables.SortableHistoricoTable;
 import com.Danthop.bionet.Tables.SortableInventariosTable;
+import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.HistoricoModel;
+
+import java.util.ArrayList;
 import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class HistoricoAdapter extends LongPressAwareTableDataAdapter<HistoricoModel> {
     int TEXT_SIZE = 16;
+    private List<HistoricoModel> historicoList;
+    private List<HistoricoModel> historicoListFull;
 
     public HistoricoAdapter(final Context context, final List<HistoricoModel> data, final SortableHistoricoTable tableView) {
         super(context, data, tableView);
+        historicoList=data;
+        historicoListFull = new ArrayList<>(data);
     }
 
     @Override
@@ -136,4 +144,45 @@ public class HistoricoAdapter extends LongPressAwareTableDataAdapter<HistoricoMo
         public void afterTextChanged(Editable s) {
             ordenToUpdate.setNombre_sucursal(s.toString());
         }
-    }}
+    }
+
+    @Override
+    public Filter getFilter() {
+        return HistoricoFilter;
+    }
+
+    private Filter HistoricoFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<HistoricoModel> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(historicoListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (HistoricoModel item : historicoListFull) {
+                    if (item.getArt_nombre().toLowerCase().contains(filterPattern)
+                            || item.getCat_nombre().toLowerCase().contains(filterPattern)
+                            || item.getNombre_sucursal().toLowerCase().contains(filterPattern)
+                            || item.getHis_tipo().toLowerCase().contains(filterPattern)
+                            || item.gethis_fecha_hora_creo().toString().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            historicoList.clear();
+            historicoList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+}

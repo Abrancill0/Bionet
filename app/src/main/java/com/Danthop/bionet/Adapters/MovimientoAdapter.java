@@ -5,10 +5,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.Danthop.bionet.Tables.SortableMovimientoTable;
 import com.Danthop.bionet.Tables.SortableOrdenEspecialTable;
+import com.Danthop.bionet.model.HistoricoModel;
 import com.Danthop.bionet.model.MovimientoModel;
 import com.Danthop.bionet.model.OrdenEspecialModel;
 
@@ -51,9 +53,27 @@ public class MovimientoAdapter extends LongPressAwareTableDataAdapter<Movimiento
 
     @Override
     public View getLongPressCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        final MovimientoModel movimiento = getRowData(rowIndex);
+        final MovimientoModel Movimiento = getRowData(rowIndex);
+        View renderedView = null;
 
-        return renderString("");
+        switch (columnIndex) {
+            case 1:
+                renderedView = renderEditableMovimiento(Movimiento);
+                break;
+            default:
+                renderedView = getDefaultCellView(rowIndex, columnIndex, parentView);
+        }
+
+        return renderedView;
+    }
+
+    private View renderEditableMovimiento(final MovimientoModel Inventario) {
+        final EditText editText = new EditText(getContext());
+        editText.setText(Inventario.getMovimiento_articulo_ticket());
+        editText.setPadding(20, 10, 20, 10);
+        editText.setTextSize(TEXT_SIZE);
+        editText.setSingleLine();
+        return editText;
     }
 
 
@@ -91,9 +111,9 @@ public class MovimientoAdapter extends LongPressAwareTableDataAdapter<Movimiento
 
     private static class MovimientoNameUpdater implements TextWatcher {
 
-        private OrdenEspecialModel movimientoToUpdate;
+        private MovimientoModel movimientoToUpdate;
 
-        public MovimientoNameUpdater(OrdenEspecialModel ordenToUpdate) {
+        public MovimientoNameUpdater(MovimientoModel ordenToUpdate) {
             this.movimientoToUpdate = ordenToUpdate;
         }
 
@@ -109,7 +129,9 @@ public class MovimientoAdapter extends LongPressAwareTableDataAdapter<Movimiento
 
         @Override
         public void afterTextChanged(Editable s) {
-            movimientoToUpdate.getOrden_nombre_cliente();
+            movimientoToUpdate.getMovimiento_articulo_ticket();
         }
     }
+
+
 }

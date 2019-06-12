@@ -41,6 +41,7 @@ public class TicketModel {
     private String tic_puntos_lealtad_obtenidos;
     private String tic_tiene_apartados;
     private String tic_tiene_ordenes_especiales;
+    private String tic_apa_id;
 
 
     public TicketModel(String tic_id, String tic_comision,
@@ -432,5 +433,13 @@ public class TicketModel {
 
     public void setTic_tiene_ordenes_especiales(String tic_tiene_ordenes_especiales) {
         this.tic_tiene_ordenes_especiales = tic_tiene_ordenes_especiales;
+    }
+
+    public String getTic_apa_id() {
+        return tic_apa_id;
+    }
+
+    public void setTic_apa_id(String tic_apa_id) {
+        this.tic_apa_id = tic_apa_id;
     }
 }
