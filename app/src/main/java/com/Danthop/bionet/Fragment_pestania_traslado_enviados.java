@@ -232,7 +232,14 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
                             RecibidasDestino = elemento.getString("suc_nombre_sucursal_destino");
                             suc_numero_sucursal_destino = elemento.getString("suc_numero_sucursal_destino");
                             tra_nombre_estatus = elemento.getString("tra_nombre_estatus");
-                            tra_motivo = elemento.getString("tra_motivo");
+
+                            String motivo = elemento.getString("tra_motivo");
+                            if (motivo.equals("null")){
+                                tra_motivo = "Sin observaciones";
+                            }else {
+                                tra_motivo = elemento.getString("tra_motivo");
+                            }
+
 
                             String SucursalCodigoOrigen;
                             String SucursalCodigoDestino;
