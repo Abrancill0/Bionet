@@ -60,6 +60,7 @@ public class PublicacionAdapter extends ArrayAdapter<PublicacionModel> {
     private Button atras;
     private String idcategoria;
     private String Remaining_listings;
+    private String RespuestaApi;
 
     public interface NameCategoriaSelcted {
         void sendInput(String input);
@@ -74,6 +75,7 @@ public class PublicacionAdapter extends ArrayAdapter<PublicacionModel> {
         ListaPublicaciones = ListsPublicaciones;
         bundle1 = bundle;
         fr = fg;
+
     }
 
     @NonNull
@@ -99,10 +101,6 @@ public class PublicacionAdapter extends ArrayAdapter<PublicacionModel> {
         nombre = convertView.findViewById(R.id.TextPublicacion);
         nombre.setText(name);
 
-        bundle1.putString("name", name);
-        bundle1.putString("id", id);
-        bundle1.putStringArrayList("ex",  ex );
-        bundle1.putString("Remaining_listings", Remaining_listings );
 
         nombre.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +108,11 @@ public class PublicacionAdapter extends ArrayAdapter<PublicacionModel> {
                 name = getItem(position).getName();
                 id = getItem(position).getId();
                 ex  = getItem( position ).getExceptionsCategory();
+
+                bundle1.putString("name", name);
+                bundle1.putString("id", id);
+                bundle1.putStringArrayList("ex",  ex );
+                bundle1.putString("Remaining_listings", Remaining_listings );
 
 
                 Fragment_selecciona_categoria secondFragment = new Fragment_selecciona_categoria();

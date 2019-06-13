@@ -56,6 +56,7 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
     FragmentTransaction fr;
     private ImageView atras;
     private String idcategoria;
+    private String NombrePublicacion;
 
     public interface NameCategoriaSelcted {
         void sendInput(String input);
@@ -86,6 +87,7 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
         usu_id = bundle1.getString("usu_id");
         Imagen1 = bundle1.getString("image1");
         Imagen2 = bundle1.getString("image2");
+        NombrePublicacion = bundle1.getString("name");
 
         CategoriaModel categoria = new CategoriaModel(name, id);
 
@@ -137,6 +139,7 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
                                         bundle1.putString("id_categoria", id);
                                         bundle1.putString("image1", Imagen1);
                                         bundle1.putString("image2", Imagen2);
+                                        bundle1.putString("name",NombrePublicacion);
 
                                         Fragment_ecommerce_Sincronizar_Nuevo_Prod secondFragment = new Fragment_ecommerce_Sincronizar_Nuevo_Prod();
                                         secondFragment.setArguments(bundle1);

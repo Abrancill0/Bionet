@@ -298,6 +298,7 @@ public class Login extends Activity {
                             String encodedCredentials = android.util.Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                             params.put("Authorization", "Basic " + encodedCredentials);
 
+                            System.out.println(params);
                             return params;
                         }
 
@@ -308,6 +309,7 @@ public class Login extends Activity {
                             params.put("grant_type", "authorization_code");
                             params.put("code", code);
                             params.put("redirect_uri", "bionet://callback");
+                            System.out.println(params);
                             return params;
                         }
                     };

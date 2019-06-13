@@ -300,17 +300,25 @@ public class Fragment_ventas_transacciones extends Fragment {
                 DetalleApartadoTable.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia_detalle_apartado));
                 final DetalleApartadoAdapter detalleApartadoAdapter = new DetalleApartadoAdapter(getContext(),clickedData.getArticulosApartados(),DetalleApartadoTable);
                 DetalleApartadoTable.setDataAdapter(detalleApartadoAdapter);
-
                 Button vender = dialog.findViewById(R.id.btn_aceptar_concluir);
-                vender.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        CrearTicketApartado(clickedData.getApartado_id(),clickedData.getApartado_sucursal_id());
 
-                        dialog.dismiss();
+                if(clickedData.getApartado_estatus().equals("Pagado"))
+                {
+                    vender.setVisibility(View.GONE);
+                }
+                else
+                {
+                    vender.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            CrearTicketApartado(clickedData.getApartado_id(),clickedData.getApartado_sucursal_id());
 
-                    }
-                });
+                            dialog.dismiss();
+
+                        }
+                    });
+                }
+
 
                 Button aceptar = dialog.findViewById(R.id.btn_aceptar_cerrar);
                 aceptar.setOnClickListener(new View.OnClickListener() {

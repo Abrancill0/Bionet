@@ -44,7 +44,7 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<ArticuloModel> {
 
-    int TEXT_SIZE = 14;
+    int TEXT_SIZE = 12;
     private SortableVentaArticulos tabla_venta_articulos;
     private List<ArticuloModel> Articulos;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
@@ -170,6 +170,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                 break;
 
         }
+
         return renderedView;
     }
 
@@ -190,7 +191,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     private View renderEliminar(final ArticuloModel articulo)
     {
         final Button delete = new Button(getContext());
-        delete.setPadding(20, 10, 20, 10);
+        delete.setPadding(5,2,5,2);
         delete.setBackgroundColor(getResources().getColor(R.color.white));
         delete.setDrawingCacheBackgroundColor(getResources().getColor(R.color.white));
         delete.setBackgroundResource(R.drawable.ic_delete);
@@ -222,9 +223,11 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     private View renderCantidad(final ArticuloModel articulo) {
         final ElegantNumberButton cantidad = new ElegantNumberButton(getContext());
         cantidad.setNumber(articulo.getArticulo_cantidad());
-        cantidad.setPadding(20, 10, 20, 10);
+        cantidad.setPadding(5,2,5,2);
         cantidad.setBackgroundColor(getResources().getColor(R.color.white));
         cantidad.setDrawingCacheBackgroundColor(getResources().getColor(R.color.white));
+        cantidad.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
+        cantidad.setGravity(View.TEXT_ALIGNMENT_VIEW_END);
 
         cantidad.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
             @Override
@@ -246,8 +249,10 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
         final TextView textView = new TextView( getContext() );
         textView.setText( formatter.format( Descuento ) );
-        textView.setPadding( 20, 10, 20, 10 );
+        textView.setPadding(5,2,5,2);
         textView.setTextSize( TEXT_SIZE );
+        textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
+        textView.setGravity(View.TEXT_ALIGNMENT_VIEW_END);
 
         return textView;
     }
@@ -258,7 +263,9 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
         final TextView textView = new TextView( getContext() );
         textView.setText( formatter.format( Importe ) );
-        textView.setPadding( 20, 10, 20, 10 );
+        textView.setPadding(5,2,5,2);
+        textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
+        textView.setGravity(View.TEXT_ALIGNMENT_VIEW_END);
         textView.setTextSize( TEXT_SIZE );
 
         return textView;
@@ -276,9 +283,9 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
         final TextView textView = new TextView( getContext() );
         textView.setText( formatter.format( Precio ) );
-        textView.setPadding( 20, 10, 20, 10 );
         textView.setTextSize( TEXT_SIZE );
-
+        textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
+        textView.setGravity(View.TEXT_ALIGNMENT_VIEW_END);
         return textView;
 
     }
@@ -286,8 +293,10 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
         textView.setText(value);
-        textView.setPadding(20, 10, 20, 10);
+        textView.setPadding(5,2,5,2);
         textView.setTextSize(TEXT_SIZE);
+        textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
+        textView.setGravity(View.TEXT_ALIGNMENT_VIEW_END);
         return textView;
     }
 
