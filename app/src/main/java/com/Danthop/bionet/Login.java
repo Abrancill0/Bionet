@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,9 +29,15 @@ import com.Danthop.bionet.Class.LoginService;
 import com.Danthop.bionet.Class.ServiceGenerator;
 import com.Danthop.bionet.model.LoginModel;
 import com.Danthop.bionet.model.VolleySingleton;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyLog;
+import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.android.volley.request.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.zj.usbsdk.UsbController;
 import android.os.Handler;
 import android.os.Message;
@@ -46,9 +53,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -263,18 +272,64 @@ public class Login extends Activity {
             String code = uri.getQueryParameter("code");
                 if (code != null) {
                 // get access token
-                LoginService loginService =
-                        ServiceGenerator.createService(LoginService.class, clientid, clientsecret);
-                Call<AccessToken> call = loginService.getAccessToken(code, "authorization_code");
-                try {
-                    AccessToken accessToken = call.execute().body();
 
-                    String pruebita =accessToken.toString();
+                    StringRequest request = new StringRequest(Request.Method.POST, "http://sso-dev.biocheck.net/oauth/token", new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if (!response.equals(null)) {
+                                Log.e("Your Array Response", response);
+                            } else {
+                                Log.e("Your Array Response", "Data Null");
+                            }
+                        }
+
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("error is ", "" + error);
+                        }
+                    }) {
+
+                        //This is for Headers If You Needed
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<String, String>();
+                            String credentials = clientid + ":" + clientsecret;
+                            String encodedCredentials = android.util.Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                            params.put("Authorization", "Basic " + encodedCredentials);
+
+                            return params;
+                        }
+
+                        //Pass Your Parameters here
+                        @Override
+                        protected Map<String, String> getParams() {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("grant_type", "authorization_code");
+                            params.put("code", code);
+                            params.put("redirect_uri", "bionet://callback");
+                            return params;
+                        }
+                    };
+                    RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                    queue.add(request);
 
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             } else if (uri.getQueryParameter("error") != null) {
                 // show an error message here
             }
