@@ -1,22 +1,16 @@
 package com.Danthop.bionet;
 
 import android.Manifest;
-import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.Notification;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.hardware.usb.UsbDevice;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -29,6 +23,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Class.AccessToken;
+import com.Danthop.bionet.Class.LoginService;
+import com.Danthop.bionet.Class.ServiceGenerator;
 import com.Danthop.bionet.model.LoginModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Response;
@@ -43,30 +40,25 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.logging.LogRecord;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.nio.file.*;
 
 
 import static com.android.volley.Request.Method;
 
-import java.util.Base64;
-
-import zj.com.customize.sdk.Other;
+import ca.mimic.oauth2library.OAuth2Client;
+import ca.mimic.oauth2library.OAuthResponse;
+import ca.mimic.oauth2library.OAuthResponseCallback;
+import retrofit2.Call;
 
 //import org.sdf.danielsz.OAuth2Client;
 //import org.sdf.danielsz.Token;
@@ -97,8 +89,9 @@ public class Login extends Activity {
 
     private String clientid = "danthop-dev";
     private String clientsecret = "001824";
-    private String redirectUri = "http://187.189.192.150:8010";
-    private String UrlSend = " http://sso-dev.biocheck.net/oauth/token";
+    //private String redirectUri = "http://187.189.192.150:8010";
+    private String redirectUri = "bionet://callback";
+    private String UrlSend = "http://sso-dev.biocheck.net/oauth/authorize";
 
     @SuppressLint({"HandlerLeak"})
     private final Handler mHandler = new Handler() {
@@ -128,6 +121,57 @@ public class Login extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+// http://sso-dev.biocheck.net/oauth/authorize?grant_type=authorization_code&client_id=danthop-dev &client_secret=001824&redirect_uri= http://187.189.192.150:8010/
+
+
+      //  http://sso-dev.biocheck.net/oauth/authorize?response_type=code&client_id=danthop-dev&redirect_uri=http://127.0.0.1:8000
+
+      //  OAuth2Client client = new OAuth2Client.Builder("gmartinez@marstom.com", "001824", "danthop-dev", "001824", "http://sso-dev.biocheck.net").build();
+      //  OkHttpClient client = new OkHttpClient();
+
+     //   OAuth2Client.Builder builder = new OAuth2Client.Builder("danthop-dev", "001824", "http://sso-dev.biocheck.net/login")
+     //           .grantType("autorization_code")
+     //           .scope("read write")
+     //           .username("gmartinez@marstom.com")
+     //           .password("001824")
+     //           .okHttpClient(client);
+
+
+       // OAuth2Client client1 = builder.build();
+
+
+       // OAuth2Client.Builder builder = new OAuth2Client.Builder("danthop-dev", "001824", "http://sso-dev.biocheck.net/oauth/token");
+       // final OAuth2Client client = builder.build();
+
+      //  OAuthResponse Token1;
+
+      //  try {
+
+
+           // client.refreshAccessToken("implicit");
+     //     Token1 =  client.requestAccessToken();
+     //   } catch (IOException e) {
+     //       e.printStackTrace();
+     //   }
+
+
+        // HTTP Status code
+
+       // OkHttpClient client = new OkHttpClient();
+
+     //   OAuth2Client.Builder builder = new OAuth2Client.Builder("danthop-dev", "001824", "http://sso-dev.biocheck.net")
+      //          .grantType("autorization_code")
+     //           .scope("read write")
+     //           .username("gmartinez@marstom.com")
+     //           .password("001824")
+     //           .okHttpClient(client);
+
+
+       // OAuth2Client.Builder builder = new OAuth2Client.Builder("client-id", "client-secret", "site")
+       //         .okHttpClient(client);
+
+
 
 
 
@@ -198,25 +242,42 @@ public class Login extends Activity {
     }
 
 
-    private class OnTokenAcquired implements AccountManagerCallback<Bundle> {
-        @Override
-        public void run(AccountManagerFuture<Bundle> result) {
-            // Get the result of the operation from the AccountManagerFuture.
-            Bundle bundle = null;
-            try {
-                bundle = result.getResult();
-            } catch (AuthenticatorException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (OperationCanceledException e) {
-                e.printStackTrace();
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // the intent filter defined in AndroidManifest will handle the return from ACTION_VIEW intent
+        Uri uri = getIntent().getData();
+
+        String URLtratada ="";
+        String URlRedirecttratada ="";
+
+        if (uri != null)
+        {
+            URLtratada=uri.toString().toLowerCase();
+            URlRedirecttratada=redirectUri.toString().toLowerCase();
+        }
+
+        if (uri != null &&  URLtratada.toString().startsWith(URlRedirecttratada)) {
+            // use the parameter your API exposes for the code (mostly it's "code")
+            String code = uri.getQueryParameter("code");
+                if (code != null) {
+                // get access token
+                LoginService loginService =
+                        ServiceGenerator.createService(LoginService.class, clientid, clientsecret);
+                Call<AccessToken> call = loginService.getAccessToken(code, "authorization_code");
+                try {
+                    AccessToken accessToken = call.execute().body();
+
+                    String pruebita =accessToken.toString();
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (uri.getQueryParameter("error") != null) {
+                // show an error message here
             }
-
-            // The token is a named value in the bundle. The name of the value
-            // is stored in the constant AccountManager.KEY_AUTHTOKEN.
-            String token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-
         }
     }
 
@@ -489,53 +550,55 @@ public class Login extends Activity {
 
     public void PDFIMprimie (View v)
     {
-        usbCtrl.close();
+        Intent intent = new Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(UrlSend + "?response_type=code&client_id=" + clientid + "&scope=read+write&redirect_uri=" + redirectUri));
+        startActivity(intent);
 
-       // int i =0;
+       // usbCtrl.close();
 
-        for(int i = 0; i < 8; ++i) {
-            dev = usbCtrl.getDev(this.u_infor[i][0], this.u_infor[i][1]);
-            if (dev != null) {
-                break;
-            }
-        }
+       //// int i =0;
 
-        if (dev != null) {
-            if (!usbCtrl.isHasPermission(dev)) {
-                usbCtrl.getPermission(dev);
-            } else {
-               // Toast.makeText(this.getApplicationContext(), this.getString(2130968584), 0).show();
+       // for(int i = 0; i < 8; ++i) {
+       //     dev = usbCtrl.getDev(this.u_infor[i][0], this.u_infor[i][1]);
+       //     if (dev != null) {
+       //         break;
+       //     }
+       // }
 
-            }
-        }
+      //  if (dev != null) {
+      //      if (!usbCtrl.isHasPermission(dev)) {
+       //         usbCtrl.getPermission(dev);
+       //     } else {
+       //        // Toast.makeText(this.getApplicationContext(), this.getString(2130968584), 0).show();
 
-        byte[] bytes = new byte[0];
-        try {
-            bytes = convertDocToByteArray("/storage/emulated/0/DCIM/PDFTicket/Ticket.pdf");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+       //     }
+      //  }
 
-        String stream = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            stream = Base64.getEncoder().encodeToString(bytes);
-        }
-        byte[] newBytes = new byte[0];
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            newBytes = Base64.getDecoder().decode(stream);
-        }
-        try {
-            convertByteArrayToDoc("/storage/emulated/0/DCIM/PDFTicket/Ticket.pdf", newBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+     //   byte[] bytes = new byte[0];
+     //   try {
+     //       bytes = convertDocToByteArray("/storage/emulated/0/DCIM/PDFTicket/Ticket.pdf");
+    //    } catch (IOException e) {
+    //        e.printStackTrace();
+    //    }
+
+    //    String stream = null;
+    //    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+    //        stream = Base64.getEncoder().encodeToString(bytes);
+   //     }
+   //     byte[] newBytes = new byte[0];
+   //     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+   //         newBytes = Base64.getDecoder().decode(stream);
+   //     }
+   //     try {
+    //        convertByteArrayToDoc("/storage/emulated/0/DCIM/PDFTicket/Ticket.pdf", newBytes);
+    //    } catch (IOException e) {
+    //        e.printStackTrace();
+   //     }
 
         //String datastring = bytesToHex(bytes);
         //this.SendDataString("datastring");
-        this.SendDataByte(bytes);
-
-
-
+     //   this.SendDataByte(bytes);
 
 
     }
