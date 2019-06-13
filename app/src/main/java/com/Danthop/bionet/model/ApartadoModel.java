@@ -3,6 +3,7 @@ package com.Danthop.bionet.model;
 import java.util.List;
 
 public class ApartadoModel {
+    String Apartado_id;
     String Apartado_ticket_id;
     String Apartado_cliente_id;
     String Apartado_nombre_cliente;
@@ -115,5 +116,13 @@ public class ApartadoModel {
 
     public void setApartado_estatus(String apartado_estatus) {
         Apartado_estatus = apartado_estatus;
+    }
+
+    public String getApartado_id() {
+        return Apartado_id;
+    }
+
+    public void setApartado_id(String apartado_id) {
+        Apartado_id = apartado_id;
     }
 }

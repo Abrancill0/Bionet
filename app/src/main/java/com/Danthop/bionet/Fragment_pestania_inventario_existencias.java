@@ -272,8 +272,8 @@ private void Load_ExistenciasInventario() {
                                 "",
                                 "",
                                 "",
-                                fechaSolicitud,
-                                "","","","","","","");
+                                "",
+                                "","","","","","","","","");
 
                         inventarios.add(inventario);
                     }final InventarioExistenciasAdapter ExistenciasAdapter = new InventarioExistenciasAdapter(getContext(), inventarios, tabla_inventario_existencias);

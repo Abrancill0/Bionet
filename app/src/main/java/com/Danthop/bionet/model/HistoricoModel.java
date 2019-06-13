@@ -25,7 +25,7 @@ public class HistoricoModel {
     private String his_tipo;
     private String his_cantidad;
     private String observacion;
-    private Date his_fecha_hora_creo;
+    private String his_fecha_hora_creo;
 
 
 
@@ -48,7 +48,7 @@ public class HistoricoModel {
                            String his_tipo,
                            String his_cantidad,
                            String observacion,
-                           Date his_fecha_hora_creo)
+                           String his_fecha_hora_creo)
     {
 
         this.sku = sku;
@@ -182,8 +182,8 @@ public class HistoricoModel {
     }
     public void setobservacion(String observacion) { this.observacion = observacion; }
 
-    public Date gethis_fecha_hora_creo() {return his_fecha_hora_creo; }
-    public void sethis_fecha_hora_creo(Date his_fecha_hora_creo) { this.his_fecha_hora_creo = his_fecha_hora_creo; }
+    public String gethis_fecha_hora_creo() {return his_fecha_hora_creo; }
+    public void sethis_fecha_hora_creo(String his_fecha_hora_creo) { this.his_fecha_hora_creo = his_fecha_hora_creo; }
 
 
 }

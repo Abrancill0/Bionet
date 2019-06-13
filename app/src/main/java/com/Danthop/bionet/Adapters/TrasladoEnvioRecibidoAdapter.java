@@ -100,7 +100,7 @@ public class TrasladoEnvioRecibidoAdapter extends LongPressAwareTableDataAdapter
     }
 
     private View renderFecha(final InventarioModel Inventario) {
-        return renderString( String.valueOf( Inventario.getfechaSolicitud() ) );
+        return renderString( String.valueOf( Inventario.getfechaSolicitud()) );
     }
 
 

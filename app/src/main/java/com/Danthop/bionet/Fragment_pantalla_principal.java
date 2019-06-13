@@ -285,7 +285,8 @@ private void LoadPocasExistencias(){
                                     "","", "","","",
                                     "","","", "","","",
                                     "","", "","","",
-                                    fechaSolicitud, "","","","","","","");
+                                    "", "","","","","","",
+                                    "","","");
                             inventarios.add(inventario);
                         }
                     }

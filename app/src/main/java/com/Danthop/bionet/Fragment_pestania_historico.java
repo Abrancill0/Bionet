@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Toast;
 import com.Danthop.bionet.Adapters.HistoricoAdapter;
 import com.Danthop.bionet.Tables.SortableHistoricoTable;
@@ -29,6 +30,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -68,7 +70,11 @@ public class Fragment_pestania_historico extends Fragment {
     private String his_fecha_hora_creo;
     private String Sucursal;
     private Long timestamp;
+    private String FechaconFormato;
     private ProgressDialog progressDialog;
+
+    private HistoricoAdapter HistoricoAdapter;
+    private SearchView Buscar;
 
     public Fragment_pestania_historico() {
         // Required empty public constructor
@@ -103,6 +109,20 @@ public class Fragment_pestania_historico extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_inventario_existencias()).commit();
+            }
+        });
+
+        Buscar = v.findViewById(R.id.buscar_historico);
+        Buscar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                HistoricoAdapter.getFilter().filter(newText);
+                return false;
             }
         });
 
@@ -205,15 +225,27 @@ public class Fragment_pestania_historico extends Fragment {
                             RespuestaFecha = elemento.getJSONObject("his_fecha_hora_creo");
                             timestamp = RespuestaFecha.getLong("seconds");
 
-                            Timestamp ts = new Timestamp(timestamp);
-                            //Date date = new  Date (ts.getTime());
+                            Timestamp stamp = new Timestamp(timestamp);
+                            Date date_f = new Date(stamp.getTime() * 1000L);
+
+                            String Formato = "dd/MM/yyyy";
+                            SimpleDateFormat formatter = new SimpleDateFormat(Formato);
+
+                            FechaconFormato = formatter.format(date_f.getTime());
+
+                          /*  String JsonTimeStamp = RespuestaFecha.getString("seconds");
+                            Long TimeStamp = Long.parseLong(JsonTimeStamp);
+
+                            Timestamp ts = new Timestamp(TimeStamp);
                             Date date = ts;
 
-                            long timestamp = date.getTime();
+                            String Formato = "dd/MM/yyyy";
+                            SimpleDateFormat formatter = new SimpleDateFormat(Formato);
 
-                            /*Timestamp TS = new Timestamp( timestamp);
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            formatter.format( TS );*/
+                            //Calendar calendar = Calendar.getInstance();
+                            //calendar.setTimeInMillis(TimeStamp);
+
+                            FechaconFormato = formatter.format(date.getTime());*/
 
 
                             String var = elemento.getString("his_observaciones");
@@ -243,10 +275,10 @@ public class Fragment_pestania_historico extends Fragment {
                                     his_tipo,
                                     his_cantidad,
                                     observacion,
-                                    date);
+                                    FechaconFormato);
                             historico.add(historicos);
                         }
-                        final HistoricoAdapter HistoricoAdapter = new HistoricoAdapter(getContext(), historico, tabla_historico);
+                        HistoricoAdapter = new HistoricoAdapter(getContext(), historico, tabla_historico);
                          tabla_historico.setDataAdapter(HistoricoAdapter);
                      }
                 } catch (JSONException e) {

@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -161,6 +162,8 @@ public class Fragment_ventas_transacciones extends Fragment {
     private String contenidoImprimir;
     Handler handler;
 
+    private MovimientoAdapter movimientoAdapter;
+
     private List<ArticuloModel> ListaArticulosTicket = new ArrayList<>();
 
     private int[][] u_infor;
@@ -211,6 +214,7 @@ public class Fragment_ventas_transacciones extends Fragment {
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
         progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
 
 
         fr = getFragmentManager().beginTransaction();
@@ -297,6 +301,17 @@ public class Fragment_ventas_transacciones extends Fragment {
                 final DetalleApartadoAdapter detalleApartadoAdapter = new DetalleApartadoAdapter(getContext(),clickedData.getArticulosApartados(),DetalleApartadoTable);
                 DetalleApartadoTable.setDataAdapter(detalleApartadoAdapter);
 
+                Button vender = dialog.findViewById(R.id.btn_aceptar_concluir);
+                vender.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CrearTicketApartado(clickedData.getApartado_id(),clickedData.getApartado_sucursal_id());
+
+                        dialog.dismiss();
+
+                    }
+                });
+
                 Button aceptar = dialog.findViewById(R.id.btn_aceptar_cerrar);
                 aceptar.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -312,6 +327,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                         dialog.hide();
                     }
                 });
+
 
             }
         };
@@ -366,8 +382,6 @@ public class Fragment_ventas_transacciones extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 progressDialog.show();
-                LoadApartados();
-                LoadOrdenes();
                 LoadMovimientos();
             }
             public void onNothingSelected(AdapterView<?> parent)
@@ -380,8 +394,6 @@ public class Fragment_ventas_transacciones extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 progressDialog.show();
-                LoadApartados();
-                LoadOrdenes();
                 LoadMovimientos();
             }
             public void onNothingSelected(AdapterView<?> parent)
@@ -543,11 +555,9 @@ public class Fragment_ventas_transacciones extends Fragment {
                             SucursalID.add(id);
                         }
                         SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,SucursalName));
-
                     }
                     else
                     {
-                        progressDialog.dismiss();
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
@@ -558,7 +568,6 @@ public class Fragment_ventas_transacciones extends Fragment {
 
                 } catch (JSONException e) {
 
-                    progressDialog.dismiss();
                     Toast toast1 =
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
 
@@ -578,7 +587,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
 
                         toast1.show();
-                        progressDialog.dismiss();
+
 
 
                     }
@@ -616,6 +625,8 @@ public class Fragment_ventas_transacciones extends Fragment {
                                     for (int f=0; f<InfoApartado.length();f++)
                                     {
                                         JSONObject elemento = InfoApartado.getJSONObject(f);
+                                        JSONObject ApaIDNodo = elemento.getJSONObject("apa_id");
+                                        String apaID = ApaIDNodo.getString("uuid");
                                         JSONObject NodoIDTicket = elemento.getJSONObject("apa_id_ticket");
                                         String IDTicket = NodoIDTicket.getString("uuid");
                                         JSONObject NodoIDSucursal = elemento.getJSONObject("apa_id_sucursal");
@@ -704,6 +715,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                                 Estatus,
                                                 ListaDeArticulosApartados
                                         );
+                                        Apartado.setApartado_id(apaID);
                                         Lista_de_apartados.add(Apartado);
                                     }
 
@@ -711,6 +723,11 @@ public class Fragment_ventas_transacciones extends Fragment {
                                     apartadoAdapter.notifyDataSetChanged();
                                     TablaApartados.setDataAdapter(apartadoAdapter);
 
+                                }
+                                else{
+                                    Toast toast1 =
+                                            Toast.makeText(getContext(),
+                                                    "Error del servidor", Toast.LENGTH_LONG);
 
                                 }
                             } catch (JSONException e) {
@@ -856,7 +873,11 @@ public class Fragment_ventas_transacciones extends Fragment {
                                     ordenAdapter.notifyDataSetChanged();
                                     TablaOrdenes.setDataAdapter(ordenAdapter);
 
-
+                                }
+                                else{
+                                    Toast toast1 =
+                                            Toast.makeText(getContext(),
+                                                    "Error del servidor", Toast.LENGTH_LONG);
                                 }
                             } catch (JSONException e) {
                                 Toast toast1 =
@@ -886,6 +907,7 @@ public class Fragment_ventas_transacciones extends Fragment {
 
 
     public void LoadMovimientos(){
+        progressDialog.show();
         Lista_de_movimientos.clear();
         if(FormaPagoName.isEmpty()&&UsuarioVentaName.isEmpty()) {
             try {
@@ -916,37 +938,6 @@ public class Fragment_ventas_transacciones extends Fragment {
 
                                         JSONObject RespuestaResultado = response.getJSONObject("resultado");
 
-                                        transacciones.setText(RespuestaResultado.getString("floatNumeroTransacciones"));
-                                        total_ventas.setText(RespuestaResultado.getString("floatTotalEnVentas"));
-                                        String mas_vendido=RespuestaResultado.getString("stringArticuloMasVendido");
-                                        if(mas_vendido.equals("null"))
-                                        {
-                                            best_seller.setText("ninguno");
-                                        }
-                                        else
-                                        {
-                                            best_seller.setText(mas_vendido);
-                                        }
-
-
-                                        JSONArray Movimientos = RespuestaResultado.getJSONArray("aMovimientos");
-                                        for (int f = 0; f < Movimientos.length(); f++) {
-                                            JSONObject elemento = Movimientos.getJSONObject(f);
-                                            String fecha = elemento.getString("mov_fecha_hora_creo");
-                                            String NombreSucursal = elemento.getString("suc_nombre");
-                                            String NumSucursal = elemento.getString("suc_numero");
-                                            String Monto = elemento.getString("tic_importe_total");
-
-                                            JSONArray Articulos = elemento.getJSONArray("aArticulos");
-                                            JSONObject Tic_id = elemento.getJSONObject("tic_id");
-                                            String Movimiento_tic_id = Tic_id.getString("uuid");
-                                            JSONObject nodo = Articulos.getJSONObject(0);
-                                            String Articulo = nodo.getString("tar_nombre_articulo");
-
-                                            MovimientoModel movimiento = new MovimientoModel(fecha, NombreSucursal, NumSucursal, Articulo, Monto,Movimiento_tic_id);
-                                            Lista_de_movimientos.add(movimiento);
-                                        }
-
                                         JSONArray FormasPago = RespuestaResultado.getJSONArray("aFormasPago");
                                         for (int z = 0; z < FormasPago.length(); z++) {
                                             JSONObject elemento = FormasPago.getJSONObject(z);
@@ -966,43 +957,22 @@ public class Fragment_ventas_transacciones extends Fragment {
                                             UsuarioVentaID.add(id);
                                         }
 
-                                        final MovimientoAdapter movimientoAdapter = new MovimientoAdapter(getContext(), Lista_de_movimientos, TablaMovimientos);
-                                        movimientoAdapter.notifyDataSetChanged();
-                                        TablaMovimientos.setDataAdapter(movimientoAdapter);
-
                                         SpinnerFormaPago.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, FormaPagoName));
 
                                         SpinnerUsuarioVenta.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, UsuarioVentaName));
-
-                                        handler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                progressDialog.dismiss();
-                                            }
-                                        }, 3000);
                                     }
                                     else
                                     {
                                         Toast toast1 =
                                                 Toast.makeText(getContext(), "", Toast.LENGTH_LONG);
                                         toast1.show();
-                                        handler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                progressDialog.dismiss();
-                                            }
-                                        }, 3000);
+                                        progressDialog.dismiss();
                                     }
                                 } catch (JSONException e) {
                                     Toast toast1 =
                                             Toast.makeText(getContext(),
                                                     String.valueOf(e), Toast.LENGTH_LONG);
-                                    handler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            progressDialog.dismiss();
-                                        }
-                                    }, 3000);
+                                    progressDialog.dismiss();
                                 }
                             }
                         },
@@ -1012,12 +982,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                 Toast toast1 =
                                         Toast.makeText(getContext(),
                                                 String.valueOf(error), Toast.LENGTH_LONG);
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        progressDialog.dismiss();
-                                    }
-                                }, 3000);
+                                progressDialog.dismiss();
                             }
                         }
                 );
@@ -1026,12 +991,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                 VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
             } catch (Error e) {
                 e.printStackTrace();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
+                progressDialog.dismiss();
             }
 
         }
@@ -1095,35 +1055,19 @@ public class Fragment_ventas_transacciones extends Fragment {
                                             Lista_de_movimientos.add(movimiento);
                                         }
 
-                                        final MovimientoAdapter movimientoAdapter = new MovimientoAdapter(getContext(), Lista_de_movimientos, TablaMovimientos);
+                                        movimientoAdapter = new MovimientoAdapter(getContext(),Lista_de_movimientos,TablaMovimientos);
                                         movimientoAdapter.notifyDataSetChanged();
                                         TablaMovimientos.setDataAdapter(movimientoAdapter);
-
-                                        handler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                progressDialog.dismiss();
-                                            }
-                                        }, 3000);
+                                        progressDialog.dismiss();
                                     }
                                     else {
-                                        handler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                progressDialog.dismiss();
-                                            }
-                                        }, 3000);
+                                        progressDialog.dismiss();
                                     }
                                 } catch (JSONException e) {
                                     Toast toast1 =
                                             Toast.makeText(getContext(),
                                                     String.valueOf(e), Toast.LENGTH_LONG);
-                                    handler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            progressDialog.dismiss();
-                                        }
-                                    }, 3000);
+                                    progressDialog.dismiss();
                                 }
                             }
                         },
@@ -1133,12 +1077,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                 Toast toast1 =
                                         Toast.makeText(getContext(),
                                                 String.valueOf(error), Toast.LENGTH_LONG);
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        progressDialog.dismiss();
-                                    }
-                                }, 3000);
+                                progressDialog.dismiss();
                             }
                         }
                 );
@@ -1147,12 +1086,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                 VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
             } catch (Error e) {
                 e.printStackTrace();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
+                progressDialog.dismiss();
             }
 
         }
@@ -1834,6 +1768,97 @@ public class Fragment_ventas_transacciones extends Fragment {
 
         System.arraycopy(strData, 0, command, 9, strData.length);
         return command;
+    }
+
+    private void CrearTicketApartado(String apa_id, String id_sucursal)
+    {
+        progressDialog.show();
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("apa_id", apa_id);
+            request.put("tic_id_sucursal", id_sucursal);
+            request.put("tic_id", "");
+            request.put("tic_id_cliente", "");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/apartados/store_ticket_apartado";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONObject RespuestaNodoTicket = null;
+                JSONObject TicketIDNodo = null;
+                JSONArray NodoTicketArticulos = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+
+                        Respuesta = response.getJSONObject("resultado");
+                        RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
+                        TicketIDNodo = RespuestaNodoTicket.getJSONObject("tic_id");
+                        String TicketIDVenta = TicketIDNodo.getString("uuid");
+
+                        JSONObject SucIdNodo = RespuestaNodoTicket.getJSONObject("tic_id_sucursal");
+                        String Suc_id = SucIdNodo.getString("uuid");
+
+
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString("tic_id", TicketIDVenta);
+                        bundle.putString("suc_id", Suc_id);
+                        bundle.putString("apa_id", apa_id);
+
+
+                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+                        Fragment_Ventas secondFragment = new Fragment_Ventas();
+                        secondFragment.setArguments(bundle);
+
+                        fragmentTransaction.replace(R.id.fragment_container, secondFragment);
+                        fragmentTransaction.commit();
+                        progressDialog.dismiss();
+
+
+
+                    } else {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
     }
 
 

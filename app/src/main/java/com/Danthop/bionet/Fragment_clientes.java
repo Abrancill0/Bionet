@@ -138,6 +138,7 @@ public class Fragment_clientes extends Fragment {
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
+                progressDialog.show();
                 Muestra_clientes();
 
             }
@@ -595,10 +596,6 @@ public class Fragment_clientes extends Fragment {
         );
         postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
-    }
-
-    private void LoadListenerTable(){
-
     }
 
 

@@ -97,7 +97,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     private String UUIDarticulo;
     private String UUIDvariante;
     private String UUIDmodificador;
-    private Date fechaSolicitud;
+    private String fechaSolicitud;
     private Button btn_agregar_articulo;
     private LinearLayout LayoutFecha;
     private LinearLayout LayoutelegirArticulos;
@@ -134,7 +134,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         tabla_inventario = (SortableInventariosTable) v.findViewById(R.id.tabla_articulos);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "", "Artículo", "Categoría", "Sucursal", "Existencias", "Cantidad");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        simpleHeader.setTextSize( 18 );
+        simpleHeader.setTextSize( 16 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
         tableColumnWeightModel.setColumnWeight(0, 1);
@@ -258,7 +258,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         //SpinnerFecha=(Spinner)v.findViewById(R.id.SpinnerFecha);
         LayoutFecha = v.findViewById(R.id.Layoutfecha);
        // LayoutFecha.setVisibility(View.GONE);
-        LayoutelegirArticulos = v.findViewById(R.id.LayoutelegirArticulos);
+        //LayoutelegirArticulos = v.findViewById(R.id.LayoutelegirArticulos);
         btn_agregar_articulo = v.findViewById(R.id.btn_agregar_articulo);
 
         SpinnerTipoTraslado = (Spinner) v.findViewById(R.id.tipos_traslados);
@@ -269,7 +269,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         SpinnerTipoTraslado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                   // VerificarTipoTraslado();
+                    VerificarTipoTraslado();
 
             }
             public void onNothingSelected(AdapterView<?> parent) {
@@ -314,7 +314,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
             }
         });
 
-        //VerificarTipoTraslado();
+        VerificarTipoTraslado();
         LoadListenerTable();
         SpinnerSucursales();
 
@@ -420,7 +420,8 @@ private void MuestraArticulos(){
                                 "","", "","","",
                                 "","","", "","","",
                                 "","", "","","",
-                                fechaSolicitud, "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,"");
+                                "", "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,
+                                "","","");
                         inventarios.add(inventario);
                     }
 
@@ -432,6 +433,7 @@ private void MuestraArticulos(){
                         {
                             inventarios.remove(i);
                         }
+                        progreso.dismiss();
 
                     }
 
@@ -462,7 +464,7 @@ private void MuestraArticulos(){
 
 private void MuestraArticulossinApi(){
 
-        JSONObject Resultado = null;
+    JSONObject Resultado = null;
         JSONArray Articulo = null;
         JSONObject RespuestaUUID = null;
         JSONObject RespuestaExistencias= null;
@@ -476,11 +478,14 @@ private void MuestraArticulossinApi(){
                 status = Integer.parseInt(RespuestaTodo.getString("estatus"));
                 String Mensaje = RespuestaTodo.getString("mensaje");
 
+
             if (status == 1) {
 
-            }
-                Resultado = RespuestaTodo.getJSONObject("resultado");
+                progreso.dismiss();
 
+            }
+                progreso.dismiss();
+                Resultado = RespuestaTodo.getJSONObject("resultado");
                 Articulo = Resultado.getJSONArray("aArticuloExistencias");
                 inventarioModel = new String[Articulo.length()][4];
 
@@ -503,7 +508,7 @@ private void MuestraArticulossinApi(){
                     RespuestaExistencias = elemento.getJSONObject("exi_cantidad");
                     existencia = RespuestaExistencias.getString("value");
 
-                    cantidad = "0";
+                    //cantidad = "0";
                     UUIDmodificador="";
 
                     //Variantes_Modificadores_SKU
@@ -540,15 +545,16 @@ private void MuestraArticulossinApi(){
                             producto = NombreCompleto;
                         }
                     }
-
                     final InventarioModel inventario = new InventarioModel(
                             sku, producto, existencia, categoria, "", nombre_sucursal,
                             "","","","","",
                             "","", "","","",
                             "","","", "","","",
                             "","", "","","",
-                            fechaSolicitud, "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,"");
+                            fechaSolicitud, "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,
+                            "","","");
                     inventarios.add(inventario);
+                    progreso.dismiss();
             }
 
 
@@ -559,27 +565,20 @@ private void MuestraArticulossinApi(){
                     if(inventarios.get(i).getSuc_id() != SucursalID.get(SpinnerSucursal.getSelectedItemPosition()) )
                     {
                         inventarios.remove(i);
-                    }
 
+                    }
                 }
             }
-
-
                 TrasladoAdapter = new TrasladoAdapter(getContext(), inventarios,tabla_inventario,ArticulosTraslados);
                 tabla_inventario.setDataAdapter(TrasladoAdapter);
 
             } catch (JSONException e) {
+            progreso.dismiss();
             e.printStackTrace();
-
-
         }
-
-
-
-
     }
 
-/*private void VerificarTipoTraslado (){
+private void VerificarTipoTraslado (){
         String opcion;
         opcion = SpinnerTipoTraslado.getSelectedItem().toString();
         if(opcion.equals("Traslado temporal")) {
@@ -589,7 +588,7 @@ private void MuestraArticulossinApi(){
             LayoutFecha.setVisibility(View.GONE);
             TipoTraslado = "false";
         }
-    }*/
+    }
 
 private void LoadListenerTable() {
     tablaElegirArticuloListener = new TableDataClickListener<InventarioModel>() {

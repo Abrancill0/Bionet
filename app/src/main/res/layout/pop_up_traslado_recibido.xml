@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:table="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="720dp"
+    android:layout_height="350dp"
+    android:layout_gravity="center"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".9"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".9"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".9"
+                android:background="@color/colorPrimaryDark"
+                android:gravity="center"
+
+                android:text="Detalle de solicitud de traslado"
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textStyle="bold"
+                android:textSize="24dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".6"
+                android:background="@color/colorPrimaryDark"
+                android:gravity="center"
+                android:text="Acepta la solicitud o rechazala."
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textSize="20dp" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".5">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".5"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:orientation="vertical"
+                        android:padding="5dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:background="@drawable/pestanas_desplegables">
+
+                            <TextView
+                                android:id="@+id/motivo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Motivo de traslado:"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/motivotraslado"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:padding="1dp"
+                                android:textSize="18sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:background="@drawable/pestanas_desplegables">
+
+                            <TextView
+                                android:id="@+id/articulos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Estatus de solicitud:"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/articulostraslados"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:padding="1dp"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:background="@drawable/pestanas_desplegables">
+
+                            <TextView
+                                android:id="@+id/cantidad"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Nombre Estatus:"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/cantidadtraslado"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:padding="1dp"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".85">
+
+            <Button
+                android:id="@+id/aceptar_solicitud"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/btn"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Aceptar solicitud"
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textSize="22dp" />
+
+            <Button
+                android:id="@+id/rechazar_solicitud"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/btn"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Rechazar Solicitud"
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textSize="22dp" />
+
+            <Button
+                android:id="@+id/cerrar_ventana"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/gray2"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Cerrar"
+                android:textAllCaps="false"
+                android:textColor="@color/vpi__bright_foreground_disabled_holo_dark"
+                android:textSize="22dp" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

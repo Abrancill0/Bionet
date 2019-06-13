@@ -34,7 +34,7 @@ public class InventarioModel {
     private String tra_nombre_estatus;
     private String suc_numero_sucursal_destino;
     private String suc_numero_sucursal_origen;
-    private Date fechaSolicitud;
+    private String fechaSolicitud;
     private String tra_motivo;
     private String UUIDarticulo;
     private String UUIDvariante;
@@ -42,6 +42,8 @@ public class InventarioModel {
     private String UUIDexistencias;
     private String cantidad;
     private String nombre_cliente;
+    private String status_solicitud;
+    private String status_nombre;
 
 
 
@@ -72,14 +74,16 @@ public class InventarioModel {
                            String tra_nombre_estatus,
                            String suc_numero_sucursal_destino,
                            String suc_numero_sucursal_origen,
-                           Date fechaSolicitud,
+                           String fechaSolicitud,
                            String tra_motivo,
                            String UUIDarticulo,
                            String UUIDvariante,
                            String UUIDmodificador,
                            String UUIDexistencias,
                            String cantidad,
-                           String nombre_cliente)
+                           String nombre_cliente,
+                           String status_solicitud,
+                           String status_nombre)
     {
 
         this.sku = sku;
@@ -117,6 +121,8 @@ public class InventarioModel {
         this.UUIDexistencias = UUIDexistencias;
         this.cantidad = cantidad;
         this.nombre_cliente = nombre_cliente;
+        this.status_solicitud = status_solicitud;
+        this.status_nombre = status_nombre;
     }
 
     public String getSku() { return sku; }
@@ -248,8 +254,8 @@ public class InventarioModel {
     public String getsuc_numero_sucursal_origen() {return suc_numero_sucursal_origen; }
     public void setsuc_numero_sucursal_origen(String suc_numero_sucursal_origen) { this.suc_numero_sucursal_origen = suc_numero_sucursal_origen; }
 
-    public Date getfechaSolicitud() {return fechaSolicitud; }
-    public void setfechaSolicitud(Date fechaSolicitud) { this.fechaSolicitud = fechaSolicitud; }
+    public String getfechaSolicitud() {return fechaSolicitud; }
+    public void setfechaSolicitud(String fechaSolicitud) { this.fechaSolicitud = fechaSolicitud; }
 
     public String gettra_motivo() {return tra_motivo; }
     public void settra_motivo(String tra_motivo) { this.tra_motivo = tra_motivo; }
@@ -272,5 +278,9 @@ public class InventarioModel {
     public String getnombre_cliente() {return nombre_cliente; }
     public void setnombre_cliente(String nombre_cliente) { this.nombre_cliente = nombre_cliente; }
 
+    public String getstatus_solicitud() {return  status_solicitud; }
+    public void  setstatus_solicitud(String status_solicitud) { this.status_solicitud = status_solicitud; }
 
+    public String getstatus_nombre() { return  status_nombre; }
+    public void  setstatus_nombre(String status_nombre) { this.status_nombre = status_nombre; }
 }

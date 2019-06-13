@@ -122,7 +122,8 @@ public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioMo
                             "","", "","","",
                             "","","", "","","",
                             "","", "","","",
-                            fechaSolicitud, "",Inventario.getUUIDarticulo(),Inventario.getUUIDvariante(),Inventario.getUUIDmodificador(),Inventario.getUUIDexistencias(),String.valueOf(ElegantButtoncantidad),"");
+                            Inventario.getfechaSolicitud(), "",Inventario.getUUIDarticulo(),Inventario.getUUIDvariante(),Inventario.getUUIDmodificador(),Inventario.getUUIDexistencias(),String.valueOf(ElegantButtoncantidad),
+                            "","","");
                     ArticulosTraslados.add(inventarioM);
 
                 }
