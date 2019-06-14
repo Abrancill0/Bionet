@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbDevice;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -28,22 +27,17 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ClienteAdapter;
 import com.Danthop.bionet.Adapters.ImpuestoAdapter;
-import com.Danthop.bionet.Adapters.ListaTicketsAdapter;
 import com.Danthop.bionet.Adapters.MetodoPagoAdapter;
-import com.Danthop.bionet.Adapters.NotificacionAdapter;
 import com.Danthop.bionet.Adapters.SeleccionaApartadoAdapter;
 import com.Danthop.bionet.Adapters.SeleccionaOrdenEspecialAdapter;
 import com.Danthop.bionet.Adapters.SeleccionarArticuloVentaAdapter;
-import com.Danthop.bionet.Adapters.SeleccionarMesesCreditoAdapter;
 import com.Danthop.bionet.Adapters.VentaArticuloAdapter;
 import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.Tables.SortableMetodosPagoTable;
@@ -56,10 +50,7 @@ import com.Danthop.bionet.model.ArticuloApartadoModel;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.CompraModel;
-import com.Danthop.bionet.model.CorteCajaModel;
-import com.Danthop.bionet.model.FormaspagoModel;
 import com.Danthop.bionet.model.Impuestos;
-import com.Danthop.bionet.model.MovimientoModel;
 import com.Danthop.bionet.model.OrdenEspecialArticuloModel;
 import com.Danthop.bionet.model.PagoModel;
 import com.Danthop.bionet.model.PromocionesModel;
@@ -69,10 +60,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
@@ -251,7 +240,7 @@ public class Fragment_Ventas extends Fragment {
     private NumberFormat formatter;
 
     private ImpuestoAdapter mAdapter;
-    private List<Impuestos> ImpuestosList;
+    private List<Impuestos> ImpuestosList = new ArrayList<>();
 
 
     private Button btn_imprimir;
@@ -344,6 +333,7 @@ public class Fragment_Ventas extends Fragment {
         ListaDeArticulosOrdenados = new ArrayList<>();
         ArticulosApartados = new ArrayList<>();
         ArticulosOrdenados = new ArrayList<>();
+        mAdapter = new ImpuestoAdapter(ImpuestosList);
 
 
         Meses = new ArrayList<>();
@@ -351,7 +341,7 @@ public class Fragment_Ventas extends Fragment {
         tabla_venta_articulos = v.findViewById(R.id.tabla_venta_articulos);
         tabla_venta_articulos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
 
-        InstanciarModeloTicket();
+        InstanciarTicket();
         LoadSucursales();
         LoadAutocomplete();
         LoadButtons();
@@ -361,33 +351,7 @@ public class Fragment_Ventas extends Fragment {
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                InstanciarModeloTicket();
-                ArticulosVenta.clear();
-                Imagenes.clear();
-                total.setText("$0.00");
-                subtotal.setText("$0.00");
-                descuento.setText("$0.00");
-                btn_agregar_vendedor.setText("Vendedor");
-                btn_agregar_cliente.setText("Cliente");
-                ListaDeArticulosApartados.clear();
-                ListaDeArticulosOrdenados.clear();
-                final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
-                        total, descuento, impuesto, subtotal,
-                        carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,btn_ordenar,btn_apartar,btn_finalizar,
-                        RecyclerImpuesto);
-                articuloAdapter.notifyDataSetChanged();
-                tabla_venta_articulos.setDataAdapter(articuloAdapter);
-                LoadImages();
-
-                bundle = getArguments();
-                if(bundle!=null)
-                {
-                    ticket_de_venta.setTic_id(bundle.getString( "tic_id"));
-                    ticket_de_venta.setTic_id_sucursal(bundle.getString( "suc_id"));
-                    ticket_de_venta.setTic_apa_id(bundle.getString("apa_id"));
-                    VerificarTicket();
-                }
-
+                InstanciarTicket();
 
             }
             public void onNothingSelected(AdapterView<?> parent)
@@ -973,6 +937,12 @@ public class Fragment_Ventas extends Fragment {
                         promociones_credito(Sku,SucursalID);
                     }
 
+                    System.out.println
+                            ("Tres meses: "+Resptresmeses+
+                             "\nSeis Meses: "+Respseismeses+
+                             "\nNueve Meses: "+Respnuevemeses+
+                             "\nDoce Meses: "+Respdocemeses);
+
 
 
 
@@ -1021,6 +991,7 @@ public class Fragment_Ventas extends Fragment {
                                     AniadirCFDI();
                                     dialog.dismiss();
                                     dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
+                                    dialog.setCanceledOnTouchOutside(false);
                                     dialog.show();
                                     tabla_metodos_pago = dialog.findViewById(R.id.tabla_seleccionar_metodo_pago);
                                     tabla_metodos_pago.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
@@ -1154,6 +1125,7 @@ public class Fragment_Ventas extends Fragment {
 
                                                 dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
                                                 dialog.show();
+                                                progressDialog.show();
 
                                                 Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
                                                 cerrarPopUp.setOnClickListener(new View.OnClickListener() {
@@ -1167,24 +1139,26 @@ public class Fragment_Ventas extends Fragment {
                                                 TextView importe_venta = dialog.findViewById(R.id.importe_venta);
                                                 TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
                                                 TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
-
+                                                FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
 
 
                                                 Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
                                                 aceptar.setOnClickListener(new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v) {
-
+                                                        progressDialog.show();
                                                         loadTicket();
                                                         dialog.dismiss();
-                                                        FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
-                                                        if(ticket_de_venta.getTic_apa_id().equals(""))
+                                                        if(ticket_de_venta!=null)
                                                         {
+                                                            if(ticket_de_venta.getTic_apa_id().equals(""))
+                                                            {
 
-                                                        }else{
-                                                            bundle.putString("tic_id", "");
-                                                            bundle.putString("suc_id", "");
-                                                            bundle.putString("apa_id", "");
+                                                            }else{
+                                                                bundle.putString("tic_id", "");
+                                                                bundle.putString("suc_id", "");
+                                                                bundle.putString("apa_id", "");
+                                                            }
                                                         }
                                                     }
                                                 });
@@ -1208,6 +1182,7 @@ public class Fragment_Ventas extends Fragment {
                             dialog.dismiss();
                             facturar(ticket_de_venta.getTic_facturar());
                             dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
+                            dialog.setCanceledOnTouchOutside(false);
                             dialog.show();
                             tabla_metodos_pago = dialog.findViewById(R.id.tabla_seleccionar_metodo_pago);
                             tabla_metodos_pago.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
@@ -1388,6 +1363,7 @@ public class Fragment_Ventas extends Fragment {
                                                 dialog.dismiss();
                                                 dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
                                                 dialog.show();
+                                                progressDialog.show();
 
                                                 Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
                                                 cerrarPopUp.setOnClickListener(new View.OnClickListener() {
@@ -1403,6 +1379,7 @@ public class Fragment_Ventas extends Fragment {
                                                 TextView importe_venta = dialog.findViewById(R.id.importe_venta);
                                                 TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
                                                 TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
+                                                FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
 
 
 
@@ -1410,17 +1387,19 @@ public class Fragment_Ventas extends Fragment {
                                                 aceptar.setOnClickListener(new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v) {
-
+                                                        progressDialog.show();
                                                         loadTicket();
                                                         dialog.dismiss();
-                                                        FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
-                                                        if(ticket_de_venta.getTic_apa_id().equals(""))
+                                                        if(ticket_de_venta!=null)
                                                         {
+                                                            if(ticket_de_venta.getTic_apa_id().equals(""))
+                                                            {
 
-                                                        }else{
-                                                            bundle.putString("tic_id", "");
-                                                            bundle.putString("suc_id", "");
-                                                            bundle.putString("apa_id", "");
+                                                            }else{
+                                                                bundle.putString("tic_id", "");
+                                                                bundle.putString("suc_id", "");
+                                                                bundle.putString("apa_id", "");
+                                                            }
                                                         }
 
                                                     }
@@ -1643,6 +1622,7 @@ public class Fragment_Ventas extends Fragment {
                             dialog.dismiss();
                             dialog.setContentView(R.layout.pop_up_ventas_confirmacion_transaccion);
                             dialog.show();
+                            InstanciarTicket();
                             Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
                             cerrarPopUp.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -1778,6 +1758,8 @@ public class Fragment_Ventas extends Fragment {
                             dialog.dismiss();
                             dialog.setContentView(R.layout.pop_up_ventas_confirmacion_transaccion);
                             dialog.show();
+                            InstanciarTicket();
+
                             Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
                             aceptar.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -1828,7 +1810,6 @@ public class Fragment_Ventas extends Fragment {
 
     private void FinalizarTicket(final TextView importeCambio, final TextView importeRecibido, final TextView importeVenta) {
 
-        progressDialog.show();
         JSONArray arreglo = new JSONArray();
         try {
             for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
@@ -1888,6 +1869,11 @@ public class Fragment_Ventas extends Fragment {
                         importeRecibido.setText(formatter.format(RecibidoConDecimal));
                         importeVenta.setText(formatter.format(ImporteTotalConDecimal));
 
+                        if(!ticket_de_venta.getTic_apa_id().equals(""))
+                        {
+                            ConcluirApartado(ticket_de_venta.getTic_apa_id());
+                        }
+
                         ArticulosVenta.clear();
                         Imagenes.clear();
                         final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
@@ -1899,20 +1885,8 @@ public class Fragment_Ventas extends Fragment {
                         LoadImages();
 
 
-                        InstanciarModeloTicket();
-                        ListaDePagos_a_utilizar.clear();
+                        InstanciarTicket();
 
-                        descuento.setText("$0.00");
-                        total.setText("$0.00");
-                        subtotal.setText("$0.00");
-                        btn_agregar_cliente.setText("Cliente");
-                        btn_agregar_vendedor.setText("Vendedor");
-                        ImpuestosList.clear();
-                        mAdapter = new ImpuestoAdapter(ImpuestosList);
-                        RecyclerImpuesto.setAdapter(mAdapter);
-                        btn_apartar.setVisibility(View.INVISIBLE);
-                        btn_ordenar.setVisibility(View.INVISIBLE);
-                        btn_finalizar.setVisibility(View.INVISIBLE);
                         progressDialog.dismiss();
                     } else {
                         progressDialog.dismiss();
@@ -2994,7 +2968,7 @@ public class Fragment_Ventas extends Fragment {
         }
     }
 
-    private void InstanciarModeloTicket() {
+    private void InstanciarTicket() {
         ticket_de_venta = new TicketModel(
                 "",
                 "",
@@ -3037,6 +3011,40 @@ public class Fragment_Ventas extends Fragment {
                 ""
 
         );
+        ticket_de_venta.setTic_apa_id("");
+        ArticulosVenta.clear();
+        Imagenes.clear();
+        total.setText("$0.00");
+        subtotal.setText("$0.00");
+        descuento.setText("$0.00");
+        btn_agregar_vendedor.setText("Vendedor");
+        btn_agregar_cliente.setText("Cliente");
+        btn_finalizar.setText("Cobrar");
+        ListaDeArticulosApartados.clear();
+        ListaDeArticulosOrdenados.clear();
+        final VentaArticuloAdapter articuloAdapter = new VentaArticuloAdapter(getContext(), ArticulosVenta, tabla_venta_articulos, ticket_de_venta, usu_id,
+                total, descuento, impuesto, subtotal,
+                carouselView, Imagenes, ImpuestosDeArticuloApartado,ListaDeArticulosApartados,ImpuestosDeArticuloOrdenado,ListaDeArticulosOrdenados,btn_ordenar,btn_apartar,btn_finalizar,
+                RecyclerImpuesto);
+        articuloAdapter.notifyDataSetChanged();
+        tabla_venta_articulos.setDataAdapter(articuloAdapter);
+        LoadImages();
+        ListaDePagos_a_utilizar.clear();
+        ImpuestosList.clear();
+        mAdapter = new ImpuestoAdapter(ImpuestosList);
+        RecyclerImpuesto.setAdapter(mAdapter);
+        btn_apartar.setVisibility(View.INVISIBLE);
+        btn_ordenar.setVisibility(View.INVISIBLE);
+        btn_finalizar.setVisibility(View.INVISIBLE);
+
+        bundle = getArguments();
+        if(bundle!=null)
+        {
+            ticket_de_venta.setTic_id(bundle.getString( "tic_id"));
+            ticket_de_venta.setTic_id_sucursal(bundle.getString( "suc_id"));
+            ticket_de_venta.setTic_apa_id(bundle.getString("apa_id"));
+            VerificarTicket();
+        }
     }
 
     private void LoadConfiguracionApartado()
@@ -3304,6 +3312,7 @@ public class Fragment_Ventas extends Fragment {
 
     private void loadTicket()
     {
+        progressDialog.dismiss();
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.pop_up_ticket_web);
         dialog.show();
@@ -3918,9 +3927,7 @@ public class Fragment_Ventas extends Fragment {
                     String Mensaje = response.getString("mensaje");
 
                     if (status == 1) {
-                        Toast toast1 =
-                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-                        toast1.show();
+
                     } else {
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
@@ -4286,6 +4293,65 @@ public class Fragment_Ventas extends Fragment {
             postRequest.setShouldCache(false);
             VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
         }
+    }
+
+    private void ConcluirApartado(String apa_ide)
+    {
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("apa_id", apa_ide);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/ventas/apartados/concluir_apartado";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray Respuesta = null;
+                JSONObject RespuestaNodoTicket = null;
+                JSONObject TicketID = null;
+                JSONArray NodoTicketArticulos = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+
+                    } else {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
 

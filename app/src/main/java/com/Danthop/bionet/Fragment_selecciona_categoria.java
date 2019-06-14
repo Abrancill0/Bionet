@@ -44,6 +44,8 @@ public class Fragment_selecciona_categoria extends Fragment {
     private String idVacio;
     private String idpub;
     public ArrayList ex;
+    public String NombrePublicacion;
+
     public Fragment_selecciona_categoria() {
         // Required empty public constructor
     }
@@ -63,6 +65,9 @@ public class Fragment_selecciona_categoria extends Fragment {
         nombre = bundle.getString( "nombre");
         descripcion = bundle.getString( "descripcion");
         ex = bundle.getStringArrayList( "ex");
+        NombrePublicacion = bundle.getString("name");
+
+
 
         idpub = bundle.getString("id");
 

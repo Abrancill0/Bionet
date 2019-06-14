@@ -118,10 +118,10 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     public static String Ticket;
     public static String Sucursal;
 
-    public static String Tresmeses;
-    public static String Seismeses;
-    public static String nuevemeses;
-    public static String docemeses;
+    public static int Tresmeses;
+    public static int Seismeses;
+    public static int nuevemeses;
+    public static int docemeses;
 
     public static int Contador;
     public static String Mensaje;
@@ -157,22 +157,22 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         askForContactPermission();
 
         Bundle bundle = getIntent().getExtras();
-        TarjetaCredito = bundle.getDouble( "TC");
+        TarjetaCredito = getIntent().getExtras().getDouble( "TC");
         TarjetaDebio = bundle.getDouble( "TD");
         tamano = bundle.getInt("Tamano");
         Ticket = bundle.getString("Ticket");
         Sucursal = bundle.getString( "Sucursal");
-        Tresmeses = bundle.getString("03meses");
-        Seismeses = bundle.getString("06meses");
-        nuevemeses = bundle.getString("09meses");
-        docemeses = bundle.getString("12meses");
+        Tresmeses = bundle.getInt("03meses");
+        Seismeses = bundle.getInt("06meses");
+        nuevemeses = bundle.getInt("09meses");
+        docemeses = bundle.getInt("12meses");
 
         try {
 
-            Log.i("3 meses",Tresmeses);
-            Log.i("6 meses",Seismeses);
-            Log.i("9 meses",nuevemeses);
-            Log.i("12 meses",docemeses);
+            Log.i("3 meses", String.valueOf(Tresmeses));
+            Log.i("6 meses", String.valueOf(Seismeses));
+            Log.i("9 meses", String.valueOf(nuevemeses));
+            Log.i("12 meses", String.valueOf(docemeses));
             }
             catch (Exception e){
             Log.e("Error feenicia bundle", e.toString());

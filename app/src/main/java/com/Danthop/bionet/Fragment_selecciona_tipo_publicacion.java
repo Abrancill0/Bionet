@@ -125,6 +125,7 @@ public class Fragment_selecciona_tipo_publicacion extends Fragment {
 
                 try {
                     int EstatusApi = Integer.parseInt( response.getString("estatus") );
+
                     if (EstatusApi == 1) {
                         ArrayList arrayList = new ArrayList<>();
                         ArrayList arrayList2 = new ArrayList<>();

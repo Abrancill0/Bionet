@@ -672,6 +672,8 @@ private void SolicitarTraslado(){
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
+
+
 private void SpinnerSucursales() {
 
     progreso=new ProgressDialog(getContext());

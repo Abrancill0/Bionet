@@ -88,6 +88,9 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private String Sucursal;
     private String Sucursal_UUID;
     private String Exi_ID;
+    private String NombrePublicacion;
+
+    private String Respuesta_api;
 
     public Fragment_ecommerce_Sincronizar_Nuevo_Prod() {
         // Required empty public constructor
@@ -114,6 +117,8 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         Sucursal = bundle.getString("Sucursal");
         Sucursal_UUID = bundle.getString("Sucursal_UUID");
         Exi_ID = bundle.getString("Exi_ID");
+        NombrePublicacion = bundle.getString("name");
+
 
         IDTipoPublicacion = bundle.getString("id");
         id_categoria = bundle.getString("id_categoria");
@@ -200,7 +205,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        JSONArray RespuestaTiposPublicacion = null;
+                        JSONObject RespuestaTiposPublicacion = null;
                         JSONArray RespuestaCategoria = null;
 
                         try {
@@ -219,6 +224,8 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                                     CategoriaModel cat = new CategoriaModel(idcategoria, categoria );
                                     arrayList.add(cat);
                                 }
+
+                                RespuestaTiposPublicacion = response.getJSONObject("aListaTiposPublicacion");
                                 //CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria,arrayList,pop_up_categoria1 );
                                 //listacategoria1.setAdapter(adapter);//sets the adapter for listView
                             }
