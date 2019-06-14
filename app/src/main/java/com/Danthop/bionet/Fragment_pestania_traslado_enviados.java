@@ -1,5 +1,6 @@
 package com.Danthop.bionet;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.TrasladoEnvioRecibidoAdapter;
@@ -34,6 +36,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
+import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
@@ -79,6 +83,17 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
     private SearchView BuscarTraslado;
     private Long timestamp;
     private String FechaconFormato;
+
+    private TableDataClickListener<InventarioModel> tableListener;
+    private String UUID;
+    private TextView UUIDarticulostraslados;
+    private TextView StatusSolicitud;
+    private String estadosolicitud;
+    private String AceptarSolicitud;
+    private String CancelarSolicitud;
+    private String status_solicitud;
+    private String status_nombre;
+    private String tipo_traslado = "enviada";
 
     private TrasladoEnvioRecibidoAdapter TrasladoAdapter;
 
@@ -193,6 +208,26 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
                 return false;
             }
         });
+
+
+        LoadListenerTable();
+        tabla_traslados.setSwipeToRefreshEnabled(true);
+        tabla_traslados.setSwipeToRefreshListener(new SwipeToRefreshListener() {
+            @Override
+            public void onRefresh(final RefreshIndicator refreshIndicator) {
+                tabla_traslados.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        traslados.clear();
+                        refreshIndicator.hide();
+                    }
+                }, 2000);
+            }
+        });
+
+        tabla_traslados.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
+        tabla_traslados.addDataClickListener(tableListener);
+
         return v;
     }
 
@@ -233,7 +268,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
                             JSONObject elemento = aSolicitudesEnviadas.getJSONObject(x);
 
                             RespuestaUUID = elemento.getJSONObject("tra_id");
-                            String UUID = RespuestaUUID.getString("uuid");
+                            UUID = RespuestaUUID.getString("uuid");
 
                             RespuestaFecha = elemento.getJSONObject("tra_fecha_hora_creo");
                             timestamp = RespuestaFecha.getLong("seconds");
@@ -268,7 +303,9 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
                             SucursalCodigoDestino = RecibidasDestino + "(" + suc_numero_sucursal_destino + ")";
                             RecibidasDestino = SucursalCodigoDestino;
 
-                            //
+                            status_solicitud = elemento.getString("tra_id_estatus_type");
+                            status_nombre = elemento.getString( "tra_nombre_estatus");
+
                             final InventarioModel traslado = new InventarioModel(
                                     sku,
                                     producto,
@@ -298,8 +335,8 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
                                     suc_numero_sucursal_destino,
                                     suc_numero_sucursal_origen,
                                     FechaconFormato,
-                                    tra_motivo,"","","","","",
-                                    "","","");
+                                    tra_motivo,UUID,"","",
+                                    "","","",status_solicitud, status_nombre);
                             traslados.add(traslado);
 
                         }
@@ -327,9 +364,132 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
     }
 //--------------------------------------------------------------------------------------------------
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
+    private void LoadListenerTable(){
+        tableListsener = new TableDataClickListener<InventarioModel>() {
+            @Override
+            public void onDataClicked(int rowIndex, final InventarioModel clickedData) {
+
+                final Dialog ver_dialog_traslado;
+                ver_dialog_traslado = new Dialog(getContext());
+                ver_dialog_traslado.setContentView(R.layout.pop_up_traslado_enviados);
+                ver_dialog_traslado.show();
+
+                TextView motivotraslado = ver_dialog_traslado.findViewById( R.id.motivotraslado );
+                motivotraslado.setText(clickedData.gettra_motivo());
+
+                TextView nombre_status = ver_dialog_traslado.findViewById( R.id.articulostraslados );
+                nombre_status.setText(clickedData.getstatus_nombre());
+
+                UUIDarticulostraslados = ver_dialog_traslado.findViewById( R.id.cantidadtraslado );
+                UUIDarticulostraslados.setText(clickedData.getUUIDarticulo());
+
+                StatusSolicitud = ver_dialog_traslado.findViewById(R.id.StatuSolicitud);
+                StatusSolicitud.setText(clickedData.getstatus_solicitud());
+                estadosolicitud = String.valueOf( StatusSolicitud.getText() );
+
+                Button cerrar_ventana = ver_dialog_traslado.findViewById(R.id.cerrar_ventana);
+                cerrar_ventana.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ver_dialog_traslado.dismiss();
+                    }
+                });
+//---------------------------------------btn Cancelar-----------------------------------------------
+                Button cancelar_solicitud = ver_dialog_traslado.findViewById(R.id.cancelar_solicitud);
+                cancelar_solicitud.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        int resultadoEnviada = estadosolicitud.compareTo("Enviada");
+                        if (resultadoEnviada == 0)
+                        {
+                            responder_solicitud("cancelar");
+                            ver_dialog_traslado.dismiss();
+
+                        }
+                        else {
+                            ver_dialog_traslado.setContentView(R.layout.pop_up_solicitud_cancelar);
+                            ver_dialog_traslado.show();
+
+                            Button Aceptar = ver_dialog_traslado.findViewById(R.id.Aceptar);
+                            Aceptar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ver_dialog_traslado.dismiss();
+                                }
+                            });
+
+                            Button tachita = ver_dialog_traslado.findViewById(R.id.tachita);
+                            tachita.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ver_dialog_traslado.dismiss();
+                                }
+                            });
+                        }
+
+                    }
+                });
+
+
+            }
+        };
+    }
+
+
+    private void responder_solicitud(String tipo) {
+
+        String tiporeturn = tipo;
+        String url = getString(R.string.Url);
+        String ApiPath = url + "/api/inventario/responder_solicitud";
+
+
+        JSONObject jsonBodyrequest = new JSONObject();
+        try {
+            jsonBodyrequest.put("esApp", "1" );
+            jsonBodyrequest.put("usu_id", usu_id);
+            jsonBodyrequest.put("tra_id",UUIDarticulostraslados.getText());
+            jsonBodyrequest.put("tipo_traslado",tipo_traslado);
+            jsonBodyrequest.put("respuesta",tiporeturn);
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,jsonBodyrequest, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1)
+                    {
+                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG).show();
+                    }
+
+
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), "Error", Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 = Toast.makeText(getContext(),error.getMessage() , Toast.LENGTH_SHORT);
+                        toast1.show();
+                    }
+                }
+        );
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
 }
