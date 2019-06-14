@@ -435,6 +435,7 @@ public class Fragment_ventas_transacciones extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container,new Fragment_Ventas()).commit();
+                onDetach();
             }
         });
 
@@ -442,12 +443,15 @@ public class Fragment_ventas_transacciones extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();
+                onDetach();
+
             }
         });
         Comisiones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container, new Fragment_pestania_comison()).commit();
+                onDetach();
             }
         });
 
@@ -1867,6 +1871,11 @@ public class Fragment_ventas_transacciones extends Fragment {
         postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
 

@@ -155,6 +155,7 @@ public class Fragment_clientes extends Fragment {
             public void onClick(View v) {
 
                 fr.replace(R.id.fragment_container,new Fragment_crear_cliente()).commit();
+                onDetach();
             }
         });
 
@@ -683,6 +684,11 @@ public class Fragment_clientes extends Fragment {
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
 
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
 

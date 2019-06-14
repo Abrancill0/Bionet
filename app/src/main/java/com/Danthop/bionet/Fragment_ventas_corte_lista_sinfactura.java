@@ -116,6 +116,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_ventas_corte_lista_sinfactura()).commit();
+                onDetach();
             }
         });
 
@@ -126,6 +127,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_cortecaja()).commit();
+                onDetach();
             }
         });
 
@@ -135,6 +137,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();
+                onDetach();
             }
         });
 
@@ -144,6 +147,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_comison()).commit();
+                onDetach();
             }
         });
 
@@ -309,6 +313,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_Ventas()).commit();
+                onDetach();
             }
         });
         pestania_reporte.setOnClickListener(new View.OnClickListener() {
@@ -316,6 +321,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_ventas_transacciones()).commit();
+                onDetach();
             }
         });
 
@@ -344,6 +350,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
                             Toast.makeText( getContext(), "Facturación Generada Exitosamente", Toast.LENGTH_LONG ).show();
                             FragmentTransaction fr = getFragmentManager().beginTransaction();
                             fr.replace( R.id.fragment_container, new Fragment_ventas_corte_lista_sinfactura() ).commit();
+                            onDetach();
                         }
                     } );
 
@@ -665,6 +672,11 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         );
 
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
 }

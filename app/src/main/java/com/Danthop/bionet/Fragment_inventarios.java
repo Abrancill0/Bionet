@@ -126,6 +126,7 @@ public class Fragment_inventarios extends Fragment {
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Artículo", "Código de barras", "Categoría", "Existencias", "Sucursal");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader.setTextSize( 18 );
+        simpleHeader.setPaddings(5,5,5,5);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
         tableColumnWeightModel.setColumnWeight(0, 2);
@@ -144,6 +145,7 @@ public class Fragment_inventarios extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container, new Fragment_pestania_traslado()).commit();
+                onDetach();
             }
         });
 
@@ -153,6 +155,7 @@ public class Fragment_inventarios extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_historico()).commit();
+                onDetach();
             }
         });
 
@@ -162,6 +165,7 @@ public class Fragment_inventarios extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_inventario_existencias()).commit();
+                onDetach();
             }
         });
 
@@ -407,5 +411,10 @@ public class Fragment_inventarios extends Fragment {
                 imageLoader.displayImage(String.valueOf(clickedData.getaim_url()),FotoArticulo);
             }
         };
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 }

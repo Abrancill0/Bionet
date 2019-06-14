@@ -400,6 +400,7 @@ public class FragmentLealtadAniadirCliente extends Fragment {
 
                                 toast1.show();
                                 fr.replace(R.id.fragment_container,new FragmentLealtadInscribir()).commit();
+                                onDetach();
 
                             }
                             else
@@ -450,6 +451,7 @@ public class FragmentLealtadAniadirCliente extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container,new FragmentLealtadInscribir()).commit();
+                onDetach();
             }
         });
     }

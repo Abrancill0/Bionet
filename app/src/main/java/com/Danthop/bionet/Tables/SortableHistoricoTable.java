@@ -28,6 +28,7 @@ public class SortableHistoricoTable extends SortableTableView<HistoricoModel> {
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
         simpleHeader.setTextSize( 14 );
+        simpleHeader.setPaddings(5,2,5,2);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
         tableColumnWeightModel.setColumnWeight(0, 1);

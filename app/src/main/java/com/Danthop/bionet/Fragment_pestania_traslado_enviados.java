@@ -94,6 +94,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_inventarios()).commit();
+                onDetach();
             }
         });
 
@@ -103,6 +104,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_historico()).commit();
+                onDetach();
             }
         });
 
@@ -112,6 +114,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container, new Fragment_pop_up_traslados()).commit();
+                onDetach();
             }
         });
 
@@ -121,6 +124,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_inventario_existencias()).commit();
+                onDetach();
             }
         });
 
@@ -133,6 +137,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container, new Fragment_pestania_traslado_recibidos()).commit();
+                onDetach();
             }
         });
 
@@ -143,6 +148,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container, new Fragment_pestania_traslado_enviados()).commit();
+                onDetach();
             }
         });
 
@@ -321,5 +327,9 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
     }
 //--------------------------------------------------------------------------------------------------
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
 
 }

@@ -80,6 +80,7 @@ public class Fragment_selecciona_categoria extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container, new Fragment_ecommerce_Sincronizar_Articulos()).commit();
+                onDetach();
             }
         });
 
@@ -157,6 +158,10 @@ public class Fragment_selecciona_categoria extends Fragment {
             );
             VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
         }
+    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 //---------------------------------------------------------------------------------------------------
 }

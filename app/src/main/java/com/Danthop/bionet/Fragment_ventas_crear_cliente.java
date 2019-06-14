@@ -214,6 +214,7 @@ public class Fragment_ventas_crear_cliente extends DialogFragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_Ventas()).commit();
+                onDetach();
             }
         });
         return v;
@@ -394,6 +395,7 @@ public class Fragment_ventas_crear_cliente extends DialogFragment {
 
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_Ventas()).commit();
+                onDetach();
 
                 progreso.hide();
 
@@ -782,6 +784,11 @@ public class Fragment_ventas_crear_cliente extends DialogFragment {
             TextFacturacionEstado.setEnabled(true);
             return;
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
 

@@ -99,7 +99,11 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
     }
 
     private View renderexistencia(final InventarioModel Inventario) {
-        return renderString(Inventario.getExistencia());
+        final TextView textView = new TextView(getContext());
+        textView.setText(Inventario.getExistencia());
+        textView.setTextSize(TEXT_SIZE);
+        textView.setGravity(View.TEXT_ALIGNMENT_CENTER);
+        return textView;
     }
 
     private View rendercategoria(final InventarioModel Inventario) {
@@ -118,8 +122,9 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
         textView.setText(value);
-        textView.setPadding(20, 10, 20, 10);
         textView.setTextSize(TEXT_SIZE);
+        textView.setPadding(5,2,5,2);;
+        textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
         return textView;
     }
 

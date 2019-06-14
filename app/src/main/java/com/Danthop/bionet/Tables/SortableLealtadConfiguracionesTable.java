@@ -25,7 +25,7 @@ public class SortableLealtadConfiguracionesTable extends SortableTableView<Confi
     public SortableLealtadConfiguracionesTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nivel", "¢ por Puntos", "Puntos por ¢"," ");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Nivel", "$ por Puntos", "Puntos por $"," ");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
         simpleHeader.setTextSize( 18 );

@@ -90,6 +90,8 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
     private String Exi_ID;
     private String NombrePublicacion;
 
+    private int ArticulosMaximos=0;
+
     private String Respuesta_api;
 
     public Fragment_ecommerce_Sincronizar_Nuevo_Prod() {
@@ -134,6 +136,8 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         TokenLife = sharedPref.getString( "TokenLifetime", "" );
         usu_id = sharedPref.getString("usu_id","");
 
+        Max_stock_per_item();
+
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
         progressDialog.setCanceledOnTouchOutside(false);
@@ -150,17 +154,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
         TextCantidad = (ElegantNumberButton) v.findViewById( R.id.text_cantidad );
         TextGarantia = (EditText) v.findViewById( R.id.text_garantia );
 
-        if (Integer.parseInt(Cantidadinventario) > Integer.parseInt(Remaining_listings))
-        {
-            TextCantidad.setNumber(String.valueOf(Remaining_listings) );
 
-            TextCantidad.setRange( 1, Integer.valueOf( Remaining_listings ) );
-        }
-        else
-        {
-            TextCantidad.setNumber(String.valueOf(Cantidadinventario) );
-            TextCantidad.setRange( 1, Integer.valueOf( Cantidadinventario ) );
-        }
 
 
 
@@ -225,7 +219,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
                                     arrayList.add(cat);
                                 }
 
-                                RespuestaTiposPublicacion = response.getJSONObject("aListaTiposPublicacion");
+
                                 //CategoriaAdapter adapter = new CategoriaAdapter(getContext(), R.layout.caja_categoria,arrayList,pop_up_categoria1 );
                                 //listacategoria1.setAdapter(adapter);//sets the adapter for listView
                             }
@@ -415,6 +409,50 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
+    }
+
+    private void Max_stock_per_item()
+    {
+        final String url = "http://187.189.192.150:8010/api/ecommerce/create_app?accesstoken=" + AccesToken  + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+                    int EstatusApi = Integer.parseInt( response.getString("estatus") );
+                    if (EstatusApi == 1) {
+                        progressDialog.dismiss();
+
+                        JSONObject RespuestaTiposPublicacion = response.getJSONObject("aListaTiposPublicacion");
+                        JSONArray Configuraciones = RespuestaTiposPublicacion.getJSONArray("configuration");
+                        for(int s=0;s<Configuraciones.length();s++)
+                        {
+                            JSONObject elemento = Configuraciones.getJSONObject(s);
+                            JSONObject configuracionPublicacion = elemento.getJSONObject("configuration");
+                            String Publicacion = configuracionPublicacion.getString("name");
+
+                            if(NombrePublicacion.equals(Publicacion))
+                            {
+                                ArticulosMaximos = Integer.parseInt(configuracionPublicacion.getString("max_stock_per_item"));
+                                TextCantidad.setNumber(String.valueOf(ArticulosMaximos));
+                                TextCantidad.setRange( 1, ArticulosMaximos );
+                            }
+                        }
+                    }
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Error.Response", String.valueOf(error));
+                    }
+                }
+        );
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
     }
 //---------------------------------------------------------------------------------------------------
 }
