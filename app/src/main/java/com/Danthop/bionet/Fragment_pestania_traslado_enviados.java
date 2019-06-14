@@ -365,7 +365,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
 //--------------------------------------------------------------------------------------------------
 
     private void LoadListenerTable(){
-        tableListsener = new TableDataClickListener<InventarioModel>() {
+        tableListener = new TableDataClickListener<InventarioModel>() {
             @Override
             public void onDataClicked(int rowIndex, final InventarioModel clickedData) {
 

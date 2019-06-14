@@ -234,6 +234,30 @@ public class Fragment_Ventas extends Fragment {
     static UsbController usbCtrl = null;
     static UsbDevice dev = null;
 
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch(msg.what) {
+                case 0:
+                    //   Toast.makeText(PrintDemo.this.getApplicationContext(), PrintDemo.this.getString(2130968584), 0).show();
+                    //    PrintDemo.this.btnSend.setEnabled(true);
+                    //   PrintDemo.this.btn_test.setEnabled(true);
+                    //    PrintDemo.this.btnClose.setEnabled(true);
+                    //    PrintDemo.this.btn_printA.setEnabled(true);
+                    //    PrintDemo.this.btn_BMP.setEnabled(true);
+                    //   PrintDemo.this.btn_ChoseCommand.setEnabled(true);
+                    //   PrintDemo.this.btn_prtcodeButton.setEnabled(true);
+                    //   PrintDemo.this.btn_prtsma.setEnabled(true);
+                    //   PrintDemo.this.btn_prttableButton.setEnabled(true);
+                    //    PrintDemo.this.Simplified.setEnabled(true);
+                    //   PrintDemo.this.Korean.setEnabled(true);
+                    //    PrintDemo.this.big5.setEnabled(true);
+                    //    PrintDemo.this.thai.setEnabled(true);
+                    //    PrintDemo.this.btn_conn.setEnabled(false);
+                default:
+            }
+        }
+    };
+
 
     private RecyclerView RecyclerImpuesto;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -271,6 +295,24 @@ public class Fragment_Ventas extends Fragment {
         dialog = new Dialog(getContext());
 
         usbCtrl = new UsbController(getActivity(),mHandler);
+        usbCtrl = new UsbController(getActivity(),mHandler);
+        this.u_infor = new int[8][2];
+        this.u_infor[0][0] = 7358;
+        this.u_infor[0][1] = 3;
+        this.u_infor[1][0] = 7344;
+        this.u_infor[1][1] = 3;
+        this.u_infor[2][0] = 1155;
+        this.u_infor[2][1] = 22336;
+        this.u_infor[3][0] = 1171;
+        this.u_infor[3][1] = 34656;
+        this.u_infor[4][0] = 1046;
+        this.u_infor[4][1] = 20497;
+        this.u_infor[5][0] = 1046;
+        this.u_infor[5][1] = 43707;
+        this.u_infor[6][0] = 5721;
+        this.u_infor[6][1] = 35173;
+        this.u_infor[7][0] = 1155;
+        this.u_infor[7][1] = 22337;
 
 
         try {
@@ -373,21 +415,6 @@ public class Fragment_Ventas extends Fragment {
         usbCtrl.close();
         cancelAll();
     }
-
-    @SuppressLint("HandlerLeak") private final  Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case UsbController.USB_CONNECTED:
-
-                    btn_imprimir.setEnabled(true);
-
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     private void closeKeyboard() {
         View view = getView();
@@ -3100,6 +3127,7 @@ public class Fragment_Ventas extends Fragment {
 
     private void LoadCFDI()
     {
+        progressDialog.show();
         JSONObject request = new JSONObject();
         try {
             request.put("usu_id", usu_id);
@@ -3136,12 +3164,13 @@ public class Fragment_Ventas extends Fragment {
                             CFDI_ID.add(CFDI_id);
                         }
                         SpinnerCFDI.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, CFDI_Name));
-
+                        progressDialog.dismiss();
                     } else {
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
 
 
                     }
@@ -3746,64 +3775,69 @@ public class Fragment_Ventas extends Fragment {
 
     public void PDFIMprime (String ruta)
     {
-        usbCtrl.close();
+        try {
 
-        // int i =0;
+            usbCtrl.close();
 
-        for(int i = 0; i < 8; ++i) {
-            dev = usbCtrl.getDev(this.u_infor[i][0], this.u_infor[i][1]);
+            // int i =0;
+
+            for(int i = 0; i < 8; ++i) {
+                dev = usbCtrl.getDev(this.u_infor[i][0], this.u_infor[i][1]);
+                if (dev != null) {
+                    break;
+                }
+            }
+
             if (dev != null) {
-                break;
+                if (!usbCtrl.isHasPermission(dev)) {
+                    usbCtrl.getPermission(dev);
+                } else {
+                    // Toast.makeText(this.getApplicationContext(), this.getString(2130968584), 0).show();
+
+                }
             }
-        }
 
-        if (dev != null) {
-            if (!usbCtrl.isHasPermission(dev)) {
-                usbCtrl.getPermission(dev);
-            } else {
-                // Toast.makeText(this.getApplicationContext(), this.getString(2130968584), 0).show();
+            String msg = "";
 
+            byte[] bytes = new byte[0];
+            try {
+                bytes = convertDocToByteArray(ruta);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            String stream = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                stream = Base64.getEncoder().encodeToString(bytes);
+            }
+            byte[] newBytes = new byte[0];
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                newBytes = Base64.getDecoder().decode(stream);
+            }
+            try {
+                convertByteArrayToDoc(ruta, newBytes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                URL url = new URL(getString(R.string.Url)+LogoNegocio);
+                Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                byte[] Data = POS_PrintBMP(image,384,0);
+                this.SendDataByte(Data);
+                this.SendDataString(contenidoImprimir);
+            } catch(IOException e) {
+                System.out.println(e);
+            }
+
+
+
+        }catch(NullPointerException e) {
+            Toast toast1 =
+                    Toast.makeText(getContext(),
+                            "Hubo un error al tratar de conectar con la impresora", Toast.LENGTH_LONG);
+            toast1.show();
         }
-
-        String msg = "";
-
-        byte[] bytes = new byte[0];
-        try {
-            bytes = convertDocToByteArray(ruta);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String stream = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            stream = Base64.getEncoder().encodeToString(bytes);
-        }
-        byte[] newBytes = new byte[0];
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            newBytes = Base64.getDecoder().decode(stream);
-        }
-        try {
-            convertByteArrayToDoc(ruta, newBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            URL url = new URL(getString(R.string.Url)+LogoNegocio);
-            Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            byte[] Data = POS_PrintBMP(image,384,0);
-            this.SendDataByte(Data);
-            this.SendDataString(contenidoImprimir);
-        } catch(IOException e) {
-            System.out.println(e);
-        }
-
-
-
-
-
-
     }
 
     public static byte[] convertDocToByteArray(String path)throws FileNotFoundException, IOException {

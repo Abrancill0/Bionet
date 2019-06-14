@@ -69,7 +69,7 @@ public class Fragment_inventarios extends Fragment {
     private String sku = "";
     private String codigoBarras = "";
     private String almacen = "";
-    private String amo_activo="";
+    private String amo_activo = "";
     private String articulo_descripcion;
     private String categoria;
     private String art_disponible_venta;
@@ -109,7 +109,7 @@ public class Fragment_inventarios extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
 
-        progressDialog=new ProgressDialog(getContext());
+        progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
@@ -117,15 +117,15 @@ public class Fragment_inventarios extends Fragment {
         inventarios = new ArrayList<>();
         SucursalName = new ArrayList<>();
         SucursalID = new ArrayList<>();
-        Buscar= (SearchView) v.findViewById(R.id.search_inventario);
-        ver_producto_dialog=new Dialog(getContext());
+        Buscar = (SearchView) v.findViewById(R.id.search_inventario);
+        ver_producto_dialog = new Dialog(getContext());
         ver_producto_dialog.setContentView(R.layout.pop_up_ficha_articulos);
 
         tabla_inventario = (SortableInventariosTable) v.findViewById(R.id.tabla_inventario);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Artículo", "Código de barras", "Categoría", "Existencias", "Sucursal");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        simpleHeader.setTextSize( 18 );
-        simpleHeader.setPaddings(5,5,5,5);
+        simpleHeader.setTextSize(18);
+        simpleHeader.setPaddings(5, 5, 5, 5);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
         tableColumnWeightModel.setColumnWeight(0, 2);
@@ -138,7 +138,7 @@ public class Fragment_inventarios extends Fragment {
         tabla_inventario.setHeaderAdapter(simpleHeader);
         tabla_inventario.setColumnModel(tableColumnWeightModel);
 
-       Button btnTraslados = (Button) v.findViewById(R.id.btn_traslados);
+        Button btnTraslados = (Button) v.findViewById(R.id.btn_traslados);
         btnTraslados.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,7 +153,7 @@ public class Fragment_inventarios extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_historico()).commit();
+                fr.replace(R.id.fragment_container, new Fragment_pestania_historico()).commit();
                 onDetach();
             }
         });
@@ -163,13 +163,13 @@ public class Fragment_inventarios extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_inventario_existencias()).commit();
+                fr.replace(R.id.fragment_container, new Fragment_pestania_inventario_existencias()).commit();
                 onDetach();
             }
         });
 
 
-       tabla_inventario.setSwipeToRefreshEnabled(true);
+        tabla_inventario.setSwipeToRefreshEnabled(true);
         tabla_inventario.setSwipeToRefreshListener(new SwipeToRefreshListener() {
             @Override
             public void onRefresh(final RefreshIndicator refreshIndicator) {
@@ -206,13 +206,12 @@ public class Fragment_inventarios extends Fragment {
 
         SpinnerSucursal = (Spinner) v.findViewById(R.id.sucursal);
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 progressDialog.show();
                 Muestra_Inventario();
             }
-            public void onNothingSelected(AdapterView<?> parent)
-            {
+
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
@@ -233,7 +232,7 @@ public class Fragment_inventarios extends Fragment {
                 JSONArray Articulo = null;
                 JSONArray imagenes = null;
                 JSONObject RespuestaUUID = null;
-                JSONObject RespuestaExistencias= null;
+                JSONObject RespuestaExistencias = null;
 
                 try {
                     int status = Integer.parseInt(response.getString("estatus"));
@@ -259,8 +258,8 @@ public class Fragment_inventarios extends Fragment {
                             codigoBarras = elemento.getString("exi_codigo_barras");
                             almacen = elemento.getString("alm_nombre");
 
-                            String suc_nombre = elemento.getString( "suc_nombre" );
-                            String suc_numero = elemento.getString( "suc_numero" );
+                            String suc_nombre = elemento.getString("suc_nombre");
+                            String suc_numero = elemento.getString("suc_numero");
                             nombre_sucursal = suc_nombre + "(" + suc_numero + ")";
 
                             RespuestaExistencias = elemento.getJSONObject("exi_cantidad");
@@ -315,7 +314,7 @@ public class Fragment_inventarios extends Fragment {
                                     NombreCompleto = producto + " " + NombreVariante;
                                     producto = NombreCompleto;
                                 }
-                            }else {
+                            } else {
                                 String NombreVariante = elemento.getString("ava_nombre");
                                 sku = elemento.getString("ava_sku");
                                 Boolean Disponible_Modificador = Boolean.valueOf(elemento.getString("ava_tiene_modificadores"));
@@ -332,39 +331,40 @@ public class Fragment_inventarios extends Fragment {
                                     producto = NombreCompleto;
                                 }
                             }
-                                    final InventarioModel inventario = new InventarioModel(
-                                            sku,
-                                            producto,
-                                            existencia,
-                                            categoria,
-                                            modificadores,
-                                            nombre_sucursal,
-                                            suc_id,
-                                            articulo_descripcion,
-                                            art_tipo,
-                                            art_disponible_venta,
-                                            art_disponible_compra,
-                                            ava_aplica_apartados,
-                                            ava_aplica_cambio_devolucion,
-                                            aim_url,
-                                            art_nombre,
-                                            cat_nombre,
-                                            his_tipo,
-                                            his_cantidad,
-                                            his_observaciones,
-                                            his_fecha_hora_creo,
-                                            codigoBarras,
-                                            almacen,
-                                            RecibidasOrigen,
-                                            RecibidasDestino,
-                                            tra_nombre_estatus,
-                                            suc_numero_sucursal_destino,
-                                            suc_numero_sucursal_origen,
-                                            "",
-                                            tra_motivo,"","","","","",
-                                            "","","");
-                                    inventarios.add(inventario);
-                        }inventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario);
+                            final InventarioModel inventario = new InventarioModel(
+                                    sku,
+                                    producto,
+                                    existencia,
+                                    categoria,
+                                    modificadores,
+                                    nombre_sucursal,
+                                    suc_id,
+                                    articulo_descripcion,
+                                    art_tipo,
+                                    art_disponible_venta,
+                                    art_disponible_compra,
+                                    ava_aplica_apartados,
+                                    ava_aplica_cambio_devolucion,
+                                    aim_url,
+                                    art_nombre,
+                                    cat_nombre,
+                                    his_tipo,
+                                    his_cantidad,
+                                    his_observaciones,
+                                    his_fecha_hora_creo,
+                                    codigoBarras,
+                                    almacen,
+                                    RecibidasOrigen,
+                                    RecibidasDestino,
+                                    tra_nombre_estatus,
+                                    suc_numero_sucursal_destino,
+                                    suc_numero_sucursal_origen,
+                                    "",
+                                    tra_motivo, "", "", "", "", "",
+                                    "", "", "");
+                            inventarios.add(inventario);
+                        }
+                        inventarioAdapter = new InventarioAdapter(getContext(), inventarios, tabla_inventario);
                         tabla_inventario.setDataAdapter(inventarioAdapter);
                     }
                 } catch (JSONException e) {
@@ -384,11 +384,11 @@ public class Fragment_inventarios extends Fragment {
                 }
         );
         getRequest.setShouldCache(false);
-        VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
     }
 //--------------------------------------------------------------------------------------------------
 
-    private void LoadListenerTable(){
+    private void LoadListenerTable() {
         tablaListener = new TableDataClickListener<InventarioModel>() {
             @Override
             public void onDataClicked(int rowIndex, final InventarioModel clickedData) {
@@ -417,12 +417,11 @@ public class Fragment_inventarios extends Fragment {
                 art_disponible_compra.setText(clickedData.getart_disponible_compra());
                 ava_aplica_apartados.setText(clickedData.getava_aplica_apartados());
                 ava_aplica_cambio_devolucion.setText(clickedData.getava_aplica_cambio_devolucion());
-                imageLoader.displayImage(String.valueOf(clickedData.getaim_url()),FotoArticulo);
+                imageLoader.displayImage(String.valueOf(clickedData.getaim_url()), FotoArticulo);
             }
         };
     }
 
-<<<<<<< HEAD
     public void LoadSucursales() {
         JSONObject request = new JSONObject();
         try {
@@ -493,10 +492,8 @@ public class Fragment_inventarios extends Fragment {
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
-=======
     @Override
     public void onDetach() {
         super.onDetach();
     }
->>>>>>> e9e34965ec5711dcf28b239c0f60c9cf0473a948
 }

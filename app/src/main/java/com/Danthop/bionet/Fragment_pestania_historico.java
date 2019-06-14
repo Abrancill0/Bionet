@@ -266,9 +266,6 @@ public class Fragment_pestania_historico extends Fragment {
         );
         VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
     }
-<<<<<<< HEAD
-
-=======
 //----------------------------------------------------------------------------------------------------------------------------------------
    /* private void LoadListenerTable(){
         tablaListener = new TableDataClickListener<HistoricoModel>() {
@@ -308,5 +305,4 @@ public class Fragment_pestania_historico extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
->>>>>>> e9e34965ec5711dcf28b239c0f60c9cf0473a948
 }

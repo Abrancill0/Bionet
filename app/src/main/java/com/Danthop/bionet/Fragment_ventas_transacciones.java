@@ -1617,67 +1617,75 @@ public class Fragment_ventas_transacciones extends Fragment {
 
     }
 
-    public void PDFIMprime (String ruta)
-    {
-        usbCtrl.close();
+        public void PDFIMprime (String ruta)
+        {
+            try {
 
-        // int i =0;
+                usbCtrl.close();
 
-        for(int i = 0; i < 8; ++i) {
-            dev = usbCtrl.getDev(this.u_infor[i][0], this.u_infor[i][1]);
-            if (dev != null) {
-                break;
+                // int i =0;
+
+                for(int i = 0; i < 8; ++i) {
+                    dev = usbCtrl.getDev(this.u_infor[i][0], this.u_infor[i][1]);
+                    if (dev != null) {
+                        break;
+                    }
+                }
+
+                if (dev != null) {
+                    if (!usbCtrl.isHasPermission(dev)) {
+                        usbCtrl.getPermission(dev);
+                    } else {
+                        // Toast.makeText(this.getApplicationContext(), this.getString(2130968584), 0).show();
+
+                    }
+                }
+
+                String msg = "";
+
+                byte[] bytes = new byte[0];
+                try {
+                    bytes = convertDocToByteArray(ruta);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                String stream = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    stream = Base64.getEncoder().encodeToString(bytes);
+                }
+                byte[] newBytes = new byte[0];
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    newBytes = Base64.getDecoder().decode(stream);
+                }
+                try {
+                    convertByteArrayToDoc(ruta, newBytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    URL url = new URL(getString(R.string.Url)+LogoNegocio);
+                    Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    byte[] Data = POS_PrintBMP(image,384,0);
+                    this.SendDataByte(Data);
+                    this.SendDataString(contenidoImprimir);
+                } catch(IOException e) {
+                    System.out.println(e);
+                }
+
+
+
+            }catch(NullPointerException e) {
+                Toast toast1 =
+                        Toast.makeText(getContext(),
+                                "Hubo un error al tratar de conectar con la impresora", Toast.LENGTH_LONG);
+                toast1.show();
             }
+
+
+
         }
-
-        if (dev != null) {
-            if (!usbCtrl.isHasPermission(dev)) {
-                usbCtrl.getPermission(dev);
-            } else {
-                // Toast.makeText(this.getApplicationContext(), this.getString(2130968584), 0).show();
-
-            }
-        }
-
-        String msg = "";
-
-        byte[] bytes = new byte[0];
-        try {
-            bytes = convertDocToByteArray(ruta);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String stream = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            stream = Base64.getEncoder().encodeToString(bytes);
-        }
-        byte[] newBytes = new byte[0];
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            newBytes = Base64.getDecoder().decode(stream);
-        }
-        try {
-            convertByteArrayToDoc(ruta, newBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            URL url = new URL(getString(R.string.Url)+LogoNegocio);
-            Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            byte[] Data = POS_PrintBMP(image,384,0);
-            this.SendDataByte(Data);
-            this.SendDataString(contenidoImprimir);
-        } catch(IOException e) {
-            System.out.println(e);
-        }
-
-
-
-
-
-
-    }
 
     public static byte[] convertDocToByteArray(String path)throws FileNotFoundException, IOException {
         File file = new File(path);

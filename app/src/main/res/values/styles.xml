@@ -69,6 +69,7 @@
 
     <style name="Pop_up_activity" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="windowNoTitle">true</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
     </style>
 
     <style name="Transparent" parent="Theme.AppCompat.Light.NoActionBar">
@@ -78,6 +79,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
+
     </style>
 
 
