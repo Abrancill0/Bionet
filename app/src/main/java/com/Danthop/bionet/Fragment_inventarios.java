@@ -359,7 +359,7 @@ public class Fragment_inventarios extends Fragment {
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                     toast1.show();
                 }
-            }
+            }//S
         },
                 new Response.ErrorListener() {
                     @Override

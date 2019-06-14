@@ -84,6 +84,8 @@ public class Fragment_pestania_traslado extends Fragment {
     private TableDataClickListener<InventarioModel> tableListener;
     private String UUID;
     private TextView UUIDarticulostraslados;
+    private TextView StatusSolicitud;
+    private String estadosolicitud;
     private String AceptarSolicitud;
     private String CancelarSolicitud;
     private String status_solicitud;
@@ -376,32 +378,186 @@ public  void Traslados_Recibidas(){
                 UUIDarticulostraslados = ver_dialog_traslado.findViewById( R.id.cantidadtraslado );
                 UUIDarticulostraslados.setText(clickedData.getUUIDarticulo());
 
-                Button aceptar_solicitud = ver_dialog_traslado.findViewById(R.id.aceptar_solicitud);
-                aceptar_solicitud.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        responder_solicitud("aceptar");
-
-                    }
-                });
-
-                Button rechazar_solicitud = ver_dialog_traslado.findViewById(R.id.rechazar_solicitud);
-                rechazar_solicitud.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
+                StatusSolicitud = ver_dialog_traslado.findViewById(R.id.StatuSolicitud);
+                StatusSolicitud.setText(clickedData.getstatus_solicitud());
+                estadosolicitud = String.valueOf( StatusSolicitud.getText() );
 
                 Button cerrar_ventana = ver_dialog_traslado.findViewById(R.id.cerrar_ventana);
                 cerrar_ventana.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v){
+                    public void onClick(View v) {
                         ver_dialog_traslado.dismiss();
                     }
                 });
+//---------------------------------------btn Aceptada-----------------------------------------------
+                Button aceptar_solicitud = ver_dialog_traslado.findViewById(R.id.aceptar_solicitud);
+                aceptar_solicitud.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int resultadoAceptada = estadosolicitud.compareTo("Aceptada");
+                        if (resultadoAceptada == 0){
 
+                            ver_dialog_traslado.setContentView(R.layout.pop_up_solicitud_traslado_aceptada);
+                            ver_dialog_traslado.show();
+
+                            Button Aceptar = ver_dialog_traslado.findViewById(R.id.Aceptar);
+                            Aceptar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ver_dialog_traslado.dismiss();
+                                }
+                            });
+
+                            Button tachita = ver_dialog_traslado.findViewById(R.id.tachita);
+                            tachita.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ver_dialog_traslado.dismiss();
+                                }
+                            });
+                        }
+
+
+                        int resultRechazada = estadosolicitud.compareTo("Rechazada");
+                        if (resultRechazada == 0){
+
+                            ver_dialog_traslado.setContentView(R.layout.pop_up_solicitud_trasladoaceptada);
+                            ver_dialog_traslado.show();
+
+                            Button Aceptar = ver_dialog_traslado.findViewById(R.id.Aceptar);
+                            Aceptar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ver_dialog_traslado.dismiss();
+                                }
+                            });
+
+                            Button tachita = ver_dialog_traslado.findViewById(R.id.tachita);
+                            tachita.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ver_dialog_traslado.dismiss();
+                                }
+                            });
+                        }
+
+                        int resultCancelada = estadosolicitud.compareTo("Cancelada");
+                        if (resultCancelada == 0){
+
+                            ver_dialog_traslado.setContentView(R.layout.pop_up_solicitud_traslado_cancelado);
+                            ver_dialog_traslado.show();
+
+                            Button Aceptar = ver_dialog_traslado.findViewById(R.id.Aceptar);
+                            Aceptar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ver_dialog_traslado.dismiss();
+                                }
+                            });
+
+                            Button tachita = ver_dialog_traslado.findViewById(R.id.tachita);
+                            tachita.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ver_dialog_traslado.dismiss();
+                                }
+                            });
+                        }
+
+
+                        int resultadoEnviada = estadosolicitud.compareTo("Enviada");
+                        if (resultadoEnviada == 0){
+                            responder_solicitud("aceptar");
+                            ver_dialog_traslado.dismiss();
+                        }
+
+
+                    }
+                });
+//---------------------------------------btn Rechazada-------------------------------------------
+                        Button rechazar_solicitud = ver_dialog_traslado.findViewById(R.id.rechazar_solicitud);
+                        rechazar_solicitud.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                int resultadoRechazada = estadosolicitud.compareTo("Aceptada");
+                                if (resultadoRechazada == 0){
+
+                                    ver_dialog_traslado.setContentView(R.layout.pop_up_solicitud_traslado_rechazada);
+                                    ver_dialog_traslado.show();
+
+                                    Button Aceptar = ver_dialog_traslado.findViewById(R.id.Aceptar);
+                                    Aceptar.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ver_dialog_traslado.dismiss();
+                                        }
+                                    });
+
+                                    Button tachita = ver_dialog_traslado.findViewById(R.id.tachita);
+                                    tachita.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ver_dialog_traslado.dismiss();
+                                        }
+                                    });
+                                }
+
+                                int resultRechazada = estadosolicitud.compareTo("Rechazada");
+                                if (resultRechazada == 0){
+
+                                    ver_dialog_traslado.setContentView(R.layout.pop_up_solicitud_trasladorechazada);
+                                    ver_dialog_traslado.show();
+
+                                    Button Aceptar = ver_dialog_traslado.findViewById(R.id.Aceptar);
+                                    Aceptar.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ver_dialog_traslado.dismiss();
+                                        }
+                                    });
+
+                                    Button tachita = ver_dialog_traslado.findViewById(R.id.tachita);
+                                    tachita.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ver_dialog_traslado.dismiss();
+                                        }
+                                    });
+                                }
+
+
+                                int resultCancelada = estadosolicitud.compareTo("Cancelada");
+                                if (resultCancelada == 0){
+
+                                    ver_dialog_traslado.setContentView(R.layout.pop_up_solicitud_trasladocancelado);
+                                    ver_dialog_traslado.show();
+
+                                    Button Aceptar = ver_dialog_traslado.findViewById(R.id.Aceptar);
+                                    Aceptar.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ver_dialog_traslado.dismiss();
+                                        }
+                                    });
+
+                                    Button tachita = ver_dialog_traslado.findViewById(R.id.tachita);
+                                    tachita.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ver_dialog_traslado.dismiss();
+                                        }
+                                    });
+                                }
+
+
+                                int resultadoEnviada = estadosolicitud.compareTo("Enviada");
+                                if (resultadoEnviada == 0){
+                                    responder_solicitud("rechazar");
+                                    ver_dialog_traslado.dismiss();
+                                }
+                            }
+                        });
 
             }
         };
@@ -412,7 +568,7 @@ public  void Traslados_Recibidas(){
 
         String tiporeturn = tipo;
         String url = getString(R.string.Url);
-        String ApiPath = url + "api/inventario/responder_solicitud";
+        String ApiPath = url + "/api/inventario/responder_solicitud";
 
 
         JSONObject jsonBodyrequest = new JSONObject();
@@ -423,7 +579,6 @@ public  void Traslados_Recibidas(){
             jsonBodyrequest.put("tipo_traslado",tipo_traslado);
             jsonBodyrequest.put("respuesta",tiporeturn);
 
-
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -431,79 +586,37 @@ public  void Traslados_Recibidas(){
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,jsonBodyrequest, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
-                JSONArray Resultado = null;
                 try {
                     int status = Integer.parseInt(response.getString("estatus"));
                     String Mensaje = response.getString("mensaje");
 
-                    if (status == 0){
-                        Toast.makeText(getContext(), "No se puede aceptar la solicitud", Toast.LENGTH_LONG).show();
+                    if (status == 1)
+                    {
+                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG).show();
                     }
 
-                    if (status == 1){
-                        Resultado = response.getJSONArray( "resultado" );
 
-                        for (int n=0; n<Resultado.length(); n++){
-                            JSONObject elemento = Resultado.getJSONObject(n);
-
-                        }
-                        final InventarioModel comisiones = new InventarioModel(
-                                sku,
-                                producto,
-                                existencia,
-                                categoria,
-                                modificadores,
-                                nombre_sucursal,
-                                suc_id,
-                                articulo_descripcion,
-                                art_tipo,
-                                art_disponible_venta,
-                                art_disponible_compra,
-                                ava_aplica_apartados,
-                                ava_aplica_cambio_devolucion,
-                                aim_url,
-                                art_nombre,
-                                cat_nombre,
-                                his_tipo,
-                                his_cantidad,
-                                his_observaciones,
-                                his_fecha_hora_creo,
-                                codigoBarras,
-                                almacen,
-                                RecibidasOrigen,
-                                RecibidasDestino,
-                                tra_nombre_estatus,
-                                suc_numero_sucursal_destino,
-                                suc_numero_sucursal_origen,
-                                "",
-                                tra_motivo,"","","","","","",
-                                status_solicitud, status_nombre);
-
-                        // pagocomision.add(comisiones);
-
-
-                        //final ComisionesAdapter comisionAdapter = new ComisionesAdapter(getContext(), pagocomision, tabla_comisiones);
-                        // tabla_comisiones.setDataAdapter(comisionAdapter);
-
-
-                    }
 
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Toast toast1 =
+                            Toast.makeText(getContext(), "Error", Toast.LENGTH_LONG);
+                    toast1.show();
                 }
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast toast1 = Toast.makeText(getContext(), "Error de conexion", Toast.LENGTH_SHORT);
+                        Toast toast1 = Toast.makeText(getContext(),error.getMessage() , Toast.LENGTH_SHORT);
                         toast1.show();
                     }
                 }
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
-
     }
 
 }
