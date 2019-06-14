@@ -156,11 +156,11 @@ public class Login extends Activity {
                                 ResultadoToken.setSso_token_type(TokenType);
                                 ResultadoToken.setSso_refresh_Token(RefreshToken);
                                 ResultadoToken.setSso_expire(Expire);
-                               // ObtieneUsuario(token);
+                                // ObtieneUsuario(token);
 
                                 ObtieneLicencia(token);
 
-                               // Logintemporal();
+                                // Logintemporal();
 
                                 Log.e("Your Array Response", response);
                             } catch (JSONException err) {
@@ -246,7 +246,7 @@ public class Login extends Activity {
                 @Override
                 public void onResponse(JSONObject response) {
 
-                //    Resultado = new LoginModel();
+                    //    Resultado = new LoginModel();
 
                     JSONArray Respuesta = null;
                     JSONObject RespuestaObjeto = null;
