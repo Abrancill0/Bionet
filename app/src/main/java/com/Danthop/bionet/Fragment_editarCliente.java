@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -313,6 +314,20 @@ public class Fragment_editarCliente extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_clientes()).commit();
+                onDetach();
+            }
+        });
+
+        TextMunicipio.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if((event.getAction()==KeyEvent.ACTION_DOWN)&&(keyCode==KeyEvent.KEYCODE_ENTER))
+                {
+                    TextMunicipio.clearFocus();
+                    TextCalle.requestFocus();
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -876,6 +891,7 @@ public class Fragment_editarCliente extends Fragment {
 
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_clientes()).commit();
+                onDetach();
 
                 progreso.hide();
 
@@ -991,6 +1007,10 @@ public class Fragment_editarCliente extends Fragment {
                 }
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequets);
+    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
     //----------------------------------------------------------------------------------
 

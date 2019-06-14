@@ -155,6 +155,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_traslado()).commit();
+                onDetach();
             }
         });
         SucursalID = new ArrayList<>();
@@ -752,6 +753,11 @@ private void SpinnerSucursales() {
                 }
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
 }

@@ -29,6 +29,7 @@ public class SortableClientesTable extends SortableTableView<ClienteModel> {
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
         simpleHeader.setTextSize( 18 );
+        simpleHeader.setPaddings(5,5,5,5);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
         tableColumnWeightModel.setColumnWeight(0, 2);

@@ -807,6 +807,7 @@ public class Fragment_Ventas extends Fragment {
                     public void onClick(View v) {
                         dialog.dismiss();
                         fr.replace(R.id.fragment_container, new Fragment_ventas_crear_cliente()).commit();
+                        onDetach();
                     }
                 });
             }
@@ -846,6 +847,8 @@ public class Fragment_Ventas extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container, new Fragment_ventas_transacciones()).commit();
+                onStop();
+                onDetach();
             }
         });
 
@@ -853,6 +856,8 @@ public class Fragment_Ventas extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container, new Fragment_ventas_corte_caja_listado()).commit();
+                onStop();
+                onDetach();
             }
         });
 
@@ -860,6 +865,8 @@ public class Fragment_Ventas extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container, new Fragment_pestania_comison()).commit();
+                onStop();
+                onDetach();
             }
         });
 
@@ -1065,7 +1072,7 @@ public class Fragment_Ventas extends Fragment {
                                                     Toast.makeText(getContext(),
                                                             totalvalida + " " + totalsumaimportes + " " + PagosEfectivo,
                                                             Toast.LENGTH_LONG);
-                                            toast2.show();
+                                            //toast2.show();
 
                                             if (totalvalida > TotalFormat){
                                                 Toast toast1 =
@@ -4354,6 +4361,10 @@ public class Fragment_Ventas extends Fragment {
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
 
 
 

@@ -108,6 +108,7 @@ public class Fragment_pestania_traslado extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_inventarios()).commit();
+                onDetach();
             }
         });
 
@@ -117,6 +118,7 @@ public class Fragment_pestania_traslado extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_historico()).commit();
+                onDetach();
             }
         });
 
@@ -129,6 +131,7 @@ public class Fragment_pestania_traslado extends Fragment {
                 //dialog.show(getFragmentManager(), "MyCustomDialog");
                FragmentTransaction fr = getFragmentManager().beginTransaction();
                fr.replace(R.id.fragment_container,new Fragment_pop_up_traslados()).commit();
+               onDetach();
             }
         });
 
@@ -169,6 +172,7 @@ public class Fragment_pestania_traslado extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container, new Fragment_pestania_traslado_recibidos()).commit();
+                onDetach();
             }
         });
 
@@ -617,6 +621,11 @@ public  void Traslados_Recibidas(){
                 }
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
 }

@@ -143,7 +143,11 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
     }
 
     private View renderConsumoPromedio(final ClienteModel cliente) {
-        return renderString( "$"+cliente.getConsumoPromedio());
+
+        final TextView textView = new TextView(getContext());
+        textView.setText( "$"+cliente.getConsumoPromedio());
+        textView.setPadding(5,5,5,5);
+        return textView;
 
        /* Double  Consumo = Double.valueOf( cliente.getConsumoPromedio() );
 
@@ -160,8 +164,9 @@ public class ClienteAdapter extends LongPressAwareTableDataAdapter<ClienteModel>
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
         textView.setText(value);
-        textView.setPadding(20, 10, 20, 10);
         textView.setTextSize(TEXT_SIZE);
+        textView.setPadding(5,5,5,5);;
+        textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
         return textView;
     }
 

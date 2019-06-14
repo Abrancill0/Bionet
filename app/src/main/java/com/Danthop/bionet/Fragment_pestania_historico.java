@@ -91,6 +91,7 @@ public class Fragment_pestania_historico extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_inventarios()).commit();
+                onDetach();
             }
         });
 
@@ -100,6 +101,7 @@ public class Fragment_pestania_historico extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_traslado()).commit();
+                onDetach();
             }
         });
 
@@ -109,6 +111,7 @@ public class Fragment_pestania_historico extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_inventario_existencias()).commit();
+                onDetach();
             }
         });
 
@@ -144,6 +147,7 @@ public class Fragment_pestania_historico extends Fragment {
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Sucursal", "Movimiento", "Cantidad", "Observaciones", "Fecha");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader.setTextSize( 18 );
+        simpleHeader.setPaddings(5,5,5,5);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(7);
         tableColumnWeightModel.setColumnWeight(0, 2);
@@ -262,5 +266,47 @@ public class Fragment_pestania_historico extends Fragment {
         );
         VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
     }
+<<<<<<< HEAD
 
+=======
+//----------------------------------------------------------------------------------------------------------------------------------------
+   /* private void LoadListenerTable(){
+        tablaListener = new TableDataClickListener<HistoricoModel>() {
+            @Override
+            public void onDataClicked(int rowIndex, final HistoricoModel clickedData) {
+                final Dialog ver_producto_dialog;
+                ver_producto_dialog = new Dialog(getContext());
+                ver_producto_dialog.setContentView(R.layout.pop_up_ficha_articulos_historico);
+                ver_producto_dialog.show();
+
+                TextView nombre_producto = ver_producto_dialog.findViewById(R.id.articulo_nombre);
+                TextView tipo_articulo = ver_producto_dialog.findViewById(R.id.tipo_producto);
+                TextView sku = ver_producto_dialog.findViewById(R.id.sku_producto);
+                TextView descripcion = ver_producto_dialog.findViewById(R.id.descripcion_producto);
+                TextView categoria = ver_producto_dialog.findViewById(R.id.categoria_producto);
+                TextView disponible_venta = ver_producto_dialog.findViewById(R.id.disponible_venta);
+                TextView art_disponible_compra = ver_producto_dialog.findViewById(R.id.disponible_compra);
+                TextView ava_aplica_apartados = ver_producto_dialog.findViewById(R.id.aplica_apartados);
+                TextView ava_aplica_cambio_devolucion = ver_producto_dialog.findViewById(R.id.aplica_devoluciones);
+                ImageView FotoArticulo = (ImageView) ver_producto_dialog.findViewById(R.id.img);
+
+                nombre_producto.setText(clickedData.getProducto());
+                tipo_articulo.setText(clickedData.getArt_tipo());
+                sku.setText(clickedData.getSku());
+                descripcion.setText(clickedData.getArt_descripcion());
+                categoria.setText(clickedData.getCategoria());
+                disponible_venta.setText(clickedData.getart_disponible_venta());
+                art_disponible_compra.setText(clickedData.getart_disponible_compra());
+                ava_aplica_apartados.setText(clickedData.getava_aplica_apartados());
+                ava_aplica_cambio_devolucion.setText(clickedData.getava_aplica_cambio_devolucion());
+                imageLoader.displayImage(String.valueOf(clickedData.getaim_url()),FotoArticulo);
+            }
+        };
+    }*/
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+>>>>>>> e9e34965ec5711dcf28b239c0f60c9cf0473a948
 }

@@ -98,6 +98,7 @@ public class Fragment_pestania_comison extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_Ventas()).commit();
+                onDetach();
             }
         });
 
@@ -107,6 +108,7 @@ public class Fragment_pestania_comison extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_ventas_transacciones()).commit();
+                onDetach();
             }
         });
 
@@ -116,6 +118,7 @@ public class Fragment_pestania_comison extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_cortecaja()).commit();
+                onDetach();
             }
         });
 
@@ -125,6 +128,7 @@ public class Fragment_pestania_comison extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_comison()).commit();
+                onDetach();
             }
         });
 
@@ -425,6 +429,10 @@ private void LoadListenerTable(){
         }
     };
 }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
 
 
 

@@ -112,6 +112,7 @@ public class FragmentLealtad extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container,new FragmentLealtadConfiguraciones()).commit();
+                onDetach();
 
             }
         });
@@ -123,6 +124,7 @@ public class FragmentLealtad extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container,new FragmentLealtadInscribir()).commit();
+                onDetach();
 
             }
 
@@ -133,6 +135,7 @@ public class FragmentLealtad extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container,new FragmentLealtadArticulo()).commit();
+                onDetach();
 
             }
         });
@@ -445,6 +448,11 @@ public class FragmentLealtad extends Fragment {
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
 
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
 }

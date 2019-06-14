@@ -117,7 +117,7 @@ public class HistoricoAdapter extends LongPressAwareTableDataAdapter<HistoricoMo
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
         textView.setText(value);
-        textView.setPadding(20, 10, 20, 10);
+        textView.setPadding(5,2,5,2);
         textView.setTextSize(TEXT_SIZE);
         return textView;
     }

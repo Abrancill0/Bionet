@@ -150,6 +150,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_Ventas()).commit();
+                onDetach();
             }
         });
 
@@ -159,6 +160,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_ventas_transacciones()).commit();
+                onDetach();
             }
         });
 
@@ -168,6 +170,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_ventas_corte_lista_sinfactura()).commit();
+                onDetach();
             }
         });
 
@@ -177,6 +180,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_comison()).commit();
+                onDetach();
             }
         });
 
@@ -185,6 +189,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();
+                onDetach();
             }
         });
 
@@ -193,6 +198,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_cortecaja()).commit();
+                onDetach();
             }
         });
 
@@ -298,6 +304,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
                             Toast.makeText( getContext(), "Corte de Caja Generado Exitosamente", Toast.LENGTH_LONG ).show();
                             FragmentTransaction fr = getFragmentManager().beginTransaction();
                             fr.replace( R.id.fragment_container, new Fragment_ventas_corte_caja_listado() ).commit();
+                            onDetach();
                         }
                     } );
 
@@ -689,6 +696,11 @@ public class Fragment_pestania_cortecaja extends Fragment {
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
 

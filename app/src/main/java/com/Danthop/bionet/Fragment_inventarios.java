@@ -125,6 +125,7 @@ public class Fragment_inventarios extends Fragment {
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Artículo", "Código de barras", "Categoría", "Existencias", "Sucursal");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         simpleHeader.setTextSize( 18 );
+        simpleHeader.setPaddings(5,5,5,5);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
         tableColumnWeightModel.setColumnWeight(0, 2);
@@ -143,6 +144,7 @@ public class Fragment_inventarios extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container, new Fragment_pestania_traslado()).commit();
+                onDetach();
             }
         });
 
@@ -152,6 +154,7 @@ public class Fragment_inventarios extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_historico()).commit();
+                onDetach();
             }
         });
 
@@ -161,6 +164,7 @@ public class Fragment_inventarios extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_inventario_existencias()).commit();
+                onDetach();
             }
         });
 
@@ -418,6 +422,7 @@ public class Fragment_inventarios extends Fragment {
         };
     }
 
+<<<<<<< HEAD
     public void LoadSucursales() {
         JSONObject request = new JSONObject();
         try {
@@ -488,4 +493,10 @@ public class Fragment_inventarios extends Fragment {
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
+=======
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+>>>>>>> e9e34965ec5711dcf28b239c0f60c9cf0473a948
 }

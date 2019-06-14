@@ -210,6 +210,7 @@ public class FragmentLealtadArticulo extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container,new FragmentLealtadInscribir()).commit();
+                onDetach();
 
             }
         });
@@ -217,6 +218,7 @@ public class FragmentLealtadArticulo extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container,new FragmentLealtadConfiguraciones()).commit();
+                onDetach();
 
             }
         });
@@ -224,6 +226,7 @@ public class FragmentLealtadArticulo extends Fragment {
             @Override
             public void onClick(View v) {
                 fr.replace(R.id.fragment_container,new FragmentLealtad()).commit();
+                onDetach();
 
             }
         });
@@ -449,6 +452,11 @@ public class FragmentLealtadArticulo extends Fragment {
 
 
 
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
 }

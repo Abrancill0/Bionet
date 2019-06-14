@@ -220,6 +220,33 @@ public class Fragment_crear_cliente extends DialogFragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_clientes()).commit();
+                onDetach();
+            }
+        });
+
+        TextMunicipio.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if((event.getAction()==KeyEvent.ACTION_DOWN)&&(keyCode==KeyEvent.KEYCODE_ENTER))
+                {
+                    TextMunicipio.clearFocus();
+                    SpinnerColonia.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        TextNumExt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if((event.getAction()==KeyEvent.ACTION_DOWN)&&(keyCode==KeyEvent.KEYCODE_ENTER))
+                {
+                    TextNumExt.clearFocus();
+                    TextRfc.requestFocus();
+                    return true;
+                }
+                return false;
             }
         });
         return v;
@@ -387,6 +414,7 @@ public class Fragment_crear_cliente extends DialogFragment {
 
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_clientes()).commit();
+                onDetach();
                 progreso.hide();
 
                 String estatus = "0";
@@ -819,6 +847,11 @@ public class Fragment_crear_cliente extends DialogFragment {
                 }
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequets);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
  //----------------------------------------------------------------------------------
 }

@@ -78,6 +78,7 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_inventarios()).commit();
+                onDetach();
             }
         });
 
@@ -87,6 +88,7 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_historico()).commit();
+                onDetach();
             }
         });
 
@@ -96,6 +98,7 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container,new Fragment_pestania_traslado()).commit();
+                onDetach();
             }
         });
 
@@ -312,4 +315,8 @@ private void Load_ExistenciasInventario() {
 }
 //------------------------------------------------------------------------------------------------------------------------
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
 }
