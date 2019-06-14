@@ -159,7 +159,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
         });
         SucursalID = new ArrayList<>();
         SucursalName = new ArrayList<>();
-        //text1=(TextView)v.findViewById(R.id.text1);
+
         text2=(TextView)v.findViewById(R.id.text2);
         SucOrigen=(TextView)v.findViewById(R.id.SucOrigen);
         SpinnerSucursal=(Spinner)v.findViewById(R.id.Sucursal_Origen);
@@ -168,6 +168,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (RespuestaTodo != null)
                 {
+                    dialog.dismiss();
                     MuestraArticulossinApi();
                     ArticulosTraslados.clear();
                 }

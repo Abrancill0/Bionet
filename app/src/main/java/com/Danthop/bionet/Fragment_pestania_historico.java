@@ -126,8 +126,6 @@ public class Fragment_pestania_historico extends Fragment {
             }
         });
 
-        ver_producto_dialog=new Dialog(getContext());
-        ver_producto_dialog.setContentView(R.layout.pop_up_ficha_articulos_historico);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
@@ -138,6 +136,9 @@ public class Fragment_pestania_historico extends Fragment {
         progressDialog.show();
 
         historico = new ArrayList<>();
+        ver_producto_dialog=new Dialog(getContext());
+        ver_producto_dialog.setContentView(R.layout.pop_up_ficha_articulos_historico);
+
 
         tabla_historico = (SortableHistoricoTable) v.findViewById(R.id.tabla_historico);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Sucursal", "Movimiento", "Cantidad", "Observaciones", "Fecha");
@@ -157,34 +158,11 @@ public class Fragment_pestania_historico extends Fragment {
         tabla_historico.setColumnModel(tableColumnWeightModel);
 
         Muestra_historico();
-       // LoadListenerTable();
-
-        /*tabla_historico.setSwipeToRefreshEnabled(true);
-        tabla_historico.setSwipeToRefreshListener(new SwipeToRefreshListener() {
-            @Override
-            public void onRefresh(final RefreshIndicator refreshIndicator) {
-                tabla_historico.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        historico.clear();
-                        //Muestra_Inventario();
-                        refreshIndicator.hide();
-                    }
-                }, 2000);
-            }
-        });
-
-        tabla_historico.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
-        tabla_historico.addDataClickListener(tablaListener);*/
         return v;
     }
 
     public void Muestra_historico() {
-        JSONObject request = new JSONObject();
-        try {
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1";
 
@@ -203,7 +181,7 @@ public class Fragment_pestania_historico extends Fragment {
                     if (status == 1) {
                         progressDialog.dismiss();
                         Resultado = response.getJSONObject("resultado");
-//---------------------------------------------------------------------------------------
+
                         aHistoricos = Resultado.getJSONArray("aHistoricos");
                         HistoricoModel = new String[aHistoricos.length()][4];
 
@@ -232,21 +210,6 @@ public class Fragment_pestania_historico extends Fragment {
                             SimpleDateFormat formatter = new SimpleDateFormat(Formato);
 
                             FechaconFormato = formatter.format(date_f.getTime());
-
-                          /*  String JsonTimeStamp = RespuestaFecha.getString("seconds");
-                            Long TimeStamp = Long.parseLong(JsonTimeStamp);
-
-                            Timestamp ts = new Timestamp(TimeStamp);
-                            Date date = ts;
-
-                            String Formato = "dd/MM/yyyy";
-                            SimpleDateFormat formatter = new SimpleDateFormat(Formato);
-
-                            //Calendar calendar = Calendar.getInstance();
-                            //calendar.setTimeInMillis(TimeStamp);
-
-                            FechaconFormato = formatter.format(date.getTime());*/
-
 
                             String var = elemento.getString("his_observaciones");
                             if (var == "null"){
@@ -299,38 +262,5 @@ public class Fragment_pestania_historico extends Fragment {
         );
         VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
     }
-//----------------------------------------------------------------------------------------------------------------------------------------
-   /* private void LoadListenerTable(){
-        tablaListener = new TableDataClickListener<HistoricoModel>() {
-            @Override
-            public void onDataClicked(int rowIndex, final HistoricoModel clickedData) {
-                final Dialog ver_producto_dialog;
-                ver_producto_dialog = new Dialog(getContext());
-                ver_producto_dialog.setContentView(R.layout.pop_up_ficha_articulos_historico);
-                ver_producto_dialog.show();
 
-                TextView nombre_producto = ver_producto_dialog.findViewById(R.id.articulo_nombre);
-                TextView tipo_articulo = ver_producto_dialog.findViewById(R.id.tipo_producto);
-                TextView sku = ver_producto_dialog.findViewById(R.id.sku_producto);
-                TextView descripcion = ver_producto_dialog.findViewById(R.id.descripcion_producto);
-                TextView categoria = ver_producto_dialog.findViewById(R.id.categoria_producto);
-                TextView disponible_venta = ver_producto_dialog.findViewById(R.id.disponible_venta);
-                TextView art_disponible_compra = ver_producto_dialog.findViewById(R.id.disponible_compra);
-                TextView ava_aplica_apartados = ver_producto_dialog.findViewById(R.id.aplica_apartados);
-                TextView ava_aplica_cambio_devolucion = ver_producto_dialog.findViewById(R.id.aplica_devoluciones);
-                ImageView FotoArticulo = (ImageView) ver_producto_dialog.findViewById(R.id.img);
-
-                nombre_producto.setText(clickedData.getProducto());
-                tipo_articulo.setText(clickedData.getArt_tipo());
-                sku.setText(clickedData.getSku());
-                descripcion.setText(clickedData.getArt_descripcion());
-                categoria.setText(clickedData.getCategoria());
-                disponible_venta.setText(clickedData.getart_disponible_venta());
-                art_disponible_compra.setText(clickedData.getart_disponible_compra());
-                ava_aplica_apartados.setText(clickedData.getava_aplica_apartados());
-                ava_aplica_cambio_devolucion.setText(clickedData.getava_aplica_cambio_devolucion());
-                imageLoader.displayImage(String.valueOf(clickedData.getaim_url()),FotoArticulo);
-            }
-        };
-    }*/
 }

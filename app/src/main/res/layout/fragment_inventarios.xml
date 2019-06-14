@@ -138,7 +138,7 @@
                     <SearchView
                         android:id="@+id/search_inventario"
                         android:layout_width="match_parent"
-                        android:layout_height="34dp"
+                        android:layout_height="35dp"
                         android:layout_gravity="left"
                         android:layout_marginVertical="10dp"
                         android:layout_marginLeft="8dp"
@@ -149,15 +149,12 @@
                         android:queryHint="Buscar" />
 
                     <Spinner
-                        android:id="@+id/categoria_inventario"
-                        android:layout_width="match_parent"
-                        android:layout_height="34dp"
-                        android:layout_gravity="left"
-                        android:layout_marginVertical="10dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_weight=".5"
-                        android:background="@drawable/spinner_giro" />
+                        android:id="@+id/sucursal"
+                        style="@style/SpinnerTheme"
+                        android:layout_width="221dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/spinner_giro" ></Spinner>
+
                 </LinearLayout>
 
             </LinearLayout>

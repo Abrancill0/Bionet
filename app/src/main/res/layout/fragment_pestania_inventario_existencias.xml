@@ -137,7 +137,7 @@
                     android:padding="20dp">
 
                     <SearchView
-                        android:id="@+id/search_inventario"
+                        android:id="@+id/search_disponibilidad"
                         android:layout_width="match_parent"
                         android:layout_height="34dp"
                         android:layout_gravity="right"
@@ -153,7 +153,7 @@
                     <Button
                         android:id="@+id/btn_buscarexistencias"
                         android:layout_width="match_parent"
-                        android:layout_height="34dp"
+                        android:layout_height="35dp"
                         android:layout_gravity="right"
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
@@ -163,8 +163,7 @@
                         android:textColor="@color/white"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:visibility="invisible" />
-
+                        android:visibility="visible" />
                 </LinearLayout>
 
             </LinearLayout>

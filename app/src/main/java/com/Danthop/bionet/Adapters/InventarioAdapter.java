@@ -187,4 +187,6 @@ public class InventarioAdapter extends LongPressAwareTableDataAdapter<Inventario
             notifyDataSetChanged();
         }
     };
+
+
 }

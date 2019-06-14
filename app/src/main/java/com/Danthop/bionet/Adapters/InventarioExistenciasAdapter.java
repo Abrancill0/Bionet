@@ -6,20 +6,27 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.TextView;
 
 import com.Danthop.bionet.Tables.SortableInventariosTable;
+import com.Danthop.bionet.model.HistoricoModel;
 import com.Danthop.bionet.model.InventarioModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class InventarioExistenciasAdapter extends LongPressAwareTableDataAdapter<InventarioModel> {
     int TEXT_SIZE = 16;
+    private List<InventarioModel> historicoList;
+    private List<InventarioModel> historicoListFull;
 
     public InventarioExistenciasAdapter(final Context context, final List<InventarioModel> data, final SortableInventariosTable tableView) {
         super(context, data, tableView);
+        historicoList=data;
+        historicoListFull = new ArrayList<>(data);
     }
     @Override
     public View getDefaultCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
@@ -119,4 +126,43 @@ public class InventarioExistenciasAdapter extends LongPressAwareTableDataAdapter
         public void afterTextChanged(Editable s) {
             ordenToUpdate.setNombre_sucursal(s.toString());
         }
-    }}
+    }
+
+    @Override
+    public Filter getFilter() {
+        return HistoricoFilter;
+    }
+
+    private Filter HistoricoFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<InventarioModel> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(historicoListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (InventarioModel item : historicoListFull) {
+                    if (item.getArt_nombre().toLowerCase().contains(filterPattern)
+                            || item.getSku().toLowerCase().contains(filterPattern)
+                            || item.getArt_nombre().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            historicoList.clear();
+            historicoList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+}

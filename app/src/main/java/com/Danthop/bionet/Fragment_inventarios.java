@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -92,6 +93,9 @@ public class Fragment_inventarios extends Fragment {
     private ProgressDialog progressDialog;
     private InventarioAdapter inventarioAdapter;
     private SearchView Buscar;
+    private Spinner SpinnerSucursal;
+    private ArrayList<String> SucursalName;
+    private ArrayList<String> SucursalID;
 
     public Fragment_inventarios() {
         // Required empty public constructor
@@ -102,16 +106,6 @@ public class Fragment_inventarios extends Fragment {
         View v = inflater.inflate(R.layout.fragment_inventarios, container, false);
         fr = getFragmentManager().beginTransaction();
 
-        Buscar= (SearchView) v.findViewById(R.id.search_inventario);
-
-        Spinner spinner = (Spinner) v.findViewById(R.id.categoria_inventario);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.Giros, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        spinner.setAdapter(adapter);
-
-        ver_producto_dialog=new Dialog(getContext());
-        ver_producto_dialog.setContentView(R.layout.pop_up_ficha_articulos);
-
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
 
@@ -121,6 +115,11 @@ public class Fragment_inventarios extends Fragment {
         progressDialog.show();
 
         inventarios = new ArrayList<>();
+        SucursalName = new ArrayList<>();
+        SucursalID = new ArrayList<>();
+        Buscar= (SearchView) v.findViewById(R.id.search_inventario);
+        ver_producto_dialog=new Dialog(getContext());
+        ver_producto_dialog.setContentView(R.layout.pop_up_ficha_articulos);
 
         tabla_inventario = (SortableInventariosTable) v.findViewById(R.id.tabla_inventario);
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "SKU", "Artículo", "Código de barras", "Categoría", "Existencias", "Sucursal");
@@ -165,8 +164,6 @@ public class Fragment_inventarios extends Fragment {
             }
         });
 
-        Muestra_Inventario();
-        LoadListenerTable();
 
        tabla_inventario.setSwipeToRefreshEnabled(true);
         tabla_inventario.setSwipeToRefreshListener(new SwipeToRefreshListener() {
@@ -199,15 +196,28 @@ public class Fragment_inventarios extends Fragment {
             }
         });
 
+        Muestra_Inventario();
+        LoadListenerTable();
+        LoadSucursales();
+
+        SpinnerSucursal = (Spinner) v.findViewById(R.id.sucursal);
+        SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                progressDialog.show();
+                Muestra_Inventario();
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+
         return v;
     }
-//------------------------------------------------------------------------------------------------------------------------
+
     private void Muestra_Inventario() {
-        JSONObject request = new JSONObject();
-        try {
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1";
 
@@ -217,7 +227,6 @@ public class Fragment_inventarios extends Fragment {
 
                 JSONObject Resultado = null;
                 JSONArray Articulo = null;
-                JSONArray Sucursales = null;
                 JSONArray imagenes = null;
                 JSONObject RespuestaUUID = null;
                 JSONObject RespuestaExistencias= null;
@@ -359,7 +368,7 @@ public class Fragment_inventarios extends Fragment {
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                     toast1.show();
                 }
-            }//S
+            }
         },
                 new Response.ErrorListener() {
                     @Override
@@ -373,7 +382,7 @@ public class Fragment_inventarios extends Fragment {
         getRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( getRequest );
     }
-//------------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
     private void LoadListenerTable(){
         tablaListener = new TableDataClickListener<InventarioModel>() {
@@ -408,4 +417,75 @@ public class Fragment_inventarios extends Fragment {
             }
         };
     }
+
+    public void LoadSucursales() {
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+        String ApiPath = url + "/api/configuracion/sucursales/index_app";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONArray RespuestaNodoSucursales = null;
+                JSONObject RespuestaNodoID = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+                    if (status == 1) {
+                        progressDialog.dismiss();
+
+                        Respuesta = response.getJSONObject("resultado");
+
+                        RespuestaNodoSucursales = Respuesta.getJSONArray("aSucursales");
+
+                        for (int x = 0; x < RespuestaNodoSucursales.length(); x++) {
+                            JSONObject jsonObject1 = RespuestaNodoSucursales.getJSONObject(x);
+                            String sucursal = jsonObject1.getString("suc_nombre");
+                            SucursalName.add(sucursal);
+                            RespuestaNodoID = jsonObject1.getJSONObject("suc_id");
+                            String id = RespuestaNodoID.getString("uuid");
+                            SucursalID.add(id);
+                        }
+                        SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, SucursalName));
+
+                    } else {
+                        progressDialog.dismiss();
+                        Toast toast1 = Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    progressDialog.dismiss();
+
+                    Toast toast1 = Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
 }

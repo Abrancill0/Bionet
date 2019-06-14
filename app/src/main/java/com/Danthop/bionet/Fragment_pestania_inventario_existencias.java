@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.InventarioExistenciasAdapter;
@@ -60,6 +61,8 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
     private String ava_aplica_apartados;
     private String ava_aplica_cambio_devolucion;
 
+    private InventarioExistenciasAdapter ExistenciasAdapter;
+    private SearchView Buscar;
 
 
     public Fragment_pestania_inventario_existencias() {
@@ -119,7 +122,7 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
         tabla_inventario_existencias.setColumnModel(tableColumnWeightModel);
 
 
-        btn_buscarexistencias = (Button)v.findViewById( R.id.btn_buscarexistencias );
+       btn_buscarexistencias = (Button)v.findViewById( R.id.btn_buscarexistencias );
         btn_buscarexistencias.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,17 +130,27 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
             }
         });
 
+        Buscar = v.findViewById(R.id.search_disponibilidad);
+        Buscar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ExistenciasAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+        Load_ExistenciasInventario();
         return v;
     }
 
 //--------------------------------------------------------------------------------------------------
 private void Load_ExistenciasInventario() {
-    JSONObject request = new JSONObject();
-    try {
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
+
     String url = getString(R.string.Url);
     String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1";
 
@@ -147,7 +160,6 @@ private void Load_ExistenciasInventario() {
 
             JSONObject Resultado = null;
             JSONArray Articulo = null;
-            JSONArray Sucursales = null;
             JSONArray imagenes = null;
             JSONObject RespuestaUUID = null;
             JSONObject RespuestaExistencias= null;
@@ -276,7 +288,7 @@ private void Load_ExistenciasInventario() {
                                 "","","","","","","","","");
 
                         inventarios.add(inventario);
-                    }final InventarioExistenciasAdapter ExistenciasAdapter = new InventarioExistenciasAdapter(getContext(), inventarios, tabla_inventario_existencias);
+                    }ExistenciasAdapter = new InventarioExistenciasAdapter(getContext(), inventarios, tabla_inventario_existencias);
                     tabla_inventario_existencias.setDataAdapter(ExistenciasAdapter);
                 }
             } catch (JSONException e) {
