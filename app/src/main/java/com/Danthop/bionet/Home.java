@@ -279,6 +279,8 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                 break;
             case R.id.nav_notificaciones:
                 boolean Aplica1 = false;
+                boolean Aplica1_Permiso = false;
+
                 String rol_nombre1="";
 
                 for (int i = 0; i < Roles.length(); i++) {
@@ -290,9 +292,9 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                         if(rol_nombre1 == "Centro de notificaciones")
                         {
                             Aplica1 =  Elemento.getBoolean("rol_aplica_en_version");
+                            Aplica1_Permiso = Elemento.getBoolean("rol_permiso");
                             break;
                         }
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -301,7 +303,18 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                 if (Aplica1== true){
 
-                    notificaciones();
+                    if (Aplica1_Permiso==true)
+                    {
+                        notificaciones();
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(Home.this,
+                                        String.valueOf("No cuentas con permisos para el modulo de Notificaciones"), Toast.LENGTH_LONG);
+
+                        toast1.show();
+                    }
                 }
                 else
                 {
@@ -315,6 +328,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                 break;
             case R.id.nav_Ventas:
                 boolean Aplica2 = false;
+                boolean Aplica2_Permiso = false;
                 String rol_nombre2="";
 
                 for (int i = 0; i < Roles.length(); i++) {
@@ -326,6 +340,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                         if(rol_nombre2 == "Ventas")
                         {
                             Aplica2 =  Elemento.getBoolean("rol_aplica_en_version");
+                            Aplica2_Permiso = Elemento.getBoolean("rol_permiso");
                             break;
                         }
 
@@ -337,7 +352,18 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                 if (Aplica2== true){
 
-                    ventas();
+                    if (Aplica2_Permiso==true)
+                    {
+                        ventas();
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(Home.this,
+                                        String.valueOf("No cuentas con permisos para el modulo de Ventas"), Toast.LENGTH_LONG);
+
+                        toast1.show();
+                    }
                 }
                 else
                 {
@@ -350,6 +376,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                 break;
             case R.id.nav_inventario:
+                boolean Aplica3_Permiso = false;
                 boolean Aplica3 = false;
                 String rol_nombre3="";
 
@@ -362,6 +389,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                         if(rol_nombre3 == "Inventarios")
                         {
                             Aplica3 =  Elemento.getBoolean("rol_aplica_en_version");
+                            Aplica3_Permiso = Elemento.getBoolean("rol_permiso");
                             break;
                         }
 
@@ -373,7 +401,18 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                 if (Aplica3 == true){
 
-                    inventario();
+                    if (Aplica3_Permiso==true)
+                    {
+                        inventario();
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(Home.this,
+                                        String.valueOf("No cuentas con permisos para el modulo de Inventarios"), Toast.LENGTH_LONG);
+
+                        toast1.show();
+                    }
                 }
                 else
                 {
@@ -387,9 +426,59 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                 break;
             case R.id.nav_asistencia:
                 asistencia();
-                break;
+
+                boolean Aplica0 = false;
+                boolean Aplica0_Permiso = false;
+                String rol_nombre0="";
+
+                for (int i = 0; i < Roles.length(); i++) {
+                    try {
+
+                        JSONObject Elemento = Roles.getJSONObject(i);
+                        rol_nombre0 = Elemento.getString("rol_nombre");
+
+                        if(rol_nombre0 == "Tiempo y Asistencia")
+                        {
+                            Aplica0 =  Elemento.getBoolean("rol_aplica_en_version");
+                            Aplica0_Permiso = Elemento.getBoolean("rol_permiso");
+
+                            break;
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (Aplica0 == true){
+                    if (Aplica0_Permiso==true)
+                    {
+                        clientes();
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(Home.this,
+                                        String.valueOf("No cuentas con permisos para el modulo de Asistencia"), Toast.LENGTH_LONG);
+
+                        toast1.show();
+                    }
+                }
+                else
+                {
+                    Toast toast1 =
+                            Toast.makeText(Home.this,
+                                    String.valueOf("No se tiene acceso al modulo de Asistencia"), Toast.LENGTH_LONG);
+
+                    toast1.show();
+                }
+
+
+            break;
             case R.id.nav_clientes:
                 boolean Aplica4 = false;
+                boolean Aplica4_Permiso = false;
                 String rol_nombre4="";
 
                 for (int i = 0; i < Roles.length(); i++) {
@@ -401,6 +490,8 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                         if(rol_nombre4 == "Clientes")
                         {
                             Aplica4 =  Elemento.getBoolean("rol_aplica_en_version");
+                            Aplica4_Permiso = Elemento.getBoolean("rol_permiso");
+
                             break;
                         }
 
@@ -411,8 +502,18 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                 }
 
                 if (Aplica4 == true){
+                    if (Aplica4_Permiso==true)
+                    {
+                        clientes();
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(Home.this,
+                                        String.valueOf("No cuentas con permisos para el modulo de Clientes"), Toast.LENGTH_LONG);
 
-                    clientes();
+                        toast1.show();
+                    }
                 }
                 else
                 {
@@ -425,6 +526,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                 break;
             case R.id.nav_lealtad:
+                boolean Aplica5_Permiso = false;
                 boolean Aplica5 = false;
                 String rol_nombre5="";
 
@@ -437,6 +539,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                         if(rol_nombre5 == "Programa de Lealtad")
                         {
                             Aplica5 =  Elemento.getBoolean("rol_aplica_en_version");
+                            Aplica5_Permiso = Elemento.getBoolean("rol_permiso");
                             break;
                         }
 
@@ -446,9 +549,20 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                     }
                 }
 
-                if (Aplica5== true){
+                if (Aplica5 == true){
 
-                    lealtad();
+                    if (Aplica5_Permiso ==true)
+                    {
+                        lealtad();
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(Home.this,
+                                        String.valueOf("No cuentas con permisos para el modulo de Programa de Lealtad"), Toast.LENGTH_LONG);
+
+                        toast1.show();
+                    }
                 }
                 else
                 {
@@ -461,7 +575,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                 break;
             case R.id.nav_ecommerce:
-
+                boolean Aplica6_Permiso = false;
                 boolean Aplica6 = false;
                 String rol_nombre6="";
 
@@ -474,6 +588,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                         if(rol_nombre6 == "E-Commerce")
                         {
                             Aplica6 =  Elemento.getBoolean("rol_aplica_en_version");
+                            Aplica6_Permiso = Elemento.getBoolean("rol_permiso");
                             break;
                         }
 
@@ -485,7 +600,19 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                 if (Aplica6 == true){
 
-                    ecomerce();
+
+                    if (Aplica6_Permiso ==true)
+                    {
+                        ecomerce();
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(Home.this,
+                                        String.valueOf("No cuentas con permisos para el modulo de Programa de Lealtad"), Toast.LENGTH_LONG);
+
+                        toast1.show();
+                    }
                 }
                 else
                 {
