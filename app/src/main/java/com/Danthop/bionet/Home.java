@@ -278,36 +278,18 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                 home();
                 break;
             case R.id.nav_notificaciones:
-                notificaciones();
-                break;
-            case R.id.nav_Ventas:
-                ventas();
-                break;
-            case R.id.nav_inventario:
-                inventario();
-                break;
-            case R.id.nav_clientes:
-                clientes();
-                break;
-            case R.id.nav_lealtad:
-                lealtad();
-                break;
-            case R.id.nav_ecommerce:
-                //validar Roles
-
-                boolean Aplica = false;
-                String rol_nombre="";
-                String rol_aplica_en_version="";
+                boolean Aplica1 = false;
+                String rol_nombre1="";
 
                 for (int i = 0; i < Roles.length(); i++) {
                     try {
 
                         JSONObject Elemento = Roles.getJSONObject(i);
-                        rol_nombre = Elemento.getString("rol_nombre");
+                        rol_nombre1 = Elemento.getString("rol_nombre");
 
-                        if(rol_nombre == "E-Commerce")
+                        if(rol_nombre1 == "Centro de notificaciones")
                         {
-                            Aplica =  Elemento.getBoolean("rol_aplica_en_version");
+                            Aplica1 =  Elemento.getBoolean("rol_aplica_en_version");
                             break;
                         }
 
@@ -317,7 +299,188 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                     }
                 }
 
-                if (Aplica== true){
+                if (Aplica1== true){
+
+                    notificaciones();
+                }
+                else
+                {
+                    Toast toast1 =
+                            Toast.makeText(Home.this,
+                                    String.valueOf("No se tiene acceso al modulo de Notificaciones"), Toast.LENGTH_LONG);
+
+                    toast1.show();
+                }
+
+                break;
+            case R.id.nav_Ventas:
+                boolean Aplica2 = false;
+                String rol_nombre2="";
+
+                for (int i = 0; i < Roles.length(); i++) {
+                    try {
+
+                        JSONObject Elemento = Roles.getJSONObject(i);
+                        rol_nombre2 = Elemento.getString("rol_nombre");
+
+                        if(rol_nombre2 == "Ventas")
+                        {
+                            Aplica2 =  Elemento.getBoolean("rol_aplica_en_version");
+                            break;
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (Aplica2== true){
+
+                    ventas();
+                }
+                else
+                {
+                    Toast toast1 =
+                            Toast.makeText(Home.this,
+                                    String.valueOf("No se tiene acceso al modulo de Ventas"), Toast.LENGTH_LONG);
+
+                    toast1.show();
+                }
+
+                break;
+            case R.id.nav_inventario:
+                boolean Aplica3 = false;
+                String rol_nombre3="";
+
+                for (int i = 0; i < Roles.length(); i++) {
+                    try {
+
+                        JSONObject Elemento = Roles.getJSONObject(i);
+                        rol_nombre3 = Elemento.getString("rol_nombre");
+
+                        if(rol_nombre3 == "Inventarios")
+                        {
+                            Aplica3 =  Elemento.getBoolean("rol_aplica_en_version");
+                            break;
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (Aplica3 == true){
+
+                    inventario();
+                }
+                else
+                {
+                    Toast toast1 =
+                            Toast.makeText(Home.this,
+                                    String.valueOf("No se tiene acceso al modulo de Inventarios"), Toast.LENGTH_LONG);
+
+                    toast1.show();
+                }
+
+                break;
+            case R.id.nav_clientes:
+                boolean Aplica4 = false;
+                String rol_nombre4="";
+
+                for (int i = 0; i < Roles.length(); i++) {
+                    try {
+
+                        JSONObject Elemento = Roles.getJSONObject(i);
+                        rol_nombre4 = Elemento.getString("rol_nombre");
+
+                        if(rol_nombre4 == "Clientes")
+                        {
+                            Aplica4 =  Elemento.getBoolean("rol_aplica_en_version");
+                            break;
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (Aplica4 == true){
+
+                    clientes();
+                }
+                else
+                {
+                    Toast toast1 =
+                            Toast.makeText(Home.this,
+                                    String.valueOf("No se tiene acceso al modulo de Clientes"), Toast.LENGTH_LONG);
+
+                    toast1.show();
+                }
+
+                break;
+            case R.id.nav_lealtad:
+                boolean Aplica5 = false;
+                String rol_nombre5="";
+
+                for (int i = 0; i < Roles.length(); i++) {
+                    try {
+
+                        JSONObject Elemento = Roles.getJSONObject(i);
+                        rol_nombre5 = Elemento.getString("rol_nombre");
+
+                        if(rol_nombre5 == "Programa de Lealtad")
+                        {
+                            Aplica5 =  Elemento.getBoolean("rol_aplica_en_version");
+                            break;
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (Aplica5== true){
+
+                    lealtad();
+                }
+                else
+                {
+                    Toast toast1 =
+                            Toast.makeText(Home.this,
+                                    String.valueOf("No se tiene acceso al modulo de Programa de lealtad"), Toast.LENGTH_LONG);
+
+                    toast1.show();
+                }
+
+                break;
+            case R.id.nav_ecommerce:
+
+                boolean Aplica6 = false;
+                String rol_nombre6="";
+
+                for (int i = 0; i < Roles.length(); i++) {
+                    try {
+
+                        JSONObject Elemento = Roles.getJSONObject(i);
+                        rol_nombre6 = Elemento.getString("rol_nombre");
+
+                        if(rol_nombre6 == "E-Commerce")
+                        {
+                            Aplica6 =  Elemento.getBoolean("rol_aplica_en_version");
+                            break;
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (Aplica6 == true){
 
                     ecomerce();
                 }
@@ -329,7 +492,6 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                     toast1.show();
                 }
-
 
                 break;
             case R.id.nav_cerrar_sesion:
