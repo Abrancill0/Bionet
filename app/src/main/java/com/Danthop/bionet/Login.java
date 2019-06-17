@@ -871,8 +871,8 @@ public class Login extends Activity {
                                     RespuestaNodoUsuID = RespuestaObjeto.getJSONObject("usu_id");
                                     Resultado.setUsuId(RespuestaNodoUsuID.getString("uuid"));
 
-                                    RespuestaNodoUsuID = tipo_id.getJSONObject("usu_id");
-                                    Resultado.setUsuId(RespuestaNodoUsuID.getString("uuid"));
+                                 //   RespuestaNodoUsuID = tipo_id.getJSONObject("usu_id");
+                                 //   Resultado.setUsuId(RespuestaNodoUsuID.getString("uuid"));
 
                                     RespuestaIdSucursales = RespuestaObjeto.getJSONObject("usu_sucursales");
                                     ValorIdSucursales = RespuestaIdSucursales.getJSONArray("values");

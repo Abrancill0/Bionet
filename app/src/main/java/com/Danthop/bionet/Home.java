@@ -100,6 +100,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     private ProgressDialog progressDialog;
     private String SucursalSelect;
     private String Logo;
+    private JSONArray Roles;
 
     private WifiManager wifiManager;
 
@@ -118,7 +119,6 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
     }
 
-
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
@@ -133,14 +133,12 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         return cursor.getString(idx);
     }
 
-
     public static Uri writeToTempImageAndGetPathUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +178,12 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         String RutaImagenPerfil = sharedPref.getString("usu_imagen_perfil", "");
         String RutaLogoEmpresa = sharedPref.getString("logo_imagen", "");
         SucursalSelect = sharedPref.getString("usu_sucursal","");
+
+        try {
+            Roles = new JSONArray(sharedPref.getString("sso_Roles",""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.fragment_container, new Fragment_pantalla_principal());
@@ -289,7 +293,44 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                 lealtad();
                 break;
             case R.id.nav_ecommerce:
-                ecomerce();
+                //validar Roles
+
+                boolean Aplica = false;
+                String rol_nombre="";
+                String rol_aplica_en_version="";
+
+                for (int i = 0; i < Roles.length(); i++) {
+                    try {
+
+                        JSONObject Elemento = Roles.getJSONObject(i);
+                        rol_nombre = Elemento.getString("rol_nombre");
+
+                        if(rol_nombre == "E-Commerce")
+                        {
+                            Aplica =  Elemento.getBoolean("rol_aplica_en_version");
+                            break;
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (Aplica== true){
+
+                    ecomerce();
+                }
+                else
+                {
+                    Toast toast1 =
+                            Toast.makeText(Home.this,
+                                    String.valueOf("No se tiene acceso al modulo de E-Commerce"), Toast.LENGTH_LONG);
+
+                    toast1.show();
+                }
+
+
                 break;
             case R.id.nav_cerrar_sesion:
                 cerrar_sesion();
