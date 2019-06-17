@@ -129,7 +129,7 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
         btn_buscarexistencias.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Load_ExistenciasInventario();
+
             }
         });
 
@@ -142,20 +142,20 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                Load_ExistenciasInventario(newText);
                 ExistenciasAdapter.getFilter().filter(newText);
                 return false;
             }
         });
 
-        Load_ExistenciasInventario();
         return v;
     }
 
 //--------------------------------------------------------------------------------------------------
-private void Load_ExistenciasInventario() {
+private void Load_ExistenciasInventario(String articulo) {
 
     String url = getString(R.string.Url);
-    String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1";
+    String ApiPath = url + "/api/inventario/buscar_disponibilidad_articulo?usu_id=" + usu_id + "&esApp=1&nombre_sku_articulo="+articulo;
 
     JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null, new Response.Listener<JSONObject>() {
         @Override
@@ -304,9 +304,14 @@ private void Load_ExistenciasInventario() {
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast toast1 =
-                            Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
-                    toast1.show();
+                    try{
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }catch(NullPointerException e){
+
+                    }
+
                 }
             }
     );

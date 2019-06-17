@@ -16,6 +16,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.AndroidRuntimeException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -522,6 +523,7 @@ public class Fragment_ventas_transacciones extends Fragment {
 
     public void LoadSucursales()
     {
+        progressDialog.show();
         JSONObject request = new JSONObject();
         try
         {
@@ -567,6 +569,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                             SucursalID.add(id);
                         }
                         SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,SucursalName));
+                        progressDialog.dismiss();
                     }
                     else
                     {
@@ -574,6 +577,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
 
 
                     }
@@ -972,6 +976,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                         SpinnerFormaPago.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, FormaPagoName));
 
                                         SpinnerUsuarioVenta.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, UsuarioVentaName));
+                                        progressDialog.dismiss();
                                     }
                                     else
                                     {
@@ -1067,7 +1072,15 @@ public class Fragment_ventas_transacciones extends Fragment {
                                             Lista_de_movimientos.add(movimiento);
                                         }
 
-                                        movimientoAdapter = new MovimientoAdapter(getContext(),Lista_de_movimientos,TablaMovimientos);
+                                        try {
+                                            movimientoAdapter = new MovimientoAdapter(getContext(),Lista_de_movimientos,TablaMovimientos);
+                                        }catch (AndroidRuntimeException e)
+                                        {
+
+                                        }catch (NullPointerException c)
+                                        {
+
+                                        }
                                         movimientoAdapter.notifyDataSetChanged();
                                         TablaMovimientos.setDataAdapter(movimientoAdapter);
                                         progressDialog.dismiss();

@@ -91,7 +91,8 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     Intent intent;
 
     //// JAR ////
-    Button btn_connect, btn_desconectar,btn_cerrar;  /// CONECTAR
+    Button btn_connect, btn_desconectar,btn_terminar_feenicia;  /// CONECTAR
+    Button btn_cerrar;
     Button btn_search_devices; /// BUSCAR DISPOSITIVOS
     TextView textView_Devices;  // DISPOSITIVOS ENCONTRADOS
     static TextView textView_resultTx; // RESULTADO DE LA TRANSACCION
@@ -147,7 +148,8 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         btn_search_devices = (Button) findViewById(R.id.btn_search_devices);
         btn_connect = (Button) findViewById(R.id.btn_conectar);
 
-        btn_cerrar = (Button) findViewById(R.id.btnCierraFeenicia);
+        btn_terminar_feenicia = (Button) findViewById(R.id.btnTerminarFeenicia);
+        btn_cerrar = (Button) findViewById(R.id.btnCerrar);
         btn_desconectar = (Button) findViewById(R.id.btn_desconectar);
         textView_Devices = (TextView)findViewById(R.id.textView_Devices);
         textView_Devices.setText("");
@@ -494,6 +496,14 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
 
 
 
+            }
+        });
+
+
+        btn_cerrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 

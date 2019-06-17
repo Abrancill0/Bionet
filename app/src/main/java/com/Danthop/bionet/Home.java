@@ -385,6 +385,9 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                 }
 
                 break;
+            case R.id.nav_asistencia:
+                asistencia();
+                break;
             case R.id.nav_clientes:
                 boolean Aplica4 = false;
                 String rol_nombre4="";
@@ -517,6 +520,11 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
     public void clientes() {
         layoutCerrar.setVisibility(View.GONE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_clientes()).addToBackStack(null).commit();
+    }
+
+    public void asistencia() {
+        layoutCerrar.setVisibility(View.GONE);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_asistencia()).addToBackStack(null).commit();
     }
 
     public void ecomerce() {
