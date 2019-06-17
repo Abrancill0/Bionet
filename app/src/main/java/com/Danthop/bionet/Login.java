@@ -59,6 +59,7 @@ public class Login extends Activity {
     EditText TextUsuario, TextPassword;
     ProgressDialog progreso;
 
+    private String NombreCompleto="";
     private String ID_dispositivo;
     private String usu_sucursales;
 
@@ -477,11 +478,22 @@ public class Login extends Activity {
             editor.putString("sso_refresh_token", ResultadoToken.getSso_refresh_Token());
             editor.putString("sso_expire", ResultadoToken.getSso_expire());
 
+            editor.commit();
+
+            return null;
+        }
+    }
+
+    private class GuardaPreferencia_Permisos extends AsyncTask<Void, String, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+
+            SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("sso_nombre_perfil", nombre_perfil);
             editor.putString("sso_version", version);
             editor.putString("sso_Roles", String.valueOf(Roles));
-
-            Log.i("Roles",String.valueOf(Roles));
 
             editor.commit();
 
@@ -899,6 +911,8 @@ public class Login extends Activity {
 
                                     }
 
+                                    new GuardaPreferencia().execute();
+
                                     String Code = ResultadoLicencia.getSso_code().substring(0,4);
 
                                     ObtienePermisos(Resultado.getUsuId(), Code,(Resultado.getUsuNombre() + " " + Resultado.getUsuApellidos()));
@@ -941,7 +955,6 @@ public class Login extends Activity {
             e.printStackTrace();
         }
 
-
     }
 
     private void ObtienePermisos(String Usu_id, String ver_code,String NombreUsuario) {
@@ -970,7 +983,6 @@ public class Login extends Activity {
                     int status = 0;
                     String mensaje = "";
 
-
                     try {
 
                         status = response.getInt("estatus");
@@ -983,17 +995,20 @@ public class Login extends Activity {
                             version = Resultado.getString("version");
                             Roles = Resultado.getJSONArray("roles");
 
-                            new GuardaPreferencia().execute();
+                            NombreCompleto =  NombreUsuario;
+
+                            new GuardaPreferencia_Permisos().execute();
 
                             Intent intent = new Intent(Login.this, Home.class);
+                            intent.putExtra("sso_Roles", String.valueOf(Roles));
                             startActivity(intent);
 
                             Toast toast1 =
                                     Toast.makeText(getApplicationContext(),
-                                            "Bienvenido " + NombreUsuario, Toast.LENGTH_LONG);
+                                            "Bienvenido " + NombreCompleto, Toast.LENGTH_LONG);
                             toast1.show();
-                            progreso.hide();
 
+                            progreso.hide();
 
                         } else {
                             progreso.hide();

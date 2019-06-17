@@ -179,10 +179,18 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         String RutaLogoEmpresa = sharedPref.getString("logo_imagen", "");
         SucursalSelect = sharedPref.getString("usu_sucursal","");
 
+        Bundle bundle = getIntent().getExtras();
+
         try {
             Roles = new JSONArray(sharedPref.getString("sso_Roles",""));
         } catch (JSONException e) {
             e.printStackTrace();
+
+            try {
+                Roles = new JSONArray(bundle.getString("sso_Roles"));
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
         }
 
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
@@ -287,9 +295,9 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                     try {
 
                         JSONObject Elemento = Roles.getJSONObject(i);
-                        rol_nombre1 = Elemento.getString("rol_nombre");
+                        rol_nombre1 = Elemento.getString("rol_id");
 
-                        if(rol_nombre1 == "Centro de notificaciones")
+                        if(rol_nombre1.equals("cbcf943b-ed1e-11e8-8a6e-cb097f5c03df"))
                         {
                             Aplica1 =  Elemento.getBoolean("rol_aplica_en_version");
                             Aplica1_Permiso = Elemento.getBoolean("rol_permiso");
@@ -335,9 +343,9 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                     try {
 
                         JSONObject Elemento = Roles.getJSONObject(i);
-                        rol_nombre2 = Elemento.getString("rol_nombre");
+                        rol_nombre2 = Elemento.getString("rol_id");
 
-                        if(rol_nombre2 == "Ventas")
+                        if(rol_nombre2.equals("cbcf93c0-ed1e-11e8-8a6e-cb097f5c03df"))
                         {
                             Aplica2 =  Elemento.getBoolean("rol_aplica_en_version");
                             Aplica2_Permiso = Elemento.getBoolean("rol_permiso");
@@ -384,9 +392,9 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                     try {
 
                         JSONObject Elemento = Roles.getJSONObject(i);
-                        rol_nombre3 = Elemento.getString("rol_nombre");
+                        rol_nombre3 = Elemento.getString("rol_id");
 
-                        if(rol_nombre3 == "Inventarios")
+                        if(rol_nombre3.equals("cbcf93d8-ed1e-11e8-8a6e-cb097f5c03df"))
                         {
                             Aplica3 =  Elemento.getBoolean("rol_aplica_en_version");
                             Aplica3_Permiso = Elemento.getBoolean("rol_permiso");
@@ -425,7 +433,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                 break;
             case R.id.nav_asistencia:
-                asistencia();
+
 
                 boolean Aplica0 = false;
                 boolean Aplica0_Permiso = false;
@@ -435,9 +443,9 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                     try {
 
                         JSONObject Elemento = Roles.getJSONObject(i);
-                        rol_nombre0 = Elemento.getString("rol_nombre");
+                        rol_nombre0 = Elemento.getString("rol_id");
 
-                        if(rol_nombre0 == "Tiempo y Asistencia")
+                        if(rol_nombre0 == "cbcf93db-ed1e-11e8-8a6e-cb097f5c03df")
                         {
                             Aplica0 =  Elemento.getBoolean("rol_aplica_en_version");
                             Aplica0_Permiso = Elemento.getBoolean("rol_permiso");
@@ -454,7 +462,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                 if (Aplica0 == true){
                     if (Aplica0_Permiso==true)
                     {
-                        clientes();
+                        asistencia();
                     }
                     else
                     {
@@ -485,9 +493,9 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                     try {
 
                         JSONObject Elemento = Roles.getJSONObject(i);
-                        rol_nombre4 = Elemento.getString("rol_nombre");
+                        rol_nombre4 = Elemento.getString("rol_id");
 
-                        if(rol_nombre4 == "Clientes")
+                        if(rol_nombre4.equals("cbcf9420-ed1e-11e8-8a6e-cb097f5c03df"))
                         {
                             Aplica4 =  Elemento.getBoolean("rol_aplica_en_version");
                             Aplica4_Permiso = Elemento.getBoolean("rol_permiso");
@@ -534,9 +542,9 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                     try {
 
                         JSONObject Elemento = Roles.getJSONObject(i);
-                        rol_nombre5 = Elemento.getString("rol_nombre");
+                        rol_nombre5 = Elemento.getString("rol_id");
 
-                        if(rol_nombre5 == "Programa de Lealtad")
+                        if(rol_nombre5 == "cbcf941d-ed1e-11e8-8a6e-cb097f5c03df")
                         {
                             Aplica5 =  Elemento.getBoolean("rol_aplica_en_version");
                             Aplica5_Permiso = Elemento.getBoolean("rol_permiso");
@@ -583,9 +591,9 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
                     try {
 
                         JSONObject Elemento = Roles.getJSONObject(i);
-                        rol_nombre6 = Elemento.getString("rol_nombre");
+                        rol_nombre6 = Elemento.getString("rol_id");
 
-                        if(rol_nombre6 == "E-Commerce")
+                        if(rol_nombre6 == "cbcf943e-ed1e-11e8-8a6e-cb097f5c03df")
                         {
                             Aplica6 =  Elemento.getBoolean("rol_aplica_en_version");
                             Aplica6_Permiso = Elemento.getBoolean("rol_permiso");
