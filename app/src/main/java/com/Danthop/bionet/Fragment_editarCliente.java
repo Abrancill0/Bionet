@@ -617,7 +617,12 @@ public class Fragment_editarCliente extends Fragment {
                                     String colonia=RespuestaNodoColonias.getString(x);
                                     ColoniaName.add(colonia);
                                 }
-                                SpinnerColonia.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,ColoniaName));
+                                try {
+                                    SpinnerColonia.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,ColoniaName));
+                                }catch (NullPointerException e)
+                                {
+
+                                }
                                 estado = response.getString("estado");
 
                                 if(estado.equals("")){

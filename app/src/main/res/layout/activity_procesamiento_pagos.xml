@@ -222,7 +222,20 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btnCierraFeenicia"
+            android:id="@+id/btnTerminarFeenicia"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/btn"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Terminar"
+            android:textAllCaps="false"
+            android:textColor="#fff"
+            android:textSize="15dp" />
+
+        <Button
+            android:id="@+id/btnCerrar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

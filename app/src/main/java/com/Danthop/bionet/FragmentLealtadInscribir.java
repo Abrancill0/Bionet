@@ -851,8 +851,14 @@ public class FragmentLealtadInscribir extends Fragment {
                     if (status == 1)
                     {
 
-                        Toast toast1 =
-                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        try{
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        }catch (NullPointerException a)
+                        {
+
+                        }
+
 
                     }
                     else
