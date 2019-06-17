@@ -38,10 +38,13 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonArray;
 import com.zj.usbsdk.UsbController;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,6 +82,9 @@ public class Login extends Activity {
     private String redirectUri = "bionet://callback";
     private String UrlSend = "http://sso-dev.biocheck.net/oauth/authorize";
 
+    private JSONArray Roles = null;
+    private String nombre_perfil="";
+    private String version ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -471,6 +477,12 @@ public class Login extends Activity {
             editor.putString("sso_refresh_token", ResultadoToken.getSso_refresh_Token());
             editor.putString("sso_expire", ResultadoToken.getSso_expire());
 
+            editor.putString("sso_nombre_perfil", nombre_perfil);
+            editor.putString("sso_version", version);
+            editor.putString("sso_Roles", String.valueOf(Roles));
+
+            Log.i("Roles",String.valueOf(Roles));
+
             editor.commit();
 
             return null;
@@ -720,11 +732,10 @@ public class Login extends Activity {
             public void onResponse(String response) {
                 Log.i("onResponse", response.toString());
 
-
                 try {
                     JSONObject Respuesta = new JSONObject(response);
 
-                    String NombreCompleto =Respuesta.getString("name") + " " + Respuesta.getString("lastName");
+                    String NombreCompleto = Respuesta.getString("name") + " " + Respuesta.getString("lastName");
                     ResultadoUser.setSso_usu_correo_electronico(Respuesta.getString("email"));
                     ResultadoUser.setSso_usurname(Respuesta.getString("username"));
                     ResultadoUser.setSso_nombre(NombreCompleto);
@@ -758,7 +769,7 @@ public class Login extends Activity {
         queue.add(request1);
     }
 
-    private void Logintemporal(){
+    private void Logintemporal() {
 
         progreso.setMessage("Iniciando sesion...");
         progreso.show();
@@ -836,7 +847,6 @@ public class Login extends Activity {
                                 JSONArray ArregloSucursales = SucursalesNodo.getJSONArray("values");
                                 Sucursal = ArregloSucursales.getString(0);
 
-
                                 JSONObject tipo_id = Respuesta.getJSONObject(0);
 
                                 Resultado.setUsuTipoContrasena(tipo_id.getString("usu_tipo_contrasenia"));
@@ -884,16 +894,9 @@ public class Login extends Activity {
 
                                     }
 
-                                    new GuardaPreferencia().execute();
+                                    String Code = ResultadoLicencia.getSso_code().substring(0,4);
 
-                                    Intent intent = new Intent(Login.this, Home.class);
-                                    startActivity(intent);
-
-                                    Toast toast1 =
-                                            Toast.makeText(getApplicationContext(),
-                                                    "Bienvenido " + Resultado.getUsuNombre(), Toast.LENGTH_LONG);
-                                    toast1.show();
-                                    progreso.hide();
+                                    ObtienePermisos(Resultado.getUsuId(), Code,(Resultado.getUsuNombre() + " " + Resultado.getUsuApellidos()));
                                 }
                             }
                         } else {
@@ -934,6 +937,97 @@ public class Login extends Activity {
         }
 
 
+    }
+
+    private void ObtienePermisos(String Usu_id, String ver_code,String NombreUsuario) {
+        try {
+            JSONObject request = new JSONObject();
+            try {
+                request.put("usu_id", Usu_id);
+                request.put("ver_code", ver_code);
+                request.put("esApp", 1);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            String url = getString(R.string.Url);
+
+            String ApiPath = url + "/api/usuarios/perfiles/validar-permisos";
+
+            JsonObjectRequest postRequest = new JsonObjectRequest(Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    Resultado = new LoginModel();
+
+                    JSONObject Resultado = null;
+
+                    int status = 0;
+                    String mensaje = "";
+
+
+                    try {
+
+                        status = response.getInt("estatus");
+                        mensaje = response.getString("mensaje");
+
+                        if (status == 1) {
+
+                            Resultado = response.getJSONObject("resultado");
+                            nombre_perfil=Resultado.getString("nombre_perfil");
+                            version = Resultado.getString("version");
+                            Roles = Resultado.getJSONArray("roles");
+
+                            new GuardaPreferencia().execute();
+
+                            Intent intent = new Intent(Login.this, Home.class);
+                            startActivity(intent);
+
+                            Toast toast1 =
+                                    Toast.makeText(getApplicationContext(),
+                                            "Bienvenido " + NombreUsuario, Toast.LENGTH_LONG);
+                            toast1.show();
+                            progreso.hide();
+
+
+                        } else {
+                            progreso.hide();
+
+                            Toast toast2 = Toast.makeText(getApplicationContext(),
+                                    mensaje, Toast.LENGTH_LONG);
+                            toast2.show();
+                        }
+
+                    } catch (JSONException e) {
+                        progreso.hide();
+
+                        Toast toast1 = Toast.makeText(getApplicationContext(),
+                                "Error al conectarse al servidor", Toast.LENGTH_LONG);
+
+                        toast1.show();
+                    }
+                }
+
+            },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // error
+                            progreso.hide();
+
+                            Toast toast1 =
+                                    Toast.makeText(getApplicationContext(),
+                                            "Error de conexion", Toast.LENGTH_SHORT);
+                            toast1.show();
+                        }
+                    }
+            );
+            VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
