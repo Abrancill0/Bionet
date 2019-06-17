@@ -252,7 +252,7 @@ public class Login extends Activity {
                 @Override
                 public void onResponse(JSONObject response) {
 
-                    //    Resultado = new LoginModel();
+                        Resultado = new LoginModel();
 
                     JSONArray Respuesta = null;
                     JSONObject RespuestaObjeto = null;
@@ -466,14 +466,14 @@ public class Login extends Activity {
 
             editor.putString("sso_code", ResultadoLicencia.getSso_code());
             editor.putString("sso_descripcion_licencia", ResultadoLicencia.getSso_descripcion_licencia());
-            editor.putString("sso_perpetua", ResultadoLicencia.getSso_code());
+            editor.putString("sso_perpetua", ResultadoLicencia.getSso_perpetua());
             editor.putString("sso_expira", ResultadoLicencia.getSso_expira());
             editor.putString("sso_activa", ResultadoLicencia.getSso_activa());
             editor.putString("sso_fecha_creacion", ResultadoLicencia.getSso_fecha_creacion());
             editor.putString("sso_fecha_expiracion", ResultadoLicencia.getSso_fecha_expiracion());
 
             editor.putString("sso_token", ResultadoToken.getSso_token());
-            editor.putString("sso_toke_type", ResultadoToken.getSso_activa());
+            editor.putString("sso_toke_type", ResultadoToken.getSso_token_type());
             editor.putString("sso_refresh_token", ResultadoToken.getSso_refresh_Token());
             editor.putString("sso_expire", ResultadoToken.getSso_expire());
 
@@ -687,6 +687,9 @@ public class Login extends Activity {
             @Override
             public void onResponse(String response) {
 
+
+                ResultadoLicencia= new LoginModel();
+
                 try {
                     JSONObject Respuesta = new JSONObject(response);
 
@@ -731,6 +734,8 @@ public class Login extends Activity {
             @Override
             public void onResponse(String response) {
                 Log.i("onResponse", response.toString());
+
+                ResultadoUser= new LoginModel();
 
                 try {
                     JSONObject Respuesta = new JSONObject(response);
@@ -959,8 +964,6 @@ public class Login extends Activity {
             JsonObjectRequest postRequest = new JsonObjectRequest(Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-
-                    Resultado = new LoginModel();
 
                     JSONObject Resultado = null;
 

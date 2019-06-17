@@ -883,10 +883,6 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
             }
         }
     };
-
-
-
-
-
+    
 
 }
