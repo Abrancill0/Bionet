@@ -291,6 +291,228 @@ public class Fragment_Ventas extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
         cca_id_sucursal = sharedPref.getString("cca_id_sucursal", "");
+
+        try {
+            Roles = new JSONArray(sharedPref.getString("sso_Roles", ""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        boolean Aplica = false;
+        boolean Aplica_Permiso = false;
+        String fun_id = "";
+
+        String rol_id = "";
+
+        for (int i = 0; i < Roles.length(); i++) {
+            try {
+
+                JSONObject Elemento = Roles.getJSONObject(i);
+                rol_id = Elemento.getString("rol_id");
+
+                if (rol_id.equals("cbcf93d8-ed1e-11e8-8a6e-cb097f5c03df")) {
+                    Aplica = Elemento.getBoolean("rol_aplica_en_version");
+                    Aplica_Permiso = Elemento.getBoolean("rol_permiso");
+
+                    if (Aplica == true) {
+                        if (Aplica_Permiso == true) {
+
+                            JSONArray Elemento1 = Elemento.getJSONArray("rol_funciones");
+
+                            for (int x = 0; x < Elemento1.length(); x++) {
+
+                                JSONObject Elemento2 = Elemento1.getJSONObject(x);
+
+                                fun_id = Elemento2.getString("fun_id");
+
+                                switch (fun_id) {
+
+                                    case "fba9366-82a5-4f87-9ccf-793e5a1148e0":
+                                        Proceso_Venta = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "76e6bbac-cb73-4427-82dc-8a7c9a45869f":
+                                        Resumen_Ventas = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "c945507f-9f0b-48ea-a8c3-88320097e8bc":
+                                        Transacciones = Elemento2.getBoolean("fun_permiso");
+                                        break;
+                                    case "c945507f-9f0b-48ea-a8c3-88320097e8bc":
+                                        Transacciones = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //                        "fun_id": "0da9f0b0-ed68-4366-acd5-cc99ef1e35dd",
+        //                        "fun_nombre": "Corte de Caja",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "b009825e-4325-469a-8810-465ad7472180",
+        //                        "fun_nombre": "Crear cliente",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "20566dc2-b25d-4bc7-95d7-55a67a4fc5a2",
+        //                        "fun_nombre": "Descuento",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "ce21c249-e896-48d9-afa4-2665bd9806a4",
+        //                        "fun_nombre": "Descuentos",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "6dc09951-0d20-46b0-832f-2ddf74090ac4",
+        //                        "fun_nombre": "Entrega de apartado",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "5ac65bc8-5233-4c29-94ca-50b25e8eb6d2",
+        //                        "fun_nombre": "Enviar por correo XML, PDF",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "a72ca9c6-3cd3-4524-896b-7aa95461cd27",
+        //                        "fun_nombre": "Factura ventas mostrador",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "40a178d2-52a0-486b-b621-02ad99e22135",
+        //                        "fun_nombre": "Facturación",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "7d20f4da-c310-469d-81e1-be0a265fc688",
+        //                        "fun_nombre": "Formas de pago",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "041e4caa-ed4a-4a57-a35e-7182b88c2780",
+        //                        "fun_nombre": "Generar corte de caja",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "b5daa736-83bb-41d9-b0b4-3b5f1d2d94cc",
+        //                        "fun_nombre": "Impuestos",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "b7987839-a6e6-415b-a241-b6cddfad03cd",
+        //                        "fun_nombre": "Listado de corte de caja",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "29a3e0fc-7136-48d6-82b8-30b22aa7f6b3",
+        //                        "fun_nombre": "Listado de facturas",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "3ce3041a-41d2-4d8a-a1e4-07d37c22fa80",
+        //                        "fun_nombre": "Movimientos",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "caa9baf3-e67e-4dc5-80b1-d64e7d86f199",
+        //                        "fun_nombre": "Proceso de pago",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "7fba9366-82a5-4f87-9ccf-793e5a1148e0",
+        //                        "fun_nombre": "Proceso de venta",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "e13f10e6-02b1-4089-a91f-4352ab5feff4",
+        //                        "fun_nombre": "Promociones",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "cb2f09f9-c206-46c9-b3cd-618399d92b58",
+        //                        "fun_nombre": "Propinas",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "e6d437bd-c43c-49d2-8d91-7e66a5badc6e",
+        //                        "fun_nombre": "Reemplazo",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "f8d1f550-927e-4af1-a558-148755577c73",
+        //                        "fun_nombre": "Regenerar factura",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "5a49aa8c-4f08-48ee-b95b-6812cd673ffa",
+        //                        "fun_nombre": "Reporte de ventas",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "76e6bbac-cb73-4427-82dc-8a7c9a45869f",
+        //                        "fun_nombre": "Resumen de ventas",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "e9971817-09f8-4130-aef8-895d9f3e4108",
+        //                        "fun_nombre": "Tendencia en ventas",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "c945507f-9f0b-48ea-a8c3-88320097e8bc",
+        //                        "fun_nombre": "Transacciones",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "24733c73-0132-4bce-8bdd-cf8f36c16714",
+        //                        "fun_nombre": "Vendedores",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "e3da2d59-f19d-436f-9d3d-6809a9cf6806",
+        //                        "fun_nombre": "Venta",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "a3fd2fe1-0102-4d1d-8f95-6b6fe171f881",
+        //                        "fun_nombre": "Venta por articulos",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "785fe60e-0c9a-4aa6-a9ed-cf94a34eaa7d",
+        //                        "fun_nombre": "Venta por categoría",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "bbdaadb5-c45b-4ab7-b5ad-44ff8510f141",
+        //                        "fun_nombre": "Ventas por usuario",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "1d85e2ce-e647-4aec-9cb3-c23304bf9ad0",
+        //                        "fun_nombre": "Visualizar PDF",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "a380e778-2fff-4e98-ad74-d117ca926fd4",
+        //                        "fun_nombre": "Visualizar XML",
+        //                        "fun_permiso": true
+        //                    }
+
+
+
+
         fr = getFragmentManager().beginTransaction();
         dialog = new Dialog(getContext());
 

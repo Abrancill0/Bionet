@@ -74,7 +74,6 @@ public class FragmentLealtad extends Fragment {
 
     private JSONArray Roles;
 
-
     private boolean  Agregar_Articulo=false;
     private boolean  Agregar_Cliente=false;
     private boolean Lista_Articulos=false;
@@ -100,7 +99,6 @@ public class FragmentLealtad extends Fragment {
         tabla_puntos = v.findViewById(R.id.tabla_puntos);
         tabla_puntos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
         Buscar = v.findViewById(R.id.buscarPuntos);
-
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");

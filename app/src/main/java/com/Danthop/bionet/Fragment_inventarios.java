@@ -97,6 +97,8 @@ public class Fragment_inventarios extends Fragment {
     private ArrayList<String> SucursalName;
     private ArrayList<String> SucursalID;
 
+    private JSONArray Roles;
+
     public Fragment_inventarios() {
         // Required empty public constructor
     }
@@ -108,6 +110,82 @@ public class Fragment_inventarios extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
+
+        try {
+            Roles = new JSONArray(sharedPref.getString("sso_Roles", ""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        boolean Aplica = false;
+        boolean Aplica_Permiso = false;
+        String fun_id = "";
+
+        String rol_id = "";
+
+        for (int i = 0; i < Roles.length(); i++) {
+            try {
+
+                JSONObject Elemento = Roles.getJSONObject(i);
+                rol_id = Elemento.getString("rol_id");
+
+                if (rol_id.equals("cbcf93d8-ed1e-11e8-8a6e-cb097f5c03df")) {
+                    Aplica = Elemento.getBoolean("rol_aplica_en_version");
+                    Aplica_Permiso = Elemento.getBoolean("rol_permiso");
+
+                    if (Aplica == true) {
+                        if (Aplica_Permiso == true) {
+
+                            JSONArray Elemento1 = Elemento.getJSONArray("rol_funciones");
+
+                            for (int x = 0; x < Elemento1.length(); x++) {
+
+                                JSONObject Elemento2 = Elemento1.getJSONObject(x);
+
+                                fun_id = Elemento2.getString("fun_id");
+
+                                switch (fun_id) {
+
+                                    case "aea6fac7-14e3-4e85-b691-55894fe5dfd2":
+
+                                        Inventarios = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "8c8ecc05-7d7e-44ed-a6be-e69d882333dc":
+
+                                        Listado_inventario = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+
+        //   {
+        //                        "fun_id": "aea6fac7-14e3-4e85-b691-55894fe5dfd2",
+        //                        "fun_nombre": "Inventarios",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "8c8ecc05-7d7e-44ed-a6be-e69d882333dc",
+        //                        "fun_nombre": "Listado de inventarios",
+        //                        "fun_permiso": true
+        //                    }
+
+
+
+
 
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
