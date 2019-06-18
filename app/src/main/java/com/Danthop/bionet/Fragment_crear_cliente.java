@@ -175,7 +175,13 @@ public class Fragment_crear_cliente extends DialogFragment {
         });
 
         VerificarOpcion();
-        LoadSpinnerEstado();
+        try{
+
+        }catch (NullPointerException x)
+        {
+            LoadSpinnerEstado();
+        }
+
         LoadSpinnerSucursal();
 
 
