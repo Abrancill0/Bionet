@@ -437,7 +437,8 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                 boolean Aplica0 = false;
                 boolean Aplica0_Permiso = false;
-                String rol_nombre0="";
+
+                String rol_nombre0 = "";
 
                 for (int i = 0; i < Roles.length(); i++) {
                     try {

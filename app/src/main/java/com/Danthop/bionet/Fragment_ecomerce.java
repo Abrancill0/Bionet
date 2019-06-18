@@ -53,6 +53,7 @@ public class Fragment_ecomerce extends Fragment {
     private String RespuestaTodoString;
     private OrdenEcommerceAdapter ordenAdapter;
     private SearchView Buscar;
+    private JSONArray Roles;
 
     private List<Ecommerce_orden_Model> Ordenes;
     private TableDataClickListener<Ecommerce_orden_Model> tablaListener;
@@ -77,6 +78,108 @@ public class Fragment_ecomerce extends Fragment {
         AccesToken = sharedPref.getString( "AccessToken", "" );
         TokenLife = sharedPref.getString( "TokenLifetime", "" );
         usu_id = sharedPref.getString( "usu_id", "" );
+
+        //Funcion para Obtener Permisos
+        try {
+            Roles = new JSONArray(sharedPref.getString("sso_Roles", ""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        boolean Aplica = false;
+        boolean Aplica_Permiso = false;
+        String fun_id = "";
+
+        String rol_id = "";
+
+        for (int i = 0; i < Roles.length(); i++) {
+            try {
+
+                JSONObject Elemento = Roles.getJSONObject(i);
+                rol_id = Elemento.getString("rol_id");
+
+                if (rol_id.equals("cbcf943b-ed1e-11e8-8a6e-cb097f5c03df")) {
+                    Aplica = Elemento.getBoolean("rol_aplica_en_version");
+                    Aplica_Permiso = Elemento.getBoolean("rol_permiso");
+
+                    if (Aplica == true) {
+                        if (Aplica_Permiso == true) {
+
+                            JSONArray Elemento1 = Elemento.getJSONArray("rol_funciones");
+
+                            for (int x = 0; x < Elemento1.length(); x++) {
+
+                                JSONObject Elemento2 = Elemento1.getJSONObject(x);
+
+                                fun_id = Elemento2.getString("fun_id");
+
+                                switch (fun_id) {
+
+                                    case "6c4f52e5-4f69-4fe4-b9f8-9ec0bce58aaa":
+
+                                    //    Elimina_Notificacion = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "5ba36503-0ab7-49ea-9ec8-91d2ee9af17d":
+
+                                     //   Listado_Notificacion = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+       // "fun_id": "641528ee-7c4a-4ce5-8042-e820bd877e29",
+       //         "fun_nombre": "Dar de alta artículos",
+       //         "fun_permiso": false
+
+
+       // "fun_id": "990374f4-7c7d-409e-9532-a055e6d77468",
+       //         "fun_nombre": "Eliminar pregunta",
+       //         "fun_permiso": false
+
+       // "fun_id": "2406cc13-c137-4a1f-9eee-123a5b34a6ef",
+       //         "fun_nombre": "Eliminar pregunta y bloquear al comprador para que no pueda ofertar",
+       //         "fun_permiso": false
+
+       // "fun_id": "1206c1ea-f8f9-479a-80ff-515e95e1cbc8",
+       //         "fun_nombre": "Historial",
+       //         "fun_permiso": false
+
+       // "fun_id": "3c9ca085-1e2d-4e33-9267-68d8e84de58a",
+       //         "fun_nombre": "Imprimir guía",
+       //         "fun_permiso": false
+
+       // "fun_id": "bf5211ed-eb4a-44dc-b4f0-41ce308c8d5c",
+       //         "fun_nombre": "Listado de preguntas",
+       //         "fun_permiso": false
+
+       // "fun_id": "0a0c2990-2576-4fb5-8785-7a43db01e641",
+       //         "fun_nombre": "Ordenes",
+       //         "fun_permiso": false
+
+        //"fun_id": "78e46ff9-2ee4-4584-81b5-fb4efd7528dc",
+        //                        "fun_nombre": "Preguntas",
+        //                        "fun_permiso": false
+
+        // "fun_id": "47a9650b-ba94-4373-b816-f42ae6fc9a30",
+        //                        "fun_nombre": "Sincronizar",
+        //                        "fun_permiso": false
+
+        // "fun_id": "ca647f58-dc8f-4ad4-8619-34d09a673d78",
+        //                        "fun_nombre": "Ver publicación",
+        //                        "fun_permiso": false
+
 
         progreso=new ProgressDialog(getContext());
         progreso.setMessage("Espere un momento por favor");

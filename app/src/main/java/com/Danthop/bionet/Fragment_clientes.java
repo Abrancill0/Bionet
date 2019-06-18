@@ -88,7 +88,7 @@ public class Fragment_clientes extends Fragment {
     private String UltimaCompra;
     private String ConsumoPromedio;
     private Dialog ver_cliente_dialog;
-    private  FragmentTransaction fr;
+    private FragmentTransaction fr;
     private TableDataClickListener<ClienteModel> tablaListener;
     private ProgressDialog progressDialog;
     private SearchView BuscarCliente;
@@ -96,9 +96,17 @@ public class Fragment_clientes extends Fragment {
     private Spinner SpinnerSucursal;
     private ArrayList<String> SucursalName;
     private ArrayList<String> SucursalID;
+    private JSONArray Roles;
 
     private List<ClienteModel> clientes;
     private List<CompraModel> HistorialCompras;
+
+    private Boolean Crear_Usuario = false;
+    private Boolean Editar_Usuario = false;
+    private Boolean Eliminar_Usuario = false;
+    private Boolean Listado_Clientes = false;
+    private Boolean Ficha_Tecnica_cliente = false;
+
 
     public Fragment_clientes() {
         // Required empty public constructor
@@ -109,8 +117,8 @@ public class Fragment_clientes extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_clientes,container, false);
-        progressDialog=new ProgressDialog(getContext());
+        View v = inflater.inflate(R.layout.fragment_clientes, container, false);
+        progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
@@ -120,7 +128,7 @@ public class Fragment_clientes extends Fragment {
         SpinnerSucursal = (Spinner) v.findViewById(R.id.sucursal);
 
         tabla_clientes = (SortableClientesTable) v.findViewById(R.id.tabla_clientes);
-        ver_cliente_dialog=new Dialog(getContext());
+        ver_cliente_dialog = new Dialog(getContext());
         ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
 
         BuscarCliente = (SearchView) v.findViewById(R.id.TextSearchClientes);
@@ -129,37 +137,130 @@ public class Fragment_clientes extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
-        usu_id = sharedPref.getString("usu_id","");
+        usu_id = sharedPref.getString("usu_id", "");
+
+        //Funcion para Obtener Permisos
+        try {
+            Roles = new JSONArray(sharedPref.getString("sso_Roles", ""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        boolean Aplica = false;
+        boolean Aplica_Permiso = false;
+        String fun_id = "";
+
+        String rol_id = "";
+
+        for (int i = 0; i < Roles.length(); i++) {
+            try {
+
+                JSONObject Elemento = Roles.getJSONObject(i);
+                rol_id = Elemento.getString("rol_id");
+
+                if (rol_id.equals("cbcf9420-ed1e-11e8-8a6e-cb097f5c03df")) {
+                    Aplica = Elemento.getBoolean("rol_aplica_en_version");
+                    Aplica_Permiso = Elemento.getBoolean("rol_permiso");
+
+                    if (Aplica == true) {
+                        if (Aplica_Permiso == true) {
+
+                            JSONArray Elemento1 = Elemento.getJSONArray("rol_funciones");
+
+                            for (int x = 0; x < Elemento1.length(); x++) {
+
+                                JSONObject Elemento2 = Elemento1.getJSONObject(x);
+
+                                fun_id = Elemento2.getString("fun_id");
+
+                                switch (fun_id) {
+
+                                    case "1d8afd39-7569-45a5-9ada-f253e725b5b9":
+
+                                        Crear_Usuario = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "cc3cd942-126e-4b9e-8863-45a1f20b20a8":
+
+                                        Editar_Usuario = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "968767f2-fce8-42f7-9fbd-17723d03d691":
+
+                                        Eliminar_Usuario = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "5d7e98e9-5b20-4a63-8e67-c4c85f2bebe3":
+
+                                        Listado_Clientes = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "14758e15-7bf8-4bdc-8586-2adda7e1c996":
+
+                                        Ficha_Tecnica_cliente = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    default:
+
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        //Crear usuario
+        //1d8afd39-7569-45a5-9ada-f253e725b5b9
+        //Editar Usuario
+        //cc3cd942-126e-4b9e-8863-45a1f20b20a8
+        //Eliminar Usuario
+        //968767f2-fce8-42f7-9fbd-17723d03d691
+        //Listado de clientes
+        //5d7e98e9-5b20-4a63-8e67-c4c85f2bebe3
+        //Ver Ficha tecnica cliente
+        //14758e15-7bf8-4bdc-8586-2adda7e1c996
+
 
         clientes = new ArrayList<>();
 
 
         LoadSucursales();
-        SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
+        SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+
+        {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 progressDialog.show();
                 Muestra_clientes();
 
             }
-            public void onNothingSelected(AdapterView<?> parent)
-            {
+
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
 
 
         Button btn_crear_cliente = (Button) v.findViewById(R.id.btn_crear_cliente);
-        btn_crear_cliente.setOnClickListener(new View.OnClickListener() {
+        btn_crear_cliente.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
 
-                fr.replace(R.id.fragment_container,new Fragment_crear_cliente()).commit();
+                fr.replace(R.id.fragment_container, new Fragment_crear_cliente()).commit();
                 onDetach();
             }
         });
 
-        BuscarCliente.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        BuscarCliente.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+
+        {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -174,46 +275,49 @@ public class Fragment_clientes extends Fragment {
 
 
         tabla_clientes.setSwipeToRefreshEnabled(true);
-        tabla_clientes.setSwipeToRefreshListener(new SwipeToRefreshListener() {
-            @Override
-            public void onRefresh(final RefreshIndicator refreshIndicator) {
-                tabla_clientes.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        clientes.clear();
-                        Muestra_clientes();
-                        refreshIndicator.hide();
-                    }
-                }, 2000);
-            }
-        });
+        tabla_clientes.setSwipeToRefreshListener(new
+
+                                                         SwipeToRefreshListener() {
+                                                             @Override
+                                                             public void onRefresh(final RefreshIndicator refreshIndicator) {
+                                                                 tabla_clientes.postDelayed(new Runnable() {
+                                                                     @Override
+                                                                     public void run() {
+                                                                         clientes.clear();
+                                                                         Muestra_clientes();
+                                                                         refreshIndicator.hide();
+                                                                     }
+                                                                 }, 2000);
+                                                             }
+                                                         });
 
         tabla_clientes.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
 
         //FilterHelper<ClienteModel> filterHelper = new FilterHelper<>(tabla_clientes);
         //filterHelper.setFilter(new FiltroClientes(""));
 
-        tablaListener = new TableDataClickListener<ClienteModel>() {
+        tablaListener = new TableDataClickListener<ClienteModel>()
+
+        {
             @Override
             public void onDataClicked(int rowIndex, final ClienteModel clickedData) {
                 Dialog ver_cliente_dialog;
-                ver_cliente_dialog=new Dialog(getContext());
+                ver_cliente_dialog = new Dialog(getContext());
                 ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
                 ver_cliente_dialog.show();
 
                 HistorialCompras = new ArrayList<>();
-                for(int d=0; d<clickedData.getCompras().size();d++)
-                {
+                for (int d = 0; d < clickedData.getCompras().size(); d++) {
                     String NoTicket = clickedData.getCompras().get(d).getNumero();
                     String Importe = clickedData.getCompras().get(d).getImporte();
                     String Fecha = clickedData.getCompras().get(d).getFechaCompra();
-                    CompraModel compra = new CompraModel(NoTicket,Importe,Fecha);
+                    CompraModel compra = new CompraModel(NoTicket, Importe, Fecha);
                     HistorialCompras.add(compra);
                 }
 
 
                 SortableClientesHistorialTable HistorialTable = ver_cliente_dialog.findViewById(R.id.historial_compras);
-                final HistorialClientesAdapter historialAdapter = new HistorialClientesAdapter(getContext(),HistorialCompras,HistorialTable);
+                final HistorialClientesAdapter historialAdapter = new HistorialClientesAdapter(getContext(), HistorialCompras, HistorialTable);
                 HistorialTable.setDataAdapter(historialAdapter);
 
 
@@ -242,15 +346,15 @@ public class Fragment_clientes extends Fragment {
                 TelefonoCliente.setText(clickedData.getCliente_Telefono());
                 EstadoCliente.setText(clickedData.getcliente_estado());
 
-                ColoniaCliente.setText( clickedData.getcliente_colonia() );
-                NumExtCliente.setText( clickedData.getcliente_num_ext() );
-                NumIntCliente.setText( clickedData.getcliente_num_int() );
-                CPCliente.setText( clickedData.getcliente_cp() );
-                CiudadCliente.setText( clickedData.getcliente_ciudad() );
+                ColoniaCliente.setText(clickedData.getcliente_colonia());
+                NumExtCliente.setText(clickedData.getcliente_num_ext());
+                NumIntCliente.setText(clickedData.getcliente_num_int());
+                CPCliente.setText(clickedData.getcliente_cp());
+                CiudadCliente.setText(clickedData.getcliente_ciudad());
 
-                MunicipioCliente.setText( clickedData.getcliente_municipio() );
-                RFCCliente.setText( clickedData.getcliente_rfc() );
-                RazonSocialCliente.setText(  clickedData.getcliente_razon_social());
+                MunicipioCliente.setText(clickedData.getcliente_municipio());
+                RFCCliente.setText(clickedData.getcliente_rfc());
+                RazonSocialCliente.setText(clickedData.getcliente_razon_social());
                 CalleCliente.setText(clickedData.getCliente_calle());
 
                 DireccionFiscal.setText(clickedData.getCliente_direccion_fiscal());
@@ -264,34 +368,34 @@ public class Fragment_clientes extends Fragment {
 
                         ver_cliente_dialog.dismiss();
                         Bundle bundle = new Bundle();
-                        bundle.putString( "nombre", clickedData.getCliente_Nombre() );
-                        bundle.putString( "ultima_visita", clickedData.getCliente_Ultima_Visita() );
-                        bundle.putString( "email", clickedData.getCliente_Correo() );
-                        bundle.putString( "telefono", clickedData.getCliente_Telefono() );
-                        bundle.putString( "cp", clickedData.getcliente_cp() );
-                        bundle.putString( "estado", clickedData.getcliente_estado() );
-                        bundle.putString( "municipio", clickedData.getcliente_municipio() );
-                        bundle.putString( "colonia", clickedData.getcliente_colonia() );
-                        bundle.putString( "calle", clickedData.getCliente_calle());
-                        bundle.putString( "numero_interior", clickedData.getcliente_num_int() );
-                        bundle.putString( "numero_exterior", clickedData.getcliente_num_ext() );
-                        bundle.putString( "sucursal","");
-                        bundle.putString( "rfc", clickedData.getcliente_rfc() );
-                        bundle.putString( "razon_social", clickedData.getcliente_razon_social());
-                        bundle.putString( "cp_fiscal", clickedData.getCp_fiscal());
-                        bundle.putString( "estado_fiscal", clickedData.getEstado_fiscal() );
-                        bundle.putString( "municipio_fiscal", clickedData.getMunicipio_fiscal());
-                        bundle.putString( "colonia_fiscal", clickedData.getColonia_fiscal());
-                        bundle.putString( "calle_fiscal", clickedData.getCalle_fiscal());
-                        bundle.putString( "numero_interior_fiscal", clickedData.getNum_int_fiscal());
-                        bundle.putString( "numero_exterior_fiscal", clickedData.getNum_ext_fiscal());
-                        bundle.putString( "correo_fiscal", clickedData.getCliente_email_facturacion());
+                        bundle.putString("nombre", clickedData.getCliente_Nombre());
+                        bundle.putString("ultima_visita", clickedData.getCliente_Ultima_Visita());
+                        bundle.putString("email", clickedData.getCliente_Correo());
+                        bundle.putString("telefono", clickedData.getCliente_Telefono());
+                        bundle.putString("cp", clickedData.getcliente_cp());
+                        bundle.putString("estado", clickedData.getcliente_estado());
+                        bundle.putString("municipio", clickedData.getcliente_municipio());
+                        bundle.putString("colonia", clickedData.getcliente_colonia());
+                        bundle.putString("calle", clickedData.getCliente_calle());
+                        bundle.putString("numero_interior", clickedData.getcliente_num_int());
+                        bundle.putString("numero_exterior", clickedData.getcliente_num_ext());
+                        bundle.putString("sucursal", "");
+                        bundle.putString("rfc", clickedData.getcliente_rfc());
+                        bundle.putString("razon_social", clickedData.getcliente_razon_social());
+                        bundle.putString("cp_fiscal", clickedData.getCp_fiscal());
+                        bundle.putString("estado_fiscal", clickedData.getEstado_fiscal());
+                        bundle.putString("municipio_fiscal", clickedData.getMunicipio_fiscal());
+                        bundle.putString("colonia_fiscal", clickedData.getColonia_fiscal());
+                        bundle.putString("calle_fiscal", clickedData.getCalle_fiscal());
+                        bundle.putString("numero_interior_fiscal", clickedData.getNum_int_fiscal());
+                        bundle.putString("numero_exterior_fiscal", clickedData.getNum_ext_fiscal());
+                        bundle.putString("correo_fiscal", clickedData.getCliente_email_facturacion());
                         bundle.putString("correo_igual", clickedData.getCorreo_igual());
                         bundle.putString("direccion_igual", clickedData.getDireccion_igual());
-                        bundle.putString("UUID",clickedData.getCliente_UUID());
+                        bundle.putString("UUID", clickedData.getCliente_UUID());
                         Fragment_editarCliente editarCliente = new Fragment_editarCliente();
                         editarCliente.setArguments(bundle);
-                        fr.replace(R.id.fragment_container,editarCliente).commit();
+                        fr.replace(R.id.fragment_container, editarCliente).commit();
 
                     }
                 });
@@ -300,7 +404,7 @@ public class Fragment_clientes extends Fragment {
                 eliminarCliente.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final Dialog pop_up_confirmacion_eliminar =new Dialog(getContext());
+                        final Dialog pop_up_confirmacion_eliminar = new Dialog(getContext());
                         pop_up_confirmacion_eliminar.setContentView(R.layout.pop_up_confirmar_eliminar_cliente);
                         pop_up_confirmacion_eliminar.show();
                         Button aceptar = pop_up_confirmacion_eliminar.findViewById(R.id.AceptarEliminar);
@@ -311,15 +415,12 @@ public class Fragment_clientes extends Fragment {
                             public void onClick(View v) {
 
                                 JSONObject request = new JSONObject();
-                                try
-                                {
+                                try {
                                     request.put("usu_id", clickedData.getCliente_usu_id());
                                     request.put("cli_id", clickedData.getCliente_UUID());
                                     request.put("esApp", "1");
 
-                                }
-                                catch(Exception e)
-                                {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
@@ -327,8 +428,7 @@ public class Fragment_clientes extends Fragment {
 
                                 String ApiPath = url + "api/clientes/delete";
 
-                                JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-                                {
+                                JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
                                     @Override
                                     public void onResponse(JSONObject response) {
 
@@ -339,8 +439,7 @@ public class Fragment_clientes extends Fragment {
                                             int status = Integer.parseInt(response.getString("estatus"));
                                             String Mensaje = response.getString("mensaje");
 
-                                            if (status == 1)
-                                            {
+                                            if (status == 1) {
 
                                                 Toast toast1 =
                                                         Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
@@ -350,9 +449,7 @@ public class Fragment_clientes extends Fragment {
                                                 clientes.clear();
                                                 Muestra_clientes();
 
-                                            }
-                                            else
-                                            {
+                                            } else {
                                                 Toast toast1 =
                                                         Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
@@ -374,8 +471,7 @@ public class Fragment_clientes extends Fragment {
                                     }
 
                                 },
-                                        new Response.ErrorListener()
-                                        {
+                                        new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
                                                 Toast toast1 =
@@ -407,7 +503,9 @@ public class Fragment_clientes extends Fragment {
                 });
 
             }
-        };
+        }
+
+        ;
 
         tabla_clientes.addDataClickListener(tablaListener);
 
@@ -415,19 +513,15 @@ public class Fragment_clientes extends Fragment {
 
     }
 
-    private void Muestra_clientes()
-    {
+    private void Muestra_clientes() {
         clientes.clear();
         JSONObject request = new JSONObject();
-        try
-        {
+        try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
             request.put("usu_suc", SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
 
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -437,34 +531,33 @@ public class Fragment_clientes extends Fragment {
 
         //clienteAdapter.clear();
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>() {
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
                 JSONObject Respuesta = null;
-                JSONObject RespuestaNodoDireccion= null;
-                JSONObject ElementoUsuario=null;
-                JSONArray RespuestaNodoClientes= null;
+                JSONObject RespuestaNodoDireccion = null;
+                JSONObject ElementoUsuario = null;
+                JSONArray RespuestaNodoClientes = null;
 
                 try {
 
                     int status = Integer.parseInt(response.getString("estatus"));
                     String Mensaje = response.getString("mensaje");
 
-                    if (status == 1)
-                    {
+                    if (status == 1) {
                         Respuesta = response.getJSONObject("resultado");
 
                         RespuestaNodoClientes = Respuesta.getJSONArray("aClientes");
 
                         clienteModel = new String[RespuestaNodoClientes.length()][5];
 
-                        for(int x = 0; x < RespuestaNodoClientes.length(); x++){
+                        for (int x = 0; x < RespuestaNodoClientes.length(); x++) {
                             JSONObject elemento = RespuestaNodoClientes.getJSONObject(x);
 
-                            ElementoUsuario =  elemento.getJSONObject("cli_id");
+                            ElementoUsuario = elemento.getJSONObject("cli_id");
 
-                            UUID = ElementoUsuario.getString( "uuid");
+                            UUID = ElementoUsuario.getString("uuid");
                             nombre = elemento.getString("cli_nombre");
                             correo_electronico = elemento.getString("cli_correo_electronico");
 
@@ -472,16 +565,16 @@ public class Fragment_clientes extends Fragment {
                             RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion");
                             calle = RespuestaNodoDireccion.getString("cli_calle");
 
-                            estado = RespuestaNodoDireccion.getString( "cli_estado");
-                            colonia = RespuestaNodoDireccion.getString( "cli_colonia");
-                            num_int = RespuestaNodoDireccion.getString( "cli_numero_interior");
-                            num_ext = RespuestaNodoDireccion.getString( "cli_numero_exterior");
-                            cp = RespuestaNodoDireccion.getString( "cli_codigo_postal");
-                            ciudad = RespuestaNodoDireccion.getString( "cli_ciudad");
-                            municipio = RespuestaNodoDireccion.getString( "cli_ciudad");
+                            estado = RespuestaNodoDireccion.getString("cli_estado");
+                            colonia = RespuestaNodoDireccion.getString("cli_colonia");
+                            num_int = RespuestaNodoDireccion.getString("cli_numero_interior");
+                            num_ext = RespuestaNodoDireccion.getString("cli_numero_exterior");
+                            cp = RespuestaNodoDireccion.getString("cli_codigo_postal");
+                            ciudad = RespuestaNodoDireccion.getString("cli_ciudad");
+                            municipio = RespuestaNodoDireccion.getString("cli_ciudad");
 
-                            rfc = elemento.getString( "cli_rfc");
-                            razon_social = elemento.getString( "cli_razon_social");
+                            rfc = elemento.getString("cli_rfc");
+                            razon_social = elemento.getString("cli_razon_social");
 
                             RespuestaNodoDireccion = elemento.getJSONObject("cli_direccion_fiscal");
                             cp_fiscal = RespuestaNodoDireccion.getString("cli_codigo_postal");
@@ -491,41 +584,34 @@ public class Fragment_clientes extends Fragment {
                             calle_fiscal = RespuestaNodoDireccion.getString("cli_calle");
                             num_ext_fiscal = RespuestaNodoDireccion.getString("cli_numero_exterior");
                             num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
-                            UltimaCompra = elemento.getString( "cli_ultima_compra" );
-                            ConsumoPromedio = elemento.getString( "cli_promedio_compra" );
+                            UltimaCompra = elemento.getString("cli_ultima_compra");
+                            ConsumoPromedio = elemento.getString("cli_promedio_compra");
 
 
                             HistorialCompras = new ArrayList<>();
                             JSONArray comprasNodo = elemento.getJSONArray("ventas");
-                            for(int d=0; d<comprasNodo.length();d++)
-                            {
+                            for (int d = 0; d < comprasNodo.length(); d++) {
                                 JSONObject elementoCompra = comprasNodo.getJSONObject(d);
                                 String NoTicket = elementoCompra.getString("tic_numero");
                                 String Importe = elementoCompra.getString("tic_importe_total");
                                 String Fecha = elementoCompra.getString("fecha_hora_venta");
-                                CompraModel compra = new CompraModel(NoTicket,Importe,Fecha);
+                                CompraModel compra = new CompraModel(NoTicket, Importe, Fecha);
                                 HistorialCompras.add(compra);
                             }
 
 
                             direccion_igual = elemento.getString("cli_direcciones_iguales");
-                            if(direccion_igual.equals("false"))
-                            {
-                                direccion_fiscal = calle_fiscal + " " + num_ext_fiscal + " " + num_int_fiscal + " " +colonia_fiscal + " " + cp_fiscal + " " + estado_fiscal + " " + municipio_fiscal;
-                            }
-                            else if (direccion_igual.equals("true"))
-                            {
-                                direccion_fiscal = calle + " " + num_ext + " " + num_int + " " +colonia + " " + cp + " " + estado + " " + municipio;
+                            if (direccion_igual.equals("false")) {
+                                direccion_fiscal = calle_fiscal + " " + num_ext_fiscal + " " + num_int_fiscal + " " + colonia_fiscal + " " + cp_fiscal + " " + estado_fiscal + " " + municipio_fiscal;
+                            } else if (direccion_igual.equals("true")) {
+                                direccion_fiscal = calle + " " + num_ext + " " + num_int + " " + colonia + " " + cp + " " + estado + " " + municipio;
 
                             }
 
                             correo_igual = elemento.getString("cli_correos_iguales");
-                            if(correo_igual.equals("false"))
-                            {
+                            if (correo_igual.equals("false")) {
                                 email_fiscal = elemento.getString("cli_correo_electronico_facturacion");
-                            }
-                            else if (correo_igual.equals("true"))
-                            {
+                            } else if (correo_igual.equals("true")) {
                                 email_fiscal = correo_electronico;
                             }
 
@@ -563,12 +649,10 @@ public class Fragment_clientes extends Fragment {
                             clientes.add(cliente);
                         }
 
-                        clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes,fr);
+                        clienteAdapter = new ClienteAdapter(getContext(), clientes, tabla_clientes, fr);
                         tabla_clientes.setDataAdapter(clienteAdapter);
                         progressDialog.dismiss();
-                    }
-                    else
-                    {
+                    } else {
                         progressDialog.dismiss();
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
@@ -584,8 +668,7 @@ public class Fragment_clientes extends Fragment {
             }
 
         },
-                new Response.ErrorListener()
-                {
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();

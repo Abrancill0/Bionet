@@ -48,6 +48,9 @@ public class Fragment_notificaciones extends Fragment {
     private TextView NumNotificaciones;
     private Dialog pop_detail_notification;
     private ProgressDialog progressDialog;
+    private JSONArray Roles;
+    private boolean Elimina_Notificacion=false;
+    private boolean Listado_Notificacion=false;
 
 
     String text = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.";
@@ -67,13 +70,73 @@ public class Fragment_notificaciones extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
 
+        //Funcion para Obtener Permisos
+        try {
+            Roles = new JSONArray(sharedPref.getString("sso_Roles", ""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        boolean Aplica = false;
+        boolean Aplica_Permiso = false;
+        String fun_id = "";
+
+        String rol_id = "";
+
+        for (int i = 0; i < Roles.length(); i++) {
+            try {
+
+                JSONObject Elemento = Roles.getJSONObject(i);
+                rol_id = Elemento.getString("rol_id");
+
+                if (rol_id.equals("cbcf943b-ed1e-11e8-8a6e-cb097f5c03df")) {
+                    Aplica = Elemento.getBoolean("rol_aplica_en_version");
+                    Aplica_Permiso = Elemento.getBoolean("rol_permiso");
+
+                    if (Aplica == true) {
+                        if (Aplica_Permiso == true) {
+
+                            JSONArray Elemento1 = Elemento.getJSONArray("rol_funciones");
+
+                            for (int x = 0; x < Elemento1.length(); x++) {
+
+                                JSONObject Elemento2 = Elemento1.getJSONObject(x);
+
+                                fun_id = Elemento2.getString("fun_id");
+
+                                switch (fun_id) {
+
+                                    case "6c4f52e5-4f69-4fe4-b9f8-9ec0bce58aaa":
+
+                                        Elimina_Notificacion = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "5ba36503-0ab7-49ea-9ec8-91d2ee9af17d":
+
+                                        Listado_Notificacion = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
         LoadNotificaciones();
-
 
         Button delete = v.findViewById(R.id.btn_eliminar);
 
