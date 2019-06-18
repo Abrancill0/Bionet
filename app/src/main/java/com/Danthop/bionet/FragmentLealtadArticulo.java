@@ -66,6 +66,19 @@ public class FragmentLealtadArticulo extends Fragment {
     private ArrayList<String> SucursalName;
     private ArrayList<String> SucursalID;
 
+    private Bundle bundle;
+    private boolean  Agregar_Articulo=false;
+    private boolean  Agregar_Cliente=false;
+    private boolean Lista_Articulos=false;
+    private boolean Asignar_Articulo=false;
+    private boolean Asignar_Cliente=false;
+    private boolean  Configuracion_Programa=false;
+    private boolean Caducidad_Puntos=false;
+    private boolean Inscribir_Programa = false;
+    private boolean Puntos_Acumulados = false;
+    private boolean Listado_Puntos = false;
+
+
 
     public FragmentLealtadArticulo() {
         // Required empty public constructor
@@ -199,6 +212,18 @@ public class FragmentLealtadArticulo extends Fragment {
                 return false;
             }
         });
+
+        bundle = getArguments();
+        Agregar_Articulo=bundle.getBoolean("Agregar_Articulo");
+        Agregar_Cliente=bundle.getBoolean("Agregar_Cliente");
+        Lista_Articulos=bundle.getBoolean("Lista_Articulos");
+        Asignar_Articulo=bundle.getBoolean("Asignar_Articulo");
+        Asignar_Cliente=bundle.getBoolean("Asignar_Cliente");
+        Configuracion_Programa=bundle.getBoolean("Configuracion_Programa");
+        Caducidad_Puntos=bundle.getBoolean("Caducidad_Puntos");
+        Inscribir_Programa=bundle.getBoolean("Inscribir_Programa");
+        Puntos_Acumulados=bundle.getBoolean("Puntos_Acumulados");
+        Listado_Puntos=bundle.getBoolean("Listado_Puntos");
 
 
         return v;

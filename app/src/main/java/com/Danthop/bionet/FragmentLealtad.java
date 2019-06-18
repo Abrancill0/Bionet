@@ -306,7 +306,20 @@ public class FragmentLealtad extends Fragment {
         Programas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtadConfiguraciones()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Agregar_Articulo", Agregar_Articulo);
+                bundle.putBoolean("Agregar_Cliente", Agregar_Cliente);
+                bundle.putBoolean("Lista_Articulos", Lista_Articulos);
+                bundle.putBoolean("Asignar_Articulo", Asignar_Articulo);
+                bundle.putBoolean("Asignar_Cliente", Asignar_Cliente);
+                bundle.putBoolean("Configuracion_Programa", Configuracion_Programa);
+                bundle.putBoolean("Caducidad_Puntos", Caducidad_Puntos);
+                bundle.putBoolean("Inscribir_Programa", Inscribir_Programa);
+                bundle.putBoolean("Puntos_Acumulados", Puntos_Acumulados);
+                bundle.putBoolean("Listado_Puntos", Listado_Puntos);
+                FragmentLealtadConfiguraciones fragment2 = new FragmentLealtadConfiguraciones();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
 
             }
@@ -318,7 +331,20 @@ public class FragmentLealtad extends Fragment {
         Inscribir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtadInscribir()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Agregar_Articulo", Agregar_Articulo);
+                bundle.putBoolean("Agregar_Cliente", Agregar_Cliente);
+                bundle.putBoolean("Lista_Articulos", Lista_Articulos);
+                bundle.putBoolean("Asignar_Articulo", Asignar_Articulo);
+                bundle.putBoolean("Asignar_Cliente", Asignar_Cliente);
+                bundle.putBoolean("Configuracion_Programa", Configuracion_Programa);
+                bundle.putBoolean("Caducidad_Puntos", Caducidad_Puntos);
+                bundle.putBoolean("Inscribir_Programa", Inscribir_Programa);
+                bundle.putBoolean("Puntos_Acumulados", Puntos_Acumulados);
+                bundle.putBoolean("Listado_Puntos", Listado_Puntos);
+                FragmentLealtadInscribir fragment2 = new FragmentLealtadInscribir();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
 
             }
@@ -329,7 +355,20 @@ public class FragmentLealtad extends Fragment {
         Articulos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtadArticulo()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Agregar_Articulo", Agregar_Articulo);
+                bundle.putBoolean("Agregar_Cliente", Agregar_Cliente);
+                bundle.putBoolean("Lista_Articulos", Lista_Articulos);
+                bundle.putBoolean("Asignar_Articulo", Asignar_Articulo);
+                bundle.putBoolean("Asignar_Cliente", Asignar_Cliente);
+                bundle.putBoolean("Configuracion_Programa", Configuracion_Programa);
+                bundle.putBoolean("Caducidad_Puntos", Caducidad_Puntos);
+                bundle.putBoolean("Inscribir_Programa", Inscribir_Programa);
+                bundle.putBoolean("Puntos_Acumulados", Puntos_Acumulados);
+                bundle.putBoolean("Listado_Puntos", Listado_Puntos);
+                FragmentLealtadArticulo fragment2 = new FragmentLealtadArticulo();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
 
             }
@@ -643,6 +682,24 @@ public class FragmentLealtad extends Fragment {
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
 
+    }
+
+    private void LoadPermisosFunciones()
+    {
+        if(Listado_Puntos==false){
+            clientes.clear();
+            clienteAdapter.notifyDataSetChanged();
+            Buscar.setEnabled(false);
+            Buscar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), "No cuentas con los permisos necesarios para \n realizar esta acción", Toast.LENGTH_LONG);
+
+                    toast1.show();
+                }
+            });
+        }
     }
 
     @Override

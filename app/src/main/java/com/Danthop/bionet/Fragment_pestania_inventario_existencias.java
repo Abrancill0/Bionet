@@ -143,7 +143,6 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 Load_ExistenciasInventario(newText);
-                ExistenciasAdapter.getFilter().filter(newText);
                 return false;
             }
         });
@@ -153,6 +152,7 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
 
 //--------------------------------------------------------------------------------------------------
 private void Load_ExistenciasInventario(String articulo) {
+        inventarios.clear();
 
     String url = getString(R.string.Url);
     String ApiPath = url + "/api/inventario/buscar_disponibilidad_articulo?usu_id=" + usu_id + "&esApp=1&nombre_sku_articulo="+articulo;
@@ -161,7 +161,7 @@ private void Load_ExistenciasInventario(String articulo) {
         @Override
         public void onResponse(JSONObject response) {
 
-            JSONObject Resultado = null;
+            JSONArray Resultado = null;
             JSONArray Articulo = null;
             JSONArray imagenes = null;
             JSONObject RespuestaUUID = null;
@@ -172,19 +172,16 @@ private void Load_ExistenciasInventario(String articulo) {
                 String Mensaje = response.getString("mensaje");
 
                 if (status == 1) {
-                    Resultado = response.getJSONObject("resultado");
+                    Resultado = response.getJSONArray("resultado");
+                    inventarioModel = new String[Resultado.length()][4];
 
-                    Articulo = Resultado.getJSONArray("aArticuloExistencias");
-                    inventarioModel = new String[Articulo.length()][4];
-
-                    for (int x = 0; x < Articulo.length(); x++) {
-                        JSONObject elemento = Articulo.getJSONObject(x);
+                    for (int x = 0; x < Resultado.length(); x++) {
+                        JSONObject elemento = Resultado.getJSONObject(x);
 
                         RespuestaUUID = elemento.getJSONObject("art_id");
                         String UUID = RespuestaUUID.getString("uuid");
 
                         producto = elemento.getString("art_nombre");
-                        categoria = elemento.getString("cat_nombre");
                         articulo_descripcion = elemento.getString("art_descripcion");
                         art_tipo = elemento.getString("art_tipo");
                         nombre_sucursal = elemento.getString("suc_nombre");
@@ -221,9 +218,6 @@ private void Load_ExistenciasInventario(String articulo) {
                         } else {
                             ava_aplica_cambio_devolucion = "no";
                         }
-
-                        imagenes = elemento.getJSONArray("imagenes");
-                        JSONObject elemento3 = imagenes.getJSONObject(0);
 
                         //Variantes_Modificadores_SKU
                         Boolean Disponible_Variante = Boolean.valueOf(elemento.getString("art_tiene_variantes"));

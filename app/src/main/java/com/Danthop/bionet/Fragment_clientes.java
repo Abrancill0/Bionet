@@ -8,38 +8,28 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ClienteAdapter;
-import com.Danthop.bionet.Adapters.DetalleApartadoAdapter;
 import com.Danthop.bionet.Adapters.HistorialClientesAdapter;
-import com.Danthop.bionet.Adapters.VentaArticuloAdapter;
-import com.Danthop.bionet.Tables.SortableApartadoDetalleTable;
 import com.Danthop.bionet.Tables.SortableClientesHistorialTable;
 import com.Danthop.bionet.Tables.SortableClientesTable;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.CompraModel;
-import com.Danthop.bionet.model.ConfiguracionLealtadModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
-import com.sortabletableview.recyclerview.toolkit.FilterHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,12 +91,15 @@ public class Fragment_clientes extends Fragment {
     private List<ClienteModel> clientes;
     private List<CompraModel> HistorialCompras;
 
-    private Boolean Crear_Usuario = false;
-    private Boolean Editar_Usuario = false;
-    private Boolean Eliminar_Usuario = false;
+    private Boolean Crear_Cliente = false;
+    private Boolean Editar_Cliente = false;
+    private Boolean Eliminar_Cliente = false;
     private Boolean Listado_Clientes = false;
     private Boolean Ficha_Tecnica_cliente = false;
 
+    private Button btn_crear_cliente;
+    private Button editarCliente;
+    private Button eliminarCliente;
 
     public Fragment_clientes() {
         // Required empty public constructor
@@ -130,6 +123,7 @@ public class Fragment_clientes extends Fragment {
         tabla_clientes = (SortableClientesTable) v.findViewById(R.id.tabla_clientes);
         ver_cliente_dialog = new Dialog(getContext());
         ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
+        btn_crear_cliente = v.findViewById(R.id.btn_crear_cliente);
 
         BuscarCliente = (SearchView) v.findViewById(R.id.TextSearchClientes);
 
@@ -177,17 +171,17 @@ public class Fragment_clientes extends Fragment {
 
                                     case "1d8afd39-7569-45a5-9ada-f253e725b5b9":
 
-                                        Crear_Usuario = Elemento2.getBoolean("fun_permiso");
+                                        Crear_Cliente = Elemento2.getBoolean("fun_permiso");
                                         break;
 
                                     case "cc3cd942-126e-4b9e-8863-45a1f20b20a8":
 
-                                        Editar_Usuario = Elemento2.getBoolean("fun_permiso");
+                                        Editar_Cliente = Elemento2.getBoolean("fun_permiso");
                                         break;
 
                                     case "968767f2-fce8-42f7-9fbd-17723d03d691":
 
-                                        Eliminar_Usuario = Elemento2.getBoolean("fun_permiso");
+                                        Eliminar_Cliente = Elemento2.getBoolean("fun_permiso");
                                         break;
 
                                     case "5d7e98e9-5b20-4a63-8e67-c4c85f2bebe3":
@@ -245,10 +239,7 @@ public class Fragment_clientes extends Fragment {
             }
         });
 
-
-        Button btn_crear_cliente = (Button) v.findViewById(R.id.btn_crear_cliente);
         btn_crear_cliente.setOnClickListener(new View.OnClickListener()
-
         {
             @Override
             public void onClick(View v) {
@@ -259,7 +250,6 @@ public class Fragment_clientes extends Fragment {
         });
 
         BuscarCliente.setOnQueryTextListener(new SearchView.OnQueryTextListener()
-
         {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -293,221 +283,9 @@ public class Fragment_clientes extends Fragment {
 
         tabla_clientes.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
 
-        //FilterHelper<ClienteModel> filterHelper = new FilterHelper<>(tabla_clientes);
-        //filterHelper.setFilter(new FiltroClientes(""));
+        LoadListener();
+        LoadPermisosFunciones();
 
-        tablaListener = new TableDataClickListener<ClienteModel>()
-
-        {
-            @Override
-            public void onDataClicked(int rowIndex, final ClienteModel clickedData) {
-                Dialog ver_cliente_dialog;
-                ver_cliente_dialog = new Dialog(getContext());
-                ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
-                ver_cliente_dialog.show();
-
-                HistorialCompras = new ArrayList<>();
-                for (int d = 0; d < clickedData.getCompras().size(); d++) {
-                    String NoTicket = clickedData.getCompras().get(d).getNumero();
-                    String Importe = clickedData.getCompras().get(d).getImporte();
-                    String Fecha = clickedData.getCompras().get(d).getFechaCompra();
-                    CompraModel compra = new CompraModel(NoTicket, Importe, Fecha);
-                    HistorialCompras.add(compra);
-                }
-
-
-                SortableClientesHistorialTable HistorialTable = ver_cliente_dialog.findViewById(R.id.historial_compras);
-                final HistorialClientesAdapter historialAdapter = new HistorialClientesAdapter(getContext(), HistorialCompras, HistorialTable);
-                HistorialTable.setDataAdapter(historialAdapter);
-
-
-                TextView NameCliente = ver_cliente_dialog.findViewById(R.id.cliente_nombre);
-                TextView CorreoCliente = ver_cliente_dialog.findViewById(R.id.email_cliente);
-                TextView TelefonoCliente = ver_cliente_dialog.findViewById(R.id.telefono_cliente);
-
-                TextView EstadoCliente = ver_cliente_dialog.findViewById(R.id.estado_cliente);
-                TextView CalleCliente = ver_cliente_dialog.findViewById(R.id.calle_cliente);
-
-                TextView ColoniaCliente = ver_cliente_dialog.findViewById(R.id.colonia_cliente);
-                TextView NumExtCliente = ver_cliente_dialog.findViewById(R.id.numero_exterior_cliente);
-                TextView NumIntCliente = ver_cliente_dialog.findViewById(R.id.numero_interior_cliente);
-                TextView CPCliente = ver_cliente_dialog.findViewById(R.id.cp_cliente);
-                TextView CiudadCliente = ver_cliente_dialog.findViewById(R.id.ciudad_cliente);
-
-                TextView MunicipioCliente = ver_cliente_dialog.findViewById(R.id.municipio_cliente);
-                TextView RFCCliente = ver_cliente_dialog.findViewById(R.id.rfc_cliente);
-                TextView RazonSocialCliente = ver_cliente_dialog.findViewById(R.id.razon_social_cliente);
-
-                TextView DireccionFiscal = ver_cliente_dialog.findViewById(R.id.direccion_fiscal_cliente);
-                TextView EmailFiscal = ver_cliente_dialog.findViewById(R.id.email_facturacion_cliente);
-
-                NameCliente.setText(clickedData.getCliente_Nombre());
-                CorreoCliente.setText(clickedData.getCliente_Correo());
-                TelefonoCliente.setText(clickedData.getCliente_Telefono());
-                EstadoCliente.setText(clickedData.getcliente_estado());
-
-                ColoniaCliente.setText(clickedData.getcliente_colonia());
-                NumExtCliente.setText(clickedData.getcliente_num_ext());
-                NumIntCliente.setText(clickedData.getcliente_num_int());
-                CPCliente.setText(clickedData.getcliente_cp());
-                CiudadCliente.setText(clickedData.getcliente_ciudad());
-
-                MunicipioCliente.setText(clickedData.getcliente_municipio());
-                RFCCliente.setText(clickedData.getcliente_rfc());
-                RazonSocialCliente.setText(clickedData.getcliente_razon_social());
-                CalleCliente.setText(clickedData.getCliente_calle());
-
-                DireccionFiscal.setText(clickedData.getCliente_direccion_fiscal());
-                EmailFiscal.setText(clickedData.getCliente_email_facturacion());
-
-//
-                Button editarCliente = ver_cliente_dialog.findViewById(R.id.editar_cliente);
-                editarCliente.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        ver_cliente_dialog.dismiss();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("nombre", clickedData.getCliente_Nombre());
-                        bundle.putString("ultima_visita", clickedData.getCliente_Ultima_Visita());
-                        bundle.putString("email", clickedData.getCliente_Correo());
-                        bundle.putString("telefono", clickedData.getCliente_Telefono());
-                        bundle.putString("cp", clickedData.getcliente_cp());
-                        bundle.putString("estado", clickedData.getcliente_estado());
-                        bundle.putString("municipio", clickedData.getcliente_municipio());
-                        bundle.putString("colonia", clickedData.getcliente_colonia());
-                        bundle.putString("calle", clickedData.getCliente_calle());
-                        bundle.putString("numero_interior", clickedData.getcliente_num_int());
-                        bundle.putString("numero_exterior", clickedData.getcliente_num_ext());
-                        bundle.putString("sucursal", "");
-                        bundle.putString("rfc", clickedData.getcliente_rfc());
-                        bundle.putString("razon_social", clickedData.getcliente_razon_social());
-                        bundle.putString("cp_fiscal", clickedData.getCp_fiscal());
-                        bundle.putString("estado_fiscal", clickedData.getEstado_fiscal());
-                        bundle.putString("municipio_fiscal", clickedData.getMunicipio_fiscal());
-                        bundle.putString("colonia_fiscal", clickedData.getColonia_fiscal());
-                        bundle.putString("calle_fiscal", clickedData.getCalle_fiscal());
-                        bundle.putString("numero_interior_fiscal", clickedData.getNum_int_fiscal());
-                        bundle.putString("numero_exterior_fiscal", clickedData.getNum_ext_fiscal());
-                        bundle.putString("correo_fiscal", clickedData.getCliente_email_facturacion());
-                        bundle.putString("correo_igual", clickedData.getCorreo_igual());
-                        bundle.putString("direccion_igual", clickedData.getDireccion_igual());
-                        bundle.putString("UUID", clickedData.getCliente_UUID());
-                        Fragment_editarCliente editarCliente = new Fragment_editarCliente();
-                        editarCliente.setArguments(bundle);
-                        fr.replace(R.id.fragment_container, editarCliente).commit();
-
-                    }
-                });
-
-                Button eliminarCliente = ver_cliente_dialog.findViewById(R.id.eliminar_cliente);
-                eliminarCliente.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final Dialog pop_up_confirmacion_eliminar = new Dialog(getContext());
-                        pop_up_confirmacion_eliminar.setContentView(R.layout.pop_up_confirmar_eliminar_cliente);
-                        pop_up_confirmacion_eliminar.show();
-                        Button aceptar = pop_up_confirmacion_eliminar.findViewById(R.id.AceptarEliminar);
-                        Button cancelar = pop_up_confirmacion_eliminar.findViewById(R.id.CancelarEliminar);
-
-                        aceptar.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                JSONObject request = new JSONObject();
-                                try {
-                                    request.put("usu_id", clickedData.getCliente_usu_id());
-                                    request.put("cli_id", clickedData.getCliente_UUID());
-                                    request.put("esApp", "1");
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                                String url = "http://187.189.192.150:8010/";
-
-                                String ApiPath = url + "api/clientes/delete";
-
-                                JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-
-                                        JSONObject Respuesta = null;
-
-                                        try {
-
-                                            int status = Integer.parseInt(response.getString("estatus"));
-                                            String Mensaje = response.getString("mensaje");
-
-                                            if (status == 1) {
-
-                                                Toast toast1 =
-                                                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-
-                                                toast1.show();
-                                                ver_cliente_dialog.dismiss();
-                                                clientes.clear();
-                                                Muestra_clientes();
-
-                                            } else {
-                                                Toast toast1 =
-                                                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-
-                                                toast1.show();
-
-
-                                            }
-
-                                        } catch (JSONException e) {
-
-                                            Toast toast1 =
-                                                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
-
-                                            toast1.show();
-
-
-                                        }
-
-                                    }
-
-                                },
-                                        new Response.ErrorListener() {
-                                            @Override
-                                            public void onErrorResponse(VolleyError error) {
-                                                Toast toast1 =
-                                                        Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
-
-                                                toast1.show();
-
-
-                                            }
-                                        }
-                                );
-
-                                VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
-
-                                pop_up_confirmacion_eliminar.dismiss();
-
-
-                            }
-                        });
-
-                        cancelar.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                pop_up_confirmacion_eliminar.dismiss();
-                            }
-                        });
-
-                    }
-                });
-
-            }
-        }
-
-        ;
-
-        tabla_clientes.addDataClickListener(tablaListener);
 
         return v;
 
@@ -765,6 +543,301 @@ public class Fragment_clientes extends Fragment {
         );
         postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+
+    }
+
+    private void LoadListener()
+    {
+
+        tablaListener = new TableDataClickListener<ClienteModel>()
+
+        {
+            @Override
+            public void onDataClicked(int rowIndex, final ClienteModel clickedData) {
+                Dialog ver_cliente_dialog;
+                ver_cliente_dialog = new Dialog(getContext());
+                ver_cliente_dialog.setContentView(R.layout.pop_up_ficha_cliente);
+                ver_cliente_dialog.show();
+
+                HistorialCompras = new ArrayList<>();
+                for (int d = 0; d < clickedData.getCompras().size(); d++) {
+                    String NoTicket = clickedData.getCompras().get(d).getNumero();
+                    String Importe = clickedData.getCompras().get(d).getImporte();
+                    String Fecha = clickedData.getCompras().get(d).getFechaCompra();
+                    CompraModel compra = new CompraModel(NoTicket, Importe, Fecha);
+                    HistorialCompras.add(compra);
+                }
+
+
+                SortableClientesHistorialTable HistorialTable = ver_cliente_dialog.findViewById(R.id.historial_compras);
+                final HistorialClientesAdapter historialAdapter = new HistorialClientesAdapter(getContext(), HistorialCompras, HistorialTable);
+                HistorialTable.setDataAdapter(historialAdapter);
+
+
+                TextView NameCliente = ver_cliente_dialog.findViewById(R.id.cliente_nombre);
+                TextView CorreoCliente = ver_cliente_dialog.findViewById(R.id.email_cliente);
+                TextView TelefonoCliente = ver_cliente_dialog.findViewById(R.id.telefono_cliente);
+
+                TextView EstadoCliente = ver_cliente_dialog.findViewById(R.id.estado_cliente);
+                TextView CalleCliente = ver_cliente_dialog.findViewById(R.id.calle_cliente);
+
+                TextView ColoniaCliente = ver_cliente_dialog.findViewById(R.id.colonia_cliente);
+                TextView NumExtCliente = ver_cliente_dialog.findViewById(R.id.numero_exterior_cliente);
+                TextView NumIntCliente = ver_cliente_dialog.findViewById(R.id.numero_interior_cliente);
+                TextView CPCliente = ver_cliente_dialog.findViewById(R.id.cp_cliente);
+                TextView CiudadCliente = ver_cliente_dialog.findViewById(R.id.ciudad_cliente);
+
+                TextView MunicipioCliente = ver_cliente_dialog.findViewById(R.id.municipio_cliente);
+                TextView RFCCliente = ver_cliente_dialog.findViewById(R.id.rfc_cliente);
+                TextView RazonSocialCliente = ver_cliente_dialog.findViewById(R.id.razon_social_cliente);
+
+                TextView DireccionFiscal = ver_cliente_dialog.findViewById(R.id.direccion_fiscal_cliente);
+                TextView EmailFiscal = ver_cliente_dialog.findViewById(R.id.email_facturacion_cliente);
+
+                NameCliente.setText(clickedData.getCliente_Nombre());
+                CorreoCliente.setText(clickedData.getCliente_Correo());
+                TelefonoCliente.setText(clickedData.getCliente_Telefono());
+                EstadoCliente.setText(clickedData.getcliente_estado());
+
+                ColoniaCliente.setText(clickedData.getcliente_colonia());
+                NumExtCliente.setText(clickedData.getcliente_num_ext());
+                NumIntCliente.setText(clickedData.getcliente_num_int());
+                CPCliente.setText(clickedData.getcliente_cp());
+                CiudadCliente.setText(clickedData.getcliente_ciudad());
+
+                MunicipioCliente.setText(clickedData.getcliente_municipio());
+                RFCCliente.setText(clickedData.getcliente_rfc());
+                RazonSocialCliente.setText(clickedData.getcliente_razon_social());
+                CalleCliente.setText(clickedData.getCliente_calle());
+
+                DireccionFiscal.setText(clickedData.getCliente_direccion_fiscal());
+                EmailFiscal.setText(clickedData.getCliente_email_facturacion());
+
+//
+                editarCliente = ver_cliente_dialog.findViewById(R.id.editar_cliente);
+                editarCliente.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        ver_cliente_dialog.dismiss();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("nombre", clickedData.getCliente_Nombre());
+                        bundle.putString("ultima_visita", clickedData.getCliente_Ultima_Visita());
+                        bundle.putString("email", clickedData.getCliente_Correo());
+                        bundle.putString("telefono", clickedData.getCliente_Telefono());
+                        bundle.putString("cp", clickedData.getcliente_cp());
+                        bundle.putString("estado", clickedData.getcliente_estado());
+                        bundle.putString("municipio", clickedData.getcliente_municipio());
+                        bundle.putString("colonia", clickedData.getcliente_colonia());
+                        bundle.putString("calle", clickedData.getCliente_calle());
+                        bundle.putString("numero_interior", clickedData.getcliente_num_int());
+                        bundle.putString("numero_exterior", clickedData.getcliente_num_ext());
+                        bundle.putString("sucursal", "");
+                        bundle.putString("rfc", clickedData.getcliente_rfc());
+                        bundle.putString("razon_social", clickedData.getcliente_razon_social());
+                        bundle.putString("cp_fiscal", clickedData.getCp_fiscal());
+                        bundle.putString("estado_fiscal", clickedData.getEstado_fiscal());
+                        bundle.putString("municipio_fiscal", clickedData.getMunicipio_fiscal());
+                        bundle.putString("colonia_fiscal", clickedData.getColonia_fiscal());
+                        bundle.putString("calle_fiscal", clickedData.getCalle_fiscal());
+                        bundle.putString("numero_interior_fiscal", clickedData.getNum_int_fiscal());
+                        bundle.putString("numero_exterior_fiscal", clickedData.getNum_ext_fiscal());
+                        bundle.putString("correo_fiscal", clickedData.getCliente_email_facturacion());
+                        bundle.putString("correo_igual", clickedData.getCorreo_igual());
+                        bundle.putString("direccion_igual", clickedData.getDireccion_igual());
+                        bundle.putString("UUID", clickedData.getCliente_UUID());
+                        Fragment_editarCliente editarCliente = new Fragment_editarCliente();
+                        editarCliente.setArguments(bundle);
+                        fr.replace(R.id.fragment_container, editarCliente).commit();
+
+                    }
+                });
+
+                eliminarCliente = ver_cliente_dialog.findViewById(R.id.eliminar_cliente);
+                eliminarCliente.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Dialog pop_up_confirmacion_eliminar = new Dialog(getContext());
+                        pop_up_confirmacion_eliminar.setContentView(R.layout.pop_up_confirmar_eliminar_cliente);
+                        pop_up_confirmacion_eliminar.show();
+                        Button aceptar = pop_up_confirmacion_eliminar.findViewById(R.id.AceptarEliminar);
+                        Button cancelar = pop_up_confirmacion_eliminar.findViewById(R.id.CancelarEliminar);
+
+                        aceptar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                JSONObject request = new JSONObject();
+                                try {
+                                    request.put("usu_id", clickedData.getCliente_usu_id());
+                                    request.put("cli_id", clickedData.getCliente_UUID());
+                                    request.put("esApp", "1");
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                String url = "http://187.189.192.150:8010/";
+
+                                String ApiPath = url + "api/clientes/delete";
+
+                                JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+
+                                        JSONObject Respuesta = null;
+
+                                        try {
+
+                                            int status = Integer.parseInt(response.getString("estatus"));
+                                            String Mensaje = response.getString("mensaje");
+
+                                            if (status == 1) {
+
+                                                Toast toast1 =
+                                                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                                                toast1.show();
+                                                ver_cliente_dialog.dismiss();
+                                                clientes.clear();
+                                                Muestra_clientes();
+
+                                            } else {
+                                                Toast toast1 =
+                                                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                                                toast1.show();
+
+
+                                            }
+
+                                        } catch (JSONException e) {
+
+                                            Toast toast1 =
+                                                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                                            toast1.show();
+
+
+                                        }
+
+                                    }
+
+                                },
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                Toast toast1 =
+                                                        Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+
+                                                toast1.show();
+
+
+                                            }
+                                        }
+                                );
+
+                                VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+                                pop_up_confirmacion_eliminar.dismiss();
+
+
+                            }
+                        });
+
+                        cancelar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                pop_up_confirmacion_eliminar.dismiss();
+                            }
+                        });
+
+                    }
+                });
+
+                if(Editar_Cliente==true){
+                    editarCliente.setEnabled(true);
+                }else{
+                    editarCliente.setEnabled(false);
+                    editarCliente.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), "No cuentas con los permisos necesarios para \n realizar esta acción", Toast.LENGTH_LONG);
+
+                            toast1.show();
+                        }
+                    });
+                }
+
+                if(Eliminar_Cliente==true){
+                    eliminarCliente.setEnabled(true);
+                }else{
+                    eliminarCliente.setEnabled(false);
+                    eliminarCliente.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), "No cuentas con los permisos necesarios para \n realizar esta acción", Toast.LENGTH_LONG);
+
+                            toast1.show();
+                        }
+                    });
+                }
+
+                if(Ficha_Tecnica_cliente=true)
+                {
+
+                }else{
+                    tabla_clientes.addDataClickListener(new TableDataClickListener<ClienteModel>() {
+                        @Override
+                        public void onDataClicked(int rowIndex, ClienteModel clickedData) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), "No cuentas con los permisos necesarios para \n realizar ver la ficha técnica", Toast.LENGTH_LONG);
+
+                            toast1.show();
+                        }
+                    });
+                }
+
+            }
+        }
+
+        ;
+
+        tabla_clientes.addDataClickListener(tablaListener);
+
+
+    }
+
+    private void LoadPermisosFunciones()
+    {
+        if(Crear_Cliente==true)
+        {
+            btn_crear_cliente.setEnabled(true);
+        }else{
+            btn_crear_cliente.setEnabled(false);
+        }
+
+
+        if(Listado_Clientes=true){
+
+        }else{
+            BuscarCliente.setEnabled(false);
+            clientes.clear();
+            clienteAdapter.notifyDataSetChanged();
+            BuscarCliente.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast toast1 =
+                            Toast.makeText(getContext(), "No cuentas con los permisos necesarios para \n realizar esta acción", Toast.LENGTH_LONG);
+
+                    toast1.show();
+                }
+            });
+        }
+
 
 
     }

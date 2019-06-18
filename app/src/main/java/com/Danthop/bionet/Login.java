@@ -1043,6 +1043,7 @@ public class Login extends Activity {
                     }
             );
             VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
+            postRequest.setShouldCache(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
