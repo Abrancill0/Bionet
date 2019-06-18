@@ -65,16 +65,26 @@ public class FragmentLealtad extends Fragment {
     private String puntos;
     private SearchView Buscar;
     private LealtadPuntosAdapter clienteAdapter;
-
     private Spinner SpinnerSucursal;
     private ArrayList<String> SucursalName;
     private ArrayList<String> SucursalID;
-
-
     private String usu_id;
     private List<Puntos_acumulados_model> clientes;
     private ProgressDialog progressDialog;
 
+    private JSONArray Roles;
+
+
+    private boolean  Agregar_Articulo=false;
+    private boolean  Agregar_Cliente=false;
+    private boolean Lista_Articulos=false;
+    private boolean Asignar_Articulo=false;
+    private boolean Asignar_Cliente=false;
+    private boolean  Configuracion_Programa=false;
+    private boolean Caducidad_Puntos=false;
+    private boolean Inscribir_Programa = false;
+    private boolean Puntos_Acumulados = false;
+    private boolean Listado_Puntos = false;
 
 
     public FragmentLealtad() {
@@ -94,6 +104,191 @@ public class FragmentLealtad extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
+
+        //Funcion para Obtener Permisos
+        try {
+            Roles = new JSONArray(sharedPref.getString("sso_Roles", ""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        boolean Aplica = false;
+        boolean Aplica_Permiso = false;
+        String fun_id = "";
+
+        String rol_id = "";
+
+        for (int i = 0; i < Roles.length(); i++) {
+            try {
+
+                JSONObject Elemento = Roles.getJSONObject(i);
+                rol_id = Elemento.getString("rol_id");
+
+                if (rol_id.equals("cbcf943e-ed1e-11e8-8a6e-cb097f5c03df")) {
+                    Aplica = Elemento.getBoolean("rol_aplica_en_version");
+                    Aplica_Permiso = Elemento.getBoolean("rol_permiso");
+
+                    if (Aplica == true) {
+                        if (Aplica_Permiso == true) {
+
+                            JSONArray Elemento1 = Elemento.getJSONArray("rol_funciones");
+
+                            for (int x = 0; x < Elemento1.length(); x++) {
+
+                                JSONObject Elemento2 = Elemento1.getJSONObject(x);
+
+                                fun_id = Elemento2.getString("fun_id");
+
+                                switch (fun_id) {
+
+                                    case "e47fd175-4aca-400f-ae27-2cc03c5ab83b":
+
+                                        Agregar_Articulo = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "50f11d32-2c09-4bb2-8bae-2c7adc091442":
+
+                                        Agregar_Cliente = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "8bd3c3f3-c6a1-46b6-ae15-043e55cb3e84":
+
+                                        Lista_Articulos = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "737a6530-1abc-48e5-ad49-29ed6034c786":
+
+                                        Asignar_Articulo = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "67e65f7e-6b83-48bf-8ced-43e924f1f684":
+
+                                        Asignar_Cliente = Elemento2.getBoolean("fun_permiso");
+                                        break;
+                                    case "484988dc-0995-414b-8489-925d4d15bbab":
+
+                                        Configuracion_Programa = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "baaaccfa-ed7d-4af2-8cdd-77de77ec28b4":
+
+                                        Caducidad_Puntos = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "4394e399-de02-4d7f-ad25-4ea42085dae8":
+
+                                        Inscribir_Programa = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "4291c378-971d-4ce7-be8e-4fd9d0d4c87b":
+
+                                        Puntos_Acumulados = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "3e58b727-48db-4b39-8293-5331e5049fb5":
+
+                                        Listado_Puntos = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        //  {
+        //                        "fun_id": "e47fd175-4aca-400f-ae27-2cc03c5ab83b",
+        //                        "fun_nombre": "Agregar articulo",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "50f11d32-2c09-4bb2-8bae-2c7adc091442",
+        //                        "fun_nombre": "Agregar cliente",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "8bd3c3f3-c6a1-46b6-ae15-043e55cb3e84",
+        //                        "fun_nombre": "Artículos",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "737a6530-1abc-48e5-ad49-29ed6034c786",
+        //                        "fun_nombre": "Asignar artículos a programa de lealtad",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "67e65f7e-6b83-48bf-8ced-43e924f1f684",
+        //                        "fun_nombre": "Asignar clientes a programa de lealtad",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "484988dc-0995-414b-8489-925d4d15bbab",
+        //                        "fun_nombre": "Configuración",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "baaaccfa-ed7d-4af2-8cdd-77de77ec28b4",
+        //                        "fun_nombre": "Configuración de caducidad de puntos de lealtad",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "94e27e69-ec82-495f-81ef-0af0802e450f",
+        //                        "fun_nombre": "Crear promociones para puntos de lealtad",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "725b01c9-7597-41b0-a77d-d23c6752622f",
+        //                        "fun_nombre": "Editar",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "ad888f97-ab8d-49a0-8785-dc2b95a8a4a9",
+        //                        "fun_nombre": "Editar",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "686bbb18-549c-4ae8-bc90-f5425b0b1d6b",
+        //                        "fun_nombre": "Editar",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "b19cea7c-3af3-4286-bb9d-f753c8dc86c1",
+        //                        "fun_nombre": "Eliminar",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "a6bbd2be-554b-44b7-93df-ac72ec086fa7",
+        //                        "fun_nombre": "Eliminar",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "1190843b-aa8d-4de3-9bab-214747f73e4b",
+        //                        "fun_nombre": "Eliminar",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "4394e399-de02-4d7f-ad25-4ea42085dae8",
+        //                        "fun_nombre": "Inscribir",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "3e58b727-48db-4b39-8293-5331e5049fb5",
+        //                        "fun_nombre": "Listado de artículos",
+        //                        "fun_permiso": false
+        //                    },
+        //                    {
+        //                        "fun_id": "4291c378-971d-4ce7-be8e-4fd9d0d4c87b",
+        //                        "fun_nombre": "Puntos acumulados",
+        //                        "fun_permiso": false
+        //                    }
 
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");

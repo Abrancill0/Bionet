@@ -54,13 +54,18 @@ public class Fragment_ecomerce extends Fragment {
     private OrdenEcommerceAdapter ordenAdapter;
     private SearchView Buscar;
     private JSONArray Roles;
-
     private List<Ecommerce_orden_Model> Ordenes;
     private TableDataClickListener<Ecommerce_orden_Model> tablaListener;
-
     ProgressDialog progreso;
-
     private String[][] OrdenesModel;
+
+    private boolean Alta_Articulo =false;
+    private boolean  Elimina_Pregunta =false;
+    private boolean  Elimina_Pregunta_Bloquear =false;
+    private boolean Imprimir_Guia =false;
+    private boolean Ver_Ordenes =false;
+    private boolean Sincronizar =false;
+    private boolean Publicaciones =false;
 
     public Fragment_ecomerce() {
         // Required empty public constructor
@@ -98,7 +103,7 @@ public class Fragment_ecomerce extends Fragment {
                 JSONObject Elemento = Roles.getJSONObject(i);
                 rol_id = Elemento.getString("rol_id");
 
-                if (rol_id.equals("cbcf943b-ed1e-11e8-8a6e-cb097f5c03df")) {
+                if (rol_id.equals("cbcf943e-ed1e-11e8-8a6e-cb097f5c03df")) {
                     Aplica = Elemento.getBoolean("rol_aplica_en_version");
                     Aplica_Permiso = Elemento.getBoolean("rol_permiso");
 
@@ -115,14 +120,38 @@ public class Fragment_ecomerce extends Fragment {
 
                                 switch (fun_id) {
 
-                                    case "6c4f52e5-4f69-4fe4-b9f8-9ec0bce58aaa":
+                                    case "641528ee-7c4a-4ce5-8042-e820bd877e29":
 
-                                    //    Elimina_Notificacion = Elemento2.getBoolean("fun_permiso");
+                                        Alta_Articulo = Elemento2.getBoolean("fun_permiso");
                                         break;
 
-                                    case "5ba36503-0ab7-49ea-9ec8-91d2ee9af17d":
+                                    case "990374f4-7c7d-409e-9532-a055e6d77468":
 
-                                     //   Listado_Notificacion = Elemento2.getBoolean("fun_permiso");
+                                        Elimina_Pregunta = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "2406cc13-c137-4a1f-9eee-123a5b34a6ef":
+
+                                        Elimina_Pregunta_Bloquear = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "3c9ca085-1e2d-4e33-9267-68d8e84de58a":
+
+                                        Imprimir_Guia = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "0a0c2990-2576-4fb5-8785-7a43db01e641":
+
+                                        Ver_Ordenes = Elemento2.getBoolean("fun_permiso");
+                                        break;
+                                    case "47a9650b-ba94-4373-b816-f42ae6fc9a30":
+
+                                        Sincronizar = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "ca647f58-dc8f-4ad4-8619-34d09a673d78":
+
+                                        Publicaciones = Elemento2.getBoolean("fun_permiso");
                                         break;
 
                                     default:
