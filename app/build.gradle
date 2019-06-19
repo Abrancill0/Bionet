@@ -103,6 +103,7 @@ dependencies {
     implementation files('libs/FeeniciaBT_JAR.jar')
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.pnikosis:materialish-progress:1.5' // Circulo de Cargando
+    implementation 'com.github.jakob-grabner:Circle-Progress-View:v1.2'
 
     implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
     implementation 'com.github.pramodkr123:ConvertWebViewToPdfDemo:1.0.4'

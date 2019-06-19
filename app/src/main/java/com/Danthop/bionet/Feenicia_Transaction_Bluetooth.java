@@ -91,14 +91,16 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     Intent intent;
 
     //// JAR ////
-    Button btn_connect, btn_desconectar,btn_terminar_feenicia;  /// CONECTAR
-    Button btn_cerrar;
+    Button btn_connect, btn_desconectar;  /// CONECTAR
+    private static Button btn_cerrar, btn_terminar_feenicia;
     Button btn_search_devices; /// BUSCAR DISPOSITIVOS
     TextView textView_Devices;  // DISPOSITIVOS ENCONTRADOS
     static TextView textView_resultTx; // RESULTADO DE LA TRANSACCION
     ArrayList<BluetoothDevice> adapter;
     Spinner sp_sale;
-    static ProgressWheel progressBar;
+   static ProgressWheel progressBar;
+
+   // static CircleProgressView progressBar;
 
     SppHandlerConnection sppHandlerConnection;
     BTReceiverConnection bTReceiverConnection;
@@ -206,6 +208,9 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
             Mensaje="Tarjeta de Credito";
 
             show_Toast("Coloque la tarjeta de credito para procesar el cobro");
+
+            btn_terminar_feenicia.setEnabled(false);  /// CONECTAR
+            btn_cerrar.setEnabled(true);
         }
         else
         {
@@ -213,6 +218,9 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
             Contador = 1;
             Mensaje="Tarjeta de Debito";
             show_Toast("Coloque la tarjeta de debito para procesar el cobro");
+
+            btn_terminar_feenicia.setEnabled(false);  /// CONECTAR
+            btn_cerrar.setEnabled(true);
         }
 
         SharedPreferences sharedPref = this.getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
@@ -303,18 +311,20 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         });
 
 
-        btn_cerrar.setOnClickListener(new View.OnClickListener() {
+        btn_terminar_feenicia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (Contador == 0)
-                {
+
                     FinalizarTicket();
-                }
-                else
-                {
-                    show_Toast("Realize el cobro antes de cerrar la pantalla");
-                }
+
+            }
+        });
+
+
+        btn_cerrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
 
             }
@@ -528,8 +538,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
 
                         }
 
-
-
                     }
 
 
@@ -602,6 +610,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                                     Toast.makeText(FEENICIA_TRANSACCION, "Cobro realizado correctamente", Toast.LENGTH_SHORT).show();
 
                                     Toast.makeText(FEENICIA_TRANSACCION, "Ahora coloque su tarjeta de debito", Toast.LENGTH_SHORT).show();
+
                                 }
                                 else
                                 {
@@ -612,6 +621,10 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
 
                                     Contador = 0;
                                     Toast.makeText(FEENICIA_TRANSACCION, "Cobro realizado correctamente", Toast.LENGTH_SHORT).show();
+
+                                    btn_terminar_feenicia.setEnabled(true);  /// CONECTAR
+                                    btn_cerrar.setEnabled(false);
+
 
                                 }
 
@@ -775,6 +788,15 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         }
     }
 
+    public static void onPercentageReceived(final int percentage){
+        FEENICIA_TRANSACCION.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+               // progressBar.setValueAnimated(percentage);
+            }
+        });
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
@@ -843,9 +865,9 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                         String tic_importe_recibido = RespuestaNodoTicket.getString("tic_importe_recibido");
                         String tic_importe_cambio = RespuestaNodoTicket.getString("tic_importe_cambio");
 
-                        double CambioConDecimal = Double.parseDouble(tic_importe_total);
+                        double CambioConDecimal = Double.parseDouble(tic_importe_cambio);
                         double RecibidoConDecimal = Double.parseDouble(tic_importe_recibido);
-                        double ImporteTotalConDecimal = Double.parseDouble(tic_importe_cambio);
+                        double ImporteTotalConDecimal = Double.parseDouble(tic_importe_total);
                         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
                         ImporteCambio = CambioConDecimal;
@@ -860,7 +882,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                         mBundle.putDouble("IV",  ImporteVenta  );
                         mBundle.putString("Sucursal",  Sucursal  );
                         mBundle.putString("Ticket",  Ticket  );
-
 
                         myIntent.putExtras(mBundle);
 
