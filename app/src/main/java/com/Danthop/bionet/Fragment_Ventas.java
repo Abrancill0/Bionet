@@ -278,6 +278,8 @@ public class Fragment_Ventas extends Fragment {
     private boolean Conte_Caja  = false;
     private boolean Comision = false;
 
+    private String code="";
+
     public Fragment_Ventas() {
         // Required empty public constructor
     }
@@ -295,6 +297,7 @@ public class Fragment_Ventas extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
         cca_id_sucursal = sharedPref.getString("cca_id_sucursal", "");
+        code = sharedPref.getString("sso_code","");
 
         try {
             Roles = new JSONArray(sharedPref.getString("sso_Roles", ""));
@@ -609,10 +612,18 @@ public class Fragment_Ventas extends Fragment {
         tabla_venta_articulos = v.findViewById(R.id.tabla_venta_articulos);
         tabla_venta_articulos.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
 
-        InstanciarTicket();
-        LoadSucursales();
-        LoadAutocomplete();
-        LoadButtons();
+        try{
+            InstanciarTicket();
+            LoadSucursales();
+            LoadAutocomplete();
+            LoadButtons();
+        }catch (NullPointerException e)
+        {
+
+        }catch (RuntimeException s)
+        {
+
+        }
 
 
 
@@ -632,6 +643,9 @@ public class Fragment_Ventas extends Fragment {
 
       // usbCtrl = new UsbController(this,mHandler);
         //promociones_credito();
+
+        LoadPermisosFunciones();
+
         return v;
     }
 
@@ -662,6 +676,8 @@ public class Fragment_Ventas extends Fragment {
             request.put("tic_id_sucursal", ticket_de_venta.getTic_id_sucursal());
             request.put("tic_id_cliente", "");
             request.put("tic_nombre_cliente", "");
+            request.put("code", code);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -722,7 +738,7 @@ public class Fragment_Ventas extends Fragment {
 
             String url = getString(R.string.Url);
 
-            String ApiPath = url + "/api/inventario/obtener_existencias_articulos_app?usu_id=" + usu_id + "&esApp=1";
+            String ApiPath = url + "/api/inventario/obtener_existencias_articulos_app?usu_id=" + usu_id + "&esApp=1&code="+code;
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
@@ -818,6 +834,7 @@ public class Fragment_Ventas extends Fragment {
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("code", code);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -905,6 +922,7 @@ public class Fragment_Ventas extends Fragment {
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("code", code);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1099,8 +1117,14 @@ public class Fragment_Ventas extends Fragment {
         btn_reporte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container, new Fragment_ventas_transacciones()).commit();
-                onStop();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_ventas_transacciones fragment2 = new Fragment_ventas_transacciones();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -1108,7 +1132,14 @@ public class Fragment_Ventas extends Fragment {
         Corte_Caja.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container, new Fragment_ventas_corte_caja_listado()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_ventas_corte_caja_listado fragment2 = new Fragment_ventas_corte_caja_listado();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onStop();
                 onDetach();
             }
@@ -1117,7 +1148,14 @@ public class Fragment_Ventas extends Fragment {
         Comisiones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container, new Fragment_pestania_comison()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_pestania_comison fragment2 = new Fragment_pestania_comison();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onStop();
                 onDetach();
             }
@@ -1857,6 +1895,7 @@ public class Fragment_Ventas extends Fragment {
                 request.put("oes_importe_restante", String.format("%.2f", RestanteTotal));
                 request.put("dias_vencimiento", DiasApartado);
                 request.put("aArticulos", arreglo);
+                request.put("code", code);
 
 
             } catch (Exception e) {
@@ -1992,6 +2031,7 @@ public class Fragment_Ventas extends Fragment {
                 request.put("apa_importe_restante", String.format("%.2f", RestanteTotal));
                 request.put("dias_vencimiento", DiasApartado);
                 request.put("aArticulos", arreglo);
+                request.put("code", code);
 
 
 
@@ -2090,6 +2130,7 @@ public class Fragment_Ventas extends Fragment {
             request.put("esApp", "1");
             request.put("tic_id", ticket_de_venta.getTic_id());
             request.put("tic_importe_metodo_pago", arreglo);
+            request.put("code", code);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2192,6 +2233,7 @@ public class Fragment_Ventas extends Fragment {
             request.put("articulo", nombre_articulo); //SKU
             request.put("cantidad", Cantidad);
             request.put("tic_id", ticket_de_venta.getTic_id());
+            request.put("code", code);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2515,6 +2557,7 @@ public class Fragment_Ventas extends Fragment {
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("code", code);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2675,7 +2718,7 @@ public class Fragment_Ventas extends Fragment {
 
             String url = getString(R.string.Url);
 
-            String ApiPath = url + "/api/inventario/obtener_existencias_articulos_app?usu_id=" + usu_id + "&esApp=1";
+            String ApiPath = url + "/api/inventario/obtener_existencias_articulos_app?usu_id=" + usu_id + "&esApp=1&code="+code;
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
@@ -2807,6 +2850,7 @@ public class Fragment_Ventas extends Fragment {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
             request.put("tic_id_sucursal", ticket_de_venta.getTic_id_sucursal());
+            request.put("code", code);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2893,6 +2937,7 @@ public class Fragment_Ventas extends Fragment {
             request.put("tic_id_sucursal", ticket_de_venta.getTic_id_sucursal());
             request.put("tic_id_cliente", ticket_de_venta.getTic_id_cliente());
             request.put("tic_nombre_cliente", ticket_de_venta.getTic_nombre_cliente());
+            request.put("code", code);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2961,6 +3006,7 @@ public class Fragment_Ventas extends Fragment {
             request.put("tic_id_vendedor", ticket_de_venta.getTic_id_vendedor());
             request.put("tic_nombre_vendedor", ticket_de_venta.getTic_nombre_vendedor());
             request.put("tic_comision", ticket_de_venta.getTic_comision());
+            request.put("code", code);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3020,6 +3066,7 @@ public class Fragment_Ventas extends Fragment {
             request.put("esApp", "1");
             request.put("tic_id", ticket_de_venta.getTic_id());
             request.put("tic_id_uso_cfdi", CFDI_ID.get(SpinnerCFDI.getSelectedItemPosition()));
+            request.put("code", code);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3087,7 +3134,7 @@ public class Fragment_Ventas extends Fragment {
 
             String url = getString(R.string.Url);
 
-            String ApiPath = url + "/api/articulos/buscar_sku_articulo?usu_id=" + usu_id + "&esApp=1&sku=" + SKU;
+            String ApiPath = url + "/api/articulos/buscar_sku_articulo?usu_id=" + usu_id + "&esApp=1&code="+code+"&sku=" + SKU;
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
@@ -3208,6 +3255,7 @@ public class Fragment_Ventas extends Fragment {
                                 Toast toast1 =
                                         Toast.makeText(getContext(),
                                                 String.valueOf(e), Toast.LENGTH_LONG);
+                                progressDialog.dismiss();
                             }
                         }
                     },
@@ -3217,6 +3265,7 @@ public class Fragment_Ventas extends Fragment {
                             Toast toast1 =
                                     Toast.makeText(getContext(),
                                             String.valueOf(error), Toast.LENGTH_LONG);
+                            progressDialog.dismiss();
                         }
                     }
             );
@@ -3310,7 +3359,7 @@ public class Fragment_Ventas extends Fragment {
     private void LoadConfiguracionApartado()
     {
         try {
-            String ApiPath = "http://187.189.192.150:8010/api/ventas/apartados/index?usu_id=" + usu_id + "&esApp=1&suc_id="+SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+            String ApiPath = "http://187.189.192.150:8010/api/ventas/apartados/index?usu_id=" + usu_id + "&esApp=1&code="+code+"&suc_id="+SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
@@ -3358,6 +3407,7 @@ public class Fragment_Ventas extends Fragment {
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("code", code);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -3445,6 +3495,7 @@ public class Fragment_Ventas extends Fragment {
             request.put("esApp", "1");
             request.put("sku", Sku);
             request.put("suc_id", SucursalID);
+            request.put("code", code);
 
         }catch (JSONException e){
             e.printStackTrace();
@@ -3594,6 +3645,7 @@ public class Fragment_Ventas extends Fragment {
             ApiPath = url + "/api/ventas/movimientos/obtener_detalle_ticket?" +
                     "usu_id=" + usu_id +
                     "&esApp=1" +
+                    "&code="+code+
                     "&tic_id="+ ticketid+
                     "&suc_id=" + SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
             // prepare the Request
@@ -4170,6 +4222,7 @@ public class Fragment_Ventas extends Fragment {
             request.put("tic_id", ticket_de_venta.getTic_id());
             request.put("tic_id_sucursal", ticket_de_venta.getTic_id_sucursal());
             request.put("tic_facturar", opcion);
+            request.put("code", code);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -4237,6 +4290,7 @@ public class Fragment_Ventas extends Fragment {
                 request.put("tic_id", ticket_de_venta.getTic_id());
                 request.put("tic_id_sucursal", ticket_de_venta.getTic_id_sucursal());
                 request.put("tic_facturar", "false");
+                request.put("code", code);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -4569,6 +4623,7 @@ public class Fragment_Ventas extends Fragment {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
             request.put("apa_id", apa_ide);
+            request.put("code", code);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -4619,6 +4674,17 @@ public class Fragment_Ventas extends Fragment {
         );
         postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
+    private void LoadPermisosFunciones()
+    {
+        if(Proceso_Venta==false)
+        {
+            Buscar.setEnabled(false);
+            btn_agregar_articulo.setEnabled(false);
+            btn_agregar_cliente.setEnabled(false);
+            btn_agregar_vendedor.setEnabled(false);
+        }
     }
 
     @Override

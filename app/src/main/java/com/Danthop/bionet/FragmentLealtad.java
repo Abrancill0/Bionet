@@ -410,8 +410,24 @@ public class FragmentLealtad extends Fragment {
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                progressDialog.show();
-                Muestra_clientes();
+                if(Listado_Puntos==false){
+                    SpinnerSucursal.setEnabled(false);
+                    Buscar.setEnabled(false);
+                    Buscar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), "No cuentas con los permisos necesarios para \n realizar esta acción", Toast.LENGTH_LONG);
+
+                            toast1.show();
+                        }
+                    });
+                }else
+                {
+
+                    progressDialog.show();
+                    Muestra_clientes();
+                }
 
             }
             public void onNothingSelected(AdapterView<?> parent)

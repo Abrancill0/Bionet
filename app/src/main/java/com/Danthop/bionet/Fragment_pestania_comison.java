@@ -80,6 +80,14 @@ public class Fragment_pestania_comison extends Fragment {
     ProgressDialog progreso;
     private Dialog dialog;
 
+    private Bundle bundle;
+    private boolean  Proceso_Venta=false;
+    private boolean  Transacciones=false;
+    private boolean Conte_Caja=false;
+    private boolean Comision=false;
+
+    private String code="";
+
     public Fragment_pestania_comison() {
         // Required empty public constructor
     }
@@ -89,6 +97,13 @@ public class Fragment_pestania_comison extends Fragment {
         View v = inflater.inflate(R.layout.fragment_pestania_comisiones, container, false);
         fr = getFragmentManager().beginTransaction();
 
+        bundle = getArguments();
+        Proceso_Venta=bundle.getBoolean("Proceso_Venta");
+        Transacciones=bundle.getBoolean("Transacciones");
+        Conte_Caja=bundle.getBoolean("Conte_Caja");
+        Comision=bundle.getBoolean("Comision");
+
+
         btnactualizar = (Button)v.findViewById(R.id.btn_generarcorte);
         progreso = new ProgressDialog(getContext());
 
@@ -97,7 +112,14 @@ public class Fragment_pestania_comison extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_Ventas()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_Ventas fragment2 = new Fragment_Ventas();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -107,7 +129,14 @@ public class Fragment_pestania_comison extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ventas_transacciones()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_ventas_transacciones fragment2 = new Fragment_ventas_transacciones();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -117,7 +146,14 @@ public class Fragment_pestania_comison extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_cortecaja()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_pestania_cortecaja fragment2 = new Fragment_pestania_cortecaja();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -127,7 +163,14 @@ public class Fragment_pestania_comison extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_comison()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_pestania_comison fragment2 = new Fragment_pestania_comison();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -135,6 +178,7 @@ public class Fragment_pestania_comison extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
         cca_id_sucursal = sharedPref.getString("cca_id_sucursal", "");
+        code = sharedPref.getString("sso_code","");
 
         ListComisiones = new ArrayList<>();
         pagocomision =new ArrayList<>();
@@ -178,7 +222,14 @@ public class Fragment_pestania_comison extends Fragment {
             @Override
             public void onClick(View v) {
 
-                LoadComisiones();
+                if(Comision==false)
+                {
+                    btnactualizar.setEnabled(false);
+                }else
+                {
+                    LoadComisiones();
+                }
+
 
             }
         });
@@ -218,6 +269,7 @@ public class Fragment_pestania_comison extends Fragment {
             jsonBodyrequest.put("esApp", "1" );
             jsonBodyrequest.put("usu_id", usu_id);
             jsonBodyrequest.put("tic_id_sucursal",valueIdSuc);
+            jsonBodyrequest.put("code", code);
 
 
         }catch (JSONException e){
@@ -303,6 +355,7 @@ public class Fragment_pestania_comison extends Fragment {
                 jsonBodyrequest.put("tic_id_sucursal",valueIdSuc);
                 jsonBodyrequest.put("importe_pagar",importe_pendiente);
                 jsonBodyrequest.put("tic_id_vendedor",tic_id);
+                jsonBodyrequest.put("code", code);
 
 
 

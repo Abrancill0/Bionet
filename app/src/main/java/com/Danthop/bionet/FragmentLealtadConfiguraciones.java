@@ -1310,7 +1310,6 @@ public class FragmentLealtadConfiguraciones extends Fragment{
                 public void onDataClicked(int rowIndex, ConfiguracionLealtadModel clickedData) {
                     Toast toast1 =
                             Toast.makeText(getContext(), "No cuentas con los permisos necesarios para \n configurar el programa", Toast.LENGTH_LONG);
-
                     toast1.show();
                 }
             };

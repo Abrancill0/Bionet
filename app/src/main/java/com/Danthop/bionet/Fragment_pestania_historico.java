@@ -76,6 +76,14 @@ public class Fragment_pestania_historico extends Fragment {
     private HistoricoAdapter HistoricoAdapter;
     private SearchView Buscar;
 
+    private Bundle bundle;
+    private boolean Historicos=false;
+    private boolean Inventarios =false;
+    private boolean Listado_inventarios  =false;
+    private boolean Traslado =false;
+    private String code="";
+
+
     public Fragment_pestania_historico() {
         // Required empty public constructor
     }
@@ -85,12 +93,25 @@ public class Fragment_pestania_historico extends Fragment {
         View v = inflater.inflate(R.layout.fragment_pestania_historico, container, false);
         fr = getFragmentManager().beginTransaction();
 
+        bundle = getArguments();
+        Historicos=bundle.getBoolean("Historicos");
+        Inventarios=bundle.getBoolean("Inventarios");
+        Listado_inventarios=bundle.getBoolean("Listado_inventarios");
+        Traslado=bundle.getBoolean("Traslado");
+
         Button btn_traslados = (Button) v.findViewById(R.id.fragment_inventarios);
         btn_traslados.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_inventarios()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Historicos", Historicos);
+                bundle.putBoolean("Inventarios", Inventarios);
+                bundle.putBoolean("Listado_inventarios", Listado_inventarios);
+                bundle.putBoolean("Traslado", Traslado);
+                Fragment_inventarios fragment2 = new Fragment_inventarios();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -100,7 +121,14 @@ public class Fragment_pestania_historico extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_traslado()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Historicos", Historicos);
+                bundle.putBoolean("Inventarios", Inventarios);
+                bundle.putBoolean("Listado_inventarios", Listado_inventarios);
+                bundle.putBoolean("Traslado", Traslado);
+                Fragment_pestania_historico fragment2 = new Fragment_pestania_historico();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -110,7 +138,14 @@ public class Fragment_pestania_historico extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_inventario_existencias()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Historicos", Historicos);
+                bundle.putBoolean("Inventarios", Inventarios);
+                bundle.putBoolean("Listado_inventarios", Listado_inventarios);
+                bundle.putBoolean("Traslado", Traslado);
+                Fragment_pestania_inventario_existencias fragment2 = new Fragment_pestania_inventario_existencias();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -132,6 +167,7 @@ public class Fragment_pestania_historico extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
+        code = sharedPref.getString("sso_code","");
 
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
@@ -161,14 +197,22 @@ public class Fragment_pestania_historico extends Fragment {
         tabla_historico.setHeaderAdapter(simpleHeader);
         tabla_historico.setColumnModel(tableColumnWeightModel);
 
-        Muestra_historico();
+        if(Historicos==false)
+        {
+            Buscar.setEnabled(false);
+        }
+        else
+        {
+            Muestra_historico();
+        }
+
         return v;
     }
 
     public void Muestra_historico() {
 
         String url = getString(R.string.Url);
-        String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1";
+        String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1&code="+code;
 
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null, new Response.Listener<JSONObject>() {
             @Override

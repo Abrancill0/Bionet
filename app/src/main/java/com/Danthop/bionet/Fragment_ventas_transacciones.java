@@ -25,7 +25,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -196,6 +198,14 @@ public class Fragment_ventas_transacciones extends Fragment {
         }
     };
 
+    private Bundle bundle;
+    private boolean  Proceso_Venta=false;
+    private boolean  Transacciones=false;
+    private boolean Conte_Caja=false;
+    private boolean Comision=false;
+
+    private String code="";
+
 
 
 
@@ -210,7 +220,17 @@ public class Fragment_ventas_transacciones extends Fragment {
         View v = inflater.inflate(R.layout.fragment_ventas_transacciones,container, false);
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
+        code = sharedPref.getString("sso_code","");
+
         handler= new Handler();
+
+
+        bundle = getArguments();
+        Proceso_Venta=bundle.getBoolean("Proceso_Venta");
+        Transacciones=bundle.getBoolean("Transacciones");
+        Conte_Caja=bundle.getBoolean("Conte_Caja");
+        Comision=bundle.getBoolean("Comision");
+
 
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
@@ -376,10 +396,17 @@ public class Fragment_ventas_transacciones extends Fragment {
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                progressDialog.show();
-                LoadApartados();
-                LoadOrdenes();
-                LoadMovimientos();
+                if(Transacciones == false)
+                {
+                    SpinnerSucursal.setEnabled(false);
+                }else
+                {
+                    progressDialog.show();
+                    LoadApartados();
+                    LoadOrdenes();
+                    LoadMovimientos();
+                }
+
             }
             public void onNothingSelected(AdapterView<?> parent)
             {
@@ -390,8 +417,14 @@ public class Fragment_ventas_transacciones extends Fragment {
         SpinnerFormaPago.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                progressDialog.show();
-                LoadMovimientos();
+                if(Transacciones == false)
+                {
+                    SpinnerFormaPago.setEnabled(false);
+                }else
+                {
+                    progressDialog.show();
+                    LoadMovimientos();
+                }
             }
             public void onNothingSelected(AdapterView<?> parent)
             {
@@ -402,8 +435,14 @@ public class Fragment_ventas_transacciones extends Fragment {
         SpinnerUsuarioVenta.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                progressDialog.show();
-                LoadMovimientos();
+                if(Transacciones == false)
+                {
+                    SpinnerUsuarioVenta.setEnabled(false);
+                }else
+                {
+                    progressDialog.show();
+                    LoadMovimientos();
+                }
             }
             public void onNothingSelected(AdapterView<?> parent)
             {
@@ -416,6 +455,7 @@ public class Fragment_ventas_transacciones extends Fragment {
         LoadSucursales();
         loadButtons();
         Layouts();
+
 
         return v;
     }
@@ -435,24 +475,60 @@ public class Fragment_ventas_transacciones extends Fragment {
         btn_ventas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new Fragment_Ventas()).commit();
-                onDetach();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_Ventas fragment2 = new Fragment_Ventas();
+                fragment2.setArguments(bundle);
+                try{
+                    fr.replace(R.id.fragment_container,fragment2).commit();
+                    onDetach();
+                }catch(IllegalStateException s)
+                {
+
+                }
             }
         });
 
         btn_corte_caja.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();
-                onDetach();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_ventas_corte_caja_listado fragment2 = new Fragment_ventas_corte_caja_listado();
+                fragment2.setArguments(bundle);
+                try{
+                    fr.replace(R.id.fragment_container,fragment2).commit();
+                    onDetach();
+                }catch(IllegalStateException s)
+                {
+
+                }
 
             }
         });
         Comisiones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container, new Fragment_pestania_comison()).commit();
-                onDetach();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_pestania_comison fragment2 = new Fragment_pestania_comison();
+                fragment2.setArguments(bundle);
+                try{
+                    fr.replace(R.id.fragment_container,fragment2).commit();
+                    onDetach();
+                }catch(IllegalStateException s)
+                {
+
+                }
             }
         });
 
@@ -529,6 +605,7 @@ public class Fragment_ventas_transacciones extends Fragment {
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("code", code);
 
         }
         catch(Exception e)
@@ -621,7 +698,7 @@ public class Fragment_ventas_transacciones extends Fragment {
 
             String url = getString(R.string.Url);
 
-            String ApiPath = url + "/api/ventas/apartados/index?usu_id=" + usu_id + "&esApp=1&suc_id="+ SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+            String ApiPath = url + "/api/ventas/apartados/index?usu_id=" + usu_id + "&esApp=1&code="+code+"&suc_id="+ SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
@@ -778,7 +855,7 @@ public class Fragment_ventas_transacciones extends Fragment {
 
             String url = getString(R.string.Url);
 
-            String ApiPath = url + "/api/ventas/ordenes_especiales/index?usu_id=" + usu_id + "&esApp=1&suc_id="+ SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+            String ApiPath = url + "/api/ventas/ordenes_especiales/index?usu_id=" + usu_id + "&esApp=1&code="+code+"&suc_id="+ SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
@@ -935,6 +1012,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                 ApiPath = url + "/api/ventas/movimientos/index?" +
                         "usu_id=" + usu_id +
                         "&esApp=1" +
+                        "&code="+code+
                         "&suc_id=" + SucursalID.get(SpinnerSucursal.getSelectedItemPosition()) +
                         "&fecha_inicial=" + "" +
                         "&fecha_final=" + "" +
@@ -1023,6 +1101,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                 ApiPath = url + "/api/ventas/movimientos/index?" +
                         "usu_id=" + usu_id +
                         "&esApp=1" +
+                        "&code="+code+
                         "&suc_id=" + SucursalID.get(SpinnerSucursal.getSelectedItemPosition()) +
                         "&fecha_inicial=" + fecha_inicio +
                         "&fecha_final=" + fecha_final +
@@ -1229,6 +1308,7 @@ public class Fragment_ventas_transacciones extends Fragment {
             ApiPath = url + "/api/ventas/movimientos/obtener_detalle_ticket?" +
                     "usu_id=" + usu_id +
                     "&esApp=1" +
+                    "&code="+code+
                     "&tic_id="+ movimiento.getMovimiento_tic_id()+
                     "&suc_id=" + SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
             // prepare the Request
@@ -1814,6 +1894,7 @@ public class Fragment_ventas_transacciones extends Fragment {
             request.put("tic_id_sucursal", id_sucursal);
             request.put("tic_id", "");
             request.put("tic_id_cliente", "");
+            request.put("code", code);
 
         } catch (Exception e) {
             e.printStackTrace();

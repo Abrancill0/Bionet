@@ -112,6 +112,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
 
     private View layout_tablacortes;
     private View layaut_fechascortes;
+    private String code;
 
     public Fragment_pestania_cortecaja() {
         // Required empty public constructor
@@ -205,6 +206,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
         cca_id_sucursal = sharedPref.getString("cca_id_sucursal", "");
+        code = sharedPref.getString("sso_code","");
         dialog = new Dialog(getContext());
         CorteCaja = new ArrayList<>();
         FormasPago = new ArrayList<>();
@@ -467,6 +469,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
             request.put("esApp", "1");
             request.put("fecha_inicial",FechaInicio);
             request.put("fecha_final",FechaFin);
+            request.put("code",code);
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -629,6 +632,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
             jsonBodyrequest.put("cca_id_sucursal",valueIdSuc);
             jsonBodyrequest.put("cca_id",uuid);
             jsonBodyrequest.put("asFP",jsonArray);
+            jsonBodyrequest.put("code",code);
 
 
         }catch (JSONException e){

@@ -92,7 +92,15 @@ public class Fragment_pestania_traslado extends Fragment {
     private String status_nombre;
     private String tipo_traslado = "recibida";
 
+    private Bundle bundle;
+    private boolean Historicos=false;
+    private boolean Inventarios =false;
+    private boolean Listado_inventarios  =false;
+    private boolean Traslado =false;
+
     private TrasladoEnvioRecibidoAdapter TrasladoAdapter;
+
+    private String code="";
 
     public Fragment_pestania_traslado() {
         // Required empty public constructor
@@ -107,7 +115,14 @@ public class Fragment_pestania_traslado extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_inventarios()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Historicos", Historicos);
+                bundle.putBoolean("Inventarios", Inventarios);
+                bundle.putBoolean("Listado_inventarios", Listado_inventarios);
+                bundle.putBoolean("Traslado", Traslado);
+                Fragment_inventarios fragment2 = new Fragment_inventarios();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -117,7 +132,14 @@ public class Fragment_pestania_traslado extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_historico()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Historicos", Historicos);
+                bundle.putBoolean("Inventarios", Inventarios);
+                bundle.putBoolean("Listado_inventarios", Listado_inventarios);
+                bundle.putBoolean("Traslado", Traslado);
+                Fragment_pestania_historico fragment2 = new Fragment_pestania_historico();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -190,11 +212,17 @@ public class Fragment_pestania_traslado extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_inventario_existencias()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Historicos", Historicos);
+                bundle.putBoolean("Inventarios", Inventarios);
+                bundle.putBoolean("Listado_inventarios", Listado_inventarios);
+                bundle.putBoolean("Traslado", Traslado);
+                Fragment_pestania_inventario_existencias fragment2 = new Fragment_pestania_inventario_existencias();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
             }
         });
 
-        Traslados_Recibidas();
 
         BuscarTraslado.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -226,6 +254,18 @@ public class Fragment_pestania_traslado extends Fragment {
 
         tabla_traslados.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
         tabla_traslados.addDataClickListener(tableListener);
+
+        if(Traslado==false)
+        {
+            BuscarTraslado.setEnabled(false);
+            btnInventariExistencias.setEnabled(false);
+            SolicitudesEnviadas.setEnabled(false);
+            SolicitudesRecibidas.setEnabled(false);
+            trasladar.setEnabled(false);
+        }
+        else{
+            Traslados_Recibidas();
+        }
 
         return v;
     }

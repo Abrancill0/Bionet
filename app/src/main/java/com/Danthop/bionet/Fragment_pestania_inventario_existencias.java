@@ -63,6 +63,7 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
 
     private InventarioExistenciasAdapter ExistenciasAdapter;
     private SearchView Buscar;
+    private String code;
 
 
     public Fragment_pestania_inventario_existencias() {
@@ -107,6 +108,7 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
+        code = sharedPref.getString("sso_code","");
 
         inventarios = new ArrayList<>();
 
@@ -155,7 +157,7 @@ private void Load_ExistenciasInventario(String articulo) {
         inventarios.clear();
 
     String url = getString(R.string.Url);
-    String ApiPath = url + "/api/inventario/buscar_disponibilidad_articulo?usu_id=" + usu_id + "&esApp=1&nombre_sku_articulo="+articulo;
+    String ApiPath = url + "/api/inventario/buscar_disponibilidad_articulo?usu_id=" + usu_id + "&esApp=1&code="+code+"&nombre_sku_articulo="+articulo;
 
     JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null, new Response.Listener<JSONObject>() {
         @Override

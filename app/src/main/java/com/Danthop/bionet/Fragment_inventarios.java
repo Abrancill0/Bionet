@@ -106,6 +106,8 @@ public class Fragment_inventarios extends Fragment {
     private boolean Listado_inventarios  =false;
     private boolean Traslado =false;
 
+    private String code="";
+
     public Fragment_inventarios() {
         // Required empty public constructor
     }
@@ -117,6 +119,7 @@ public class Fragment_inventarios extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
+        code = sharedPref.getString("sso_code","");
 
         try {
             Roles = new JSONArray(sharedPref.getString("sso_Roles", ""));
@@ -242,7 +245,14 @@ public class Fragment_inventarios extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container, new Fragment_pestania_traslado()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Historicos", Historicos);
+                bundle.putBoolean("Inventarios", Inventarios);
+                bundle.putBoolean("Listado_inventarios", Listado_inventarios);
+                bundle.putBoolean("Traslado", Traslado);
+                Fragment_pestania_traslado fragment2 = new Fragment_pestania_traslado();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -252,7 +262,14 @@ public class Fragment_inventarios extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container, new Fragment_pestania_historico()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Historicos", Historicos);
+                bundle.putBoolean("Inventarios", Inventarios);
+                bundle.putBoolean("Listado_inventarios", Listado_inventarios);
+                bundle.putBoolean("Traslado", Traslado);
+                Fragment_pestania_historico fragment2 = new Fragment_pestania_historico();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -262,26 +279,18 @@ public class Fragment_inventarios extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container, new Fragment_pestania_inventario_existencias()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Historicos", Historicos);
+                bundle.putBoolean("Inventarios", Inventarios);
+                bundle.putBoolean("Listado_inventarios", Listado_inventarios);
+                bundle.putBoolean("Traslado", Traslado);
+                Fragment_pestania_inventario_existencias fragment2 = new Fragment_pestania_inventario_existencias();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
 
-
-        tabla_inventario.setSwipeToRefreshEnabled(true);
-        tabla_inventario.setSwipeToRefreshListener(new SwipeToRefreshListener() {
-            @Override
-            public void onRefresh(final RefreshIndicator refreshIndicator) {
-                tabla_inventario.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        inventarios.clear();
-                        Muestra_Inventario();
-                        refreshIndicator.hide();
-                    }
-                }, 2000);
-            }
-        });
 
         tabla_inventario.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
         tabla_inventario.addDataClickListener(tablaListener);
@@ -306,8 +315,17 @@ public class Fragment_inventarios extends Fragment {
         SpinnerSucursal = (Spinner) v.findViewById(R.id.sucursal);
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                progressDialog.show();
-                Muestra_Inventario();
+
+                if(Listado_inventarios==false)
+                {
+                    Buscar.setEnabled(false);
+                    SpinnerSucursal.setEnabled(false);
+                }else
+                {
+                    progressDialog.show();
+                    Muestra_Inventario();
+
+                }
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -321,7 +339,7 @@ public class Fragment_inventarios extends Fragment {
     private void Muestra_Inventario() {
 
         String url = getString(R.string.Url);
-        String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1";
+        String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1&code="+code;
 
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null, new Response.Listener<JSONObject>() {
             @Override
@@ -526,6 +544,7 @@ public class Fragment_inventarios extends Fragment {
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("code",code);
 
         } catch (Exception e) {
             e.printStackTrace();

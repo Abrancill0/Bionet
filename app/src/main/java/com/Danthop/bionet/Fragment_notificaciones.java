@@ -52,6 +52,7 @@ public class Fragment_notificaciones extends Fragment {
     private boolean Elimina_Notificacion=false;
     private boolean Listado_Notificacion=false;
     private Button delete;
+    private String code="";
 
 
     String text = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.";
@@ -70,6 +71,8 @@ public class Fragment_notificaciones extends Fragment {
         NumNotificaciones = v.findViewById(R.id.num_notificaciones);
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
+        code = sharedPref.getString("sso_code","");
+
 
         //Funcion para Obtener Permisos
         try {
@@ -160,6 +163,7 @@ public class Fragment_notificaciones extends Fragment {
                     request.put("usu_id", usu_id);
                     request.put("esApp", "1");
                     request.put("aNotificaciones",aNotificaciones);
+                    request.put("code",code);
                 }
                 catch(Exception e)
                 {
@@ -256,7 +260,7 @@ public class Fragment_notificaciones extends Fragment {
     public void LoadNotificaciones() {
         mNotificacionList = new ArrayList<>();
         try {
-            String ApiPath = "http://187.189.192.150:8010/api/notificaciones/index?usu_id=" + usu_id + "&esApp=1";
+            String ApiPath = "http://187.189.192.150:8010/api/notificaciones/index?usu_id=" + usu_id + "&esApp=1&code="+code;
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
@@ -342,6 +346,7 @@ public class Fragment_notificaciones extends Fragment {
                     request.put("usu_id", usu_id);
                     request.put("esApp", "1");
                     request.put("nen_id",mNotificacionList.get(position).getID());
+                    request.put("code",code);
                 }
                 catch(Exception e)
                 {

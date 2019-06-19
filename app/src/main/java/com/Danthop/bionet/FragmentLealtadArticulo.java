@@ -93,6 +93,19 @@ public class FragmentLealtadArticulo extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
 
+
+        bundle = getArguments();
+        Agregar_Articulo=bundle.getBoolean("Agregar_Articulo");
+        Agregar_Cliente=bundle.getBoolean("Agregar_Cliente");
+        Lista_Articulos=bundle.getBoolean("Lista_Articulos");
+        Asignar_Articulo=bundle.getBoolean("Asignar_Articulo");
+        Asignar_Cliente=bundle.getBoolean("Asignar_Cliente");
+        Configuracion_Programa=bundle.getBoolean("Configuracion_Programa");
+        Caducidad_Puntos=bundle.getBoolean("Caducidad_Puntos");
+        Inscribir_Programa=bundle.getBoolean("Inscribir_Programa");
+        Puntos_Acumulados=bundle.getBoolean("Puntos_Acumulados");
+        Listado_Puntos=bundle.getBoolean("Listado_Puntos");
+
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
         progressDialog.setCanceledOnTouchOutside(false);
@@ -118,8 +131,15 @@ public class FragmentLealtadArticulo extends Fragment {
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                articulos.clear();
-                Muestra_articulos();
+                if(Lista_Articulos==false)
+                {
+                    articulos.clear();
+                    SpinnerSucursal.setEnabled(false);
+                }else
+                {
+                    articulos.clear();
+                    Muestra_articulos();
+                };
             }
             public void onNothingSelected(AdapterView<?> parent)
             {
@@ -213,18 +233,6 @@ public class FragmentLealtadArticulo extends Fragment {
             }
         });
 
-        bundle = getArguments();
-        Agregar_Articulo=bundle.getBoolean("Agregar_Articulo");
-        Agregar_Cliente=bundle.getBoolean("Agregar_Cliente");
-        Lista_Articulos=bundle.getBoolean("Lista_Articulos");
-        Asignar_Articulo=bundle.getBoolean("Asignar_Articulo");
-        Asignar_Cliente=bundle.getBoolean("Asignar_Cliente");
-        Configuracion_Programa=bundle.getBoolean("Configuracion_Programa");
-        Caducidad_Puntos=bundle.getBoolean("Caducidad_Puntos");
-        Inscribir_Programa=bundle.getBoolean("Inscribir_Programa");
-        Puntos_Acumulados=bundle.getBoolean("Puntos_Acumulados");
-        Listado_Puntos=bundle.getBoolean("Listado_Puntos");
-
 
         return v;
 
@@ -234,7 +242,20 @@ public class FragmentLealtadArticulo extends Fragment {
         Inscribir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtadInscribir()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Agregar_Articulo", Agregar_Articulo);
+                bundle.putBoolean("Agregar_Cliente", Agregar_Cliente);
+                bundle.putBoolean("Lista_Articulos", Lista_Articulos);
+                bundle.putBoolean("Asignar_Articulo", Asignar_Articulo);
+                bundle.putBoolean("Asignar_Cliente", Asignar_Cliente);
+                bundle.putBoolean("Configuracion_Programa", Configuracion_Programa);
+                bundle.putBoolean("Caducidad_Puntos", Caducidad_Puntos);
+                bundle.putBoolean("Inscribir_Programa", Inscribir_Programa);
+                bundle.putBoolean("Puntos_Acumulados", Puntos_Acumulados);
+                bundle.putBoolean("Listado_Puntos", Listado_Puntos);
+                FragmentLealtadInscribir fragment2 = new FragmentLealtadInscribir();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
 
             }
@@ -242,7 +263,20 @@ public class FragmentLealtadArticulo extends Fragment {
         Programas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtadConfiguraciones()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Agregar_Articulo", Agregar_Articulo);
+                bundle.putBoolean("Agregar_Cliente", Agregar_Cliente);
+                bundle.putBoolean("Lista_Articulos", Lista_Articulos);
+                bundle.putBoolean("Asignar_Articulo", Asignar_Articulo);
+                bundle.putBoolean("Asignar_Cliente", Asignar_Cliente);
+                bundle.putBoolean("Configuracion_Programa", Configuracion_Programa);
+                bundle.putBoolean("Caducidad_Puntos", Caducidad_Puntos);
+                bundle.putBoolean("Inscribir_Programa", Inscribir_Programa);
+                bundle.putBoolean("Puntos_Acumulados", Puntos_Acumulados);
+                bundle.putBoolean("Listado_Puntos", Listado_Puntos);
+                FragmentLealtadConfiguraciones fragment2 = new FragmentLealtadConfiguraciones();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
 
             }
@@ -250,7 +284,20 @@ public class FragmentLealtadArticulo extends Fragment {
         Lealtad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fr.replace(R.id.fragment_container,new FragmentLealtad()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Agregar_Articulo", Agregar_Articulo);
+                bundle.putBoolean("Agregar_Cliente", Agregar_Cliente);
+                bundle.putBoolean("Lista_Articulos", Lista_Articulos);
+                bundle.putBoolean("Asignar_Articulo", Asignar_Articulo);
+                bundle.putBoolean("Asignar_Cliente", Asignar_Cliente);
+                bundle.putBoolean("Configuracion_Programa", Configuracion_Programa);
+                bundle.putBoolean("Caducidad_Puntos", Caducidad_Puntos);
+                bundle.putBoolean("Inscribir_Programa", Inscribir_Programa);
+                bundle.putBoolean("Puntos_Acumulados", Puntos_Acumulados);
+                bundle.putBoolean("Listado_Puntos", Listado_Puntos);
+                FragmentLealtad fragment2 = new FragmentLealtad();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
 
             }
@@ -478,6 +525,7 @@ public class FragmentLealtadArticulo extends Fragment {
 
 
     }
+
 
     @Override
     public void onDetach() {

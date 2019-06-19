@@ -968,9 +968,12 @@ public class FragmentLealtadInscribir extends Fragment {
 
     private void LoadPermisosFunciones()
     {
-        if(Asignar_Cliente== false || Agregar_Cliente)
+        if(Asignar_Cliente==false)
         {
             AniadirTodos.setEnabled(false);
+        }
+        if(Agregar_Cliente==false)
+        {
             aniadir.setEnabled(false);
         }
     }

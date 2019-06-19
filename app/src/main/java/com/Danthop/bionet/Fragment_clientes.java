@@ -229,8 +229,24 @@ public class Fragment_clientes extends Fragment {
 
         {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                progressDialog.show();
-                Muestra_clientes();
+                if(Listado_Clientes==false)
+                {
+                    BuscarCliente.setEnabled(false);
+                    BuscarCliente.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), "No cuentas con los permisos necesarios para \n realizar esta acción", Toast.LENGTH_LONG);
+
+                            toast1.show();
+                        }
+                    });
+                }
+                else
+                {
+                    progressDialog.show();
+                    Muestra_clientes();
+                }
 
             }
 
@@ -263,23 +279,6 @@ public class Fragment_clientes extends Fragment {
             }
         });
 
-
-        tabla_clientes.setSwipeToRefreshEnabled(true);
-        tabla_clientes.setSwipeToRefreshListener(new
-
-                                                         SwipeToRefreshListener() {
-                                                             @Override
-                                                             public void onRefresh(final RefreshIndicator refreshIndicator) {
-                                                                 tabla_clientes.postDelayed(new Runnable() {
-                                                                     @Override
-                                                                     public void run() {
-                                                                         clientes.clear();
-                                                                         Muestra_clientes();
-                                                                         refreshIndicator.hide();
-                                                                     }
-                                                                 }, 2000);
-                                                             }
-                                                         });
 
         tabla_clientes.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
 
@@ -813,29 +812,9 @@ public class Fragment_clientes extends Fragment {
 
     private void LoadPermisosFunciones()
     {
-        if(Crear_Cliente==true)
+        if(Crear_Cliente==false)
         {
-            btn_crear_cliente.setEnabled(true);
-        }else{
             btn_crear_cliente.setEnabled(false);
-        }
-
-
-        if(Listado_Clientes=true){
-
-        }else{
-            BuscarCliente.setEnabled(false);
-            clientes.clear();
-            clienteAdapter.notifyDataSetChanged();
-            BuscarCliente.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast toast1 =
-                            Toast.makeText(getContext(), "No cuentas con los permisos necesarios para \n realizar esta acción", Toast.LENGTH_LONG);
-
-                    toast1.show();
-                }
-            });
         }
 
 

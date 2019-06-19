@@ -77,6 +77,7 @@ public class Fragment_pantalla_principal extends Fragment{
     private int tic_importe_total;
     MediaPlayer mp = new MediaPlayer();
     private ProgressDialog progressDialog;
+    private String code="";
 
     public Fragment_pantalla_principal() {
         // Required empty public constructor
@@ -95,6 +96,7 @@ public class Fragment_pantalla_principal extends Fragment{
         String Nombre = sharedPref.getString("usu_nombre", "");
         usu_id = sharedPref.getString("usu_id","");
         suc_id = sharedPref.getString("cca_id_sucursal","");
+        code = sharedPref.getString("sso_code","");
 
 
 
@@ -319,7 +321,7 @@ private void LoadClientesFrecuentes(){
         e.printStackTrace();
     }
     String url = getString(R.string.Url);
-    String ApiPath = url + "/api/dashboard/clientesfr?usu_id=" + usu_id + "&suc_id=" + valueIdSuc + "&esApp=1";
+    String ApiPath = url + "/api/dashboard/clientesfr?usu_id=" + usu_id + "&suc_id=" + valueIdSuc + "&esApp=1&code="+code;
     JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, null, new Response.Listener<JSONObject>() {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
@@ -376,7 +378,7 @@ private void LoadMasVendidos(){
         e.printStackTrace();
     }
     String url = getString(R.string.Url);
-    String ApiPath = url + "/api/dashboard/topProd/?usu_id=" + usu_id + "&suc_id=" + valueIdSuc + "&esApp=1";
+    String ApiPath = url + "/api/dashboard/topProd/?usu_id=" + usu_id + "&suc_id=" + valueIdSuc + "&esApp=1&code="+code;
     JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, null, new Response.Listener<JSONObject>() {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
@@ -435,7 +437,7 @@ private void LoadMasVendidos(){
 //--------------------------------------------------------------------------------------------------
 public void LoadNotificaciones() {
     try {
-        String ApiPath = "http://187.189.192.150:8010/api/notificaciones/index?usu_id=" + usu_id + "&esApp=1";
+        String ApiPath = "http://187.189.192.150:8010/api/notificaciones/index?usu_id=" + usu_id + "&esApp=1&code="+code;
 
         // prepare the Request
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,

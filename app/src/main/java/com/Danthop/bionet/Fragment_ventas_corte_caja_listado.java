@@ -74,11 +74,18 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
     private Double cca_importe_forma_pago;
     private List<CorteCajaModel> ListaCorte;
     private SortableCorteCajaTable tabla_Listarcorte;
+    private Button Comisiones;
 
 
     private DatePickerDialog.OnDateSetListener inicioDataSetlistener;
     private DatePickerDialog.OnDateSetListener finDataSetlistener;
     private SortableHistoricoTable tabla_historico;
+
+    private Bundle bundle;
+    private boolean  Proceso_Venta=false;
+    private boolean  Transacciones=false;
+    private boolean Conte_Caja=false;
+    private boolean Comision=false;
 
 
     public Fragment_ventas_corte_caja_listado() {
@@ -88,9 +95,18 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ventas_listadocortecajas,container, false);
+
+        bundle = getArguments();
+        Proceso_Venta=bundle.getBoolean("Proceso_Venta");
+        Transacciones=bundle.getBoolean("Transacciones");
+        Conte_Caja=bundle.getBoolean("Conte_Caja");
+        Comision=bundle.getBoolean("Comision");
+
+
         pestania_ventas = v.findViewById(R.id.btn_ventas);
         pestania_reporte = v.findViewById(R.id.btn_traslados);
         btn_corte = (TextView) v.findViewById(R.id.btn_corte);
+        Comisiones = v.findViewById( R.id.Comisiones);
         btn_listado_corte = (TextView) v.findViewById(R.id.btn_listado_corte);
         btn_listado_corte.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
         btn_factura_ventas = (TextView) v.findViewById(R.id.btn_factura_ventas);
@@ -107,15 +123,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
         cca_id_sucursal = sharedPref.getString("cca_id_sucursal", "");
         ListaCorte = new ArrayList<>();
 
-        Button Comisiones = v.findViewById( R.id.Comisiones);
-        Comisiones.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_comison()).commit();
-                onDetach();
-            }
-        });
+
 
         btn_listado_corte = v.findViewById( R.id.btn_listado_corte);
         btn_listado_corte.setOnClickListener(new View.OnClickListener() {
@@ -293,7 +301,14 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_Ventas()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_Ventas fragment2 = new Fragment_Ventas();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -301,7 +316,14 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ventas_transacciones()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_ventas_transacciones fragment2 = new Fragment_ventas_transacciones();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -310,7 +332,14 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_cortecaja()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_pestania_cortecaja fragment2 = new Fragment_pestania_cortecaja();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -321,6 +350,29 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
 
             }
         });
+
+        Comisiones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_pestania_comison fragment2 = new Fragment_pestania_comison();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
+                onDetach();
+            }
+        });
+
+        if(Conte_Caja==false)
+        {
+            btn_buscar.setEnabled(false);
+            Fechainicio.setEnabled(false);
+            Fechafin.setEnabled(false);
+        }
 
         btn_buscar.setOnClickListener(new View.OnClickListener() {
             @Override
