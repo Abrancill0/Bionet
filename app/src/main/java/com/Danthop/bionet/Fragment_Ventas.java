@@ -266,17 +266,21 @@ public class Fragment_Ventas extends Fragment {
     private ImpuestoAdapter mAdapter;
     private List<Impuestos> ImpuestosList = new ArrayList<>();
 
-
     private Button btn_imprimir;
     private Button btn_eliminar_cliente_ticket;
 
     private Bundle bundle;
 
+    private JSONArray Roles;
+
+    private boolean Proceso_Venta = false;
+    private boolean Transacciones = false;
+    private boolean Conte_Caja  = false;
+    private boolean Comision = false;
 
     public Fragment_Ventas() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -310,7 +314,7 @@ public class Fragment_Ventas extends Fragment {
                 JSONObject Elemento = Roles.getJSONObject(i);
                 rol_id = Elemento.getString("rol_id");
 
-                if (rol_id.equals("cbcf93d8-ed1e-11e8-8a6e-cb097f5c03df")) {
+                if (rol_id.equals("cbcf93c0-ed1e-11e8-8a6e-cb097f5c03df")) {
                     Aplica = Elemento.getBoolean("rol_aplica_en_version");
                     Aplica_Permiso = Elemento.getBoolean("rol_permiso");
 
@@ -327,19 +331,19 @@ public class Fragment_Ventas extends Fragment {
 
                                 switch (fun_id) {
 
-                                    case "fba9366-82a5-4f87-9ccf-793e5a1148e0":
+                                    case "7fba9366-82a5-4f87-9ccf-793e5a1148e0":
                                         Proceso_Venta = Elemento2.getBoolean("fun_permiso");
                                         break;
 
-                                    case "76e6bbac-cb73-4427-82dc-8a7c9a45869f":
-                                        Resumen_Ventas = Elemento2.getBoolean("fun_permiso");
+                                    case "c945507f-9f0b-48ea-a8c3-88320097e8bc":
+                                        Transacciones = Elemento2.getBoolean("fun_permiso");
                                         break;
 
-                                    case "c945507f-9f0b-48ea-a8c3-88320097e8bc":
-                                        Transacciones = Elemento2.getBoolean("fun_permiso");
+                                    case "3fc97fa7-0bc0-4001-a2a9-2b0b9f35c8f9":
+                                        Comision = Elemento2.getBoolean("fun_permiso");
                                         break;
-                                    case "c945507f-9f0b-48ea-a8c3-88320097e8bc":
-                                        Transacciones = Elemento2.getBoolean("fun_permiso");
+                                    case "0da9f0b0-ed68-4366-acd5-cc99ef1e35dd":
+                                        Conte_Caja = Elemento2.getBoolean("fun_permiso");
                                         break;
 
                                     default:

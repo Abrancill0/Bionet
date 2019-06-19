@@ -1,4 +1,5 @@
 package com.Danthop.bionet;
+
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -43,6 +44,7 @@ import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -99,6 +101,11 @@ public class Fragment_inventarios extends Fragment {
 
     private JSONArray Roles;
 
+    private boolean Historicos=false;
+    private boolean Inventarios =false;
+    private boolean Listado_inventarios  =false;
+    private boolean Traslado =false;
+
     public Fragment_inventarios() {
         // Required empty public constructor
     }
@@ -146,6 +153,11 @@ public class Fragment_inventarios extends Fragment {
 
                                 switch (fun_id) {
 
+                                    case "d66b83a6-e388-4a44-9564-973ae7d063c2":
+
+                                        Historicos = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
                                     case "aea6fac7-14e3-4e85-b691-55894fe5dfd2":
 
                                         Inventarios = Elemento2.getBoolean("fun_permiso");
@@ -153,7 +165,12 @@ public class Fragment_inventarios extends Fragment {
 
                                     case "8c8ecc05-7d7e-44ed-a6be-e69d882333dc":
 
-                                        Listado_inventario = Elemento2.getBoolean("fun_permiso");
+                                        Listado_inventarios = Elemento2.getBoolean("fun_permiso");
+                                        break;
+
+                                    case "f94b8231-f9a5-4121-9caf-9ab81a2c1883":
+
+                                        Traslado = Elemento2.getBoolean("fun_permiso");
                                         break;
 
                                     default:
@@ -169,10 +186,12 @@ public class Fragment_inventarios extends Fragment {
             }
         }
 
-
-
-
-        //   {
+        //{
+        //                        "fun_id": "d66b83a6-e388-4a44-9564-973ae7d063c2",
+        //                        "fun_nombre": "Historicos",
+        //                        "fun_permiso": true
+        //                    },
+        //                    {
         //                        "fun_id": "aea6fac7-14e3-4e85-b691-55894fe5dfd2",
         //                        "fun_nombre": "Inventarios",
         //                        "fun_permiso": true
@@ -181,10 +200,12 @@ public class Fragment_inventarios extends Fragment {
         //                        "fun_id": "8c8ecc05-7d7e-44ed-a6be-e69d882333dc",
         //                        "fun_nombre": "Listado de inventarios",
         //                        "fun_permiso": true
+        //                    },
+        //                    {
+        //                        "fun_id": "f94b8231-f9a5-4121-9caf-9ab81a2c1883",
+        //                        "fun_nombre": "Traslados",
+        //                        "fun_permiso": false
         //                    }
-
-
-
 
 
         progressDialog = new ProgressDialog(getContext());
