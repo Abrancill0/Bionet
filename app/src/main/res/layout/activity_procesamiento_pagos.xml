@@ -82,7 +82,7 @@
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:entries="@array/sale_array" />
+            />
 
         <com.pnikosis.materialishprogress.ProgressWheel xmlns:wheel="http://schemas.android.com/apk/res-auto"
             android:id="@+id/progressBar"

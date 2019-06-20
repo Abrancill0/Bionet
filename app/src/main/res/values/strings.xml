@@ -80,8 +80,14 @@
     <string-array name="sale_array">
         <item>Venta Retail - Sin propina</item>
         <item>Venta Retail - Con propina</item>
-        <item>Venta MSI - Sin propina</item>
-        <item>Venta MSI - con propina</item>
+        <item>Venta MSI_03 - Sin propina</item>
+        <item>Venta MSI_03 - Con propina</item>
+        <item>Venta MSI_06 - Sin propina</item>
+        <item>Venta MSI_06 - Con propina</item>
+        <item>Venta MSI_09 - Sin propina</item>
+        <item>Venta MSI_09 - Con propina</item>
+        <item>Venta MSI_12 - Sin propina</item>
+        <item>Venta MSI_12 - Con propina</item>
     </string-array>
 
     <string name="btn_search">BUSCAR</string>

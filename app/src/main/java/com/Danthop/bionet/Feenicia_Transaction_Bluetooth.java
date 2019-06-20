@@ -22,6 +22,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -67,8 +69,7 @@ import org.json.JSONObject;
  */
 
 /// Lector Bluetooth ///
-public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
-{
+public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
     private Toolbar toolbar;
     private static TextView tvMontoMostrar;
     private static AppCompatActivity FEENICIA_TRANSACCION;
@@ -98,9 +99,9 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     static TextView textView_resultTx; // RESULTADO DE LA TRANSACCION
     ArrayList<BluetoothDevice> adapter;
     Spinner sp_sale;
-   static ProgressWheel progressBar;
+    static ProgressWheel progressBar;
 
-   // static CircleProgressView progressBar;
+    // static CircleProgressView progressBar;
 
     SppHandlerConnection sppHandlerConnection;
     BTReceiverConnection bTReceiverConnection;
@@ -129,20 +130,19 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     public static int Contador;
     public static String Mensaje;
 
-     private double ImporteCambio;
-     private double ImporteRecibido;
-     private double ImporteVenta;
+    private double ImporteCambio;
+    private double ImporteRecibido;
+    private double ImporteVenta;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_procesamiento_pagos);
         FEENICIA_TRANSACCION = this;
 
         intent = getIntent();
-        tvMontoMostrar=(TextView)findViewById(R.id.tvMontoMostrar);
+        tvMontoMostrar = (TextView) findViewById(R.id.tvMontoMostrar);
         textViewTransaccion = (TextView) findViewById(R.id.textView_procesando_transaccion);
         textView_resultTx = (TextView) findViewById(R.id.textView_resultTx);
 
@@ -153,7 +153,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         btn_terminar_feenicia = (Button) findViewById(R.id.btnTerminarFeenicia);
         btn_cerrar = (Button) findViewById(R.id.btnCerrar);
         btn_desconectar = (Button) findViewById(R.id.btn_desconectar);
-        textView_Devices = (TextView)findViewById(R.id.textView_Devices);
+        textView_Devices = (TextView) findViewById(R.id.textView_Devices);
         textView_Devices.setText("");
         sp_sale = (Spinner) findViewById(R.id.sp_sales);
         progressBar = (ProgressWheel) findViewById(R.id.progressBar);
@@ -161,15 +161,17 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         askForContactPermission();
 
         Bundle bundle = getIntent().getExtras();
-        TarjetaCredito = getIntent().getExtras().getDouble( "TC");
-        TarjetaDebio = bundle.getDouble( "TD");
+        TarjetaCredito = getIntent().getExtras().getDouble("TC");
+        TarjetaDebio = bundle.getDouble("TD");
         tamano = bundle.getInt("Tamano");
         Ticket = bundle.getString("Ticket");
-        Sucursal = bundle.getString( "Sucursal");
+        Sucursal = bundle.getString("Sucursal");
         Tresmeses = bundle.getInt("03meses");
         Seismeses = bundle.getInt("06meses");
         nuevemeses = bundle.getInt("09meses");
         docemeses = bundle.getInt("12meses");
+
+        List<String> entriesList = new ArrayList<>();
 
         try {
 
@@ -177,46 +179,117 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
             Log.i("6 meses", String.valueOf(Seismeses));
             Log.i("9 meses", String.valueOf(nuevemeses));
             Log.i("12 meses", String.valueOf(docemeses));
-            }
-            catch (Exception e){
+        } catch (Exception e) {
             Log.e("Error feenicia bundle", e.toString());
+        }
+
+
+        ListaDePagos_a_utilizar = new ArrayList<>();
+
+        //Llena Spinner en base a Arreglo declarado en String
+        String[] entries = getResources().getStringArray(R.array.sale_array);
+
+        //entriesList = new ArrayList<String>(Arrays.asList(entries));
+        entriesList = new ArrayList<String>();
+
+        for (int i = 0; i < entries.length; i++) {
+
+            switch (entries[i].toString()) {
+
+                case "Venta Retail - Sin propina":
+                    entriesList.add(i, entries[i].toString());
+                    break;
+                case "Venta Retail - Con propina":
+                    entriesList.add(i, entries[i].toString());
+                    break;
+                case "Venta MSI_03 - Sin propina":
+
+                    if (Tresmeses == 1) {
+                        entriesList.add(i, entries[i].toString());
+                    }
+
+                    break;
+                case "Venta MSI_03 - Con propina":
+                    if (Tresmeses == 1) {
+                        entriesList.add(i, entries[i].toString());
+                    }
+                    break;
+                case "Venta MSI_06 - Sin propina":
+                    if (Seismeses == 1) {
+                        entriesList.add(i, entries[i].toString());
+                    }
+                    break;
+                case "Venta MSI_06 - Con propina":
+                    if (Seismeses == 1) {
+                        entriesList.add(i, entries[i].toString());
+                    }
+                    break;
+                case "Venta MSI_09 - Sin propina":
+                    if (nuevemeses == 1) {
+                        entriesList.add(i, entries[i].toString());
+                    }
+                    break;
+                case "Venta MSI_09 - Con propina":
+                    if (nuevemeses == 1) {
+                        entriesList.add(i, entries[i].toString());
+                    }
+                    break;
+                case "Venta MSI_12 - Sin propina":
+                    if (docemeses == 1) {
+                        entriesList.add(i, entries[i].toString());
+                    }
+                    break;
+                case "Venta MSI_12 - Con propina":
+                    if (docemeses == 1) {
+                        entriesList.add(i, entries[i].toString());
+                    }
+                    break;
+                default:
+                    // sentencias;
+                    break;
+
             }
 
 
-        ListaDePagos_a_utilizar  = new ArrayList<>();
+        }
+
+
+        ArrayAdapter spinnerAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, entriesList);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+        sp_sale.setAdapter(spinnerAdapter);
+
 
         for (int i = 0; i < tamano; i++) {
 
-            fpa_id =  bundle.getString( "fpa_id"+i);
-            valor =  bundle.getString( "valor"+i);
+            fpa_id = bundle.getString("fpa_id" + i);
+            valor = bundle.getString("valor" + i);
 
             PagoModel modelito = new PagoModel(
                     "",
                     fpa_id,
                     valor
-                     );
+            );
             ListaDePagos_a_utilizar.add(modelito);
 
         }
 
         double precio = 0;
 
-        if (TarjetaCredito > 0 )
-        {
+        if (TarjetaCredito > 0) {
             precio = TarjetaCredito;
             Contador = 2;
-            Mensaje="Tarjeta de Credito";
+            Mensaje = "Tarjeta de Credito";
 
             show_Toast("Coloque la tarjeta de credito para procesar el cobro");
 
             btn_terminar_feenicia.setEnabled(false);  /// CONECTAR
             btn_cerrar.setEnabled(true);
-        }
-        else
-        {
+        } else {
             precio = TarjetaDebio;
             Contador = 1;
-            Mensaje="Tarjeta de Debito";
+            Mensaje = "Tarjeta de Debito";
             show_Toast("Coloque la tarjeta de debito para procesar el cobro");
 
             btn_terminar_feenicia.setEnabled(false);  /// CONECTAR
@@ -238,16 +311,14 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         msi = 3;
 
         //DIBUJAMOS EL MONTO
-        tvMontoMostrar.setText( "$ " + monto + " MN");
+        tvMontoMostrar.setText("$ " + monto + " MN");
 
         // PERMISO DE BLUETOOTH
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.BLUETOOTH_ADMIN}, 1);
             return;
 
-        }
-        else
-        {
+        } else {
             BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (!mBluetoothAdapter.isEnabled()) {
                 mBluetoothAdapter.enable();
@@ -260,10 +331,10 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
 
         // 01.- Generar Login para obtener credenciales
         sppHandlerConnection = new SppHandlerConnection();
-        sppHandlerConnection.generateLogin(user,pwd);   // (Username,Password)
+        sppHandlerConnection.generateLogin(user, pwd);   // (Username,Password)
 
 
-        handlerEVM = sppHandlerConnection.initialize(handlerEVM, settings, ui, getApplicationContext(),credentials);
+        handlerEVM = sppHandlerConnection.initialize(handlerEVM, settings, ui, getApplicationContext(), credentials);
 
         // 02.- Inicializar Conexión BT
         bTReceiverConnection = new BTReceiverConnection();
@@ -283,18 +354,35 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
-                //Toast.makeText(CargaTransaccionBlueTooth.this, "Opción: " + position, Toast.LENGTH_SHORT).show();
-                if(position == 0){ // RETAIL - SIN PROPINA
+
+                if (position == 0) { // RETAIL - SIN PROPINA
                     sale.sale_retail_without_tip(monto);
-                }
-                else if(position == 1){ // RETAIL - CON PROPINA
-                    sale.sale_retail_with_tip(monto,tip);
-                }
-                else if(position == 2){ // MSI - SIN PROPINA
-                    sale.sale_msi_without_tip(monto,msi);
-                }
-                else if(position == 3){ // MSI - CON PROPINA
-                    sale.sale_msi_with_tip(monto,tip,msi);
+                } else if (position == 1) { // RETAIL - CON PROPINA
+                    sale.sale_retail_with_tip(monto, tip);
+                } else if (position == 2) { // MSI_03 - SIN PROPINA
+                    msi = 3;
+                    sale.sale_msi_without_tip(monto, msi);
+                } else if (position == 3) { // MSI_03 - CON PROPINA
+                    msi = 3;
+                    sale.sale_msi_with_tip(monto, tip, msi);
+                } else if (position == 4) { // MSI_06 - SIN PROPINA
+                    msi = 6;
+                    sale.sale_msi_without_tip(monto, msi);
+                } else if (position == 5) { // MSI_06 - CON PROPINA
+                    msi = 6;
+                    sale.sale_msi_with_tip(monto, tip, msi);
+                } else if (position == 6) { // MSI_09 - SIN PROPINA
+                    msi = 9;
+                    sale.sale_msi_without_tip(monto, msi);
+                } else if (position == 7) { // MSI_09 - CON PROPINA
+                    msi = 9;
+                    sale.sale_msi_with_tip(monto, tip, msi);
+                } else if (position == 8) { // MSI_12 - SIN PROPINA
+                    msi = 12;
+                    sale.sale_msi_without_tip(monto, msi);
+                } else if (position == 9) { // MSI_12 - CON PROPINA
+                    msi = 12;
+                    sale.sale_msi_with_tip(monto, tip, msi);
                 }
 
                 Log.i("SppHandlerConnection", "MONTO: " + String.valueOf(sppHandlerConnection.getAmount()));
@@ -315,8 +403,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-
-                    FinalizarTicket();
+                FinalizarTicket();
 
             }
         });
@@ -340,7 +427,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                     @Override
                     public void run() {
 
-                        if(adapter.size() < 1){
+                        if (adapter.size() < 1) {
                             show_Toast(getResources().getString(R.string.textView_not_device));
                             setText(getResources().getString(R.string.text_feenicia_demo));
                             setTextTx("");
@@ -355,7 +442,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                         show_Toast(getResources().getString(R.string.textView_conectando_bluetooth));
                         Boolean resultConnection = sppHandlerConnection.connectDevice(dev);
 
-                        if(resultConnection == true) { // SUCESS
+                        if (resultConnection == true) { // SUCESS
                             setText(getResources().getString(R.string.textView_ejecutarDispositivo_bluetooth));
                             setTextTx("");
                             show_Toast(getResources().getString(R.string.text_conexion_sucess));
@@ -372,8 +459,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                             });
 
 
-                        }
-                        else if(resultConnection == false) // ERROR
+                        } else if (resultConnection == false) // ERROR
                         {
                             show_Toast(getResources().getString(R.string.text_conexion_error));
 
@@ -428,7 +514,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                         }
                     });
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     Log.e("Error_desconectar", e.toString());
                 }
 
@@ -472,11 +558,11 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                                     int x = 0;
                                     String devices = getResources().getString(R.string.text_devices_encontrados) + "\n\n";
 
-                                    for(x = 0; x < size_devices; x++){
+                                    for (x = 0; x < size_devices; x++) {
                                         devices = devices + x + ") " + adapter.get(x).getName().toString() + "\n";
                                     }
 
-                                    if(adapter.size() == 0){
+                                    if (adapter.size() == 0) {
                                         devices = getResources().getString(R.string.text_not_devices_encontrados) + "\n\n";
                                     }
 
@@ -485,7 +571,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
 
                                 }
                             }, 9000);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             Log.e("Exception: ", e.toString());
                         }
 
@@ -505,7 +591,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                 });
 
 
-
             }
         });
 
@@ -520,7 +605,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         _receiver.registerReceiver();
     }
 
-    public static void resultLoginResponse(final ResponseCode response){
+    public static void resultLoginResponse(final ResponseCode response) {
 
         try {
 
@@ -531,7 +616,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                     String setValue = "ERROR AL INICIALIZAR TERMINAL\nVERIFIQUE CREDENCIALES";
 
                     /* SI LA RESPUESTA DEL SERVICIO FUE 00 */
-                    if(response.getResponseCode() != null) {
+                    if (response.getResponseCode() != null) {
                         if (!response.getResponseCode().equals("00")) {
                             textView_resultTx.setVisibility(View.VISIBLE);
                             setTextTx(setValue);
@@ -546,24 +631,24 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                 }
             });
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.e("ERROR_TX", e.toString());
         }
 
     }
 
-    public static void statusReaderCard(final String result){
-        Log.i("RESULTADO_READ_CARD: " , result);
+    public static void statusReaderCard(final String result) {
+        Log.i("RESULTADO_READ_CARD: ", result);
 
         FEENICIA_TRANSACCION.runOnUiThread(new Runnable() {
             public void run() {
 
                 textView_resultTx.setVisibility(View.GONE);
 
-                if(result.equals("LEYENDO TARJETA")){
+                if (result.equals("LEYENDO TARJETA")) {
                     textViewTransaccion.setText(FEENICIA_TRANSACCION.getResources().getString(R.string.msj_read_Card));
                     progressBar.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     textViewTransaccion.setText(FEENICIA_TRANSACCION.getResources().getString(R.string.textView_ejecutarDispositivo_bluetooth));
                 }
 
@@ -572,7 +657,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     }
 
     /* METODO EL CUAL REGRESA EL RESULTADO DE LA TX*/
-    public static void resultOfTransaction(final ResponseCode response){
+    public static void resultOfTransaction(final ResponseCode response) {
 
         try {
             Log.i("RESULT_TX: ", response.toString());
@@ -586,7 +671,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                             "\ndescription: " + response.getDescriptionCode();
 
                     /* SI LA RESPUESTA DEL SERVICIO FUE 00 */
-                    if(response.getResponseCode() != null) {
+                    if (response.getResponseCode() != null) {
 
                         if (response.getTransaction() != null) {
                             setValue = setValue + "\n\n" + response.getTransaction().toStringOrder();
@@ -595,15 +680,13 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                         if (response.getResponseCode().equals("00")) {
 
 
-                            if (Contador ==2)
-                            {
+                            if (Contador == 2) {
 
-                                if (TarjetaDebio > 0)
-                                {
+                                if (TarjetaDebio > 0) {
                                     monto = TarjetaDebio;
                                     monto = utils.roundTwoDecimals(monto);
 
-                                    tvMontoMostrar.setText( "$ " + monto + " MN");
+                                    tvMontoMostrar.setText("$ " + monto + " MN");
 
                                     Contador = 1;
 
@@ -611,13 +694,11 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
 
                                     Toast.makeText(FEENICIA_TRANSACCION, "Ahora coloque su tarjeta de debito", Toast.LENGTH_SHORT).show();
 
-                                }
-                                else
-                                {
+                                } else {
                                     monto = 0;
                                     monto = utils.roundTwoDecimals(monto);
 
-                                    tvMontoMostrar.setText( "$ " + monto + " MN");
+                                    tvMontoMostrar.setText("$ " + monto + " MN");
 
                                     Contador = 0;
                                     Toast.makeText(FEENICIA_TRANSACCION, "Cobro realizado correctamente", Toast.LENGTH_SHORT).show();
@@ -628,16 +709,14 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
 
                                 }
 
-                                 //Toast toast1 = Toast.makeText(context, "El siguiente pago es con tarjeta de debito.", Toast.LENGTH_SHORT);
+                                //Toast toast1 = Toast.makeText(context, "El siguiente pago es con tarjeta de debito.", Toast.LENGTH_SHORT);
 
-                                 // toast1.show();
-                            }
-                            else  if (Contador ==1)
-                            {
+                                // toast1.show();
+                            } else if (Contador == 1) {
                                 monto = 0;
                                 monto = utils.roundTwoDecimals(monto);
 
-                                tvMontoMostrar.setText( "$ " + monto + " MN");
+                                tvMontoMostrar.setText("$ " + monto + " MN");
 
                                 Contador = 0;
                                 Toast.makeText(FEENICIA_TRANSACCION, "Cobro realizado correctamente", Toast.LENGTH_SHORT).show();
@@ -672,23 +751,23 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                 }
             });
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.e("ERROR_TX", e.toString());
-        }finally {
+        } finally {
             textViewTransaccion.setText(FEENICIA_TRANSACCION.getResources().getString(R.string.msj_tx_finish));
         }
 
     }
 
-    public static void onResultSendReceipt(SendReceiptResponse response){
-        if(response != null){
+    public static void onResultSendReceipt(SendReceiptResponse response) {
+        if (response != null) {
             Log.i("RESPONSE_SEND_RECEIPT", response.toString());
         }
 
     }
 
     /* PINTA EN PANTALLA UN MENSAJE TOAST */
-    public void show_Toast(final String text){
+    public void show_Toast(final String text) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -718,7 +797,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
     }
 
     @Override
-    protected void onResume () {
+    protected void onResume() {
         super.onResume();
 
     }
@@ -788,11 +867,11 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
         }
     }
 
-    public static void onPercentageReceived(final int percentage){
+    public static void onPercentageReceived(final int percentage) {
         FEENICIA_TRANSACCION.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-               // progressBar.setValueAnimated(percentage);
+                // progressBar.setValueAnimated(percentage);
             }
         });
     }
@@ -877,11 +956,11 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity
                         Intent myIntent = new Intent(getApplicationContext(), Confirmacion_venta.class);
 
                         Bundle mBundle = new Bundle();
-                        mBundle.putDouble("IC",  ImporteCambio  );
-                        mBundle.putDouble("IR",  ImporteRecibido  );
-                        mBundle.putDouble("IV",  ImporteVenta  );
-                        mBundle.putString("Sucursal",  Sucursal  );
-                        mBundle.putString("Ticket",  Ticket  );
+                        mBundle.putDouble("IC", ImporteCambio);
+                        mBundle.putDouble("IR", ImporteRecibido);
+                        mBundle.putDouble("IV", ImporteVenta);
+                        mBundle.putString("Sucursal", Sucursal);
+                        mBundle.putString("Ticket", Ticket);
 
                         myIntent.putExtras(mBundle);
 
