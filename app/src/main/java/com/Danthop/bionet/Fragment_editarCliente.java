@@ -131,6 +131,8 @@ public class Fragment_editarCliente extends Fragment {
     private String valor;
     private ProgressDialog progressDialog;
 
+    private String code;
+
 
 
     public Fragment_editarCliente() {
@@ -231,6 +233,7 @@ public class Fragment_editarCliente extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
+        code = sharedPref.getString("sso_code","");
 
         LayoutDireccionFiscal = v.findViewById(R.id.LayoutDireccionFiscal);
         LayoutEmail = v.findViewById(R.id.LayoutEmail);
@@ -406,6 +409,7 @@ public class Fragment_editarCliente extends Fragment {
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("code", code);
 
         }
         catch(Exception e)
@@ -507,6 +511,7 @@ public class Fragment_editarCliente extends Fragment {
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("code", code);
 
         }
         catch(Exception e)
@@ -878,6 +883,7 @@ public class Fragment_editarCliente extends Fragment {
             request.put("cli_id_estado_facturacion",Suc_DatosFisc);
             request.put("cli_estado_facturacion",FacturacionEstado);
             request.put("cli_pais_facturacion","Mexico");
+            request.put("code", code);
 
         }
         catch(Exception e)

@@ -109,6 +109,7 @@ public class Fragment_crear_cliente extends DialogFragment {
     private String mensaje;
     private String valido;
     private String valor;
+    private String code;
 
     private final static String[] opciones = { "N/A", "Email de Facturación", "Dirección Fiscal", "Ambas"};
     public Fragment_crear_cliente() {
@@ -155,6 +156,7 @@ public class Fragment_crear_cliente extends DialogFragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
+        code = sharedPref.getString("sso_code","");
 
         LayoutDireccionFiscal = v.findViewById(R.id.LayoutDireccionFiscal);
         LayoutEmail = v.findViewById(R.id.LayoutEmail);
@@ -404,6 +406,7 @@ public class Fragment_crear_cliente extends DialogFragment {
             request.put("cli_id_estado_facturacion",Suc_DatosFisc);
             request.put("cli_estado_facturacion",FacturacionEstado);
             request.put("cli_pais_facturacion","Mexico");
+            request.put("code",code);
 
         }
         catch(Exception e)
@@ -462,6 +465,7 @@ public class Fragment_crear_cliente extends DialogFragment {
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("code",code);
 
         }
         catch(Exception e)
@@ -554,6 +558,7 @@ public class Fragment_crear_cliente extends DialogFragment {
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("code",code);
 
         }
         catch(Exception e)

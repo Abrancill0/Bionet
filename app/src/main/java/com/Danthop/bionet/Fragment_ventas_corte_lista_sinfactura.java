@@ -87,6 +87,16 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
     private String cli_nombre;
     private String ucf_id;
 
+    private Bundle bundle;
+    private boolean  Proceso_Venta=false;
+    private boolean  Transacciones=false;
+    private boolean Conte_Caja=false;
+    private boolean Comision=false;
+
+    private String code;
+
+    private Button Comisiones;
+
 
     public Fragment_ventas_corte_lista_sinfactura() {
         // Required empty public constructor
@@ -103,6 +113,12 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         btn_factura_ventas = v.findViewById(R.id.btn_factura_ventas);
         btn_factura_ventas.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
 
+        bundle = getArguments();
+        Proceso_Venta=bundle.getBoolean("Proceso_Venta");
+        Transacciones=bundle.getBoolean("Transacciones");
+        Conte_Caja=bundle.getBoolean("Conte_Caja");
+        Comision=bundle.getBoolean("Comision");
+
 
         Fechainicio=(EditText) v.findViewById(R.id.btnfechainicio);
         Fechafin=(EditText) v.findViewById(R.id.btnfechafin);
@@ -114,9 +130,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         btn_factura_ventas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_lista_sinfactura()).commit();
-                onDetach();
+
             }
         });
 
@@ -126,7 +140,14 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_cortecaja()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_pestania_cortecaja fragment2 = new Fragment_pestania_cortecaja();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -136,17 +157,31 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_ventas_corte_caja_listado fragment2 = new Fragment_ventas_corte_caja_listado();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
 
-        Button Comisiones = v.findViewById( R.id.Comisiones);
+        Comisiones = v.findViewById( R.id.Comisiones);
         Comisiones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_comison()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_pestania_comison fragment2 = new Fragment_pestania_comison();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -154,6 +189,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
         cca_id_sucursal = sharedPref.getString("cca_id_sucursal", "");
+        code = sharedPref.getString("sso_code","");
         ListaTickets = new ArrayList<>();
         TicketsFactura =new ArrayList<>();
         FormasPago = new ArrayList<>();
@@ -302,7 +338,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             }
         };
 
-
+        LoadPermisosFunciones();
         loadButtons();
         return v;
     }
@@ -312,7 +348,17 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_Ventas()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                bundle.putString("tic_id", "");
+                bundle.putString("suc_id", "");
+                bundle.putString("apa_id", "");
+                Fragment_Ventas fragment2 = new Fragment_Ventas();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -320,7 +366,14 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ventas_transacciones()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_ventas_transacciones fragment2 = new Fragment_ventas_transacciones();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -426,6 +479,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             request.put("esApp", "1");
             request.put("fecha_inicial",FechaInicio);
             request.put("fecha_final",FechaFin);
+            request.put("code",code);
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -555,6 +609,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("code",code);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -619,6 +674,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("code",code);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -672,6 +728,22 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         );
 
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
+    private void LoadPermisosFunciones()
+    {
+        if(Proceso_Venta==false)
+        {
+            pestania_ventas.setEnabled(false);
+        }
+        if(Transacciones==false)
+        {
+            pestania_reporte.setEnabled(false);
+        }
+        if(Comision==false)
+        {
+            Comisiones.setEnabled(false);
+        }
     }
 
     @Override

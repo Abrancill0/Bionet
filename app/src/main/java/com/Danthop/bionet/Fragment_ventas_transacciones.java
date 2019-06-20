@@ -396,16 +396,10 @@ public class Fragment_ventas_transacciones extends Fragment {
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                if(Transacciones == false)
-                {
-                    SpinnerSucursal.setEnabled(false);
-                }else
-                {
                     progressDialog.show();
                     LoadApartados();
                     LoadOrdenes();
                     LoadMovimientos();
-                }
 
             }
             public void onNothingSelected(AdapterView<?> parent)
@@ -417,14 +411,8 @@ public class Fragment_ventas_transacciones extends Fragment {
         SpinnerFormaPago.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                if(Transacciones == false)
-                {
-                    SpinnerFormaPago.setEnabled(false);
-                }else
-                {
                     progressDialog.show();
                     LoadMovimientos();
-                }
             }
             public void onNothingSelected(AdapterView<?> parent)
             {
@@ -435,14 +423,8 @@ public class Fragment_ventas_transacciones extends Fragment {
         SpinnerUsuarioVenta.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                if(Transacciones == false)
-                {
-                    SpinnerUsuarioVenta.setEnabled(false);
-                }else
-                {
                     progressDialog.show();
                     LoadMovimientos();
-                }
             }
             public void onNothingSelected(AdapterView<?> parent)
             {
@@ -455,6 +437,7 @@ public class Fragment_ventas_transacciones extends Fragment {
         LoadSucursales();
         loadButtons();
         Layouts();
+        LoadPermisosFunciones();
 
 
         return v;
@@ -480,6 +463,9 @@ public class Fragment_ventas_transacciones extends Fragment {
                 bundle.putBoolean("Transacciones", Transacciones);
                 bundle.putBoolean("Comision", Comision);
                 bundle.putBoolean("Conte_Caja", Conte_Caja);
+                bundle.putString("tic_id", "");
+                bundle.putString("suc_id", "");
+                bundle.putString("apa_id", "");
                 Fragment_Ventas fragment2 = new Fragment_Ventas();
                 fragment2.setArguments(bundle);
                 try{
@@ -665,6 +651,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
 
                     toast1.show();
+                    progressDialog.dismiss();
 
 
                 }
@@ -680,6 +667,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
 
 
 
@@ -1930,16 +1918,16 @@ public class Fragment_ventas_transacciones extends Fragment {
 
 
 
-                        Bundle bundle = new Bundle();
-                        bundle.putString("tic_id", TicketIDVenta);
-                        bundle.putString("suc_id", Suc_id);
-                        bundle.putString("apa_id", apa_id);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putString("tic_id", TicketIDVenta);
+                        bundle1.putString("suc_id", Suc_id);
+                        bundle1.putString("apa_id", apa_id);
 
 
                         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
                         Fragment_Ventas secondFragment = new Fragment_Ventas();
-                        secondFragment.setArguments(bundle);
+                        secondFragment.setArguments(bundle1);
 
                         fragmentTransaction.replace(R.id.fragment_container, secondFragment);
                         fragmentTransaction.commit();
@@ -1973,6 +1961,22 @@ public class Fragment_ventas_transacciones extends Fragment {
         postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
+    }
+
+    private void LoadPermisosFunciones()
+    {
+        if(Proceso_Venta==false)
+        {
+            btn_ventas.setEnabled(false);
+        }
+        if(Comision==false)
+        {
+            Comisiones.setEnabled(false);
+        }
+        if(Conte_Caja==false)
+        {
+            btn_corte_caja.setEnabled(false);
+        }
     }
 
     @Override

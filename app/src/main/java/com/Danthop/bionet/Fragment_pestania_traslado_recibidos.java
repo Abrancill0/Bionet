@@ -100,6 +100,8 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
     private String status_nombre;
     private String tipo_traslado = "recibida";
 
+    private String code="";
+
     private TrasladoEnvioRecibidoAdapter TrasladoAdapter;
 
     public Fragment_pestania_traslado_recibidos() {
@@ -178,6 +180,7 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
+        code = sharedPref.getString("sso_code","");
 
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
@@ -246,7 +249,7 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
             e.printStackTrace();
         }
         String url = getString(R.string.Url);
-        String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1";
+        String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1&code="+code;
 
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null, new Response.Listener<JSONObject>() {
             @Override
@@ -592,6 +595,7 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
             jsonBodyrequest.put("tra_id",UUIDarticulostraslados.getText());
             jsonBodyrequest.put("tipo_traslado",tipo_traslado);
             jsonBodyrequest.put("respuesta",tiporeturn);
+            jsonBodyrequest.put("code",code);
 
         }catch (JSONException e){
             e.printStackTrace();

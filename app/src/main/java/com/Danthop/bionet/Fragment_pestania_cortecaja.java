@@ -114,6 +114,18 @@ public class Fragment_pestania_cortecaja extends Fragment {
     private View layaut_fechascortes;
     private String code;
 
+    private Bundle bundle;
+    private boolean  Proceso_Venta=false;
+    private boolean  Transacciones=false;
+    private boolean Conte_Caja=false;
+    private boolean Comision=false;
+
+
+    private Button btn_ventas;
+    private Button btn_reportes;
+    private Button btn_comisiones;
+
+
     public Fragment_pestania_cortecaja() {
         // Required empty public constructor
     }
@@ -122,6 +134,13 @@ public class Fragment_pestania_cortecaja extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ventas_cortecajas, container, false);
         fr = getFragmentManager().beginTransaction();
+
+        bundle = getArguments();
+        Proceso_Venta=bundle.getBoolean("Proceso_Venta");
+        Transacciones=bundle.getBoolean("Transacciones");
+        Conte_Caja=bundle.getBoolean("Conte_Caja");
+        Comision=bundle.getBoolean("Comision");
+
 
         btn_corte = (TextView) v.findViewById(R.id.btn_corte); //opcion 1
         btn_corte.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
@@ -145,22 +164,39 @@ public class Fragment_pestania_cortecaja extends Fragment {
         jsonArray = new JSONArray();
         ArrayPagos = new JSONArray();
 
-        Button btn_ventas = (Button) v.findViewById(R.id.btn_ventas);
+        btn_ventas = (Button) v.findViewById(R.id.btn_ventas);
         btn_ventas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_Ventas()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                bundle.putString("tic_id", "");
+                bundle.putString("suc_id", "");
+                bundle.putString("apa_id", "");
+                Fragment_Ventas fragment2 = new Fragment_Ventas();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
 
-        Button btn_traslados = (Button) v.findViewById(R.id.btn_traslados);
-        btn_traslados.setOnClickListener(new View.OnClickListener() {
+        btn_reportes = (Button) v.findViewById(R.id.btn_reportes);
+        btn_reportes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ventas_transacciones()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_ventas_transacciones fragment2 = new Fragment_ventas_transacciones();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -170,17 +206,31 @@ public class Fragment_pestania_cortecaja extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_lista_sinfactura()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_ventas_corte_lista_sinfactura fragment2 = new Fragment_ventas_corte_lista_sinfactura();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
 
-        Button btn_comisiones = (Button) v.findViewById(R.id.Comisiones);
+        btn_comisiones = (Button) v.findViewById(R.id.Comisiones);
         btn_comisiones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_comison()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_pestania_comison fragment2 = new Fragment_pestania_comison();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -189,7 +239,14 @@ public class Fragment_pestania_cortecaja extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_ventas_corte_caja_listado fragment2 = new Fragment_ventas_corte_caja_listado();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -197,9 +254,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
         btn_corte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_cortecaja()).commit();
-                onDetach();
+
             }
         });
 
@@ -450,6 +505,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
 
         };
 
+        LoadPermisosFunciones();
         return v;
     }
 
@@ -700,6 +756,22 @@ public class Fragment_pestania_cortecaja extends Fragment {
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
+    }
+
+    private void LoadPermisosFunciones()
+    {
+        if(Proceso_Venta==false)
+        {
+            btn_ventas.setEnabled(false);
+        }
+        if(Transacciones==false)
+        {
+            btn_reportes.setEnabled(false);
+        }
+        if(Comision==false)
+        {
+            btn_comisiones.setEnabled(false);
+        }
     }
 
     @Override

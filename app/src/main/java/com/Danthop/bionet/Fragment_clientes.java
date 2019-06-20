@@ -100,6 +100,7 @@ public class Fragment_clientes extends Fragment {
     private Button btn_crear_cliente;
     private Button editarCliente;
     private Button eliminarCliente;
+    private String code="";
 
     public Fragment_clientes() {
         // Required empty public constructor
@@ -132,6 +133,7 @@ public class Fragment_clientes extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
         usu_id = sharedPref.getString("usu_id", "");
+        code = sharedPref.getString("sso_code","");
 
         //Funcion para Obtener Permisos
         try {
@@ -297,6 +299,7 @@ public class Fragment_clientes extends Fragment {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
             request.put("usu_suc", SucursalID.get(SpinnerSucursal.getSelectedItemPosition()));
+            request.put("code",code);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -465,6 +468,7 @@ public class Fragment_clientes extends Fragment {
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
+            request.put("code",code);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -672,6 +676,7 @@ public class Fragment_clientes extends Fragment {
                                     request.put("usu_id", clickedData.getCliente_usu_id());
                                     request.put("cli_id", clickedData.getCliente_UUID());
                                     request.put("esApp", "1");
+                                    request.put("code",code);
 
                                 } catch (Exception e) {
                                     e.printStackTrace();

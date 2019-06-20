@@ -86,6 +86,8 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
     private boolean  Transacciones=false;
     private boolean Conte_Caja=false;
     private boolean Comision=false;
+    private String code;
+
 
 
     public Fragment_ventas_corte_caja_listado() {
@@ -121,6 +123,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
         cca_id_sucursal = sharedPref.getString("cca_id_sucursal", "");
+        code = sharedPref.getString("sso_code","");
         ListaCorte = new ArrayList<>();
 
 
@@ -129,9 +132,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
         btn_listado_corte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_caja_listado()).commit();
-                onDetach();
+
             }
         });
 
@@ -140,7 +141,14 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_ventas_corte_lista_sinfactura()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                bundle.putBoolean("Transacciones", Transacciones);
+                bundle.putBoolean("Comision", Comision);
+                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                Fragment_ventas_corte_lista_sinfactura fragment2 = new Fragment_ventas_corte_lista_sinfactura();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -290,8 +298,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             }
         };
 
-
-
+        LoadPermisosFunciones();
         loadButtons();
         return v;
     }
@@ -306,6 +313,9 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
                 bundle.putBoolean("Transacciones", Transacciones);
                 bundle.putBoolean("Comision", Comision);
                 bundle.putBoolean("Conte_Caja", Conte_Caja);
+                bundle.putString("tic_id", "");
+                bundle.putString("suc_id", "");
+                bundle.putString("apa_id", "");
                 Fragment_Ventas fragment2 = new Fragment_Ventas();
                 fragment2.setArguments(bundle);
                 fr.replace(R.id.fragment_container,fragment2).commit();
@@ -372,6 +382,9 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             btn_buscar.setEnabled(false);
             Fechainicio.setEnabled(false);
             Fechafin.setEnabled(false);
+            btn_corte.setEnabled(false);
+            btn_factura_ventas.setEnabled(false);
+
         }
 
         btn_buscar.setOnClickListener(new View.OnClickListener() {
@@ -404,6 +417,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             request.put("esApp", "1");
             request.put("fecha_inicial",FechaInicio);
             request.put("fecha_final",FechaFin);
+            request.put("code",code);
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -523,6 +537,22 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
                 }
         );
         VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( posRequest );
+    }
+
+    private void LoadPermisosFunciones()
+    {
+        if(Proceso_Venta==false)
+        {
+            pestania_ventas.setEnabled(false);
+        }
+        if(Transacciones==false)
+        {
+            pestania_reporte.setEnabled(false);
+        }
+        if(Comision==false)
+        {
+            Comisiones.setEnabled(false);
+        }
     }
 
     @Override

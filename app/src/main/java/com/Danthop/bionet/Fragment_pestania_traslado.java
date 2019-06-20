@@ -161,6 +161,7 @@ public class Fragment_pestania_traslado extends Fragment {
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
+        code = sharedPref.getString("sso_code","");
 
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
@@ -278,7 +279,7 @@ public  void Traslados_Recibidas(){
         e.printStackTrace();
     }
     String url = getString(R.string.Url);
-    String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1";
+    String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1&code="+code;
 
     JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null, new Response.Listener<JSONObject>() {
         @Override
@@ -383,6 +384,7 @@ public  void Traslados_Recibidas(){
                     tabla_traslados.setDataAdapter(TrasladoAdapter);
                 }
             } catch (JSONException e) {
+                progressDialog.dismiss();
                 Toast toast1 =
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                 toast1.show();
@@ -392,6 +394,7 @@ public  void Traslados_Recibidas(){
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    progressDialog.dismiss();
                     Toast toast1 =
                             Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
                     toast1.show();
@@ -622,6 +625,7 @@ public  void Traslados_Recibidas(){
             jsonBodyrequest.put("tra_id",UUIDarticulostraslados.getText());
             jsonBodyrequest.put("tipo_traslado",tipo_traslado);
             jsonBodyrequest.put("respuesta",tiporeturn);
+            jsonBodyrequest.put("code",code);
 
         }catch (JSONException e){
             e.printStackTrace();

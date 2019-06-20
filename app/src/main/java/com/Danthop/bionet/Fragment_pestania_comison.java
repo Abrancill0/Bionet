@@ -86,6 +86,10 @@ public class Fragment_pestania_comison extends Fragment {
     private boolean Conte_Caja=false;
     private boolean Comision=false;
 
+    private Button Ventas_btn;
+    private Button btn_pestania_reporte;
+    private Button corte_caja;
+
     private String code="";
 
     public Fragment_pestania_comison() {
@@ -107,7 +111,7 @@ public class Fragment_pestania_comison extends Fragment {
         btnactualizar = (Button)v.findViewById(R.id.btn_generarcorte);
         progreso = new ProgressDialog(getContext());
 
-        Button Ventas_btn = (Button) v.findViewById(R.id.btnventas);
+        Ventas_btn = (Button) v.findViewById(R.id.btnventas);
         Ventas_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,6 +121,9 @@ public class Fragment_pestania_comison extends Fragment {
                 bundle.putBoolean("Transacciones", Transacciones);
                 bundle.putBoolean("Comision", Comision);
                 bundle.putBoolean("Conte_Caja", Conte_Caja);
+                bundle.putString("tic_id", "");
+                bundle.putString("suc_id", "");
+                bundle.putString("apa_id", "");
                 Fragment_Ventas fragment2 = new Fragment_Ventas();
                 fragment2.setArguments(bundle);
                 fr.replace(R.id.fragment_container,fragment2).commit();
@@ -124,7 +131,7 @@ public class Fragment_pestania_comison extends Fragment {
             }
         });
 
-        Button btn_pestania_reporte = (Button) v.findViewById(R.id.btntransacciones);
+        btn_pestania_reporte = (Button) v.findViewById(R.id.btntransacciones);
         btn_pestania_reporte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,7 +148,7 @@ public class Fragment_pestania_comison extends Fragment {
             }
         });
 
-        Button corte_caja = (Button) v.findViewById(R.id.btncortecaja);
+        corte_caja = (Button) v.findViewById(R.id.btncortecaja);
         corte_caja.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,7 +158,7 @@ public class Fragment_pestania_comison extends Fragment {
                 bundle.putBoolean("Transacciones", Transacciones);
                 bundle.putBoolean("Comision", Comision);
                 bundle.putBoolean("Conte_Caja", Conte_Caja);
-                Fragment_pestania_cortecaja fragment2 = new Fragment_pestania_cortecaja();
+                Fragment_ventas_corte_caja_listado fragment2 = new Fragment_ventas_corte_caja_listado();
                 fragment2.setArguments(bundle);
                 fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
@@ -162,16 +169,7 @@ public class Fragment_pestania_comison extends Fragment {
         Comisiones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
-                bundle.putBoolean("Transacciones", Transacciones);
-                bundle.putBoolean("Comision", Comision);
-                bundle.putBoolean("Conte_Caja", Conte_Caja);
-                Fragment_pestania_comison fragment2 = new Fragment_pestania_comison();
-                fragment2.setArguments(bundle);
-                fr.replace(R.id.fragment_container,fragment2).commit();
-                onDetach();
+
             }
         });
 
@@ -250,6 +248,8 @@ public class Fragment_pestania_comison extends Fragment {
 
         tabla_comisiones.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
         tabla_comisiones.addDataClickListener(tableListener);
+
+        LoadPermisosFunciones();
 
         return v;
     }
@@ -482,6 +482,21 @@ private void LoadListenerTable(){
         }
     };
 }
+    private void LoadPermisosFunciones()
+    {
+        if(Proceso_Venta==false)
+        {
+            Ventas_btn.setEnabled(false);
+        }
+        if(Transacciones==false)
+        {
+            btn_pestania_reporte.setEnabled(false);
+        }
+        if(Conte_Caja==false)
+        {
+            corte_caja.setEnabled(false);
+        }
+    }
     @Override
     public void onDetach() {
         super.onDetach();

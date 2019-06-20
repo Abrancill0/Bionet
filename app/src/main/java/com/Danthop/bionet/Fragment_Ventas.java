@@ -1431,6 +1431,18 @@ public class Fragment_Ventas extends Fragment {
                                                     public void onClick(View v) {
                                                         loadTicket();
                                                         dialog.hide();
+                                                        Bundle bundle = new Bundle();
+                                                        bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                                                        bundle.putBoolean("Transacciones", Transacciones);
+                                                        bundle.putBoolean("Comision", Comision);
+                                                        bundle.putBoolean("Conte_Caja", Conte_Caja);
+                                                        bundle.putString("tic_id", "");
+                                                        bundle.putString("suc_id", "");
+                                                        bundle.putString("apa_id", "");
+                                                        Fragment_Ventas fragment2 = new Fragment_Ventas();
+                                                        fragment2.setArguments(bundle);
+                                                        fr.replace(R.id.fragment_container,fragment2).commit();
+
                                                     }
                                                 });
 
@@ -1447,17 +1459,17 @@ public class Fragment_Ventas extends Fragment {
                                                         progressDialog.show();
                                                         loadTicket();
                                                         dialog.dismiss();
-                                                        if(ticket_de_venta!=null)
-                                                        {
-                                                            if(ticket_de_venta.getTic_apa_id().equals(""))
-                                                            {
-
-                                                            }else{
-                                                                bundle.putString("tic_id", "");
-                                                                bundle.putString("suc_id", "");
-                                                                bundle.putString("apa_id", "");
-                                                            }
-                                                        }
+                                                        Bundle bundle = new Bundle();
+                                                        bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                                                        bundle.putBoolean("Transacciones", Transacciones);
+                                                        bundle.putBoolean("Comision", Comision);
+                                                        bundle.putBoolean("Conte_Caja", Conte_Caja);
+                                                        bundle.putString("tic_id", "");
+                                                        bundle.putString("suc_id", "");
+                                                        bundle.putString("apa_id", "");
+                                                        Fragment_Ventas fragment2 = new Fragment_Ventas();
+                                                        fragment2.setArguments(bundle);
+                                                        fr.replace(R.id.fragment_container,fragment2).commit();
                                                     }
                                                 });
                                             }
@@ -1670,6 +1682,19 @@ public class Fragment_Ventas extends Fragment {
 
                                                         loadTicket();
                                                         dialog.dismiss();
+                                                        Bundle bundle = new Bundle();
+                                                        bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                                                        bundle.putBoolean("Transacciones", Transacciones);
+                                                        bundle.putBoolean("Comision", Comision);
+                                                        bundle.putBoolean("Conte_Caja", Conte_Caja);
+                                                        bundle.putString("tic_id", "");
+                                                        bundle.putString("suc_id", "");
+                                                        bundle.putString("apa_id", "");
+                                                        Fragment_Ventas fragment2 = new Fragment_Ventas();
+                                                        fragment2.setArguments(bundle);
+                                                        fr.replace(R.id.fragment_container,fragment2).commit();
+
+
 
                                                     }
                                                 });
@@ -1688,17 +1713,18 @@ public class Fragment_Ventas extends Fragment {
                                                         progressDialog.show();
                                                         loadTicket();
                                                         dialog.dismiss();
-                                                        if(ticket_de_venta!=null)
-                                                        {
-                                                            if(ticket_de_venta.getTic_apa_id().equals(""))
-                                                            {
+                                                        Bundle bundle = new Bundle();
+                                                        bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                                                        bundle.putBoolean("Transacciones", Transacciones);
+                                                        bundle.putBoolean("Comision", Comision);
+                                                        bundle.putBoolean("Conte_Caja", Conte_Caja);
+                                                        bundle.putString("tic_id", "");
+                                                        bundle.putString("suc_id", "");
+                                                        bundle.putString("apa_id", "");
+                                                        Fragment_Ventas fragment2 = new Fragment_Ventas();
+                                                        fragment2.setArguments(bundle);
+                                                        fr.replace(R.id.fragment_container,fragment2).commit();
 
-                                                            }else{
-                                                                bundle.putString("tic_id", "");
-                                                                bundle.putString("suc_id", "");
-                                                                bundle.putString("apa_id", "");
-                                                            }
-                                                        }
 
                                                     }
                                                 });
@@ -2819,6 +2845,7 @@ public class Fragment_Ventas extends Fragment {
                                 Toast toast1 =
                                         Toast.makeText(getContext(),
                                                 String.valueOf(e), Toast.LENGTH_LONG);
+                                progressDialog.dismiss();
                             }
                         }
                     },
@@ -2828,6 +2855,7 @@ public class Fragment_Ventas extends Fragment {
                             Toast toast1 =
                                     Toast.makeText(getContext(),
                                             String.valueOf(error), Toast.LENGTH_LONG);
+                            progressDialog.dismiss();
                         }
                     }
             );
@@ -3347,7 +3375,7 @@ public class Fragment_Ventas extends Fragment {
         btn_finalizar.setVisibility(View.INVISIBLE);
 
         bundle = getArguments();
-        if(bundle!=null)
+        if(bundle!=null&&!bundle.getString("tic_id").equals("")&&!bundle.getString("suc_id").equals("")&&!bundle.getString("apa_id").equals(""))
         {
             ticket_de_venta.setTic_id(bundle.getString( "tic_id"));
             ticket_de_venta.setTic_id_sucursal(bundle.getString( "suc_id"));
@@ -4684,6 +4712,18 @@ public class Fragment_Ventas extends Fragment {
             btn_agregar_articulo.setEnabled(false);
             btn_agregar_cliente.setEnabled(false);
             btn_agregar_vendedor.setEnabled(false);
+        }
+        if(Transacciones==false)
+        {
+            btn_reporte.setEnabled(false);
+        }
+        if(Conte_Caja==false)
+        {
+            Corte_Caja.setEnabled(false);
+        }
+        if(Comision==false)
+        {
+            Comisiones.setEnabled(false);
         }
     }
 
