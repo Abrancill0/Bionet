@@ -1230,18 +1230,8 @@ public class Fragment_Ventas extends Fragment {
 
                     for(int x=0; x<ArticulosVenta.size();x++)
                     {
-                       String Sku = ArticulosVenta.get(x).getArticulo_sku();
-
-                        promociones_credito(Sku,SucursalID);
+                        promociones_credito(ArticulosVenta.get(x),SucursalID);
                     }
-
-                    System.out.println
-                            ("Tres meses: "+Resptresmeses+
-                             "\nSeis Meses: "+Respseismeses+
-                             "\nNueve Meses: "+Respnuevemeses+
-                             "\nDoce Meses: "+Respdocemeses);
-
-
 
 
                     dialog.setContentView(R.layout.pop_up_ventas_facturar);
@@ -1258,6 +1248,7 @@ public class Fragment_Ventas extends Fragment {
                         @Override
                         public void onClick(View v) {
 
+                            VerificarPromocionCreditoMenor();
                             //validar si existe cliente
                             String cliente = "";
 
@@ -1488,6 +1479,7 @@ public class Fragment_Ventas extends Fragment {
                     no_facturar.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            VerificarPromocionCreditoMenor();
                             ticket_de_venta.setTic_facturar("false");
                             dialog.dismiss();
                             facturar(ticket_de_venta.getTic_facturar());
@@ -3512,7 +3504,7 @@ public class Fragment_Ventas extends Fragment {
 
 //------------------------------------------
 
-    public void promociones_credito(String Sku,String SucursalID){
+    public void promociones_credito(ArticuloModel articulo,String SucursalID){
 
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/articulos/promociones/consultar_promociones_articulo_sku_app";
@@ -3521,7 +3513,7 @@ public class Fragment_Ventas extends Fragment {
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
-            request.put("sku", Sku);
+            request.put("sku", articulo.getArticulo_sku());
             request.put("suc_id", SucursalID);
             request.put("code", code);
 
@@ -3570,59 +3562,64 @@ public class Fragment_Ventas extends Fragment {
 
                                     Credito = Promociones.getJSONObject("credito");
 
-                                        for(int i=0;i<Credito.length();i++) {
+                                    Iterator d = Credito.keys();
 
-                                            JSONObject ResultadoCredito = Credito.getJSONObject( String.valueOf( i + 1) );
+                                            while (d.hasNext()) {
 
-                                            NomPromoCredito = ResultadoCredito.getString( "pro_nombre" );
+                                                String keyCredito = (String) d.next();
+                                                JSONObject ResultadoCredito = Credito.getJSONObject(keyCredito);
+                                                //for(int i=0;i<Credito.length();i++) {
 
-                                            Boolean tresmeses = ResultadoCredito.getBoolean( "apr_tres_meses" );
-                                            if (tresmeses == true) {
-                                                if (Resptresmeses !=2)
-                                                {
-                                                    Resptresmeses = 1;
+                                                //JSONObject ResultadoCredito = Credito.getJSONObject( String.valueOf( i + 1) );
+
+                                                NomPromoCredito = ResultadoCredito.getString("pro_nombre");
+
+                                                Boolean tresmeses = ResultadoCredito.getBoolean("apr_tres_meses");
+                                                if (tresmeses == true) {
+                                                    articulo.setCreditoTresMeses(true);
+                                                }
+                                                else{
+                                                    if(!articulo.getCreditoTresMeses()==true)
+                                                    {
+                                                        articulo.setCreditoTresMeses(false);
+                                                    }
                                                 }
 
-                                            }else {
-                                                Resptresmeses = 2;
-                                            }
+                                                Boolean seismeses = ResultadoCredito.getBoolean("apr_seis_meses");
+                                                if (seismeses == true) {
 
-                                            Boolean seismeses = ResultadoCredito.getBoolean( "apr_seis_meses" );
-                                            if (seismeses == true) {
-
-                                                if (Respseismeses !=2)
-                                                {
-                                                    Respseismeses = 1;
+                                                    articulo.setCreditoSeisMeses(true);
                                                 }
-                                            }else {
-                                                Respseismeses = 2;
-                                            }
-
-                                            Boolean nuevemeses = ResultadoCredito.getBoolean( "apr_nueve_meses" );
-                                            if ( nuevemeses == true){
-                                                if (Respnuevemeses !=2)
-                                                {
-                                                    Respnuevemeses = 1;
-                                                }
-                                            }else {
-                                                Respnuevemeses = 2;
-                                            }
-
-                                            Boolean docemeses = ResultadoCredito.getBoolean( "apr_doce_meses" );
-                                            if (docemeses == true){
-
-                                                if (Respdocemeses !=2)
-                                                {
-                                                    Respdocemeses = 1;
+                                                else{
+                                                    if(!articulo.getCreditoSeisMeses()==true)
+                                                    {
+                                                        articulo.setCreditoSeisMeses(false);
+                                                    }
                                                 }
 
-                                            }else {
-                                                Respdocemeses = 2;
+                                                Boolean nuevemeses = ResultadoCredito.getBoolean("apr_nueve_meses");
+                                                if (nuevemeses == true) {
+
+                                                    articulo.setCreditoNueveMeses(true);
+                                                }else{
+                                                    if(!articulo.getCreditoNueveMeses()==true)
+                                                    {
+                                                        articulo.setCreditoNueveMeses(false);
+                                                    }
+                                                }
+
+                                                Boolean docemeses = ResultadoCredito.getBoolean("apr_doce_meses");
+                                                if (docemeses == true) {
+
+                                                    articulo.setCreditoDoceMeses(true);
+                                                }else{
+                                                    if(!articulo.getCreditoDoceMeses()==true)
+                                                    {
+                                                        articulo.setCreditoDoceMeses(false);
+                                                    }
+                                                }
+
                                             }
-
-
-                                        }
-
                             }
                             }
                         }
@@ -3649,6 +3646,143 @@ public class Fragment_Ventas extends Fragment {
         posRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley( getContext() ).addToRequestQueue( posRequest );
     }
+
+    private void VerificarPromocionCreditoMenor()
+    {
+
+        if(ArticulosVenta.size()==1)
+        {
+            if(ArticulosVenta.get(0).getCreditoTresMeses()==true)
+            {
+                Resptresmeses=1;
+            }else{
+                Resptresmeses=2;
+            }
+            if(ArticulosVenta.get(0).getCreditoSeisMeses()==true)
+            {
+                Respseismeses=1;
+            }else{
+                Respseismeses=2;
+            }
+            if(ArticulosVenta.get(0).getCreditoNueveMeses()==true)
+            {
+                Respnuevemeses=1;
+            }else{
+                Respnuevemeses=2;
+            }
+            if(ArticulosVenta.get(0).getCreditoDoceMeses()==true)
+            {
+                Respdocemeses=1;
+            }else{
+                Respdocemeses=2;
+            }
+        }
+        else
+        {
+            Boolean doce = true;
+            Boolean nueve = true;
+            Boolean seis = true;
+            Boolean tres = true;
+            for(int x=0; x<ArticulosVenta.size();x++)
+            {
+                //-----------------------------------------------------**********
+                //-----------------------------------------------------TRES MESES
+                if(tres==ArticulosVenta.get(x).getCreditoTresMeses())
+                {
+                    if(tres==true && ArticulosVenta.get(x).getCreditoTresMeses()==true)
+                    {
+                        tres=true;
+                        Resptresmeses=1;
+                    }
+                    if(tres==false && ArticulosVenta.get(x).getCreditoTresMeses()==false)
+                    {
+                        tres=false;
+                        Resptresmeses=2;
+                    }
+                }
+                else
+                {
+                    if(tres==true && ArticulosVenta.get(x).getCreditoTresMeses()==false)
+                    {
+                        tres=false;
+                        Resptresmeses=2;
+                    }
+                }
+                //-----------------------------------------------------**********
+                //-----------------------------------------------------SEIS MESES
+                if(seis==ArticulosVenta.get(x).getCreditoSeisMeses())
+                {
+                    if(seis==true && ArticulosVenta.get(x).getCreditoSeisMeses()==true)
+                    {
+                        seis=true;
+                        Respseismeses=1;
+                    }
+                    if(seis==false && ArticulosVenta.get(x).getCreditoSeisMeses()==false)
+                    {
+                        seis=false;
+                        Respseismeses=2;
+                    }
+                }
+                else
+                {
+                    if(seis==true && ArticulosVenta.get(x).getCreditoSeisMeses()==false)
+                    {
+                        seis=false;
+                        Respseismeses=2;
+                    }
+                }
+                //-----------------------------------------------------***********
+                //-----------------------------------------------------NUEVE MESES
+                if(nueve==ArticulosVenta.get(x).getCreditoNueveMeses())
+                {
+                    if(nueve==true && ArticulosVenta.get(x).getCreditoNueveMeses()==true)
+                    {
+                        nueve=true;
+                        Respnuevemeses=1;
+                    }
+                    if(nueve==false && ArticulosVenta.get(x).getCreditoNueveMeses()==false)
+                    {
+                        nueve=false;
+                        Respnuevemeses=2;
+                    }
+                }
+                else
+                {
+                    if(nueve==true && ArticulosVenta.get(x).getCreditoNueveMeses()==false)
+                    {
+                        nueve=false;
+                        Respnuevemeses=2;
+                    }
+                }
+                //-----------------------------------------------------**********
+                //-----------------------------------------------------DOCE MESES
+                if(doce==ArticulosVenta.get(x).getCreditoDoceMeses())
+                {
+                    if(doce==true && ArticulosVenta.get(x).getCreditoDoceMeses()==true)
+                    {
+                        doce=true;
+                        Respdocemeses=1;
+                    }
+                    if(doce==false && ArticulosVenta.get(x).getCreditoDoceMeses()==false)
+                    {
+                        doce=false;
+                        Respdocemeses=2;
+                    }
+                }
+                else
+                {
+                    if(doce==true && ArticulosVenta.get(x).getCreditoDoceMeses()==false)
+                    {
+                        doce=false;
+                        Respdocemeses=2;
+                    }
+                }
+                //-----------------------------------------------------
+            }
+        }
+    }
+
+
     //______________________________________________
 
     private void loadTicket()
