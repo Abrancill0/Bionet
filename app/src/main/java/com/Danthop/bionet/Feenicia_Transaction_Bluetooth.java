@@ -85,6 +85,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
     private Handler ui;
     private String usu_id;
     private List<PagoModel> ListaDePagos_a_utilizar;
+    private List<String> entriesList;
     private TicketModel ticket_de_venta;
 
     private static SaleUtils utils;
@@ -190,7 +191,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
         String[] entries = getResources().getStringArray(R.array.sale_array);
 
         //entriesList = new ArrayList<String>(Arrays.asList(entries));
-        entriesList = new ArrayList<String>();
 
         for (int i = 0; i < entries.length; i++) {
 

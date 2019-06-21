@@ -3557,7 +3557,7 @@ public class Fragment_Ventas extends Fragment {
                             int Respcredito = key.compareTo("credito");
                             if (Respcredito == 0){
                                 Resp = value.compareTo("[]");
-                                if (Resp == 0){
+                                if (Resp == Integer.parseInt("0")){
 
                                     Toast toast1 = Toast.makeText(getContext(), "No existen promociones", Toast.LENGTH_LONG);
                                     toast1.show();
