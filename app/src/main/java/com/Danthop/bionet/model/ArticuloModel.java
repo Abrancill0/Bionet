@@ -19,6 +19,11 @@ public class ArticuloModel {
     private String articulo_exi_id;
     private String getArticulo_UM;
 
+    private Boolean CreditoTresMeses;
+    private Boolean CreditoSeisMeses;
+    private Boolean CreditoNueveMeses;
+    private Boolean CreditoDoceMeses;
+
 
     public ArticuloModel(String articulo_UUID,String articulo_Nombre,String articulo_Descripcion ,String articulo_Precio,String articulo_Imagen1,
                          String articulo_Imagen2, String articulo_SKU, String articulo_Categoria,String articulo_Cantidad,String articulo_TarID,
@@ -41,6 +46,10 @@ public class ArticuloModel {
         this.articulo_sucursal = articulo_sucursal;
         this.articulo_sucursal_uuid = articulo_sucursal_uuid;
         this.articulo_exi_id = articulo_exi_id;
+        CreditoTresMeses=false;
+        CreditoSeisMeses=false;
+        CreditoNueveMeses=false;
+        CreditoDoceMeses=false;
     }
 
     public String getarticulo_UUID() {
@@ -151,5 +160,37 @@ public class ArticuloModel {
 
     public void setGetArticulo_UM(String getArticulo_UM) {
         this.getArticulo_UM = getArticulo_UM;
+    }
+
+    public Boolean getCreditoTresMeses() {
+        return CreditoTresMeses;
+    }
+
+    public void setCreditoTresMeses(Boolean creditoTresMeses) {
+        CreditoTresMeses = creditoTresMeses;
+    }
+
+    public Boolean getCreditoSeisMeses() {
+        return CreditoSeisMeses;
+    }
+
+    public void setCreditoSeisMeses(Boolean creditoSeisMeses) {
+        CreditoSeisMeses = creditoSeisMeses;
+    }
+
+    public Boolean getCreditoNueveMeses() {
+        return CreditoNueveMeses;
+    }
+
+    public void setCreditoNueveMeses(Boolean creditoNueveMeses) {
+        CreditoNueveMeses = creditoNueveMeses;
+    }
+
+    public Boolean getCreditoDoceMeses() {
+        return CreditoDoceMeses;
+    }
+
+    public void setCreditoDoceMeses(Boolean creditoDoceMeses) {
+        CreditoDoceMeses = creditoDoceMeses;
     }
 }
