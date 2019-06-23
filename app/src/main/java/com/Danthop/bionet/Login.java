@@ -95,8 +95,8 @@ public class Login extends Activity {
 
         Resultado = new LoginModel();
 
-        setContentView(R.layout.login);
-        findViewById(R.id.loginlayout).setOnTouchListener(new View.OnTouchListener() {
+        setContentView(R.layout.login_nuevo);
+        findViewById(R.id.loginlayoutnuevo).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -105,8 +105,6 @@ public class Login extends Activity {
             }
         });
 
-        TextUsuario = (EditText) findViewById(R.id.TextUsuario);
-        TextPassword = (EditText) findViewById(R.id.TextPassword);
         IDSucursales = new ArrayList<>();
 
         //-------------;)----------------------

@@ -368,7 +368,9 @@ public class SplashScreen extends AppCompatActivity {
                     progreso2.dismiss();
                     TelephonyManager telephonyManager;
                     telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                    ID_dispositivo = telephonyManager.getDeviceId();
+                    ID_dispositivo = Settings.Secure.getString(getContentResolver(),
+                            Settings.Secure.ANDROID_ID);
+                    System.out.println(ID_dispositivo);
                     VerificarIMEI();
 
                 } catch (Exception e) {
