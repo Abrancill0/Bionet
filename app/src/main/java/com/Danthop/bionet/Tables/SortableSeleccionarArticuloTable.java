@@ -26,16 +26,17 @@ public class SortableSeleccionarArticuloTable extends SortableTableView<Articulo
     public SortableSeleccionarArticuloTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Artículo", "SKU","Descripción","Categoría");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "SKU", "Nombre","Código de Barras","Precio de Lista", "Existencia");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
-        simpleHeader.setTextSize( 18 );
+        simpleHeader.setTextSize( 14 );
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
         tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 2);
-        tableColumnWeightModel.setColumnWeight(2, 3);
+        tableColumnWeightModel.setColumnWeight(2, 2);
         tableColumnWeightModel.setColumnWeight(3, 2);
+        tableColumnWeightModel.setColumnWeight(4, 2);
         setColumnModel(tableColumnWeightModel);
 
         setColumnComparator(0, ComparatorArticulo.getArticuloComparator());

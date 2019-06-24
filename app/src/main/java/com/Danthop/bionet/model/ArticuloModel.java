@@ -24,6 +24,9 @@ public class ArticuloModel {
     private Boolean CreditoNueveMeses;
     private Boolean CreditoDoceMeses;
 
+    private String codigo_barras;
+    private String num_existencia;
+
 
     public ArticuloModel(String articulo_UUID,String articulo_Nombre,String articulo_Descripcion ,String articulo_Precio,String articulo_Imagen1,
                          String articulo_Imagen2, String articulo_SKU, String articulo_Categoria,String articulo_Cantidad,String articulo_TarID,
@@ -192,5 +195,21 @@ public class ArticuloModel {
 
     public void setCreditoDoceMeses(Boolean creditoDoceMeses) {
         CreditoDoceMeses = creditoDoceMeses;
+    }
+
+    public String getCodigo_barras() {
+        return codigo_barras;
+    }
+
+    public void setCodigo_barras(String codigo_barras) {
+        this.codigo_barras = codigo_barras;
+    }
+
+    public String getNum_existencia() {
+        return num_existencia;
+    }
+
+    public void setNum_existencia(String num_existencia) {
+        this.num_existencia = num_existencia;
     }
 }

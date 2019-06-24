@@ -120,6 +120,12 @@ public class Fragment_pop_up_traslados extends DialogFragment {
 
     private DatePickerDialog.OnDateSetListener mDataSetlistener;
 
+    private Bundle bundle;
+    private boolean Historicos=false;
+    private boolean Inventarios =false;
+    private boolean Listado_inventarios  =false;
+    private boolean Traslado =false;
+
     public Fragment_pop_up_traslados() {
         // Required empty public constructor
     }
@@ -127,6 +133,18 @@ public class Fragment_pop_up_traslados extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) { View v = inflater.inflate(R.layout.fragment_traslado_completo, container, false);
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+
+        try{
+            bundle = getArguments();
+            Historicos=bundle.getBoolean("Historicos");
+            Inventarios=bundle.getBoolean("Inventarios");
+            Listado_inventarios=bundle.getBoolean("Listado_inventarios");
+            Traslado=bundle.getBoolean("Traslado");
+        }catch(NullPointerException s)
+        {
+
+        }
+
         usu_id = sharedPref.getString("usu_id","");
         dialog=new Dialog(getContext());
         progreso = new ProgressDialog( getContext() );
@@ -154,7 +172,14 @@ public class Fragment_pop_up_traslados extends DialogFragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_traslado()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Historicos", Historicos);
+                bundle.putBoolean("Inventarios", Inventarios);
+                bundle.putBoolean("Listado_inventarios", Listado_inventarios);
+                bundle.putBoolean("Traslado", Traslado);
+                Fragment_pestania_traslado fragment2 = new Fragment_pestania_traslado();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });

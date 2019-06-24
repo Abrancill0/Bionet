@@ -109,6 +109,17 @@ public class Fragment_pestania_traslado extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pestania_traslados,container, false);
 
+        try{
+            bundle = getArguments();
+            Historicos=bundle.getBoolean("Historicos");
+            Inventarios=bundle.getBoolean("Inventarios");
+            Listado_inventarios=bundle.getBoolean("Listado_inventarios");
+            Traslado=bundle.getBoolean("Traslado");
+        }catch(NullPointerException s)
+        {
+
+        }
+
         BuscarTraslado=v.findViewById(R.id.buscar_traslados);
        Button btn_traslados = (Button) v.findViewById(R.id.btn_inventarios);
         btn_traslados.setOnClickListener(new View.OnClickListener() {
@@ -258,16 +269,10 @@ public class Fragment_pestania_traslado extends Fragment {
 
         if(Traslado==false)
         {
-            BuscarTraslado.setEnabled(false);
-            btnInventariExistencias.setEnabled(false);
-            SolicitudesEnviadas.setEnabled(false);
-            SolicitudesRecibidas.setEnabled(false);
             trasladar.setEnabled(false);
         }
-        else{
-            Traslados_Recibidas();
-        }
 
+        Traslados_Recibidas();
         return v;
     }
 

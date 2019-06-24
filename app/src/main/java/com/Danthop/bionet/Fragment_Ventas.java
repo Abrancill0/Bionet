@@ -615,7 +615,6 @@ public class Fragment_Ventas extends Fragment {
         try{
             InstanciarTicket();
             LoadSucursales();
-            LoadAutocomplete();
             LoadButtons();
         }catch (NullPointerException e)
         {
@@ -631,6 +630,7 @@ public class Fragment_Ventas extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 InstanciarTicket();
+                LoadAutocomplete();
 
             }
             public void onNothingSelected(AdapterView<?> parent)
@@ -738,14 +738,14 @@ public class Fragment_Ventas extends Fragment {
 
             String url = getString(R.string.Url);
 
-            String ApiPath = url + "/api/inventario/obtener_existencias_articulos_app?usu_id=" + usu_id + "&esApp=1&code="+code;
+            String ApiPath = url + "/api/ventas/tickets/select-articulos?usu_id=" + usu_id + "&esApp=1&code="+code+"&tic_id_sucursal="+SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
 
             // prepare the Request
-            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            JSONObject RespuestaResultado = null;
+                            JSONArray RespuestaResultado = null;
                             JSONArray RespuestaImagenes = null;
                             JSONObject RespuestaUUID = null;
                             JSONObject RespuestaPrecio = null;
@@ -761,42 +761,11 @@ public class Fragment_Ventas extends Fragment {
 
                                 if (EstatusApi == 1) {
 
-                                    RespuestaResultado = response.getJSONObject("resultado");
-                                    JSONArray NodoArticulos = RespuestaResultado.getJSONArray("aArticulos");
-
-                                    for (int x = 0; x < NodoArticulos.length(); x++) {
-                                        JSONObject elemento = NodoArticulos.getJSONObject(x);
-
-                                        RespuestaUUID = elemento.getJSONObject("art_id");
-                                        String UUID = RespuestaUUID.getString("uuid");
-
-                                        RespuestaPrecio = elemento.getJSONObject("ava_precio");
-                                        String Precio = RespuestaPrecio.getString("value");
-                                        //VERIFICAR MODIFICADORES
-                                        String NombreCompleto = "";
-                                        String NombreArticulo = elemento.getString("art_nombre");
-                                        String NombreVariante = elemento.getString("ava_nombre");
-                                        String Descripcion = elemento.getString("art_descripcion");
-                                        String Categoria = elemento.getString("cat_nombre");
-                                        String SKU = elemento.getString("ava_sku");
-
-                                        String NombreModificador = "";
-                                        String Modificadores = elemento.getString("ava_tiene_modificadores");
-
-                                        String Sucursal = elemento.getString("suc_nombre");
-                                        if (Sucursal.equals(SpinnerSucursal.getSelectedItem())) {
-                                            if (Modificadores == "true") {
-                                                NombreModificador = elemento.getString("mod_nombre");
-
-                                                NombreCompleto = NombreArticulo + "/" + NombreVariante + "/" + NombreModificador;
-
-
-                                                ArticulosName.add(NombreCompleto);
-                                            } else {
-                                                NombreCompleto = NombreArticulo + "/" + NombreVariante;
-                                                ArticulosName.add(NombreCompleto);
-                                            }
-                                        }
+                                    RespuestaResultado = response.getJSONArray("resultado");
+                                    for (int x = 0; x < RespuestaResultado.length(); x++) {
+                                        JSONObject elemento = RespuestaResultado.getJSONObject(x);
+                                        String NombreCompleto = elemento.getString("art_nombre");
+                                        ArticulosName.add(NombreCompleto);
 
                                     }
                                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.articulo_autocomplete_list, R.id.text_view_list_item, ArticulosName);
@@ -820,9 +789,9 @@ public class Fragment_Ventas extends Fragment {
                         }
                     }
             );
-            getRequest.setShouldCache(false);
+            postRequest.setShouldCache(false);
 
-            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
         } catch (Error e) {
             e.printStackTrace();
         }
@@ -1175,7 +1144,13 @@ public class Fragment_Ventas extends Fragment {
                         dialog.hide();
                     }
                 });
-                CargaArticulos();
+                try{
+                    CargaArticulos();
+                }catch (ArrayIndexOutOfBoundsException e)
+                {
+
+                }
+
 
                 TableDataClickListener<ArticuloModel> tablaListener = new TableDataClickListener<ArticuloModel>() {
                     @Override
@@ -2733,17 +2708,16 @@ public class Fragment_Ventas extends Fragment {
         progressDialog.show();
 
         try {
-
             String url = getString(R.string.Url);
 
-            String ApiPath = url + "/api/inventario/obtener_existencias_articulos_app?usu_id=" + usu_id + "&esApp=1&code="+code;
+            String ApiPath = url + "/api/ventas/tickets/select-articulos?usu_id=" + usu_id + "&esApp=1&code="+code+"&tic_id_sucursal="+SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
 
             // prepare the Request
-            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            JSONObject RespuestaResultado = null;
+                            JSONArray RespuestaResultado = null;
                             JSONArray RespuestaImagenes = null;
                             JSONObject RespuestaUUID = null;
                             JSONObject RespuestaPrecio = null;
@@ -2759,69 +2733,36 @@ public class Fragment_Ventas extends Fragment {
 
                                 if (EstatusApi == 1) {
 
-                                    RespuestaResultado = response.getJSONObject("resultado");
-                                    JSONArray NodoArticulos = RespuestaResultado.getJSONArray("aArticulos");
+                                    RespuestaResultado = response.getJSONArray("resultado");
+                                    for (int x = 0; x < RespuestaResultado.length(); x++) {
+                                        JSONObject elemento = RespuestaResultado.getJSONObject(x);
 
-                                    for (int x = 0; x < NodoArticulos.length(); x++) {
-                                        JSONObject elemento = NodoArticulos.getJSONObject(x);
-
-                                        RespuestaUUID = elemento.getJSONObject("art_id");
-                                        String UUID = RespuestaUUID.getString("uuid");
-
-                                        RespuestaPrecio = elemento.getJSONObject("ava_precio");
-                                        String Precio = RespuestaPrecio.getString("value");
-                                        //VERIFICAR MODIFICADORES
-                                        String NombreCompleto = "";
+                                        String UUID = elemento.getString("art_id");
+                                        String Precio = elemento.getString("art_precio_lista");
                                         String NombreArticulo = elemento.getString("art_nombre");
-                                        String NombreVariante = elemento.getString("ava_nombre");
-                                        String Descripcion = elemento.getString("art_descripcion");
-                                        String Categoria = elemento.getString("cat_nombre");
-                                        String SKU = elemento.getString("ava_sku");
+                                        String SKU = elemento.getString("art_sku");
+                                        String CodigoBarras = elemento.getString("art_codigo_barras");
+                                        String num_existencia = elemento.getString("art_existencia");
 
-                                        String NombreModificador = "";
-                                        String Modificadores = elemento.getString("ava_tiene_modificadores");
+                                        String NombreModificador = elemento.getString("art_nombre_modificador");
 
-                                        RespuestaImagenes = elemento.getJSONArray("imagenes");
+                                        RespuestaImagenes = elemento.getJSONArray("art_imagenes");
 
                                         for (int z = 0; z < RespuestaImagenes.length(); z++) {
 
-                                            JSONObject elemento3 = RespuestaImagenes.getJSONObject(z);
-
                                             if (RutaImagen1.equals("")) {
-                                                RutaImagen1 = elemento3.getString("aim_url");
+                                                RutaImagen1 = RespuestaImagenes.getString(z);
                                             } else {
-                                                RutaImagen2 = elemento3.getString("aim_url");
+                                                RutaImagen2 = RespuestaImagenes.getString(z);
                                             }
 
                                         }
-
-                                        String Sucursal = elemento.getString("suc_nombre");
-                                        if (Sucursal.equals(SpinnerSucursal.getSelectedItem())) {
-                                            if (Modificadores == "true") {
-                                                NombreModificador = elemento.getString("mod_nombre");
-
-                                                Precio = elemento.getString("amo_precio_lista");
-
-                                                System.out.println(NombreVariante);
-                                                NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
-
-                                                SKU = elemento.getString("amo_sku");
-
-                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion, Precio,RutaImagen1,
-                                                        RutaImagen2,SKU,Categoria,"","","","",
+                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreArticulo," ",Precio,RutaImagen1,
+                                                        RutaImagen2,SKU,"","","","","",
                                                         "","","","");
+                                                Articulo.setCodigo_barras(CodigoBarras);
+                                                Articulo.setNum_existencia(num_existencia);
                                                 Articulos.add(Articulo);
-                                            } else {
-                                                NombreCompleto = NombreArticulo + " " + NombreVariante + " " + NombreModificador;
-
-
-                                                final ArticuloModel Articulo = new ArticuloModel(UUID,NombreCompleto,Descripcion,Precio,RutaImagen1,
-                                                        RutaImagen2,SKU,Categoria,"","","","",
-                                                        "","","","");
-                                                Articulos.add(Articulo);
-                                            }
-                                        }
-
                                     }
                                     final SeleccionarArticuloVentaAdapter ArticuloAdapter = new SeleccionarArticuloVentaAdapter(getContext(), Articulos, tabla_selecciona_articulo);
                                     tabla_selecciona_articulo.setDataAdapter(ArticuloAdapter);
@@ -2837,7 +2778,6 @@ public class Fragment_Ventas extends Fragment {
                                 Toast toast1 =
                                         Toast.makeText(getContext(),
                                                 String.valueOf(e), Toast.LENGTH_LONG);
-                                progressDialog.dismiss();
                             }
                         }
                     },
@@ -2847,13 +2787,12 @@ public class Fragment_Ventas extends Fragment {
                             Toast toast1 =
                                     Toast.makeText(getContext(),
                                             String.valueOf(error), Toast.LENGTH_LONG);
-                            progressDialog.dismiss();
                         }
                     }
             );
-            getRequest.setShouldCache(false);
+            postRequest.setShouldCache(false);
 
-            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
         } catch (Error e) {
             e.printStackTrace();
         }
@@ -4305,7 +4244,6 @@ public class Fragment_Ventas extends Fragment {
         fos.close();
     }
 
-    //Este metodo se debe de llevar al fracgment de ventas
     private void SendDataString(String data) {
         if (data.length() > 0) {
             usbCtrl.sendMsg(data, "GBK", dev);
@@ -4313,7 +4251,6 @@ public class Fragment_Ventas extends Fragment {
 
     }
 
-    //Este metodo se debe de llevar al fracgment de ventas
     private void SendDataByte(byte[] data){
         if(data.length>0)
             usbCtrl.sendByte(data, dev);

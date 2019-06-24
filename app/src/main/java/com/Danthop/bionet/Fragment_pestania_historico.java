@@ -126,7 +126,7 @@ public class Fragment_pestania_historico extends Fragment {
                 bundle.putBoolean("Inventarios", Inventarios);
                 bundle.putBoolean("Listado_inventarios", Listado_inventarios);
                 bundle.putBoolean("Traslado", Traslado);
-                Fragment_pestania_historico fragment2 = new Fragment_pestania_historico();
+                Fragment_pestania_traslado fragment2 = new Fragment_pestania_traslado();
                 fragment2.setArguments(bundle);
                 fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();

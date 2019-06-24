@@ -35,16 +35,19 @@ public class SeleccionarArticuloVentaAdapter extends LongPressAwareTableDataAdap
 
         switch (columnIndex) {
             case 0:
-                renderedView = renderNombre(Articulo);
-                break;
-            case 1:
                 renderedView = renderSKU(Articulo);
                 break;
+            case 1:
+                renderedView = renderNombre(Articulo);
+                break;
             case 2:
-                renderedView = renderDescripcion(Articulo);
+                renderedView = renderCodigoBarras(Articulo);
                 break;
             case 3:
-                renderedView = renderCategoria(Articulo);
+                renderedView = renderPrecioLista(Articulo);
+                break;
+            case 4:
+                renderedView = renderExistencia(Articulo);
                 break;
 
         }
@@ -73,14 +76,17 @@ public class SeleccionarArticuloVentaAdapter extends LongPressAwareTableDataAdap
         return renderString(articulo.getArticulo_sku());
 
     }
-    private View renderDescripcion(final ArticuloModel articulo) {
-        return renderString(articulo.getarticulo_Descripcion());
+    private View renderCodigoBarras(final ArticuloModel articulo) {
+        return renderString(articulo.getCodigo_barras());
 
     }
 
-    private View renderCategoria(final ArticuloModel articulo) {
-        return renderString(articulo.getArticulo_categoria());
+    private View renderPrecioLista(final ArticuloModel articulo) {
+        return renderString(articulo.getarticulo_Precio());
+    }
 
+    private View renderExistencia(final ArticuloModel articulo) {
+        return renderString(articulo.getNum_existencia());
     }
 
     private View renderString(final String value) {

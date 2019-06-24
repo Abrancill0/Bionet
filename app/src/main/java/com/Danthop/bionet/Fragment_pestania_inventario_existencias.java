@@ -61,6 +61,12 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
     private String ava_aplica_apartados;
     private String ava_aplica_cambio_devolucion;
 
+    private Bundle bundle;
+    private boolean Historicos=false;
+    private boolean Inventarios =false;
+    private boolean Listado_inventarios  =false;
+    private boolean Traslado =false;
+
     private InventarioExistenciasAdapter ExistenciasAdapter;
     private SearchView Buscar;
     private String code;
@@ -73,12 +79,26 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pestania_inventario_existencias,container, false);
 
-        Button btn_traslados = (Button) v.findViewById(R.id.btn_inventarios);
-        btn_traslados.setOnClickListener(new View.OnClickListener() {
+
+        bundle = getArguments();
+        Historicos=bundle.getBoolean("Historicos");
+        Inventarios=bundle.getBoolean("Inventarios");
+        Listado_inventarios=bundle.getBoolean("Listado_inventarios");
+        Traslado=bundle.getBoolean("Traslado");
+
+        Button btn_inventarios = (Button) v.findViewById(R.id.fragment_inventarios);
+        btn_inventarios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_inventarios()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Historicos", Historicos);
+                bundle.putBoolean("Inventarios", Inventarios);
+                bundle.putBoolean("Listado_inventarios", Listado_inventarios);
+                bundle.putBoolean("Traslado", Traslado);
+                Fragment_inventarios fragment2 = new Fragment_inventarios();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
@@ -88,17 +108,31 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_historico()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Historicos", Historicos);
+                bundle.putBoolean("Inventarios", Inventarios);
+                bundle.putBoolean("Listado_inventarios", Listado_inventarios);
+                bundle.putBoolean("Traslado", Traslado);
+                Fragment_pestania_historico fragment2 = new Fragment_pestania_historico();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
 
-        Button trasladar = (Button) v.findViewById(R.id.btn_tras);
-        trasladar.setOnClickListener(new View.OnClickListener() {
+        Button btnTraslado = (Button) v.findViewById(R.id.button3);
+        btnTraslado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_pestania_traslado()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Historicos", Historicos);
+                bundle.putBoolean("Inventarios", Inventarios);
+                bundle.putBoolean("Listado_inventarios", Listado_inventarios);
+                bundle.putBoolean("Traslado", Traslado);
+                Fragment_pestania_traslado fragment2 = new Fragment_pestania_traslado();
+                fragment2.setArguments(bundle);
+                fr.replace(R.id.fragment_container,fragment2).commit();
                 onDetach();
             }
         });
