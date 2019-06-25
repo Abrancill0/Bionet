@@ -303,7 +303,13 @@ public class Fragment_inventarios extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                inventarioAdapter.getFilter().filter(newText);
+                try{
+                    inventarioAdapter.getFilter().filter(newText);
+                    return false;
+                }catch (NullPointerException s)
+                {
+
+                }
                 return false;
             }
         });
@@ -320,6 +326,7 @@ public class Fragment_inventarios extends Fragment {
                 {
                     Buscar.setEnabled(false);
                     SpinnerSucursal.setEnabled(false);
+                    progressDialog.dismiss();
                 }else
                 {
                     progressDialog.show();

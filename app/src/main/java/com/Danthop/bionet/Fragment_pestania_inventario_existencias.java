@@ -86,7 +86,7 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
         Listado_inventarios=bundle.getBoolean("Listado_inventarios");
         Traslado=bundle.getBoolean("Traslado");
 
-        Button btn_inventarios = (Button) v.findViewById(R.id.fragment_inventarios);
+        Button btn_inventarios = (Button) v.findViewById(R.id.btn_inventarios);
         btn_inventarios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,7 +120,7 @@ public class Fragment_pestania_inventario_existencias extends Fragment {
             }
         });
 
-        Button btnTraslado = (Button) v.findViewById(R.id.button3);
+        Button btnTraslado = (Button) v.findViewById(R.id.btn_tras);
         btnTraslado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

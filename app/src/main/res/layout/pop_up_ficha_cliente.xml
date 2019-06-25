@@ -7,7 +7,8 @@
     android:layout_height="520dp"
     android:layout_gravity="center"
     android:gravity="center_vertical|center_horizontal"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
 
     <LinearLayout
@@ -38,10 +39,11 @@
 
         </LinearLayout>
 
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".4">
+            android:layout_weight=".4"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -343,13 +345,17 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight=".1"
-                                android:orientation="vertical">
+                                android:orientation="vertical"
+                                android:id="@+id/layout_historial_cliente">
 
                                 <com.Danthop.bionet.Tables.SortableClientesHistorialTable
                                     android:id="@+id/historial_compras"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    app:tableView_headerColor="@color/white" />
+                                    app:tableView_headerColor="@color/white"
+                                    android:overScrollMode="always"
+                                    android:scrollbarStyle="insideInset"
+                                    android:scrollbars="vertical"/>
 
 
                             </LinearLayout>
@@ -639,7 +645,7 @@
                 </LinearLayout>
 
             </LinearLayout>
-        </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
 
         <LinearLayout
             android:layout_width="match_parent"

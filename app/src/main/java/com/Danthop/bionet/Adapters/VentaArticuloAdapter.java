@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableVentaArticulos;
+import com.Danthop.bionet.Views.ButtonCantidad;
 import com.Danthop.bionet.model.ArticuloApartadoModel;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.Impuestos;
@@ -228,6 +229,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
         cantidad.setDrawingCacheBackgroundColor(getResources().getColor(R.color.white));
         cantidad.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
         cantidad.setGravity(View.TEXT_ALIGNMENT_VIEW_END);
+
 
         cantidad.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
             @Override

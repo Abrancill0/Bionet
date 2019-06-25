@@ -159,7 +159,13 @@ public class Fragment_pestania_historico extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                HistoricoAdapter.getFilter().filter(newText);
+                try{
+                    HistoricoAdapter.getFilter().filter(newText);
+                    return false;
+                }catch (NullPointerException s)
+                {
+
+                }
                 return false;
             }
         });
@@ -200,12 +206,11 @@ public class Fragment_pestania_historico extends Fragment {
         if(Historicos==false)
         {
             Buscar.setEnabled(false);
+            progressDialog.dismiss();
         }
-        else
-        {
+        else {
             Muestra_historico();
         }
-
         return v;
     }
 

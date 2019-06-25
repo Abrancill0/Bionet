@@ -95,7 +95,7 @@
     <string name="btn_disconnect">DESCONECTAR</string>
 
     <string name="textView_cobrando">COBRANDO</string>
-    <string name="text_feenicia_demo">FEENICIA BLUETOOTH DEMO</string>
+    <string name="text_feenicia_demo">FEENICIA BLUETOOTH</string>
 
     <string name="textView_ejecutarDispositivo_bluetooth">Inserte tarjeta con CHIP o deslice tarjeta con banda</string>
 
