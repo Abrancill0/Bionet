@@ -9,8 +9,12 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
+import android.text.Editable;
 import android.text.TextPaint;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -26,6 +30,7 @@ public class ButtonCantidad extends LinearLayout {
 
     private Button  menos,mas;
     private EditText cantidad;
+    private OnCustomEventListener mListener;
 
     public ButtonCantidad(Context context) {
         this(context,null);
@@ -72,12 +77,12 @@ public class ButtonCantidad extends LinearLayout {
             }
         });
 
-        mas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sumar();
-            }
-        });
+
+
+
+
+
+
 
     }
 
@@ -97,19 +102,78 @@ public class ButtonCantidad extends LinearLayout {
         }
     }
 
-    public void sumar()
-    {
-        String cantidad_string = String.valueOf(cantidad.getText());
-        int cantidad_entera = Integer.parseInt(cantidad_string);
-        cantidad_entera = cantidad_entera +1;
-        cantidad_string = String.valueOf(cantidad_entera);
-        cantidad.setText(cantidad_string);
-    }
-
     public String getCantidad()
     {
         return String.valueOf(cantidad.getText());
     }
+
+    public void setNumber(String numero)
+    {
+        cantidad.setText(numero);
+    }
+
+    public interface OnCustomEventListener {
+        void onEvent();
+    }
+
+    public void setOnSumarCantidad(OnCustomEventListener eventListener) {
+        mListener = eventListener;
+
+        mas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String cantidad_string = String.valueOf(cantidad.getText());
+                int cantidad_entera = Integer.parseInt(cantidad_string);
+                cantidad_entera = cantidad_entera +1;
+                cantidad_string = String.valueOf(cantidad_entera);
+                cantidad.setText(cantidad_string);
+                if(mListener!=null)
+                    mListener.onEvent();
+            }
+        });
+    }
+
+
+    public void setOnRestarCantidad (OnCustomEventListener eventListener){
+        mListener = eventListener;
+
+        menos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String cantidad_string = String.valueOf(cantidad.getText());
+                int cantidad_entera = Integer.parseInt(cantidad_string);
+
+                if(cantidad_entera==0){
+
+                }
+                else{
+                    cantidad_entera = cantidad_entera -1;
+                    cantidad_string = String.valueOf(cantidad_entera);
+                    cantidad.setText(cantidad_string);
+                }
+                if(mListener!=null)
+                    mListener.onEvent();
+            }
+        });
+    }
+
+    public void setOnCambiarAMano(OnCustomEventListener eventListener) {
+        mListener = eventListener;
+
+        cantidad.setOnKeyListener(new OnKeyListener() {
+            public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
+                if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    if(mListener!=null)
+                        mListener.onEvent();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+    }
+
+
 
 
 }

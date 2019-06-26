@@ -269,7 +269,7 @@ public class Fragment_pestania_traslado extends Fragment {
 
         if(Traslado==false)
         {
-            trasladar.setEnabled(false);
+            //trasladar.setEnabled(false);
         }
 
         Traslados_Recibidas();

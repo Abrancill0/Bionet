@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableInventariosTable;
+import com.Danthop.bionet.Views.ButtonCantidad;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.InventarioModel;
@@ -164,19 +165,15 @@ public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioMo
     }
 
     private View renderCantidad(final InventarioModel Inventario, final int Indice) {
-        final ElegantNumberButton cantidad = new ElegantNumberButton(getContext());
-        //cantidad.setNumber(Inventario.getCantidad());
-        cantidad.setPadding(20, 10, 20, 10);
-        cantidad.setBackgroundColor(getResources().getColor(R.color.white));
-        cantidad.setDrawingCacheBackgroundColor(getResources().getColor(R.color.white));
+        final ButtonCantidad cantidad = new ButtonCantidad(getContext());
+        cantidad.setPadding(5,2,5,2);
 
-        cantidad.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
+        cantidad.setOnSumarCantidad(new ButtonCantidad.OnCustomEventListener() {
             @Override
-            public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
+            public void onEvent() {
+                CantidadTraspaso[Indice] = Integer.parseInt( cantidad.getCantidad() );
 
-                CantidadTraspaso[Indice] = Integer.parseInt( cantidad.getNumber() );
-
-                if (Integer.parseInt(cantidad.getNumber()) > Integer.parseInt(Inventario.getExistencia()) )
+                if (Integer.parseInt(cantidad.getCantidad()) > Integer.parseInt(Inventario.getExistencia()) )
                 {
                     cantidad.setNumber(Inventario.getExistencia());
 
@@ -185,12 +182,51 @@ public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioMo
                 }
                 else
                 {
-                    String cat = cantidad.getNumber();
+                    String cat = cantidad.getCantidad();
                 }
+            }
+        });
 
+        cantidad.setOnRestarCantidad(new ButtonCantidad.OnCustomEventListener() {
+            @Override
+            public void onEvent() {
+                CantidadTraspaso[Indice] = Integer.parseInt( cantidad.getCantidad() );
+
+                if (Integer.parseInt(cantidad.getCantidad()) > Integer.parseInt(Inventario.getExistencia()) )
+                {
+                    cantidad.setNumber(Inventario.getExistencia());
+
+                    Toast toast1 = Toast.makeText(getContext(), "la cantidad seleccionada debe ser menor o igual a la existencia", Toast.LENGTH_SHORT);
+                    toast1.show();
+                }
+                else
+                {
+                    String cat = cantidad.getCantidad();
+                }
 
             }
         });
+
+        cantidad.setOnCambiarAMano(new ButtonCantidad.OnCustomEventListener() {
+            @Override
+            public void onEvent() {
+                CantidadTraspaso[Indice] = Integer.parseInt( cantidad.getCantidad() );
+
+                if (Integer.parseInt(cantidad.getCantidad()) > Integer.parseInt(Inventario.getExistencia()) )
+                {
+                    cantidad.setNumber(Inventario.getExistencia());
+
+                    Toast toast1 = Toast.makeText(getContext(), "la cantidad seleccionada debe ser menor o igual a la existencia", Toast.LENGTH_SHORT);
+                    toast1.show();
+                }
+                else
+                {
+                    String cat = cantidad.getCantidad();
+                }
+
+            }
+        });
+
 
 
         return cantidad;

@@ -222,22 +222,34 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
     }
     private View renderCantidad(final ArticuloModel articulo) {
-        final ElegantNumberButton cantidad = new ElegantNumberButton(getContext());
+        final ButtonCantidad cantidad = new ButtonCantidad(getContext());
         cantidad.setNumber(articulo.getArticulo_cantidad());
         cantidad.setPadding(5,2,5,2);
-        cantidad.setBackgroundColor(getResources().getColor(R.color.white));
-        cantidad.setDrawingCacheBackgroundColor(getResources().getColor(R.color.white));
-        cantidad.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
-        cantidad.setGravity(View.TEXT_ALIGNMENT_VIEW_END);
 
-
-        cantidad.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
+        cantidad.setOnSumarCantidad(new ButtonCantidad.OnCustomEventListener() {
             @Override
-            public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
+            public void onEvent() {
                 progressDialog.show();
-                modificaCantidad(articulo,cantidad.getNumber());
+                modificaCantidad(articulo,cantidad.getCantidad());
             }
         });
+
+        cantidad.setOnRestarCantidad(new ButtonCantidad.OnCustomEventListener() {
+            @Override
+            public void onEvent() {
+                progressDialog.show();
+                modificaCantidad(articulo,cantidad.getCantidad());
+            }
+        });
+
+        cantidad.setOnCambiarAMano(new ButtonCantidad.OnCustomEventListener() {
+            @Override
+            public void onEvent() {
+                progressDialog.show();
+                modificaCantidad(articulo,cantidad.getCantidad());
+            }
+        });
+
         return cantidad;
     }
 

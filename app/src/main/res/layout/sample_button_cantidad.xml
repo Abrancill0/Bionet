@@ -3,29 +3,37 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/menos"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_margin="0dp"
+            android:layout_weight=".8"
             android:background="@color/colorPrimaryDark"
             android:text="-"
             android:textColor="@color/white" />
 
         <EditText
             android:id="@+id/cantidad"
-            android:layout_width="75dp"
-            android:layout_height="50dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_margin="0dp"
-            android:inputType="number" />
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:hint="0"
+            android:inputType="number"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/mas"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_margin="0dp"
+            android:layout_weight=".8"
             android:background="@color/colorPrimaryDark"
             android:text="+"
             android:textColor="@color/white" />

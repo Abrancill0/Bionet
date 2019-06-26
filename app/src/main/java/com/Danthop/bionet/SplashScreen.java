@@ -166,7 +166,7 @@ public class SplashScreen extends AppCompatActivity {
                                 SharedPreferences.Editor editor = sharedPref.edit();
                                 editor.putString("id_dispositivo", String.valueOf( ID_dispositivo ) );
                                 editor.commit();
-                                Intent intent2 = new Intent(SplashScreen.this, Login_contrasena.class);
+                                Intent intent2 = new Intent(SplashScreen.this, Login.class);
                                 startActivity(intent2);
                                 finish();
 

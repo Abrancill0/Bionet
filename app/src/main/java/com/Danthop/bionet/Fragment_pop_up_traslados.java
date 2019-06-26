@@ -354,7 +354,7 @@ public class Fragment_pop_up_traslados extends DialogFragment {
 private void MuestraArticulos(){
 
     String url = getString(R.string.Url);
-    String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1";
+    String ApiPath = url + "/api/inventario/crear_solicitudtraslado?usu_id=" + usu_id + "&esApp=1";
     JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null, new Response.Listener<JSONObject>() {
         @Override
         public void onResponse(JSONObject response) {
@@ -379,7 +379,7 @@ private void MuestraArticulos(){
                     progreso.dismiss();
                     Resultado = response.getJSONObject("resultado");
 
-                    Articulo = Resultado.getJSONArray("aArticuloExistencias");
+                    Articulo = Resultado.getJSONArray("aArticulos");
                     inventarioModel = new String[Articulo.length()][4];
 
                     for (int x = 0; x < Articulo.length(); x++) {
