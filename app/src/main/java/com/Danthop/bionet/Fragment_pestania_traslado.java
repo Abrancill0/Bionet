@@ -558,7 +558,7 @@ public  void Traslados_Recibidas(){
             jsonBodyrequest.put("esApp", "1" );
             jsonBodyrequest.put("usu_id", usu_id);
             jsonBodyrequest.put("tra_id",tra_id);
-            jsonBodyrequest.put("code",code);
+            jsonBodyrequest.put("code",code);//ggg
 
         }catch (JSONException e){
             e.printStackTrace();
