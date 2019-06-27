@@ -2448,7 +2448,7 @@ public class Fragment_Ventas extends Fragment {
 
                             JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
                             for (int z = 0; z < RespuestaImagenes.length(); z++) {
-                                String RutaImagen = "http://192.168.100.192:8010" + RespuestaImagenes.getString(z);
+                                String RutaImagen = getString(R.string.Url) + RespuestaImagenes.getString(z);
                                 Imagenes.add(RutaImagen);
                             }
                             final ArticuloModel articulo = new ArticuloModel("",
@@ -3183,7 +3183,7 @@ public class Fragment_Ventas extends Fragment {
                                     art_precio.setText(formatter.format(PrecioConDecimal));
                                     art_categoria.setText(Categoria);
                                     art_decription.setText(Descripcion);
-                                    String ruta = "http://192.168.100.192:8010" + RutaImagen1;
+                                    String ruta = getString(R.string.Url) + RutaImagen1;
                                     imageLoader.displayImage(ruta, imagenArticulo);
 
                                     if (NombreCompleto.equals("")) {
@@ -3318,7 +3318,7 @@ public class Fragment_Ventas extends Fragment {
     private void LoadConfiguracionApartado()
     {
         try {
-            String ApiPath = "http://187.189.192.150:8010/api/ventas/apartados/index?usu_id=" + usu_id + "&esApp=1&code="+code+"&suc_id="+SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+            String ApiPath = getString(R.string.Url)+"/api/ventas/apartados/index?usu_id=" + usu_id + "&esApp=1&code="+code+"&suc_id="+SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
@@ -4613,7 +4613,7 @@ public class Fragment_Ventas extends Fragment {
 
                                 JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
                                 for (int z = 0; z < RespuestaImagenes.length(); z++) {
-                                    String RutaImagen = "http://192.168.100.192:8010" + RespuestaImagenes.getString(z);
+                                    String RutaImagen = getString(R.string.Url) + RespuestaImagenes.getString(z);
                                     Imagenes.add(RutaImagen);
                                 }
                                 final ArticuloModel articulo = new ArticuloModel("",

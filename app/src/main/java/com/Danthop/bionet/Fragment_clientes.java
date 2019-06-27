@@ -682,7 +682,7 @@ public class Fragment_clientes extends Fragment {
                                     e.printStackTrace();
                                 }
 
-                                String url = "http://187.189.192.150:8010/";
+                                String url = getString(R.string.Url);
 
                                 String ApiPath = url + "api/clientes/delete";
 

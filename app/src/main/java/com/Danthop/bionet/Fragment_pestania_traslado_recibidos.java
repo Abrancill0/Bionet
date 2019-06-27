@@ -12,15 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.Danthop.bionet.Adapters.ComisionesAdapter;
 import com.Danthop.bionet.Adapters.TrasladoEnvioRecibidoAdapter;
 import com.Danthop.bionet.Tables.SortableTrasladosTable;
-import com.Danthop.bionet.model.CorteCajaModel;
 import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -32,10 +29,8 @@ import com.google.gson.JsonArray;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.sql.Timestamp;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -129,7 +124,7 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
         }
 
         ver_dialog_traslado = new Dialog(getContext());
-        ver_dialog_traslado.setContentView(R.layout.pop_up_traslado_recibido);
+        ver_dialog_traslado.setContentView(R.layout.pop_up_solicitud_traslado_recibidas);
 
 
         Button btn_traslados = (Button) v.findViewById(R.id.btn_inventarios);
@@ -425,7 +420,7 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
 
                 final Dialog ver_dialog_traslado;
                 ver_dialog_traslado = new Dialog(getContext());
-                ver_dialog_traslado.setContentView(R.layout.pop_up_traslado_recibido);
+                ver_dialog_traslado.setContentView(R.layout.pop_up_solicitud_traslado_recibidas);
                 ver_dialog_traslado.show();
 
                 TextView motivotraslado = ver_dialog_traslado.findViewById( R.id.motivotraslado );

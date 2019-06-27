@@ -104,7 +104,7 @@ public class CategoriaAdapter extends ArrayAdapter<CategoriaModel> {
                 id = getItem(position).getId();
 
                 try {
-                    final String url = "http://187.189.192.150:8010/api/ecommerce/obtenerSubcategoriasMercadoLibre?sIdCategoria=" + id + "&usu_id=" + usu_id + "&esApp=1";
+                    final String url = getContext().getString(R.string.Url)+"/api/ecommerce/obtenerSubcategoriasMercadoLibre?sIdCategoria=" + id + "&usu_id=" + usu_id + "&esApp=1";
                     JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {

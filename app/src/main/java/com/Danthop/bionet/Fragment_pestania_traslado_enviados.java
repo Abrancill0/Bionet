@@ -417,7 +417,7 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
 
                 final Dialog ver_dialog_traslado;
                 ver_dialog_traslado = new Dialog(getContext());
-                ver_dialog_traslado.setContentView(R.layout.pop_up_traslado_enviados);
+                ver_dialog_traslado.setContentView(R.layout.pop_up_solicitud_traslado_enviadas);
                 ver_dialog_traslado.show();
 
                 TextView motivotraslado = ver_dialog_traslado.findViewById( R.id.motivotraslado );

@@ -78,7 +78,7 @@ public class Fragment_ventas_crear_cliente extends DialogFragment {
     private Toast toast2;
     private ImageView Back;
 
-    String URLGetEstados="http://192.168.100.192:8010/api/configuracion/sucursales/select_estados?usu_id=18807ae8-0a10-540c-91cf-aa7eaccf3cbf&esApp=1";
+    String URLGetEstados=getString(R.string.Url)+"/api/configuracion/sucursales/select_estados?usu_id=18807ae8-0a10-540c-91cf-aa7eaccf3cbf&esApp=1";
 
     //private Spinner SpinnerEstado;
     private ArrayList<String> EstadoName;

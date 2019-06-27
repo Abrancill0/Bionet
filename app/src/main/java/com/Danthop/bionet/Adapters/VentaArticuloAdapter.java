@@ -359,7 +359,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
             }
 
 
-            String ApiPath = "http://187.189.192.150:8010" + "/api/ventas/tickets/update-cantidad-articulo";
+            String ApiPath = getContext().getString(R.string.Url) + "/api/ventas/tickets/update-cantidad-articulo";
 
             JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
                 @Override
@@ -556,7 +556,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
                                 JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
                                 for (int z = 0; z < RespuestaImagenes.length(); z++) {
-                                    String RutaImagen = "http://192.168.100.192:8010" + RespuestaImagenes.getString(z);
+                                    String RutaImagen = getContext().getString(R.string.Url) + RespuestaImagenes.getString(z);
                                     Imagenes.add(RutaImagen);
                                 }
                                 final ArticuloModel articulo = new ArticuloModel("",
@@ -642,7 +642,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
         }
 
 
-        String ApiPath = "http://187.189.192.150:8010"+"/api/ventas/tickets/destroy-articulo";
+        String ApiPath = getContext().getString(R.string.Url)+"/api/ventas/tickets/destroy-articulo";
 
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
         {
@@ -852,7 +852,7 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
 
                             JSONArray RespuestaImagenes = elemento.getJSONArray("art_imagenes");
                             for (int z = 0; z < RespuestaImagenes.length(); z++) {
-                                String RutaImagen = "http://192.168.100.192:8010" + RespuestaImagenes.getString(z);
+                                String RutaImagen = getContext().getString(R.string.Url) + RespuestaImagenes.getString(z);
                                 Imagenes.add(RutaImagen);
                             }
                             final ArticuloModel articulo = new ArticuloModel("",

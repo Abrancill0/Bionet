@@ -29,11 +29,23 @@
                 android:layout_weight=".9"
                 android:background="@color/colorPrimaryDark"
                 android:gravity="center"
-                android:text="Detalle de solicitud de traslado"
+                android:text="Detalle de solicitud de traslado enviada"
                 android:textAllCaps="false"
                 android:textColor="#fff"
-                android:textStyle="bold"
-                android:textSize="24dp" />
+                android:textSize="24dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView25"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".9"
+                android:background="@color/colorPrimaryDark"
+                android:gravity="center"
+                android:text="Cancela la solicitud o marca como recibida "
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textSize="20dp" />
 
         </LinearLayout>
 

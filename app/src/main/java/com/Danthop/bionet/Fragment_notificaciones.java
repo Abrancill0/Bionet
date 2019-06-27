@@ -260,7 +260,7 @@ public class Fragment_notificaciones extends Fragment {
     public void LoadNotificaciones() {
         mNotificacionList = new ArrayList<>();
         try {
-            String ApiPath = "http://187.189.192.150:8010/api/notificaciones/index?usu_id=" + usu_id + "&esApp=1&code="+code;
+            String ApiPath = getString(R.string.Url)+"/api/notificaciones/index?usu_id=" + usu_id + "&esApp=1&code="+code;
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,

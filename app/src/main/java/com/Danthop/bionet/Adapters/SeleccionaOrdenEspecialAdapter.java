@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableSeleccionaApartadoTable;
 import com.Danthop.bionet.Tables.SortableSeleccionaOrdenEspecialTable;
 import com.Danthop.bionet.model.ArticuloApartadoModel;
@@ -207,7 +208,7 @@ public class SeleccionaOrdenEspecialAdapter extends LongPressAwareTableDataAdapt
         try {
 
 
-            String ApiPath = "http://187.189.192.150:8010/api/ventas/apartados/index?usu_id=" + usu_id + "&esApp=1&suc_id="+SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+            String ApiPath = getContext().getString(R.string.Url)+"/api/ventas/apartados/index?usu_id=" + usu_id + "&esApp=1&suc_id="+SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,

@@ -79,7 +79,6 @@ public class Login extends Activity {
 
     private String clientid = "danthop-dev";
     private String clientsecret = "001824";
-    //private String redirectUri = "http://187.189.192.150:8010";
     private String redirectUri = "bionet://callback";
     private String UrlSend = "http://sso-dev.biocheck.net/oauth/authorize";
 
@@ -452,7 +451,7 @@ public class Login extends Activity {
             editor.putString("usu_correo_electronico", Resultado.getUsuEmail());
             editor.putString("usu_sucursal", Sucursal);
             //
-            editor.putString("usu_imagen_perfil", "http://192.168.100.192:8010" + Resultado.getUsuImagen());
+            editor.putString("usu_imagen_perfil", getString(R.string.Url) + Resultado.getUsuImagen());
             editor.putString("usu_activo", Resultado.getUsu_activo());
             editor.putString("usu_administrador", Resultado.getUsu_administrador());
             editor.putString("cca_id_sucursal", String.valueOf(jsonArray));

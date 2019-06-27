@@ -208,6 +208,21 @@ public class Fragment_pop_up_traslados extends DialogFragment {
 
         SucDestino=(TextView)v.findViewById(R.id.SucDestino);
         SpinnerSucursal2=(Spinner)v.findViewById(R.id.Sucursal_Destino);
+        SpinnerSucursal2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (RespuestaTodo != null)
+                {
+                    dialog.dismiss();
+                    MuestraArticulossinApi();
+                    ArticulosTraslados.clear();
+                }
+
+
+            }
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         text3=(TextView)v.findViewById(R.id.text3);
         observaciones=(EditText)v.findViewById(R.id.editObservaciones);
         //CantidadSolicitada=(ElegantNumberButton)v.findViewById(R.id.art_cantidad);
@@ -353,6 +368,8 @@ public class Fragment_pop_up_traslados extends DialogFragment {
 
 private void MuestraArticulos(){
 
+
+        inventarios.clear();
     String url = getString(R.string.Url);
     String ApiPath = url + "/api/inventario/crear_solicitudtraslado?usu_id=" + usu_id + "&esApp=1";
     JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null, new Response.Listener<JSONObject>() {
@@ -440,32 +457,63 @@ private void MuestraArticulos(){
                                 producto = NombreCompleto;
                             }
                         }
-
-                        final InventarioModel inventario = new InventarioModel(
-                                 sku, producto, existencia, categoria, "", nombre_sucursal,
-                                suc_id,"","","","",
-                                "","", "","","",
-                                "","","", "","","",
-                                "","", "","","",
-                                "", "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,
-                                "","","");
-                        inventarios.add(inventario);
+                            final InventarioModel inventario = new InventarioModel(
+                                    sku, producto, existencia, categoria, "", nombre_sucursal,
+                                    suc_id,"","","","",
+                                    "","", "","","",
+                                    "","","", "","","",
+                                    "","", "","","",
+                                    "", "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,
+                                    "","","");
+                            inventarios.add(inventario);
                     }
 
 
 
                     for(int i=0;i<inventarios.size();i++)
                     {
-                        if(inventarios.get(i).getSuc_id() != SucursalID.get(SpinnerSucursal.getSelectedItemPosition()) )
+                        String suc_art = inventarios.get(i).getSuc_id();
+                        String suc_spin = SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+                        if(!suc_art.equals(suc_spin))
                         {
                             inventarios.remove(i);
+                            i=i-1;
                         }
                         progreso.dismiss();
 
                     }
 
+                    for(int i=0;i<inventarios.size();i++)
+                    {
+                        int checador = 0;
+                        String id_art = inventarios.get(i).getUUIDarticulo();
+                        String id_suc_art = inventarios.get(i).getSuc_id();
+                        JSONArray Permisos = Resultado.getJSONArray("aArticulosSucursalesPermisos");
+                        for (int x = 0; x < Permisos.length(); x++) {
+                            JSONObject elemento2 = Permisos.getJSONObject(x);
+                            JSONObject permiso_art_id_nodo = elemento2.getJSONObject("sar_id_articulo");
+                            String art_id_permiso = permiso_art_id_nodo.getString("uuid");
+                            JSONObject permiso_suc_id_nodo = elemento2.getJSONObject("sar_id_sucursal");
+                            String suc_id_permiso = permiso_suc_id_nodo.getString("uuid");
+
+                            if(id_art.equals(art_id_permiso)&&id_suc_art.equals(suc_id_permiso))
+                            {
+                                checador=1;
+                                break;
+                            }
+                            progreso.dismiss();
+                        }
+
+                        if(checador!=1)
+                        {
+                            inventarios.remove(i);
+                            i=i-1;
+                        }
+                    }
+
                     TrasladoAdapter = new TrasladoAdapter(getContext(), inventarios,tabla_inventario,ArticulosTraslados);
                     tabla_inventario.setDataAdapter(TrasladoAdapter);
+
 
                 }
 
@@ -491,6 +539,7 @@ private void MuestraArticulos(){
 
 private void MuestraArticulossinApi(){
 
+    inventarios.clear();
     JSONObject Resultado = null;
         JSONArray Articulo = null;
         JSONObject RespuestaUUID = null;
@@ -500,20 +549,15 @@ private void MuestraArticulossinApi(){
         JSONObject RespuestaModificadores = null;
 
         try {
-        int status = 0;
-
-                status = Integer.parseInt(RespuestaTodo.getString("estatus"));
-                String Mensaje = RespuestaTodo.getString("mensaje");
-
+            int status = Integer.parseInt(RespuestaTodo.getString("estatus"));
+            String Mensaje = RespuestaTodo.getString("mensaje");
 
             if (status == 1) {
 
                 progreso.dismiss();
-
-            }
-                progreso.dismiss();
                 Resultado = RespuestaTodo.getJSONObject("resultado");
-                Articulo = Resultado.getJSONArray("aArticuloExistencias");
+
+                Articulo = Resultado.getJSONArray("aArticulos");
                 inventarioModel = new String[Articulo.length()][4];
 
                 for (int x = 0; x < Articulo.length(); x++) {
@@ -535,7 +579,9 @@ private void MuestraArticulossinApi(){
                     RespuestaExistencias = elemento.getJSONObject("exi_cantidad");
                     existencia = RespuestaExistencias.getString("value");
 
-                    //cantidad = "0";
+                    String suc_id = elemento.getString("suc_id");
+
+                    cantidad = "0";
                     UUIDmodificador="";
 
                     //Variantes_Modificadores_SKU
@@ -572,32 +618,62 @@ private void MuestraArticulossinApi(){
                             producto = NombreCompleto;
                         }
                     }
-                    final InventarioModel inventario = new InventarioModel(
-                            sku, producto, existencia, categoria, "", nombre_sucursal,
-                            "","","","","",
-                            "","", "","","",
-                            "","","", "","","",
-                            "","", "","","",
-                            fechaSolicitud, "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,
-                            "","","");
-                    inventarios.add(inventario);
-                    progreso.dismiss();
-            }
+                        final InventarioModel inventario = new InventarioModel(
+                                sku, producto, existencia, categoria, "", nombre_sucursal,
+                                suc_id,"","","","",
+                                "","", "","","",
+                                "","","", "","","",
+                                "","", "","","",
+                                "", "",UUIDarticulo,UUIDvariante,UUIDmodificador,UUIDexistencias,cantidad,
+                                "","","");
+                        inventarios.add(inventario);
+                }
 
 
-            if (SucursalID.get(SpinnerSucursal.getSelectedItemPosition()) != null)
-            {
                 for(int i=0;i<inventarios.size();i++)
                 {
-                    if(inventarios.get(i).getSuc_id() != SucursalID.get(SpinnerSucursal.getSelectedItemPosition()) )
+                    String suc_art = inventarios.get(i).getSuc_id();
+                    String suc_spin = SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+                    if(!suc_art.equals(suc_spin))
                     {
                         inventarios.remove(i);
+                        i=i-1;
+                    }
 
+
+                }
+
+                for(int i=0;i<inventarios.size();i++)
+                {
+                    int checador = 0;
+                    String id_art = inventarios.get(i).getUUIDarticulo();
+                    String id_suc_art = inventarios.get(i).getSuc_id();
+                    JSONArray Permisos = Resultado.getJSONArray("aArticulosSucursalesPermisos");
+                    for (int x = 0; x < Permisos.length(); x++) {
+                        JSONObject elemento2 = Permisos.getJSONObject(x);
+                        JSONObject permiso_art_id_nodo = elemento2.getJSONObject("sar_id_articulo");
+                        String art_id_permiso = permiso_art_id_nodo.getString("uuid");
+                        JSONObject permiso_suc_id_nodo = elemento2.getJSONObject("sar_id_sucursal");
+                        String suc_id_permiso = permiso_suc_id_nodo.getString("uuid");
+
+                        if(id_art.equals(art_id_permiso)&&id_suc_art.equals(suc_id_permiso))
+                        {
+                            checador=1;
+                            break;
+                        }
+                        progreso.dismiss();
+                    }
+
+                    if(checador!=1)
+                    {
+                        inventarios.remove(i);
+                        i=i-1;
                     }
                 }
-            }
+
                 TrasladoAdapter = new TrasladoAdapter(getContext(), inventarios,tabla_inventario,ArticulosTraslados);
                 tabla_inventario.setDataAdapter(TrasladoAdapter);
+            }
 
             } catch (JSONException e) {
             progreso.dismiss();

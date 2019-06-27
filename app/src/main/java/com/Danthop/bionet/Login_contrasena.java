@@ -244,7 +244,7 @@ public class Login_contrasena  extends Activity {
             editor.putString("usu_id", Resultado.getUsuId());
             editor.putString("usu_apellidos", Resultado.getUsuApellidos());
             editor.putString("cbn_nombre_negocio", Resultado.getcbn_nombre_negocio());
-            editor.putString("usu_imagen_perfil", "http://187.189.192.150:8010"+Resultado.getUsuImagen());
+            editor.putString("usu_imagen_perfil", getString(R.string.Url)+Resultado.getUsuImagen());
             editor.putString("usu_activo", Resultado.getUsu_activo());
             editor.putString("usu_administrador", Resultado.getUsu_administrador());
 

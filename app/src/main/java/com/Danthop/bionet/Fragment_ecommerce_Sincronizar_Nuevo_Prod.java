@@ -127,8 +127,8 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
         Remaining_listings = bundle.getString("Remaining_listings");
 
-        Imagen1 = "http://187.189.192.150:8010" + bundle.getString( "image1");
-        Imagen2 = "http://187.189.192.150:8010" + bundle.getString( "image2");
+        Imagen1 = getString(R.string.Url) + bundle.getString( "image1");
+        Imagen2 = getString(R.string.Url) + bundle.getString( "image2");
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getActivity().MODE_PRIVATE );
         UserML = sharedPref.getString( "UserIdML", "" );
@@ -195,7 +195,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 //---------------------------------------------------------------------------------------------------
 
     private void CargaCategorias(){
-        final String url = "http://187.189.192.150:8010/api/ecommerce/create_app?accesstoken=" + AccesToken  + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
+        final String url = getString(R.string.Url)+"/api/ecommerce/create_app?accesstoken=" + AccesToken  + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -413,7 +413,7 @@ public class Fragment_ecommerce_Sincronizar_Nuevo_Prod extends Fragment implemen
 
     private void Max_stock_per_item()
     {
-        final String url = "http://187.189.192.150:8010/api/ecommerce/create_app?accesstoken=" + AccesToken  + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
+        final String url = getString(R.string.Url)+"/api/ecommerce/create_app?accesstoken=" + AccesToken  + "&user_id_mercado_libre=" + UserML + "&usu_id=" + usu_id + "&esApp=1";
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
