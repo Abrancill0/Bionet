@@ -49,6 +49,7 @@ public class LoginModel {
     private String sso_token_type;
     private String sso_refresh_Token;
     private String sso_expire;
+    private String cuenta_bionet;
 
     public String getUsuId() {
         return usuId;
@@ -408,6 +409,14 @@ public class LoginModel {
 
     public void setSso_refresh_Token(String sso_refresh_Token) {
         this.sso_refresh_Token = sso_refresh_Token;
+    }
+
+    public String getCuenta_bionet() {
+        return cuenta_bionet;
+    }
+
+    public void setCuenta_bionet(String cuenta_bionet) {
+        this.cuenta_bionet = cuenta_bionet;
     }
 }
 

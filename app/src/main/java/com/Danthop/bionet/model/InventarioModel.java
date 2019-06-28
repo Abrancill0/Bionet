@@ -1,9 +1,4 @@
 package com.Danthop.bionet.model;
-import android.print.PrinterId;
-
-import com.nostra13.universalimageloader.utils.L;
-
-import java.util.Date;
 
 public class InventarioModel {
 
@@ -36,7 +31,7 @@ public class InventarioModel {
     private String suc_numero_sucursal_origen;
     private String fechaSolicitud;
     private String tra_motivo;
-    private String UUIDarticulo;
+    private String TraID;
     private String UUIDvariante;
     private String UUIDmodificador;
     private String UUIDexistencias;
@@ -44,6 +39,7 @@ public class InventarioModel {
     private String nombre_cliente;
     private String status_solicitud;
     private String status_nombre;
+    private String tra_factura;
 
 
 
@@ -76,7 +72,7 @@ public class InventarioModel {
                            String suc_numero_sucursal_origen,
                            String fechaSolicitud,
                            String tra_motivo,
-                           String UUIDarticulo,
+                           String tra_id,
                            String UUIDvariante,
                            String UUIDmodificador,
                            String UUIDexistencias,
@@ -115,7 +111,7 @@ public class InventarioModel {
         this.suc_numero_sucursal_origen = suc_numero_sucursal_origen;
         this.fechaSolicitud = fechaSolicitud;
         this.tra_motivo = tra_motivo;
-        this.UUIDarticulo = UUIDarticulo;
+        this.TraID = tra_id;
         this.UUIDvariante = UUIDvariante;
         this.UUIDmodificador = UUIDmodificador;
         this.UUIDexistencias = UUIDexistencias;
@@ -260,8 +256,8 @@ public class InventarioModel {
     public String gettra_motivo() {return tra_motivo; }
     public void settra_motivo(String tra_motivo) { this.tra_motivo = tra_motivo; }
 
-    public String getUUIDarticulo() {return UUIDarticulo; }
-    public void setUUIDarticulo(String UUIDarticulo) { this.UUIDarticulo = UUIDarticulo; }
+    public String getTraID() {return TraID; }
+    public void setTraID(String tra_id) { this.TraID = tra_id; }
 
     public String getUUIDvariante() {return UUIDvariante; }
     public void setUUIDvariante(String UUIDvariante) { this.UUIDvariante = UUIDvariante; }
@@ -283,4 +279,12 @@ public class InventarioModel {
 
     public String getstatus_nombre() { return  status_nombre; }
     public void  setstatus_nombre(String status_nombre) { this.status_nombre = status_nombre; }
+
+    public String getTra_factura() {
+        return tra_factura;
+    }
+
+    public void setTra_factura(String tra_factura) {
+        this.tra_factura = tra_factura;
+    }
 }

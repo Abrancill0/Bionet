@@ -56,6 +56,10 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 import com.squareup.timessquare.CalendarPickerView;
 import com.webviewtopdf.PdfView;
 import com.zj.usbsdk.UsbController;
@@ -168,6 +172,9 @@ public class Fragment_ventas_transacciones extends Fragment {
     private MovimientoAdapter movimientoAdapter;
 
     private List<ArticuloModel> ListaArticulosTicket = new ArrayList<>();
+
+    public final static int QRcodeWidth = 500 ;
+
 
     private int[][] u_infor;
     // static UsbController  usbCtrl = null;
@@ -441,6 +448,60 @@ public class Fragment_ventas_transacciones extends Fragment {
 
 
         return v;
+    }
+
+    public void CargaEncuesta()
+    {
+       // /api/configuracion/sucursales/select
+
+        try {
+
+            String url = getString(R.string.Url);
+
+            String ApiPath = url + "/api/configuracion/sucursales/select?usu_id=" + usu_id + "&esApp=1&code="+code+"&suc_id="+ SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+
+            // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            try {
+
+                                int EstatusApi = Integer.parseInt(response.getString("estatus"));
+
+                                if (EstatusApi == 1) {
+
+
+                                }
+                                else{
+                                    Toast toast1 =
+                                            Toast.makeText(getContext(),
+                                                    "Error del servidor", Toast.LENGTH_LONG);
+
+                                }
+                            } catch (JSONException e) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(e), Toast.LENGTH_LONG);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf(error), Toast.LENGTH_LONG);
+                        }
+                    }
+            );
+            getRequest.setShouldCache(false);
+
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+        } catch (Error e) {
+            e.printStackTrace();
+        }
     }
 
     public void Layouts()
@@ -1977,6 +2038,40 @@ public class Fragment_ventas_transacciones extends Fragment {
         {
             btn_corte_caja.setEnabled(false);
         }
+    }
+
+    private Bitmap TextToImageEncode(String Value) throws WriterException {
+        BitMatrix bitMatrix;
+        try {
+            bitMatrix = new MultiFormatWriter().encode(
+                    Value,
+                    BarcodeFormat.DATA_MATRIX.QR_CODE,
+                    QRcodeWidth, QRcodeWidth, null
+            );
+
+        } catch (IllegalArgumentException Illegalargumentexception) {
+
+            return null;
+        }
+        int bitMatrixWidth = bitMatrix.getWidth();
+
+        int bitMatrixHeight = bitMatrix.getHeight();
+
+        int[] pixels = new int[bitMatrixWidth * bitMatrixHeight];
+
+        for (int y = 0; y < bitMatrixHeight; y++) {
+            int offset = y * bitMatrixWidth;
+
+            for (int x = 0; x < bitMatrixWidth; x++) {
+
+                pixels[offset + x] = bitMatrix.get(x, y) ?
+                        getResources().getColor(R.color.black):getResources().getColor(R.color.white);
+            }
+        }
+        Bitmap bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444);
+
+        bitmap.setPixels(pixels, 0, 500, 0, 0, bitMatrixWidth, bitMatrixHeight);
+        return bitmap;
     }
 
     @Override

@@ -2,21 +2,26 @@ package com.Danthop.bionet;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.TrasladoEnvioRecibidoAdapter;
 import com.Danthop.bionet.Tables.SortableTrasladosTable;
+import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.InventarioModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
@@ -28,8 +33,10 @@ import com.google.gson.JsonArray;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.sql.Timestamp;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -91,6 +98,7 @@ public class Fragment_pestania_traslado extends Fragment {
     private String status_solicitud;
     private String status_nombre;
     private String tipo_traslado = "recibida";
+    private String cadena_articulos;
 
     private Bundle bundle;
     private boolean Historicos=false;
@@ -103,6 +111,7 @@ public class Fragment_pestania_traslado extends Fragment {
     private TrasladoEnvioRecibidoAdapter TrasladoAdapter;
 
     private String code="";
+    private String usu_cuenta_bionet="";
 
     public Fragment_pestania_traslado() {
         // Required empty public constructor
@@ -175,6 +184,7 @@ public class Fragment_pestania_traslado extends Fragment {
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
         code = sharedPref.getString("sso_code","");
+        usu_cuenta_bionet = sharedPref.getString("usu_cuenta_bionet","");
 
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
@@ -279,7 +289,7 @@ public class Fragment_pestania_traslado extends Fragment {
     }
 
 //-------------------------------------------------------------------------------------------------
-public  void Traslados_Recibidas(){
+    public  void Traslados_Recibidas(){
     JSONObject request = new JSONObject();
     try {
     } catch (Exception e) {
@@ -384,6 +394,11 @@ public  void Traslados_Recibidas(){
                                 FechaconFormato,
                                 tra_motivo,UUID,"","",
                                 "","","",status_solicitud, status_nombre);
+
+                        String factura_id = elemento.getString("tra_factura");
+                        traslado.setTra_factura(factura_id);
+
+
                         traslados.add(traslado);
 
                     }
@@ -428,17 +443,13 @@ public  void Traslados_Recibidas(){
                 Button rechazar_solicitud = ver_dialog_traslado.findViewById(R.id.rechazar_solicitud);
                 TextView texto_explicacion = ver_dialog_traslado.findViewById(R.id.text_explicacion);
 
+                View descargarPDF = ver_dialog_traslado.findViewById(R.id.btn_descargar_pdf);
+                View descargarXML = ver_dialog_traslado.findViewById(R.id.btn_descargar_xml);
+
                 motivotraslado.setText(clickedData.gettra_motivo());
 
-                TextView nombre_status = ver_dialog_traslado.findViewById( R.id.articulostraslados );
-                nombre_status.setText(clickedData.getstatus_nombre());
-
-                UUIDarticulostraslados = ver_dialog_traslado.findViewById( R.id.cantidadtraslado );
-                UUIDarticulostraslados.setText(clickedData.getUUIDarticulo());
-
-                StatusSolicitud = ver_dialog_traslado.findViewById(R.id.StatuSolicitud);
-                StatusSolicitud.setText(clickedData.getstatus_solicitud());
-                estadosolicitud = String.valueOf( StatusSolicitud.getText() );
+                TextView articulos_trasladados = ver_dialog_traslado.findViewById(R.id.articulos_trasladados);
+                detalle_traslado(clickedData.getTraID(),articulos_trasladados);
 
                 Button cerrar_ventana = ver_dialog_traslado.findViewById(R.id.cerrar_ventana);
                 cerrar_ventana.setOnClickListener(new View.OnClickListener() {
@@ -448,32 +459,35 @@ public  void Traslados_Recibidas(){
                     }
                 });
 
-                int resultadoAceptada = estadosolicitud.compareTo("Aceptada");
-                if (resultadoAceptada == 0){
+                if (clickedData.getstatus_solicitud().equals("Aceptada")){
+                    aceptar_solicitud.setVisibility(View.GONE);
+                    rechazar_solicitud.setVisibility(View.GONE);
+                    texto_explicacion.setVisibility(View.GONE);
+                    descargarPDF.setVisibility(View.VISIBLE);
+                    descargarXML.setVisibility(View.VISIBLE);
+                }
+
+                if (clickedData.getstatus_solicitud().equals("Rechazada")){
                     aceptar_solicitud.setVisibility(View.GONE);
                     rechazar_solicitud.setVisibility(View.GONE);
                     texto_explicacion.setVisibility(View.GONE);
                 }
 
-                int resultRechazada = estadosolicitud.compareTo("Rechazada");
-                if (resultRechazada == 0){
+                if (clickedData.getstatus_solicitud().equals("Concluida")){
                     aceptar_solicitud.setVisibility(View.GONE);
                     rechazar_solicitud.setVisibility(View.GONE);
                     texto_explicacion.setVisibility(View.GONE);
+                    descargarPDF.setVisibility(View.VISIBLE);
+                    descargarXML.setVisibility(View.VISIBLE);
                 }
 
-                int resultConcluida = estadosolicitud.compareTo("Concluida");
-                if (resultConcluida == 0){
-                    aceptar_solicitud.setVisibility(View.GONE);
-                    rechazar_solicitud.setVisibility(View.GONE);
-                    texto_explicacion.setVisibility(View.GONE);
-                }
+
 //---------------------------------------btn Aceptar-----------------------------------------------
 
                 aceptar_solicitud.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        responder_solicitud("aceptar");
+                        responder_solicitud("aceptar",clickedData.getTraID());
                     }
                 });
 //---------------------------------------btn Rechazar-------------------------------------------
@@ -481,16 +495,34 @@ public  void Traslados_Recibidas(){
                 rechazar_solicitud.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        responder_solicitud("rechazar");
+                        responder_solicitud("rechazar",clickedData.getTraID());
                     }
                 });
+//---------------------------------------btn DescargarPDF-------------------------------------------
+
+                descargarPDF.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        descargarPDF(clickedData.getTra_factura(),usu_cuenta_bionet);
+                    }
+                });
+
+//---------------------------------------btn DescargarXML-------------------------------------------
+
+                descargarXML.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        descargarXML(clickedData.getTra_factura(),usu_cuenta_bionet);
+                    }
+                });
+
 
             }
         };
     }
 
 
-    private void responder_solicitud(String tipo) {
+    private void responder_solicitud(String tipo,String tra_id) {
 
         String tiporeturn = tipo;
         String url = getString(R.string.Url);
@@ -501,7 +533,7 @@ public  void Traslados_Recibidas(){
         try {
             jsonBodyrequest.put("esApp", "1" );
             jsonBodyrequest.put("usu_id", usu_id);
-            jsonBodyrequest.put("tra_id",UUIDarticulostraslados.getText());
+            jsonBodyrequest.put("tra_id",tra_id);
             jsonBodyrequest.put("tipo_traslado",tipo_traslado);
             jsonBodyrequest.put("respuesta",tiporeturn); //cancelar,recibir,aceptar,rechazar
             jsonBodyrequest.put("code",code);
@@ -546,65 +578,83 @@ public  void Traslados_Recibidas(){
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
-    private void detalle_traslado(String tra_id) {
-
+    private void detalle_traslado(String tra_id,TextView articulosText) {
+        progressDialog.show();
         ArticulosTrasladados.clear();
-        String url = getString(R.string.Url);
-        String ApiPath = url + "/api/inventario/obtener_articulos_detalle_traslado";
-
-
-        JSONObject jsonBodyrequest = new JSONObject();
         try {
-            jsonBodyrequest.put("esApp", "1" );
-            jsonBodyrequest.put("usu_id", usu_id);
-            jsonBodyrequest.put("tra_id",tra_id);
-            jsonBodyrequest.put("code",code);//ggg
+            String url = getString(R.string.Url);
 
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
+            String ApiPath = url + "/api/inventario/obtener_articulos_detalle_traslado?usu_id=" + usu_id + "&esApp=1&code="+code+"&tra_id=" + tra_id;
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,jsonBodyrequest, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    int status = Integer.parseInt(response.getString("estatus"));
-                    String Mensaje = response.getString("mensaje");
+            // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
 
-                    if (status == 1)
-                    {
-                        JSONObject Respuesta = response.getJSONObject("resultado");
-                        JSONArray articulosArray = Respuesta.getJSONArray("aTrasladosArticulos");
-                        for(int i=0;i<articulosArray.length();i++)
-                        {
-                            JSONObject elemento = articulosArray.getJSONObject(i);
-                            String articulo_trasladado = elemento.getString("art_nombre_completo");
-                            ArticulosTrasladados.add(articulo_trasladado);
+                            try {
+
+                                int EstatusApi = Integer.parseInt(response.getString("estatus"));
+
+                                if (EstatusApi == 1) {
+
+                                    JSONObject Respuesta = response.getJSONObject("resultado");
+                                    JSONArray articulosArray = Respuesta.getJSONArray("aTrasladosArticulos");
+                                    for(int i=0;i<articulosArray.length();i++)
+                                    {
+                                        JSONObject elemento = articulosArray.getJSONObject(i);
+                                        String articulo_trasladado = elemento.getString("art_nombre_completo");
+                                        ArticulosTrasladados.add(articulo_trasladado);
+                                    }
+                                    cadena_articulos="";
+                                    for(int x=0; x<ArticulosTrasladados.size();x++)
+                                    {
+                                        cadena_articulos = ArticulosTrasladados.get(x)+"\n";
+                                    }
+                                    articulosText.setText(cadena_articulos);
+                                    progressDialog.dismiss();
+
+                                }
+                            } catch (JSONException e) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(e), Toast.LENGTH_LONG);
+                                progressDialog.dismiss();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf(error), Toast.LENGTH_LONG);
+                            progressDialog.dismiss();
                         }
                     }
-                    else
-                    {
-                        Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG).show();
-                    }
+            );
 
+            getRequest.setShouldCache(false);
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+        } catch (Error e) {
+            e.printStackTrace();
+        }
+    }
 
+    private void descargarPDF(String tra_factura, String cuenta_bionet){
+        String url = getString(R.string.Url);
+        Intent viewIntent =
+                new Intent("android.intent.action.VIEW",
+                        Uri.parse(url+"/facturacion/obtener_mi_factura/"+usu_cuenta_bionet+"/traslados/"+tra_factura+"?esApp=1&usu_id="+usu_id));
+        startActivity(viewIntent);
+    }
 
-                } catch (JSONException e) {
-                    Toast toast1 =
-                            Toast.makeText(getContext(), "Error", Toast.LENGTH_LONG);
-                    toast1.show();
-                }
-            }
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast toast1 = Toast.makeText(getContext(),error.getMessage() , Toast.LENGTH_SHORT);
-                        toast1.show();
-                    }
-                }
-        );
-        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    private void descargarXML(String tra_factura, String cuenta_bionet){
+        String url = getString(R.string.Url);
+        Intent viewIntent =
+                new Intent("android.intent.action.VIEW",
+                        Uri.parse(url+"/facturacion/obtener_mi_xml/"+usu_cuenta_bionet+"/traslados/"+tra_factura+"?esApp=1&usu_id="+usu_id));
+        startActivity(viewIntent);
     }
 
     @Override

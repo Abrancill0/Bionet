@@ -287,6 +287,8 @@ public class Login extends Activity {
                                 Resultado.setUsuImagen(RespuestaObjeto.getString("usu_imagen_perfil"));
                                 Resultado.setUsu_activo(RespuestaObjeto.getString("usu_activo"));
                                 Resultado.setUsu_administrador(RespuestaObjeto.getString("usu_administrador"));
+                                JSONObject CuentaBionetNodo = RespuestaObjeto.getJSONObject("usu_id_cuenta_bionet");
+                                Resultado.setCuenta_bionet(CuentaBionetNodo.getString("uuid"));
                                 JSONObject SucursalesNodo = RespuestaObjeto.getJSONObject("usu_sucursales");
                                 JSONArray ArregloSucursales = SucursalesNodo.getJSONArray("values");
                                 Sucursal = ArregloSucursales.getString(0);
@@ -309,6 +311,8 @@ public class Login extends Activity {
                                     Resultado.setUsuImagen(tipo_id.getString("usu_imagen_perfil"));
                                     Resultado.setUsu_activo(tipo_id.getString("usu_activo"));
                                     Resultado.setUsu_administrador(tipo_id.getString("usu_administrador"));
+                                    JSONObject CuentaBionetNodo2 = RespuestaObjeto.getJSONObject("usu_id_cuenta_bionet");
+                                    Resultado.setCuenta_bionet(CuentaBionetNodo2.getString("uuid"));
                                     JSONObject SucursalesNodo2 = RespuestaObjeto.getJSONObject("usu_sucursales");
                                     JSONArray ArregloSucursales2 = SucursalesNodo.getJSONArray("values");
                                     Sucursal = ArregloSucursales2.getString(0);
@@ -450,6 +454,8 @@ public class Login extends Activity {
             editor.putString("usu_apellidos", Resultado.getUsuApellidos());
             editor.putString("usu_correo_electronico", Resultado.getUsuEmail());
             editor.putString("usu_sucursal", Sucursal);
+            editor.putString("usu_cuenta_bionet", Resultado.getCuenta_bionet());
+
             //
             editor.putString("usu_imagen_perfil", getString(R.string.Url) + Resultado.getUsuImagen());
             editor.putString("usu_activo", Resultado.getUsu_activo());
@@ -857,6 +863,8 @@ public class Login extends Activity {
                                 Resultado.setUsuImagen(RespuestaObjeto.getString("usu_imagen_perfil"));
                                 Resultado.setUsu_activo(RespuestaObjeto.getString("usu_activo"));
                                 Resultado.setUsu_administrador(RespuestaObjeto.getString("usu_administrador"));
+                                JSONObject CuentaBionetNodo = RespuestaObjeto.getJSONObject("usu_id_cuenta_bionet");
+                                Resultado.setCuenta_bionet(CuentaBionetNodo.getString("uuid"));
                                 JSONObject SucursalesNodo = RespuestaObjeto.getJSONObject("usu_sucursales");
                                 JSONArray ArregloSucursales = SucursalesNodo.getJSONArray("values");
                                 Sucursal = ArregloSucursales.getString(0);
@@ -878,6 +886,8 @@ public class Login extends Activity {
                                     Resultado.setUsuImagen(tipo_id.getString("usu_imagen_perfil"));
                                     Resultado.setUsu_activo(tipo_id.getString("usu_activo"));
                                     Resultado.setUsu_administrador(tipo_id.getString("usu_administrador"));
+                                    JSONObject CuentaBionetNodo2 = RespuestaObjeto.getJSONObject("usu_id_cuenta_bionet");
+                                    Resultado.setCuenta_bionet(CuentaBionetNodo2.getString("uuid"));
                                     JSONObject SucursalesNodo2 = RespuestaObjeto.getJSONObject("usu_sucursales");
                                     JSONArray ArregloSucursales2 = SucursalesNodo.getJSONArray("values");
                                     Sucursal = ArregloSucursales2.getString(0);

@@ -3,7 +3,6 @@ package com.Danthop.bionet.Adapters;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -16,8 +15,6 @@ import android.widget.Toast;
 import com.Danthop.bionet.R;
 import com.Danthop.bionet.Tables.SortableInventariosTable;
 import com.Danthop.bionet.Views.ButtonCantidad;
-import com.Danthop.bionet.model.ArticuloModel;
-import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.InventarioModel;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
@@ -123,7 +120,7 @@ public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioMo
                             "","", "","","",
                             "","","", "","","",
                             "","", "","","",
-                            Inventario.getfechaSolicitud(), "",Inventario.getUUIDarticulo(),Inventario.getUUIDvariante(),Inventario.getUUIDmodificador(),Inventario.getUUIDexistencias(),String.valueOf(ElegantButtoncantidad),
+                            Inventario.getfechaSolicitud(), "",Inventario.getTraID(),Inventario.getUUIDvariante(),Inventario.getUUIDmodificador(),Inventario.getUUIDexistencias(),String.valueOf(ElegantButtoncantidad),
                             "","","");
                     ArticulosTraslados.add(inventarioM);
 
@@ -132,7 +129,7 @@ public class TrasladoAdapter extends LongPressAwareTableDataAdapter<InventarioMo
                 {
                     for(int i=0;i <ArticulosTraslados.size();i++)
                     {
-                        if(Inventario.getUUIDarticulo().equals(ArticulosTraslados.get(i).getUUIDarticulo()))
+                        if(Inventario.getTraID().equals(ArticulosTraslados.get(i).getTraID()))
                         {
                             ArticulosTraslados.remove(i);
                         }
