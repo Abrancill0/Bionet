@@ -28,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +63,10 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.gson.JsonArray;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
@@ -185,6 +190,7 @@ public class Fragment_Ventas extends Fragment {
     private float TicketIVA;
     private String ticketid;
     private ArrayList<String> ArticulosConExistencias = new ArrayList<>();
+    private SeleccionarArticuloVentaAdapter ArticuloAdapter;
 
     private TableDataClickListener<ArticuloModel> VentaArticuloTablaListener;
 
@@ -229,6 +235,12 @@ public class Fragment_Ventas extends Fragment {
     private int Resp;
     private Double TarjetaCredito = 0.0;
     private Double TarjetaDebito = 0.0;
+
+    private Bitmap QR;
+    private String LinkEncuesta="";
+    private String contenidoImprimir2;
+
+    public final static int QRcodeWidth = 500 ;
 
     private int[][] u_infor;
     static UsbController usbCtrl = null;
@@ -631,6 +643,7 @@ public class Fragment_Ventas extends Fragment {
             {
                 InstanciarTicket();
                 LoadAutocomplete();
+                CargaEncuesta();
 
             }
             public void onNothingSelected(AdapterView<?> parent)
@@ -661,6 +674,67 @@ public class Fragment_Ventas extends Fragment {
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    public void CargaEncuesta()
+    {
+        // /api/configuracion/sucursales/select
+
+        try {
+
+            String url = getString(R.string.Url);
+
+            String ApiPath = url + "/api/configuracion/sucursales/select/"+SucursalID.get(SpinnerSucursal.getSelectedItemPosition())+"?usu_id=" + usu_id + "&esApp=1&code="+code;
+
+            // prepare the Request
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            try {
+
+                                int EstatusApi = Integer.parseInt(response.getString("estatus"));
+
+                                if (EstatusApi == 1) {
+                                    JSONObject Resultado = response.getJSONObject("resultado");
+                                    LinkEncuesta = Resultado.getString("con_url_encuesta");
+                                    try {
+                                        QR = TextToImageEncode(LinkEncuesta);
+                                    } catch (WriterException e) {
+                                        e.printStackTrace();
+                                    }
+
+
+                                }
+                                else{
+                                    Toast toast1 =
+                                            Toast.makeText(getContext(),
+                                                    "Error del servidor", Toast.LENGTH_LONG);
+
+                                }
+                            } catch (JSONException e) {
+                                Toast toast1 =
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(e), Toast.LENGTH_LONG);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast toast1 =
+                                    Toast.makeText(getContext(),
+                                            String.valueOf(error), Toast.LENGTH_LONG);
+                        }
+                    }
+            );
+            getRequest.setShouldCache(false);
+
+            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
+        } catch (Error e) {
+            e.printStackTrace();
         }
     }
 
@@ -1038,7 +1112,13 @@ public class Fragment_Ventas extends Fragment {
                         ticket_de_venta.setTic_nombre_cliente("");
                         ticket_de_venta.setTic_id_cliente("");
                         btn_agregar_cliente.setText("Cliente");
-                        EliminarClienteTicket();
+                        try{
+
+                        }catch(ArrayIndexOutOfBoundsException s)
+                        {
+                            EliminarClienteTicket();
+                        }
+
                     }
                 });
 
@@ -1075,8 +1155,13 @@ public class Fragment_Ventas extends Fragment {
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
-                        AniadirVendedorTicket("1");
-                        btn_agregar_vendedor.setText(ticket_de_venta.getTic_nombre_vendedor());
+                        try{
+                            AniadirVendedorTicket("1");
+                            btn_agregar_vendedor.setText(ticket_de_venta.getTic_nombre_vendedor());
+                        }catch(ArrayIndexOutOfBoundsException s)
+                        {
+
+                        }
                     }
                 });
 
@@ -1137,6 +1222,8 @@ public class Fragment_Ventas extends Fragment {
                 dialog.show();
                 tabla_selecciona_articulo = dialog.findViewById(R.id.tabla_seleccionar_articulos);
                 tabla_selecciona_articulo.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
+                SearchView BuscarArticulo = dialog.findViewById(R.id.Buscar_articulo);
+
                 Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
                 cerrarPopUp.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1146,6 +1233,18 @@ public class Fragment_Ventas extends Fragment {
                 });
                 try{
                     CargaArticulos();
+                    BuscarArticulo.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            ArticuloAdapter.getFilter().filter(newText);
+                            return false;
+                        }
+                    });
                 }catch (ArrayIndexOutOfBoundsException e)
                 {
 
@@ -1254,6 +1353,242 @@ public class Fragment_Ventas extends Fragment {
                                     //aqui
                                     AniadirCFDI();
                                     dialog.dismiss();
+                                    dialog.setContentView(R.layout.pop_up_ventas_parcialidades_completo);
+                                    dialog.show();
+                                    Button cancelarVenta = dialog.findViewById(R.id.cancelar);
+                                    cancelarVenta.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    Button cancelarVenta2 = dialog.findViewById(R.id.btnSalir3);
+                                    cancelarVenta.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    View Completo = dialog.findViewById(R.id.Completo);
+                                    Completo.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
+                                            dialog.setCanceledOnTouchOutside(false);
+                                            dialog.show();
+                                            tabla_metodos_pago = dialog.findViewById(R.id.tabla_seleccionar_metodo_pago);
+                                            tabla_metodos_pago.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
+                                            Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                                            cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    dialog.hide();
+                                                }
+                                            });
+                                            CargaMetodosPago();
+
+                                            TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
+                                            double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
+                                            NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                                            TotalAPagar.setText(formatter.format(ImporteTotalConDecimal));
+
+                                            Button realizarPago = dialog.findViewById(R.id.realizar_Pago);
+                                            realizarPago.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+
+                                                    double totalsumaimportes = 0;
+
+                                                    double TarjetaCredito = 0;
+                                                    double TarjetaDebito = 0;
+                                                    double PagosEfectivo = 0;
+
+
+                                                    for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
+
+                                                        String tipo_pago = ListaDePagos_a_utilizar.get(i).getNombre();
+                                                        String cantPago = ListaDePagos_a_utilizar.get(i).getCantidad();
+
+                                                        if (tipo_pago.equals("Tarjeta de crédito"))
+                                                        {
+                                                            TarjetaCredito = Double.parseDouble(cantPago);
+                                                        }
+
+                                                        if (tipo_pago.equals("Tarjeta débito"))
+                                                        {
+                                                            TarjetaDebito = Double.parseDouble(cantPago);
+                                                        }
+
+                                                        if(tipo_pago.equals("Efectivo")){
+
+                                                            PagosEfectivo +=Double.parseDouble(cantPago);
+
+                                                        }
+
+                                                        totalsumaimportes += Double.parseDouble(cantPago);
+
+                                                    }
+
+
+                                                    //Validar montos antes de pasar de pantallas
+                                                    String TotalText = String.valueOf(total.getText());
+
+                                                    double TotalFormat = 0;
+                                                    String cleanString = TotalText.replaceAll("\\D", "");
+                                                    try {
+                                                        TotalFormat = Double.parseDouble(cleanString);
+                                                        TotalFormat = TotalFormat / 100;
+                                                    } catch (Exception ex) {
+                                                        ex.printStackTrace();
+                                                    }
+
+                                                    double totalvalida = totalsumaimportes-PagosEfectivo;
+
+                                                    Toast toast2 =
+                                                            Toast.makeText(getContext(),
+                                                                    totalvalida + " " + totalsumaimportes + " " + PagosEfectivo,
+                                                                    Toast.LENGTH_LONG);
+                                                    //toast2.show();
+
+                                                    if (totalvalida > TotalFormat){
+                                                        Toast toast1 =
+                                                                Toast.makeText(getContext(),
+                                                                        "la suma de los montos de medios electronicos o tarjetas no puede sobrepasar el total de la venta",
+                                                                        Toast.LENGTH_LONG);
+                                                        toast1.show();
+
+                                                        return;
+                                                    }
+
+
+                                                    if (TotalFormat > totalsumaimportes) {
+                                                        Toast toast1 =
+                                                                Toast.makeText(getContext(), "El monto capturado es menor al total de la venta", Toast.LENGTH_LONG);
+                                                        toast1.show();
+
+                                                        return;
+                                                    }
+
+                                                    dialog.dismiss();
+
+                                                    double valorTarjetas = 0;
+
+                                                    valorTarjetas = TarjetaCredito + TarjetaDebito;
+
+                                                    if (valorTarjetas > 0)
+                                                    {
+
+                                                        Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
+                                                        Bundle mBundle = new Bundle();
+                                                        mBundle.putDouble("TC",TarjetaCredito);
+                                                        mBundle.putDouble("TD",TarjetaDebito);
+                                                        mBundle.putString( "Ticket",TicketIDVenta );
+                                                        mBundle.putString("Sucursal",ticket_de_venta.getTic_id_sucursal());
+                                                        mBundle.putInt( "03meses",Resptresmeses);
+                                                        mBundle.putInt( "06meses",Respseismeses);
+                                                        mBundle.putInt( "09meses",Respnuevemeses);
+                                                        mBundle.putInt( "12meses",Respdocemeses);
+
+
+                                                        mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
+
+                                                        for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
+                                                            mBundle.putInt("fpa_id"+i, Integer.parseInt( ListaDePagos_a_utilizar.get(i).getId()));
+                                                            mBundle.putString("valor"+i,ListaDePagos_a_utilizar.get(i).getCantidad());
+                                                        }
+
+                                                        myIntent.putExtras(mBundle);
+
+
+                                                        getActivity().startActivity(myIntent);
+                                                    }
+                                                    else
+                                                    {
+
+
+                                                        dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
+                                                        dialog.show();
+                                                        progressDialog.show();
+
+                                                        Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
+                                                        cerrarPopUp.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+                                                                loadTicket();
+                                                                dialog.hide();
+                                                                Bundle bundle = new Bundle();
+                                                                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                                                                bundle.putBoolean("Transacciones", Transacciones);
+                                                                bundle.putBoolean("Comision", Comision);
+                                                                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                                                                bundle.putString("tic_id", "");
+                                                                bundle.putString("suc_id", "");
+                                                                bundle.putString("apa_id", "");
+                                                                Fragment_Ventas fragment2 = new Fragment_Ventas();
+                                                                fragment2.setArguments(bundle);
+                                                                fr.replace(R.id.fragment_container,fragment2).commit();
+
+                                                            }
+                                                        });
+
+                                                        TextView importe_venta = dialog.findViewById(R.id.importe_venta);
+                                                        TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
+                                                        TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
+                                                        FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
+
+
+                                                        Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
+                                                        aceptar.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+                                                                progressDialog.show();
+                                                                loadTicket();
+                                                                dialog.dismiss();
+                                                                Bundle bundle = new Bundle();
+                                                                bundle.putBoolean("Proceso_Venta", Proceso_Venta);
+                                                                bundle.putBoolean("Transacciones", Transacciones);
+                                                                bundle.putBoolean("Comision", Comision);
+                                                                bundle.putBoolean("Conte_Caja", Conte_Caja);
+                                                                bundle.putString("tic_id", "");
+                                                                bundle.putString("suc_id", "");
+                                                                bundle.putString("apa_id", "");
+                                                                Fragment_Ventas fragment2 = new Fragment_Ventas();
+                                                                fragment2.setArguments(bundle);
+                                                                fr.replace(R.id.fragment_container,fragment2).commit();
+                                                            }
+                                                        });
+                                                    }
+
+
+
+
+                                                }
+                                            });
+                                        }
+                                    });
+
+//aqui
+
+                                }
+                            });
+                        }
+                    });
+                    Button no_facturar = dialog.findViewById(R.id.no_facturar);
+                    no_facturar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            AniadirCFDI();
+                            dialog.dismiss();
+                            dialog.setContentView(R.layout.pop_up_ventas_parcialidades_completo);
+                            dialog.show();
+                            View Completo = dialog.findViewById(R.id.Completo);
+                            Completo.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    VerificarPromocionCreditoMenor();
+                                    ticket_de_venta.setTic_facturar("false");
+                                    dialog.dismiss();
+                                    facturar(ticket_de_venta.getTic_facturar());
                                     dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
                                     dialog.setCanceledOnTouchOutside(false);
                                     dialog.show();
@@ -1266,6 +1601,9 @@ public class Fragment_Ventas extends Fragment {
                                             dialog.hide();
                                         }
                                     });
+
+                                    //=====================================================
+
                                     CargaMetodosPago();
 
                                     TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
@@ -1278,8 +1616,9 @@ public class Fragment_Ventas extends Fragment {
                                         @Override
                                         public void onClick(View v) {
 
-                                            double totalsumaimportes = 0;
+                                            //Aqui se realizan las validaciones cuando no lleva factura
 
+                                            double totalsumaimportes = 0;
                                             double TarjetaCredito = 0;
                                             double TarjetaDebito = 0;
                                             double PagosEfectivo = 0;
@@ -1300,16 +1639,13 @@ public class Fragment_Ventas extends Fragment {
                                                     TarjetaDebito = Double.parseDouble(cantPago);
                                                 }
 
-                                                if(tipo_pago.equals("Efectivo")){
-
+                                                if(tipo_pago.equals("Efectivo"))
+                                                {
                                                     PagosEfectivo +=Double.parseDouble(cantPago);
-
                                                 }
 
                                                 totalsumaimportes += Double.parseDouble(cantPago);
-
                                             }
-
 
                                             //Validar montos antes de pasar de pantallas
                                             String TotalText = String.valueOf(total.getText());
@@ -1323,13 +1659,9 @@ public class Fragment_Ventas extends Fragment {
                                                 ex.printStackTrace();
                                             }
 
+
                                             double totalvalida = totalsumaimportes-PagosEfectivo;
 
-                                            Toast toast2 =
-                                                    Toast.makeText(getContext(),
-                                                            totalvalida + " " + totalsumaimportes + " " + PagosEfectivo,
-                                                            Toast.LENGTH_LONG);
-                                            //toast2.show();
 
                                             if (totalvalida > TotalFormat){
                                                 Toast toast1 =
@@ -1356,9 +1688,9 @@ public class Fragment_Ventas extends Fragment {
 
                                             valorTarjetas = TarjetaCredito + TarjetaDebito;
 
-                                            if (valorTarjetas > 0)
-                                            {
+                                            if (valorTarjetas > 0) {
 
+                                                //Parte Bundle
                                                 Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
                                                 Bundle mBundle = new Bundle();
                                                 mBundle.putDouble("TC",TarjetaCredito);
@@ -1370,7 +1702,6 @@ public class Fragment_Ventas extends Fragment {
                                                 mBundle.putInt( "09meses",Respnuevemeses);
                                                 mBundle.putInt( "12meses",Respdocemeses);
 
-
                                                 mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
                                                 for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
@@ -1379,264 +1710,64 @@ public class Fragment_Ventas extends Fragment {
                                                 }
 
                                                 myIntent.putExtras(mBundle);
-
-
                                                 getActivity().startActivity(myIntent);
+
+
+                                                //parte de pop_meses_credito
+                                           /* dialog.setContentView( R.layout.pop_up_ventas_meses_acredito );
+                                            dialog.show();
+                                            progreso.show();
+                                            tabla_selecciona_meses = dialog.findViewById( R.id.tabla_seleccionar_meses );
+                                            tabla_selecciona_meses.setEmptyDataIndicatorView( dialog.findViewById( R.id.Tabla_vacia ) );
+
+                                            textViewNombre = dialog.findViewById( R.id.textViewNombre );
+                                            textViewNombre.setText( NomPromoCredito );
+
+                                            Button cerrarPop = dialog.findViewById( R.id.btntachita );
+                                            cerrarPop.setOnClickListener( new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    dialog.hide();
+                                                }
+                                            } );
+
+                                            Button cancelar_mes = dialog.findViewById( R.id.cancelar_mes );
+                                            cancelar_mes.setOnClickListener( new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    dialog.hide();
+                                                }
+                                            } );
+
+                                            //Button btnacpetar = dialog.findViewById( R.id.aceptar_mes );
+                                            double finalTarjetaCredito = TarjetaCredito;
+                                            double finalTarjetaDebito = TarjetaDebito;
+                                            btnacpetar.setOnClickListener( new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+
+                                                    Intent myIntent = new Intent( getActivity(), Feenicia_Transaction_Bluetooth.class );
+                                                    Bundle mBundle = new Bundle();
+                                                    mBundle.putDouble( "TC", finalTarjetaCredito );
+                                                    mBundle.putDouble( "TD", finalTarjetaDebito );
+                                                    mBundle.putString( "Ticket", TicketIDVenta );
+                                                    mBundle.putString( "Sucursal", ticket_de_venta.getTic_id_sucursal() );
+
+                                                    mBundle.putInt( "Tamano", ListaDePagos_a_utilizar.size() );
+
+                                                    for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
+                                                        mBundle.putInt( "fpa_id" + i, Integer.parseInt( ListaDePagos_a_utilizar.get( i ).getId() ) );
+                                                        mBundle.putString( "valor" + i, ListaDePagos_a_utilizar.get( i ).getCantidad() );
+                                                    }
+
+                                                    myIntent.putExtras( mBundle );
+
+                                                    getActivity().startActivity( myIntent );
+                                                }
+                                            } );*/
                                             }
                                             else
                                             {
-
-
-                                                dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
-                                                dialog.show();
-                                                progressDialog.show();
-
-                                                Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
-                                                cerrarPopUp.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        loadTicket();
-                                                        dialog.hide();
-                                                        Bundle bundle = new Bundle();
-                                                        bundle.putBoolean("Proceso_Venta", Proceso_Venta);
-                                                        bundle.putBoolean("Transacciones", Transacciones);
-                                                        bundle.putBoolean("Comision", Comision);
-                                                        bundle.putBoolean("Conte_Caja", Conte_Caja);
-                                                        bundle.putString("tic_id", "");
-                                                        bundle.putString("suc_id", "");
-                                                        bundle.putString("apa_id", "");
-                                                        Fragment_Ventas fragment2 = new Fragment_Ventas();
-                                                        fragment2.setArguments(bundle);
-                                                        fr.replace(R.id.fragment_container,fragment2).commit();
-
-                                                    }
-                                                });
-
-                                                TextView importe_venta = dialog.findViewById(R.id.importe_venta);
-                                                TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
-                                                TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
-                                                FinalizarTicket(importe_cambio, importe_recibido, importe_venta);
-
-
-                                                Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
-                                                aceptar.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        progressDialog.show();
-                                                        loadTicket();
-                                                        dialog.dismiss();
-                                                        Bundle bundle = new Bundle();
-                                                        bundle.putBoolean("Proceso_Venta", Proceso_Venta);
-                                                        bundle.putBoolean("Transacciones", Transacciones);
-                                                        bundle.putBoolean("Comision", Comision);
-                                                        bundle.putBoolean("Conte_Caja", Conte_Caja);
-                                                        bundle.putString("tic_id", "");
-                                                        bundle.putString("suc_id", "");
-                                                        bundle.putString("apa_id", "");
-                                                        Fragment_Ventas fragment2 = new Fragment_Ventas();
-                                                        fragment2.setArguments(bundle);
-                                                        fr.replace(R.id.fragment_container,fragment2).commit();
-                                                    }
-                                                });
-                                            }
-
-
-
-
-                                        }
-                                    });
-//aqui
-                                }
-                            });
-                        }
-                    });
-                    Button no_facturar = dialog.findViewById(R.id.no_facturar);
-                    no_facturar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            VerificarPromocionCreditoMenor();
-                            ticket_de_venta.setTic_facturar("false");
-                            dialog.dismiss();
-                            facturar(ticket_de_venta.getTic_facturar());
-                            dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
-                            dialog.setCanceledOnTouchOutside(false);
-                            dialog.show();
-                            tabla_metodos_pago = dialog.findViewById(R.id.tabla_seleccionar_metodo_pago);
-                            tabla_metodos_pago.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
-                            Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
-                            cerrarPopUp.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.hide();
-                                }
-                            });
-
-          //=====================================================
-
-                            CargaMetodosPago();
-
-                            TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
-                            double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
-                            NumberFormat formatter = NumberFormat.getCurrencyInstance();
-                            TotalAPagar.setText(formatter.format(ImporteTotalConDecimal));
-
-                            Button realizarPago = dialog.findViewById(R.id.realizar_Pago);
-                            realizarPago.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                 //Aqui se realizan las validaciones cuando no lleva factura
-
-                                    double totalsumaimportes = 0;
-                                    double TarjetaCredito = 0;
-                                    double TarjetaDebito = 0;
-                                    double PagosEfectivo = 0;
-
-
-                                    for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
-
-                                        String tipo_pago = ListaDePagos_a_utilizar.get(i).getNombre();
-                                        String cantPago = ListaDePagos_a_utilizar.get(i).getCantidad();
-
-                                        if (tipo_pago.equals("Tarjeta de crédito"))
-                                        {
-                                            TarjetaCredito = Double.parseDouble(cantPago);
-                                        }
-
-                                        if (tipo_pago.equals("Tarjeta débito"))
-                                        {
-                                            TarjetaDebito = Double.parseDouble(cantPago);
-                                        }
-
-                                        if(tipo_pago.equals("Efectivo"))
-                                        {
-                                            PagosEfectivo +=Double.parseDouble(cantPago);
-                                        }
-
-                                        totalsumaimportes += Double.parseDouble(cantPago);
-                                    }
-
-                                    //Validar montos antes de pasar de pantallas
-                                    String TotalText = String.valueOf(total.getText());
-
-                                    double TotalFormat = 0;
-                                    String cleanString = TotalText.replaceAll("\\D", "");
-                                    try {
-                                        TotalFormat = Double.parseDouble(cleanString);
-                                        TotalFormat = TotalFormat / 100;
-                                    } catch (Exception ex) {
-                                        ex.printStackTrace();
-                                    }
-
-
-                                    double totalvalida = totalsumaimportes-PagosEfectivo;
-
-
-                                    if (totalvalida > TotalFormat){
-                                        Toast toast1 =
-                                                Toast.makeText(getContext(),
-                                                        "la suma de los montos de medios electronicos o tarjetas no puede sobrepasar el total de la venta",
-                                                        Toast.LENGTH_LONG);
-                                        toast1.show();
-
-                                        return;
-                                    }
-
-
-                                    if (TotalFormat > totalsumaimportes) {
-                                        Toast toast1 =
-                                                Toast.makeText(getContext(), "El monto capturado es menor al total de la venta", Toast.LENGTH_LONG);
-                                        toast1.show();
-
-                                        return;
-                                    }
-
-                                    dialog.dismiss();
-
-                                    double valorTarjetas = 0;
-
-                                    valorTarjetas = TarjetaCredito + TarjetaDebito;
-
-                                    if (valorTarjetas > 0) {
-
-                                        //Parte Bundle
-                                        Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
-                                        Bundle mBundle = new Bundle();
-                                        mBundle.putDouble("TC",TarjetaCredito);
-                                        mBundle.putDouble("TD",TarjetaDebito);
-                                        mBundle.putString( "Ticket",TicketIDVenta );
-                                        mBundle.putString("Sucursal",ticket_de_venta.getTic_id_sucursal());
-                                        mBundle.putInt( "03meses",Resptresmeses);
-                                        mBundle.putInt( "06meses",Respseismeses);
-                                        mBundle.putInt( "09meses",Respnuevemeses);
-                                        mBundle.putInt( "12meses",Respdocemeses);
-
-                                        mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
-
-                                        for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
-                                            mBundle.putInt("fpa_id"+i, Integer.parseInt( ListaDePagos_a_utilizar.get(i).getId()));
-                                            mBundle.putString("valor"+i,ListaDePagos_a_utilizar.get(i).getCantidad());
-                                        }
-
-                                        myIntent.putExtras(mBundle);
-                                        getActivity().startActivity(myIntent);
-
-
-                                        //parte de pop_meses_credito
-                                       /* dialog.setContentView( R.layout.pop_up_ventas_meses_acredito );
-                                        dialog.show();
-                                        progreso.show();
-                                        tabla_selecciona_meses = dialog.findViewById( R.id.tabla_seleccionar_meses );
-                                        tabla_selecciona_meses.setEmptyDataIndicatorView( dialog.findViewById( R.id.Tabla_vacia ) );
-
-                                        textViewNombre = dialog.findViewById( R.id.textViewNombre );
-                                        textViewNombre.setText( NomPromoCredito );
-
-                                        Button cerrarPop = dialog.findViewById( R.id.btntachita );
-                                        cerrarPop.setOnClickListener( new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                dialog.hide();
-                                            }
-                                        } );
-
-                                        Button cancelar_mes = dialog.findViewById( R.id.cancelar_mes );
-                                        cancelar_mes.setOnClickListener( new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                dialog.hide();
-                                            }
-                                        } );
-
-                                        //Button btnacpetar = dialog.findViewById( R.id.aceptar_mes );
-                                        double finalTarjetaCredito = TarjetaCredito;
-                                        double finalTarjetaDebito = TarjetaDebito;
-                                        btnacpetar.setOnClickListener( new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-
-                                                Intent myIntent = new Intent( getActivity(), Feenicia_Transaction_Bluetooth.class );
-                                                Bundle mBundle = new Bundle();
-                                                mBundle.putDouble( "TC", finalTarjetaCredito );
-                                                mBundle.putDouble( "TD", finalTarjetaDebito );
-                                                mBundle.putString( "Ticket", TicketIDVenta );
-                                                mBundle.putString( "Sucursal", ticket_de_venta.getTic_id_sucursal() );
-
-                                                mBundle.putInt( "Tamano", ListaDePagos_a_utilizar.size() );
-
-                                                for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
-                                                    mBundle.putInt( "fpa_id" + i, Integer.parseInt( ListaDePagos_a_utilizar.get( i ).getId() ) );
-                                                    mBundle.putString( "valor" + i, ListaDePagos_a_utilizar.get( i ).getCantidad() );
-                                                }
-
-                                                myIntent.putExtras( mBundle );
-
-                                                getActivity().startActivity( myIntent );
-                                            }
-                                        } );*/
-                                    }
-                                    else
-                                    {
                                                 dialog.dismiss();
                                                 dialog.setContentView(R.layout.pop_up_ventas_confirmacion_venta);
                                                 dialog.show();
@@ -1696,18 +1827,21 @@ public class Fragment_Ventas extends Fragment {
                                                     }
                                                 });
 
-                                    }
+                                            }
 
-                                   /* TableDataClickListener<PromocionesModel> tablaListenermeses = new TableDataClickListener<PromocionesModel>() {
-                                        @Override
-                                        public void onDataClicked(int rowIndex, final PromocionesModel clickedData) {
-                                            dialog.dismiss();
+                                       /* TableDataClickListener<PromocionesModel> tablaListenermeses = new TableDataClickListener<PromocionesModel>() {
+                                            @Override
+                                            public void onDataClicked(int rowIndex, final PromocionesModel clickedData) {
+                                                dialog.dismiss();
+                                            }
+                                        };
+                                        tabla_selecciona_meses.addDataClickListener(tablaListenermeses);*/
+
                                         }
-                                    };
-                                    tabla_selecciona_meses.addDataClickListener(tablaListenermeses);*/
-
+                                    });
                                 }
                             });
+
 
                         }
                     });
@@ -2764,7 +2898,7 @@ public class Fragment_Ventas extends Fragment {
                                                 Articulo.setNum_existencia(num_existencia);
                                                 Articulos.add(Articulo);
                                     }
-                                    final SeleccionarArticuloVentaAdapter ArticuloAdapter = new SeleccionarArticuloVentaAdapter(getContext(), Articulos, tabla_selecciona_articulo);
+                                    ArticuloAdapter = new SeleccionarArticuloVentaAdapter(getContext(), Articulos, tabla_selecciona_articulo);
                                     tabla_selecciona_articulo.setDataAdapter(ArticuloAdapter);
                                     progressDialog.dismiss();
                                 }
@@ -4103,15 +4237,16 @@ public class Fragment_Ventas extends Fragment {
                                                             cadenaArticulosImprimir+"\n\n\n"+
                                                             "SUBTOTAL:         "+formatter.format(Subtotal)+"\n"+
                                                             "IMPUESTOS:        "+formatter.format( ImpuestosTotal)+"\n"+
-                                                            "TOTAL:            "+formatter.format( Total)+"\n\n"+
-                                                            "     ESTE TICKET FUE CREADO  \n"+
+                                                            "TOTAL:            "+formatter.format( Total)+"\n     ";
+                                            contenidoImprimir2=
+                                                    "     ESTE TICKET FUE CREADO  \n"+
                                                             "     DESDE BIO-NET PUNTO DE  \n"+
                                                             "     VENTA, EL MEJOR SISTEMA \n"+
                                                             "     PARA TU NEGOCIO, PARA   \n"+
                                                             "     MAS INFORMACION VISITA  \n"+
-                                                            "         BIONETPOS.COM\n\n\n"
+                                                            "         BIONETPOS.COM\n\n\n";
 
-                                            ;
+
                                             PDFIMprime(directory.getAbsolutePath()+"/"+fileName);
                                         }
                                     });
@@ -4202,9 +4337,12 @@ public class Fragment_Ventas extends Fragment {
             try {
                 URL url = new URL(getString(R.string.Url)+LogoNegocio);
                 Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                byte[] Data = POS_PrintBMP(image,384,0);
+                byte[] Data = POS_PrintBMP(image,384,1);
                 this.SendDataByte(Data);
                 this.SendDataString(contenidoImprimir);
+                byte[] DataQR = POS_PrintBMP(QR,320,0);
+                this.SendDataByte(DataQR);
+                this.SendDataString(contenidoImprimir2);
             } catch(IOException e) {
                 System.out.println(e);
             }
@@ -4801,6 +4939,40 @@ public class Fragment_Ventas extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    private Bitmap TextToImageEncode(String Value) throws WriterException {
+        BitMatrix bitMatrix;
+        try {
+            bitMatrix = new MultiFormatWriter().encode(
+                    Value,
+                    BarcodeFormat.DATA_MATRIX.QR_CODE,
+                    QRcodeWidth, QRcodeWidth, null
+            );
+
+        } catch (IllegalArgumentException Illegalargumentexception) {
+
+            return null;
+        }
+        int bitMatrixWidth = bitMatrix.getWidth();
+
+        int bitMatrixHeight = bitMatrix.getHeight();
+
+        int[] pixels = new int[bitMatrixWidth * bitMatrixHeight];
+
+        for (int y = 0; y < bitMatrixHeight; y++) {
+            int offset = y * bitMatrixWidth;
+
+            for (int x = 0; x < bitMatrixWidth; x++) {
+
+                pixels[offset + x] = bitMatrix.get(x, y) ?
+                        getResources().getColor(R.color.black):getResources().getColor(R.color.white);
+            }
+        }
+        Bitmap bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444);
+
+        bitmap.setPixels(pixels, 0, 500, 0, 0, bitMatrixWidth, bitMatrixHeight);
+        return bitmap;
     }
 
 

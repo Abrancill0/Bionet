@@ -501,9 +501,14 @@ public class Fragment_inventarios extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast toast1 =
-                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
-                        toast1.show();
+                        try{
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                            toast1.show();
+                        }catch (NullPointerException s)
+                        {
+
+                        }
                     }
                 }
         );

@@ -256,7 +256,13 @@ public class Fragment_pestania_traslado extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                TrasladoAdapter.getFilter().filter(newText);
+                try{
+                    TrasladoAdapter.getFilter().filter(newText);
+                    return false;
+                }catch (NullPointerException c)
+                {
+
+                }
                 return false;
             }
         });
@@ -402,8 +408,14 @@ public class Fragment_pestania_traslado extends Fragment {
                         traslados.add(traslado);
 
                     }
-                    TrasladoAdapter = new TrasladoEnvioRecibidoAdapter(getContext(), traslados,tabla_traslados);
-                    tabla_traslados.setDataAdapter(TrasladoAdapter);
+                    try{
+
+                        TrasladoAdapter = new TrasladoEnvioRecibidoAdapter(getContext(), traslados,tabla_traslados);
+                        tabla_traslados.setDataAdapter(TrasladoAdapter);
+                    }catch (NullPointerException a)
+                    {
+
+                    }
                 }
             } catch (JSONException e) {
                 progressDialog.dismiss();
