@@ -29,11 +29,8 @@
                 android:gravity="center"
                 android:text="Cobrando"
                 android:textColor="@color/white"
-<<<<<<< HEAD
-                android:textSize="20sp" />
-=======
+
                 android:textSize="22sp" />
->>>>>>> 37f56e5d95ac99606b3bcc5d2715775f6c303aab
 
             <TextView
                 android:id="@+id/tvMontoMostrar"
@@ -43,11 +40,9 @@
                 android:gravity="center"
                 android:text="$ 300.00 MN"
                 android:textColor="@color/white"
-<<<<<<< HEAD
-                android:textSize="20sp" />
-======
+
                 android:textSize="22sp" />
->
+
         </LinearLayout>
     </LinearLayout>
 
