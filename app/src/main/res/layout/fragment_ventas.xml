@@ -148,7 +148,7 @@
                         android:background="@drawable/pestanas_desplegables"
                         android:drawableLeft="@drawable/ic_agregar_vendedor"
                         android:drawablePadding="15dp"
-                        android:padding="15dp"
+                        android:paddingHorizontal="15dp"
                         android:text="Vendedor"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="14sp" />
@@ -171,7 +171,7 @@
                         android:background="@drawable/pestanas_desplegables"
                         android:drawableLeft="@drawable/ic_agregar_cliente"
                         android:drawablePadding="15dp"
-                        android:padding="15dp"
+                        android:paddingHorizontal="15dp"
                         android:text="Cliente"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="14sp" />

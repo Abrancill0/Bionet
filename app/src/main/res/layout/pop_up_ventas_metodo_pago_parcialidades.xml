@@ -19,7 +19,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".9"
+            android:layout_weight=".85"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -29,6 +29,27 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
                 android:paddingTop="20dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView60"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cliente:"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textSize="22dp" />
+
+                    <Spinner
+                        android:id="@+id/SpinnerClientes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -69,7 +90,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="right"
-                    android:layout_weight=".6"
+                    android:layout_weight=".5"
                     android:background="@drawable/ic_tachita"
                     tools:ignore="MissingConstraints"
                     tools:layout_editor_absoluteX="410dp"
