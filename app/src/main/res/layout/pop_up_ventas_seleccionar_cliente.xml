@@ -118,7 +118,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".35"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp">
 
                 <com.Danthop.bionet.Tables.SortableClientesTable
                     android:id="@+id/tabla_clientes"
@@ -136,7 +137,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight=".3"
-                    android:background="@color/gray2"
+                    android:background="@color/white"
                     android:gravity="center_vertical|center_horizontal"
                     android:orientation="vertical"
                     android:visibility="visible">

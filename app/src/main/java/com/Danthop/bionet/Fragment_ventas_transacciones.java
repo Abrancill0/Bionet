@@ -58,6 +58,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.squareup.timessquare.CalendarPickerView;
@@ -162,11 +163,13 @@ public class Fragment_ventas_transacciones extends Fragment {
     private String NombreVendedor="";
     private String NombreCliente="";
     private String NumeroTicket="";
+    private String LinkEncuesta="";
     private float Subtotal = 0;
     private float Total = 0;
     private float ImpuestosTotal=0;
     private ProgressDialog progressDialog;
     private String contenidoImprimir;
+    private String contenidoImprimir2;
     Handler handler;
 
     private MovimientoAdapter movimientoAdapter;
@@ -210,6 +213,7 @@ public class Fragment_ventas_transacciones extends Fragment {
     private boolean  Transacciones=false;
     private boolean Conte_Caja=false;
     private boolean Comision=false;
+    private Bitmap QR;
 
     private String code="";
 
@@ -407,6 +411,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                     LoadApartados();
                     LoadOrdenes();
                     LoadMovimientos();
+                    CargaEncuesta();
 
             }
             public void onNothingSelected(AdapterView<?> parent)
@@ -458,7 +463,7 @@ public class Fragment_ventas_transacciones extends Fragment {
 
             String url = getString(R.string.Url);
 
-            String ApiPath = url + "/api/configuracion/sucursales/select?usu_id=" + usu_id + "&esApp=1&code="+code+"&suc_id="+ SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+            String ApiPath = url + "/api/configuracion/sucursales/select/"+SucursalID.get(SpinnerSucursal.getSelectedItemPosition())+"?usu_id=" + usu_id + "&esApp=1&code="+code;
 
             // prepare the Request
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, ApiPath, null,
@@ -471,6 +476,13 @@ public class Fragment_ventas_transacciones extends Fragment {
                                 int EstatusApi = Integer.parseInt(response.getString("estatus"));
 
                                 if (EstatusApi == 1) {
+                                    JSONObject Resultado = response.getJSONObject("resultado");
+                                    LinkEncuesta = Resultado.getString("con_url_encuesta");
+                                    try {
+                                        QR = TextToImageEncode(LinkEncuesta);
+                                    } catch (WriterException e) {
+                                        e.printStackTrace();
+                                    }
 
 
                                 }
@@ -1031,9 +1043,15 @@ public class Fragment_ventas_transacciones extends Fragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast toast1 =
-                                    Toast.makeText(getContext(),
-                                            String.valueOf(error), Toast.LENGTH_LONG);
+                            try{
+                                Toast toast1 =
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(error), Toast.LENGTH_LONG);
+                            }catch(NullPointerException s)
+                            {
+
+                            }
+
                         }
                     }
             );
@@ -1371,7 +1389,6 @@ public class Fragment_ventas_transacciones extends Fragment {
                                 int EstatusApi = Integer.parseInt(response.getString("estatus"));
 
                                 if (EstatusApi == 1) {
-                                    progressDialog.dismiss();
 
                                     JSONObject RespuestaResultado = response.getJSONObject("resultado");
 
@@ -1710,13 +1727,14 @@ public class Fragment_ventas_transacciones extends Fragment {
                                                             cadenaArticulosImprimir+"\n\n\n"+
                                                             "SUBTOTAL:         "+formatter.format(Subtotal)+"\n"+
                                                             "IMPUESTOS:        "+formatter.format( ImpuestosTotal)+"\n"+
-                                                            "TOTAL:            "+formatter.format( Total)+"\n\n"+
+                                                            "TOTAL:            "+formatter.format( Total)+"\n     ";
+                                            contenidoImprimir2=
                                                             "     ESTE TICKET FUE CREADO  \n"+
                                                             "     DESDE BIO-NET PUNTO DE  \n"+
                                                             "     VENTA, EL MEJOR SISTEMA \n"+
                                                             "     PARA TU NEGOCIO, PARA   \n"+
                                                             "     MAS INFORMACION VISITA  \n"+
-                                                            "         BIONETPOS.COM\n\n\n"
+                                                            "         BIONETPOS.COM\n\n\n";
 
                                                     ;
                                             PDFIMprime(directory.getAbsolutePath()+"/"+fileName);
@@ -1724,7 +1742,7 @@ public class Fragment_ventas_transacciones extends Fragment {
                                     });
 
 
-
+                                    progressDialog.dismiss();
                                 }
                                 else
                                 {
@@ -1809,9 +1827,12 @@ public class Fragment_ventas_transacciones extends Fragment {
                 try {
                     URL url = new URL(getString(R.string.Url)+LogoNegocio);
                     Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    byte[] Data = POS_PrintBMP(image,384,0);
+                    byte[] Data = POS_PrintBMP(image,384,1);
                     this.SendDataByte(Data);
                     this.SendDataString(contenidoImprimir);
+                    byte[] DataQR = POS_PrintBMP(QR,320,0);
+                    this.SendDataByte(DataQR);
+                    this.SendDataString(contenidoImprimir2);
                 } catch(IOException e) {
                     System.out.println(e);
                 }

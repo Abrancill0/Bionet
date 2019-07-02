@@ -113,23 +113,20 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
 
     public static String user;  // USER LOGIN
     public static String pwd;   // PASSWORD LOGIN
-
     public static Double TarjetaCredito;
     public static Double TarjetaDebio;
-
     public static String fpa_id;
     public static String valor;
     public static int tamano;
     public static String Ticket;
     public static String Sucursal;
-
     public static int Tresmeses;
     public static int Seismeses;
     public static int nuevemeses;
     public static int docemeses;
-
     public static int Contador;
     public static String Mensaje;
+    public static String TipoVenta;
 
     private double ImporteCambio;
     private double ImporteRecibido;
@@ -162,241 +159,251 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
         askForContactPermission();
 
         Bundle bundle = getIntent().getExtras();
-        TarjetaCredito = getIntent().getExtras().getDouble("TC");
-        TarjetaDebio = bundle.getDouble("TD");
-        tamano = bundle.getInt("Tamano");
-        Ticket = bundle.getString("Ticket");
-        Sucursal = bundle.getString("Sucursal");
-        Tresmeses = bundle.getInt("03meses");
-        Seismeses = bundle.getInt("06meses");
-        nuevemeses = bundle.getInt("09meses");
-        docemeses = bundle.getInt("12meses");
+        //TarjetaCredito = getIntent().getExtras().getDouble("TC");
+        TipoVenta = bundle.getString("TipoVenta");
 
-        List<String> entriesList = new ArrayList<>();
+        if (TipoVenta.equals("Venta_Normal")) {
+            //Venta Normal
+            TarjetaCredito = bundle.getDouble("TC");
+            TarjetaDebio = bundle.getDouble("TD");
+            tamano = bundle.getInt("Tamano");
+            Ticket = bundle.getString("Ticket");
+            Sucursal = bundle.getString("Sucursal");
+            Tresmeses = bundle.getInt("03meses");
+            Seismeses = bundle.getInt("06meses");
+            nuevemeses = bundle.getInt("09meses");
+            docemeses = bundle.getInt("12meses");
 
-        try {
+            List<String> entriesList = new ArrayList<>();
 
-            Log.i("3 meses", String.valueOf(Tresmeses));
-            Log.i("6 meses", String.valueOf(Seismeses));
-            Log.i("9 meses", String.valueOf(nuevemeses));
-            Log.i("12 meses", String.valueOf(docemeses));
-        } catch (Exception e) {
-            Log.e("Error feenicia bundle", e.toString());
-        }
+            try {
 
-
-        ListaDePagos_a_utilizar = new ArrayList<>();
-
-        //Llena Spinner en base a Arreglo declarado en String
-        String[] entries = getResources().getStringArray(R.array.sale_array);
-
-        //entriesList = new ArrayList<String>(Arrays.asList(entries));
-
-        for (int i = 0; i < entries.length; i++) {
-
-            switch (entries[i].toString()) {
-
-                case "Venta Retail - Sin propina":
-                    entriesList.add(i, entries[i].toString());
-                    break;
-                case "Venta Retail - Con propina":
-                    entriesList.add(i, entries[i].toString());
-                    break;
-                case "Venta MSI_03 - Sin propina":
-
-                    if (Tresmeses == 1) {
-                        entriesList.add(i, entries[i].toString());
-                    }
-
-                    break;
-                case "Venta MSI_03 - Con propina":
-                    if (Tresmeses == 1) {
-                        entriesList.add(i, entries[i].toString());
-                    }
-                    break;
-                case "Venta MSI_06 - Sin propina":
-                    if (Seismeses == 1) {
-                        entriesList.add(i, entries[i].toString());
-                    }
-                    break;
-                case "Venta MSI_06 - Con propina":
-                    if (Seismeses == 1) {
-                        entriesList.add(i, entries[i].toString());
-                    }
-                    break;
-                case "Venta MSI_09 - Sin propina":
-                    if (nuevemeses == 1) {
-                        entriesList.add(i, entries[i].toString());
-                    }
-                    break;
-                case "Venta MSI_09 - Con propina":
-                    if (nuevemeses == 1) {
-                        entriesList.add(i, entries[i].toString());
-                    }
-                    break;
-                case "Venta MSI_12 - Sin propina":
-                    if (docemeses == 1) {
-                        entriesList.add(i, entries[i].toString());
-                    }
-                    break;
-                case "Venta MSI_12 - Con propina":
-                    if (docemeses == 1) {
-                        entriesList.add(i, entries[i].toString());
-                    }
-                    break;
-                default:
-                    // sentencias;
-                    break;
-
+                Log.i("3 meses", String.valueOf(Tresmeses));
+                Log.i("6 meses", String.valueOf(Seismeses));
+                Log.i("9 meses", String.valueOf(nuevemeses));
+                Log.i("12 meses", String.valueOf(docemeses));
+            } catch (Exception e) {
+                Log.e("Error feenicia bundle", e.toString());
             }
 
 
-        }
+            ListaDePagos_a_utilizar = new ArrayList<>();
 
+            //Llena Spinner en base a Arreglo declarado en String
+            String[] entries = getResources().getStringArray(R.array.sale_array);
 
-        ArrayAdapter spinnerAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, entriesList);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //entriesList = new ArrayList<String>(Arrays.asList(entries));
 
+            for (int i = 0; i < entries.length; i++) {
 
-        sp_sale.setAdapter(spinnerAdapter);
+                switch (entries[i].toString()) {
 
+                    case "Venta Retail - Sin propina":
+                        entriesList.add(i, entries[i].toString());
+                        break;
+                    case "Venta Retail - Con propina":
+                        entriesList.add(i, entries[i].toString());
+                        break;
+                    case "Venta MSI_03 - Sin propina":
+                        if (Tresmeses == 1) {
+                            entriesList.add(i, entries[i].toString());
+                        }
+                        break;
+                    case "Venta MSI_03 - Con propina":
+                        if (Tresmeses == 1) {
+                            entriesList.add(i, entries[i].toString());
+                        }
+                        break;
+                    case "Venta MSI_06 - Sin propina":
+                        if (Seismeses == 1) {
+                            entriesList.add(i, entries[i].toString());
+                        }
+                        break;
+                    case "Venta MSI_06 - Con propina":
+                        if (Seismeses == 1) {
+                            entriesList.add(i, entries[i].toString());
+                        }
+                        break;
+                    case "Venta MSI_09 - Sin propina":
+                        if (nuevemeses == 1) {
+                            entriesList.add(i, entries[i].toString());
+                        }
+                        break;
+                    case "Venta MSI_09 - Con propina":
+                        if (nuevemeses == 1) {
+                            entriesList.add(i, entries[i].toString());
+                        }
+                        break;
+                    case "Venta MSI_12 - Sin propina":
+                        if (docemeses == 1) {
+                            entriesList.add(i, entries[i].toString());
+                        }
+                        break;
+                    case "Venta MSI_12 - Con propina":
+                        if (docemeses == 1) {
+                            entriesList.add(i, entries[i].toString());
+                        }
+                        break;
+                    default:
+                        // sentencias;
+                        break;
 
-        for (int i = 0; i < tamano; i++) {
-
-            fpa_id = bundle.getString("fpa_id" + i);
-            valor = bundle.getString("valor" + i);
-
-            PagoModel modelito = new PagoModel(
-                    "",
-                    fpa_id,
-                    valor
-            );
-            ListaDePagos_a_utilizar.add(modelito);
-
-        }
-
-        double precio = 0;
-
-        if (TarjetaCredito > 0) {
-            precio = TarjetaCredito;
-            Contador = 2;
-            Mensaje = "Tarjeta de Credito";
-
-            show_Toast("Coloque la tarjeta de credito para procesar el cobro");
-
-            btn_terminar_feenicia.setEnabled(false);  /// CONECTAR
-            btn_cerrar.setEnabled(true);
-        } else {
-            precio = TarjetaDebio;
-            Contador = 1;
-            Mensaje = "Tarjeta de Debito";
-            show_Toast("Coloque la tarjeta de debito para procesar el cobro");
-
-            btn_terminar_feenicia.setEnabled(false);  /// CONECTAR
-            btn_cerrar.setEnabled(true);
-        }
-
-        SharedPreferences sharedPref = this.getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
-        usu_id = sharedPref.getString("usu_id", "");
-
-        dialog = new Dialog(this);
-
-        utils = new SaleUtils();
-        monto = precio;
-        monto = utils.roundTwoDecimals(monto);
-
-        tip = 1.00;
-        tip = utils.roundTwoDecimals(tip);
-
-        msi = 3;
-
-        //DIBUJAMOS EL MONTO
-        tvMontoMostrar.setText("$ " + monto + " MN");
-
-        // PERMISO DE BLUETOOTH
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_ADMIN}, 1);
-            return;
-
-        } else {
-            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            if (!mBluetoothAdapter.isEnabled()) {
-                mBluetoothAdapter.enable();
-            }
-        }
-
-        ///// LIBRERIA FEENICIA_BT //////////
-        user = "Black_Orange";
-        pwd = "Black*2019";
-
-        // 01.- Generar Login para obtener credenciales
-        sppHandlerConnection = new SppHandlerConnection();
-        sppHandlerConnection.generateLogin(user, pwd);   // (Username,Password)
-
-
-        handlerEVM = sppHandlerConnection.initialize(handlerEVM, settings, ui, getApplicationContext(), credentials);
-
-        // 02.- Inicializar Conexión BT
-        bTReceiverConnection = new BTReceiverConnection();
-        bTReceiverConnection.initializeBT(this, "FNZA");
-
-        _receiver = bTReceiverConnection.get_receiver();
-        adapter = bTReceiverConnection.getAdapter();
-
-        ////////////////////////////////////
-
-        sale.config(sppHandlerConnection); // Inicializar
-        sale.sale_retail_without_tip(monto); // DEFAULT Monto (SIN MSI y SIN PROPINA
-
-
-        // EVENTOS DE TIPO DE VENTA
-        sp_sale.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-
-
-                if (position == 0) { // RETAIL - SIN PROPINA
-                    sale.sale_retail_without_tip(monto);
-                } else if (position == 1) { // RETAIL - CON PROPINA
-                    sale.sale_retail_with_tip(monto, tip);
-                } else if (position == 2) { // MSI_03 - SIN PROPINA
-                    msi = 3;
-                    sale.sale_msi_without_tip(monto, msi);
-                } else if (position == 3) { // MSI_03 - CON PROPINA
-                    msi = 3;
-                    sale.sale_msi_with_tip(monto, tip, msi);
-                } else if (position == 4) { // MSI_06 - SIN PROPINA
-                    msi = 6;
-                    sale.sale_msi_without_tip(monto, msi);
-                } else if (position == 5) { // MSI_06 - CON PROPINA
-                    msi = 6;
-                    sale.sale_msi_with_tip(monto, tip, msi);
-                } else if (position == 6) { // MSI_09 - SIN PROPINA
-                    msi = 9;
-                    sale.sale_msi_without_tip(monto, msi);
-                } else if (position == 7) { // MSI_09 - CON PROPINA
-                    msi = 9;
-                    sale.sale_msi_with_tip(monto, tip, msi);
-                } else if (position == 8) { // MSI_12 - SIN PROPINA
-                    msi = 12;
-                    sale.sale_msi_without_tip(monto, msi);
-                } else if (position == 9) { // MSI_12 - CON PROPINA
-                    msi = 12;
-                    sale.sale_msi_with_tip(monto, tip, msi);
                 }
 
-                Log.i("SppHandlerConnection", "MONTO: " + String.valueOf(sppHandlerConnection.getAmount()));
-                Log.i("SppHandlerConnection", "TIP: " + String.valueOf(sppHandlerConnection.getTip()));
-                Log.i("SppHandlerConnection", "MSI: " + String.valueOf(sppHandlerConnection.getMsi()));
+            }
+
+
+            ArrayAdapter spinnerAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, entriesList);
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            sp_sale.setAdapter(spinnerAdapter);
+
+            for (int i = 0; i < tamano; i++) {
+
+                fpa_id = bundle.getString("fpa_id" + i);
+                valor = bundle.getString("valor" + i);
+
+                PagoModel modelito = new PagoModel(
+                        "",
+                        fpa_id,
+                        valor
+                );
+                ListaDePagos_a_utilizar.add(modelito);
 
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Este metodo no se utilizada
+            double precio = 0;
+
+            if (TarjetaCredito > 0) {
+                precio = TarjetaCredito;
+                Contador = 2;
+                Mensaje = "Tarjeta de Credito";
+
+                show_Toast("Coloque la tarjeta de credito para procesar el cobro");
+
+                btn_terminar_feenicia.setEnabled(false);  /// CONECTAR
+                btn_cerrar.setEnabled(true);
+            } else {
+                precio = TarjetaDebio;
+                Contador = 1;
+                Mensaje = "Tarjeta de Debito";
+                show_Toast("Coloque la tarjeta de debito para procesar el cobro");
+
+                btn_terminar_feenicia.setEnabled(false);  /// CONECTAR
+                btn_cerrar.setEnabled(true);
             }
 
-        });
+            SharedPreferences sharedPref = this.getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+            usu_id = sharedPref.getString("usu_id", "");
+
+            dialog = new Dialog(this);
+
+            utils = new SaleUtils();
+            monto = precio;
+            monto = utils.roundTwoDecimals(monto);
+
+            tip = 1.00;
+            tip = utils.roundTwoDecimals(tip);
+
+            msi = 3;
+
+            //DIBUJAMOS EL MONTO
+            tvMontoMostrar.setText("$ " + monto + " MN");
+
+            // PERMISO DE BLUETOOTH
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.BLUETOOTH_ADMIN}, 1);
+                return;
+
+            } else {
+                BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                if (!mBluetoothAdapter.isEnabled()) {
+                    mBluetoothAdapter.enable();
+                }
+            }
+
+            ///// LIBRERIA FEENICIA_BT //////////
+            user = "Black_Orange";
+            pwd = "Black*2019";
+
+            // 01.- Generar Login para obtener credenciales
+            sppHandlerConnection = new SppHandlerConnection();
+            sppHandlerConnection.generateLogin(user, pwd);   // (Username,Password)
+
+
+            handlerEVM = sppHandlerConnection.initialize(handlerEVM, settings, ui, getApplicationContext(), credentials);
+
+            // 02.- Inicializar Conexión BT
+            bTReceiverConnection = new BTReceiverConnection();
+            bTReceiverConnection.initializeBT(this, "FNZA");
+
+            _receiver = bTReceiverConnection.get_receiver();
+            adapter = bTReceiverConnection.getAdapter();
+
+            ////////////////////////////////////
+
+            sale.config(sppHandlerConnection); // Inicializar
+            //sale.
+            // sale.sale_retail_without_tip(monto); // DEFAULT Monto (SIN MSI y SIN PROPINA
+
+            // EVENTOS DE TIPO DE VENTA
+            sp_sale.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                    if (position == 0) { // RETAIL - SIN PROPINA
+                        sale.sale_retail_without_tip(monto);
+                    } else if (position == 1) { // RETAIL - CON PROPINA
+                        sale.sale_retail_with_tip(monto, tip);
+                    } else if (position == 2) { // MSI_03 - SIN PROPINA
+                        msi = 3;
+                        sale.sale_msi_without_tip(monto, msi);
+                    } else if (position == 3) { // MSI_03 - CON PROPINA
+                        msi = 3;
+                        sale.sale_msi_with_tip(monto, tip, msi);
+                    } else if (position == 4) { // MSI_06 - SIN PROPINA
+                        msi = 6;
+                        sale.sale_msi_without_tip(monto, msi);
+                    } else if (position == 5) { // MSI_06 - CON PROPINA
+                        msi = 6;
+                        sale.sale_msi_with_tip(monto, tip, msi);
+                    } else if (position == 6) { // MSI_09 - SIN PROPINA
+                        msi = 9;
+                        sale.sale_msi_without_tip(monto, msi);
+                    } else if (position == 7) { // MSI_09 - CON PROPINA
+                        msi = 9;
+                        sale.sale_msi_with_tip(monto, tip, msi);
+                    } else if (position == 8) { // MSI_12 - SIN PROPINA
+                        msi = 12;
+                        sale.sale_msi_without_tip(monto, msi);
+                    } else if (position == 9) { // MSI_12 - CON PROPINA
+                        msi = 12;
+                        sale.sale_msi_with_tip(monto, tip, msi);
+                    }
+
+                    Log.i("SppHandlerConnection", "MONTO: " + String.valueOf(sppHandlerConnection.getAmount()));
+                    Log.i("SppHandlerConnection", "TIP: " + String.valueOf(sppHandlerConnection.getTip()));
+                    Log.i("SppHandlerConnection", "MSI: " + String.valueOf(sppHandlerConnection.getMsi()));
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parentView) {
+                    // Este metodo no se utilizada
+                }
+
+            });
+
+        }
+        else if (TipoVenta.equals("Servicios"))
+        {
+
+            
+
+
+
+        }
+        //Venta de servicios
 
 
         btn_terminar_feenicia.setOnClickListener(new View.OnClickListener() {
@@ -603,6 +610,8 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
         });
 
         _receiver.registerReceiver();
+
+        //Aqui termina
     }
 
     public static void resultLoginResponse(final ResponseCode response) {

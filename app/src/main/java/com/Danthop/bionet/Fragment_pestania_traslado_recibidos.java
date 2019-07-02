@@ -255,7 +255,13 @@ public class Fragment_pestania_traslado_recibidos extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                TrasladoAdapter.getFilter().filter(newText);
+                try{
+                    TrasladoAdapter.getFilter().filter(newText);
+                    return false;
+                }catch (NullPointerException c)
+                {
+
+                }
                 return false;
             }
         });

@@ -89,8 +89,6 @@ public class Fragment_crear_cliente extends DialogFragment {
     private ImageView Back;
     private String rfc;
 
-    String URLGetEstados=getString(R.string.Url)+"/api/configuracion/sucursales/select_estados?usu_id=18807ae8-0a10-540c-91cf-aa7eaccf3cbf&esApp=1";
-
     //private Spinner SpinnerEstado;
     private ArrayList<String> EstadoName;
     private ArrayList<Integer> EstadoID;
@@ -628,11 +626,16 @@ public class Fragment_crear_cliente extends DialogFragment {
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast toast1 =
-                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        try{
 
-                        toast1.show();
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                            toast1.show();
 
+                        }catch (NullPointerException s)
+                        {
+
+                        }
 
                     }
                 }

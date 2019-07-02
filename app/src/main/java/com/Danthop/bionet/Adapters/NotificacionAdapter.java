@@ -2,6 +2,7 @@ package com.Danthop.bionet.Adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,7 +93,7 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
 
         notificacionViewHolder.TituloTextView.setText(currentItem.getTitulo());
         notificacionViewHolder.FechaTextView.setText(currentItem.getFecha());
-        notificacionViewHolder.MensajeTextView.setText(currentItem.getMensaje());
+        notificacionViewHolder.MensajeTextView.setText(Html.fromHtml(currentItem.getMensaje()));
 
         if(currentItem.getVisto().equals("false"))
         {

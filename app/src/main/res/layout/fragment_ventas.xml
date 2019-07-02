@@ -148,7 +148,7 @@
                         android:background="@drawable/pestanas_desplegables"
                         android:drawableLeft="@drawable/ic_agregar_vendedor"
                         android:drawablePadding="15dp"
-                        android:padding="15dp"
+                        android:paddingHorizontal="15dp"
                         android:text="Vendedor"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="14sp" />
@@ -171,7 +171,7 @@
                         android:background="@drawable/pestanas_desplegables"
                         android:drawableLeft="@drawable/ic_agregar_cliente"
                         android:drawablePadding="15dp"
-                        android:padding="15dp"
+                        android:paddingHorizontal="15dp"
                         android:text="Cliente"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="14sp" />
@@ -223,6 +223,29 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"></Spinner>
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".7"
+                    android:gravity="center_vertical|end"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                <Button
+                    android:id="@+id/btn_orden1"
+                    style="@android:style/Widget.Holo.Light.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="34dp"
+                    android:layout_margin="3dp"
+                    android:background="@drawable/shape_gray"
+                    android:padding="0dp"
+                    android:text="Servicios"
+                    android:textColor="@color/gray"
+                    android:textSize="14sp" />
+                </LinearLayout>
+
+
             </LinearLayout>
 
             <LinearLayout

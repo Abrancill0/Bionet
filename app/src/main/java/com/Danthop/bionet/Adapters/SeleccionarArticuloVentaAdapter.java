@@ -6,14 +6,17 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.TextView;
 
 import com.Danthop.bionet.Tables.SortableArticulosTable;
 import com.Danthop.bionet.Tables.SortableSeleccionarArticuloTable;
 import com.Danthop.bionet.model.ArticuloModel;
+import com.Danthop.bionet.model.Preguntas_Model;
 import com.Danthop.bionet.model.SucursalModel;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
@@ -23,9 +26,15 @@ public class SeleccionarArticuloVentaAdapter extends LongPressAwareTableDataAdap
     int TEXT_SIZE = 16;
     private static final NumberFormat PRICE_FORMATTER = NumberFormat.getNumberInstance();
 
+    private List<ArticuloModel> ArticulosList;
+    private List<ArticuloModel> ArticulosListFull;
+
 
     public SeleccionarArticuloVentaAdapter(final Context context, final List<ArticuloModel> data, final SortableSeleccionarArticuloTable tableView) {
         super(context, data, tableView);
+
+        ArticulosList= data;
+        ArticulosListFull= new ArrayList<>(data);
     }
 
     @Override
@@ -119,4 +128,45 @@ public class SeleccionarArticuloVentaAdapter extends LongPressAwareTableDataAdap
         public void afterTextChanged(Editable s) {
             ordenToUpdate.getarticulo_Nombre();
         }
-    }}
+    }
+
+    @Override
+    public Filter getFilter() {
+        return ArticulosFilter;
+    }
+
+    private Filter ArticulosFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<ArticuloModel> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(ArticulosListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (ArticuloModel item : ArticulosListFull) {
+                    if (item.getArticulo_sku().toLowerCase().contains(filterPattern)
+                            || item.getarticulo_Nombre().toLowerCase().contains(filterPattern)
+                            || item.getCodigo_barras().toLowerCase().contains(filterPattern)){
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            ArticulosList.clear();
+            ArticulosList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+}
+
+
