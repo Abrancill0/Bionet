@@ -26,6 +26,7 @@ public class HistoricoModel {
     private String his_cantidad;
     private String observacion;
     private String his_fecha_hora_creo;
+    private String Usuario;
 
 
 
@@ -185,5 +186,11 @@ public class HistoricoModel {
     public String gethis_fecha_hora_creo() {return his_fecha_hora_creo; }
     public void sethis_fecha_hora_creo(String his_fecha_hora_creo) { this.his_fecha_hora_creo = his_fecha_hora_creo; }
 
+    public String getUsuario() {
+        return Usuario;
+    }
 
+    public void setUsuario(String usuario) {
+        Usuario = usuario;
+    }
 }

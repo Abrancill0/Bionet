@@ -27,14 +27,15 @@ public class SortableClientesHistorialTable extends SortableTableView<CompraMode
     public SortableClientesHistorialTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "#", "Importe", "Fecha");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "#", "Importe", "Fecha","Usuario");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
         simpleHeader.setTextSize( 18 );
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(3);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(4);
         tableColumnWeightModel.setColumnWeight(0, 1);
         tableColumnWeightModel.setColumnWeight(1, 1);
+        tableColumnWeightModel.setColumnWeight(2, 1);
         tableColumnWeightModel.setColumnWeight(2, 1);
         setColumnModel(tableColumnWeightModel);
 

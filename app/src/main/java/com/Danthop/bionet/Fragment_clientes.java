@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -576,6 +577,8 @@ public class Fragment_clientes extends Fragment {
                 SortableClientesHistorialTable HistorialTable = ver_cliente_dialog.findViewById(R.id.historial_compras);
                 final HistorialClientesAdapter historialAdapter = new HistorialClientesAdapter(getContext(), HistorialCompras, HistorialTable);
                 HistorialTable.setDataAdapter(historialAdapter);
+
+                ViewCompat.setNestedScrollingEnabled(HistorialTable, true);
 
 
                 TextView NameCliente = ver_cliente_dialog.findViewById(R.id.cliente_nombre);

@@ -89,26 +89,6 @@
                 android:layout_gravity="center"
                 android:layout_margin="10dp" />
 
-            <Spinner
-                android:id="@+id/sp_sales1"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:layout_margin="10dp" />
-
-            <Spinner
-                android:id="@+id/sp_sales2"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:layout_margin="10dp" />
-            <Spinner
-                android:id="@+id/sp_sales3"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:layout_margin="10dp" />
-
 
             <com.pnikosis.materialishprogress.ProgressWheel
                 android:id="@+id/progressBar"

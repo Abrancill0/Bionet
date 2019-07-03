@@ -24,19 +24,20 @@ public class SortableHistoricoTable extends SortableTableView<HistoricoModel> {
     public SortableHistoricoTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Movimiento", "Cantidad", "Observaciones","Fecha y hora");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Movimiento", "Cantidad", "Observaciones","Fecha y hora","Usuario");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
-        simpleHeader.setTextSize( 14 );
+        simpleHeader.setTextSize( 12 );
         simpleHeader.setPaddings(5,2,5,2);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(7);
         tableColumnWeightModel.setColumnWeight(0, 1);
         tableColumnWeightModel.setColumnWeight(1, 1);
         tableColumnWeightModel.setColumnWeight(2, 1);
-        tableColumnWeightModel.setColumnWeight(2, 1);
         tableColumnWeightModel.setColumnWeight(3, 1);
-        tableColumnWeightModel.setColumnWeight(3, 1);
+        tableColumnWeightModel.setColumnWeight(4, 1);
+        tableColumnWeightModel.setColumnWeight(5, 1);
+        tableColumnWeightModel.setColumnWeight(6, 1);
         setColumnModel(tableColumnWeightModel);
         setColumnComparator(0, ComparatorInventarioHistorico.getInventarioNameComparator());
 

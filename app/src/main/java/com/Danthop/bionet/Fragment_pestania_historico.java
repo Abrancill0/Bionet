@@ -186,12 +186,12 @@ public class Fragment_pestania_historico extends Fragment {
 
 
         tabla_historico = (SortableHistoricoTable) v.findViewById(R.id.tabla_historico);
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Sucursal", "Movimiento", "Cantidad", "Observaciones", "Fecha");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Artículo", "Categoría", "Sucursal", "Movimiento", "Cantidad", "Observaciones", "Fecha","Usuario");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        simpleHeader.setTextSize( 18 );
-        simpleHeader.setPaddings(5,5,5,5);
+        simpleHeader.setTextSize( 16 );
+        simpleHeader.setPaddings(2,5,2,5);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(7);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(8);
         tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 2);
         tableColumnWeightModel.setColumnWeight(2, 2);
@@ -199,6 +199,7 @@ public class Fragment_pestania_historico extends Fragment {
         tableColumnWeightModel.setColumnWeight(4, 2);
         tableColumnWeightModel.setColumnWeight(5, 2);
         tableColumnWeightModel.setColumnWeight(6, 2);
+        tableColumnWeightModel.setColumnWeight(7, 2);
 
         tabla_historico.setHeaderAdapter(simpleHeader);
         tabla_historico.setColumnModel(tableColumnWeightModel);
@@ -292,6 +293,7 @@ public class Fragment_pestania_historico extends Fragment {
                                     his_cantidad,
                                     observacion,
                                     FechaconFormato);
+                            historicos.setUsuario(elemento.getString("his_usuario_nombre"));
                             historico.add(historicos);
                         }
                         HistoricoAdapter = new HistoricoAdapter(getContext(), historico, tabla_historico);
