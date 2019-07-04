@@ -118,7 +118,7 @@ public class HistorialClientesAdapter extends LongPressAwareTableDataAdapter<Com
         private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
         textView.setText(value);
-        textView.setPadding(20, 10, 20, 10);
+        textView.setPadding(10, 10, 10, 10);
         textView.setTextSize(TEXT_SIZE);
         return textView;
     }

@@ -39,7 +39,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.codecrafters.tableview.listeners.SwipeToRefreshListener;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
 
 /**
@@ -99,7 +98,7 @@ public class Fragment_clientes extends Fragment {
     private Boolean Ficha_Tecnica_cliente = false;
 
     private Button btn_crear_cliente;
-    private Button editarCliente;
+    private Button verCliente;
     private Button eliminarCliente;
     private String code="";
 
@@ -378,6 +377,10 @@ public class Fragment_clientes extends Fragment {
                                 String Fecha = elementoCompra.getString("fecha_hora_venta");
                                 CompraModel compra = new CompraModel(NoTicket, Importe, Fecha);
                                 HistorialCompras.add(compra);
+                                if(d==4)
+                                {
+                                    break;
+                                }
                             }
 
 
@@ -621,42 +624,13 @@ public class Fragment_clientes extends Fragment {
                 EmailFiscal.setText(clickedData.getCliente_email_facturacion());
 
 //
-                editarCliente = ver_cliente_dialog.findViewById(R.id.editar_cliente);
-                editarCliente.setOnClickListener(new View.OnClickListener() {
+                verCliente = ver_cliente_dialog.findViewById(R.id.ver_cliente);
+                  verCliente.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        Fragment_ver_cliente fragment_ver_cliente = new Fragment_ver_cliente();
+                        fr.replace(R.id.fragment_container, fragment_ver_cliente).commit();
                         ver_cliente_dialog.dismiss();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("nombre", clickedData.getCliente_Nombre());
-                        bundle.putString("ultima_visita", clickedData.getCliente_Ultima_Visita());
-                        bundle.putString("email", clickedData.getCliente_Correo());
-                        bundle.putString("telefono", clickedData.getCliente_Telefono());
-                        bundle.putString("cp", clickedData.getcliente_cp());
-                        bundle.putString("estado", clickedData.getcliente_estado());
-                        bundle.putString("municipio", clickedData.getcliente_municipio());
-                        bundle.putString("colonia", clickedData.getcliente_colonia());
-                        bundle.putString("calle", clickedData.getCliente_calle());
-                        bundle.putString("numero_interior", clickedData.getcliente_num_int());
-                        bundle.putString("numero_exterior", clickedData.getcliente_num_ext());
-                        bundle.putString("sucursal", "");
-                        bundle.putString("rfc", clickedData.getcliente_rfc());
-                        bundle.putString("razon_social", clickedData.getcliente_razon_social());
-                        bundle.putString("cp_fiscal", clickedData.getCp_fiscal());
-                        bundle.putString("estado_fiscal", clickedData.getEstado_fiscal());
-                        bundle.putString("municipio_fiscal", clickedData.getMunicipio_fiscal());
-                        bundle.putString("colonia_fiscal", clickedData.getColonia_fiscal());
-                        bundle.putString("calle_fiscal", clickedData.getCalle_fiscal());
-                        bundle.putString("numero_interior_fiscal", clickedData.getNum_int_fiscal());
-                        bundle.putString("numero_exterior_fiscal", clickedData.getNum_ext_fiscal());
-                        bundle.putString("correo_fiscal", clickedData.getCliente_email_facturacion());
-                        bundle.putString("correo_igual", clickedData.getCorreo_igual());
-                        bundle.putString("direccion_igual", clickedData.getDireccion_igual());
-                        bundle.putString("UUID", clickedData.getCliente_UUID());
-                        Fragment_editarCliente editarCliente = new Fragment_editarCliente();
-                        editarCliente.setArguments(bundle);
-                        fr.replace(R.id.fragment_container, editarCliente).commit();
-
                     }
                 });
 
@@ -764,10 +738,10 @@ public class Fragment_clientes extends Fragment {
                 });
 
                 if(Editar_Cliente==true){
-                    editarCliente.setEnabled(true);
+                    verCliente.setEnabled(true);
                 }else{
-                    editarCliente.setEnabled(false);
-                    editarCliente.setOnClickListener(new View.OnClickListener() {
+                    verCliente.setEnabled(false);
+                    verCliente.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Toast toast1 =
