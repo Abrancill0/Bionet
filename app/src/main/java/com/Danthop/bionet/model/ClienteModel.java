@@ -30,9 +30,12 @@ public class ClienteModel {
     private String calle_fiscal;
     private String num_ext_fiscal;
     private String num_int_fiscal;
+    private String ciudad_fiscal;
 
     private String cliente_direccion_fiscal;
     private String cliente_email_facturacion;
+
+    private List<ContactoModel> cliente_contactos;
 
     private String Correo_igual;
     private String Direccion_igual;
@@ -40,6 +43,8 @@ public class ClienteModel {
 
     private String UltimaCompra;
     private String ConsumoPromedio;
+
+    private String Sucursal;
 
 
     public ClienteModel(String cliente_UUID,String cliente_Nombre,
@@ -335,4 +340,29 @@ public class ClienteModel {
     public void setUltimaCompra(String UltimaCompra) { this.UltimaCompra = UltimaCompra;  }
 
     public void setConsumoPromedio(String ConsumoPromedio) { this.ConsumoPromedio = ConsumoPromedio; }
+
+
+    public List<ContactoModel> getCliente_contactos() {
+        return cliente_contactos;
+    }
+
+    public void setCliente_contactos(List<ContactoModel> cliente_contactos) {
+        this.cliente_contactos = cliente_contactos;
+    }
+
+    public String getCiudad_fiscal() {
+        return ciudad_fiscal;
+    }
+
+    public void setCiudad_fiscal(String ciudad_fiscal) {
+        this.ciudad_fiscal = ciudad_fiscal;
+    }
+
+    public String getSucursal() {
+        return Sucursal;
+    }
+
+    public void setSucursal(String sucursal) {
+        Sucursal = sucursal;
+    }
 }

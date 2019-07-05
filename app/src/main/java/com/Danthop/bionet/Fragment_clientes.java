@@ -628,7 +628,10 @@ public class Fragment_clientes extends Fragment {
                   verCliente.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Fragment_ver_cliente fragment_ver_cliente = new Fragment_ver_cliente();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("cli_id", clickedData.getCliente_UUID());
+                        Fragment_cliente_ver_cliente fragment_ver_cliente = new Fragment_cliente_ver_cliente();
+                        fragment_ver_cliente.setArguments(bundle);
                         fr.replace(R.id.fragment_container, fragment_ver_cliente).commit();
                         ver_cliente_dialog.dismiss();
                     }

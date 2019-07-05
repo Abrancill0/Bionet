@@ -330,7 +330,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:text="Dirección"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:fontFamily="@font/muli_extrabold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -533,7 +534,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:text="Datos de Facturación"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:fontFamily="@font/muli_extrabold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -562,16 +564,16 @@
                             android:text="RFC: "
                             android:textSize="18sp" />
 
-                        <TextView
-                            android:id="@+id/sda2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_weight="1"
-                            android:text="RFC"
-                            android:textSize="18sp" />
-
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/rfc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:text="RFC"
+                        android:textSize="18sp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -587,16 +589,16 @@
                             android:text="Correo Electrónico de Facturación:"
                             android:textSize="18sp" />
 
-                        <TextView
-                            android:id="@+id/textView6Sa2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_weight="1"
-                            android:text="Correo"
-                            android:textSize="18sp" />
-
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/correoFact"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:text="Correo"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
 
@@ -618,15 +620,15 @@
                             android:text="Razón Social"
                             android:textSize="18sp" />
 
-                        <TextView
-                            android:id="@+id/textViesw"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:text="Razón"
-                            android:textSize="18sp" />
-
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/razonSocial"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="Razón"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
 
@@ -638,7 +640,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:text="Dirección de Facturación"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:fontFamily="@font/muli_extrabold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -841,7 +844,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:text="Contactos: "
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:fontFamily="@font/muli_extrabold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -857,7 +861,7 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <com.Danthop.bionet.Tables.SortableClientesTable
+                    <com.Danthop.bionet.Tables.SortableClienteContactos
                         android:id="@+id/tabla_contactos"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -866,7 +870,7 @@
                         app:tableView_headerColor="@color/white"
                         table:tableView_columnCount="7">
 
-                    </com.Danthop.bionet.Tables.SortableClientesTable>
+                    </com.Danthop.bionet.Tables.SortableClienteContactos>
 
                     <LinearLayout
                         android:id="@+id/Tabla_vacia"
@@ -898,8 +902,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="Contactos: "
-                android:textSize="18sp" />
+                android:text="Historial de Compras:"
+                android:textSize="18sp"
+                app:fontFamily="@font/muli_extrabold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -915,7 +920,7 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <com.Danthop.bionet.Tables.SortableClientesTable
+                    <com.Danthop.bionet.Tables.SortableClientesHistorialTable
                         android:id="@+id/tabla_historial"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -924,7 +929,7 @@
                         app:tableView_headerColor="@color/white"
                         table:tableView_columnCount="7">
 
-                    </com.Danthop.bionet.Tables.SortableClientesTable>
+                    </com.Danthop.bionet.Tables.SortableClientesHistorialTable>
 
                     <LinearLayout
                         android:id="@+id/Tabla_vacia2"
