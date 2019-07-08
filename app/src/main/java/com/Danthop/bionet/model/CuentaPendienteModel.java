@@ -2,19 +2,21 @@ package com.Danthop.bionet.model;
 
 public class CuentaPendienteModel {
     private String Ticket;
+    private String Ticket_id;
     private String Fecha;
     private String Cargo;
     private String Abono;
     private String Pendiente;
-    private Boolean ButtonAbonar;
+    private String Tipo;
 
-    public CuentaPendienteModel(String ticket, String fecha, String cargo, String abono, String pendiente, Boolean buttonAbonar) {
+    public CuentaPendienteModel(String ticket, String ticket_id, String fecha, String cargo, String abono, String pendiente,String tipo) {
         Ticket = ticket;
+        ticket_id=Ticket_id;
         Fecha = fecha;
         Cargo = cargo;
         Abono = abono;
         Pendiente = pendiente;
-        ButtonAbonar = buttonAbonar;
+        Tipo=tipo;
     }
 
     public String getTicket() {
@@ -57,11 +59,19 @@ public class CuentaPendienteModel {
         Pendiente = pendiente;
     }
 
-    public Boolean getButtonAbonar() {
-        return ButtonAbonar;
+    public String getTipo() {
+        return Tipo;
     }
 
-    public void setButtonAbonar(Boolean buttonAbonar) {
-        ButtonAbonar = buttonAbonar;
+    public void setTipo(String tipo) {
+        Tipo = tipo;
+    }
+
+    public String getTicket_id() {
+        return Ticket_id;
+    }
+
+    public void setTicket_id(String ticket_id) {
+        Ticket_id = ticket_id;
     }
 }

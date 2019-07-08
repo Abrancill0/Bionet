@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Danthop.bionet.Adapters.ClienteAdapter;
+import com.Danthop.bionet.Adapters.CuentasPorCobrarAdapter;
 import com.Danthop.bionet.Adapters.HistorialClientesAdapter;
 import com.Danthop.bionet.Tables.SortableClientesHistorialTable;
+import com.Danthop.bionet.Tables.SortableCuentasPorCobrarTable;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.CompraModel;
+import com.Danthop.bionet.model.CuentaPendienteModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -32,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,8 +50,12 @@ public class Fragment_cliente_ver_cliente extends Fragment {
 
     private Button btn_informacion_general;
     private Button btn_cuentas_cobrar;
+    private Button btn_contactos;
+    private Button btn_historial;
     private View layout_informacion_general;
     private View layout_cuentas_cobrar;
+    private View layout_contactos;
+    private View layout_historial;
     private ImageView Regresar;
     private FragmentTransaction fr;
     private ProgressDialog progressDialog;
@@ -78,6 +87,8 @@ public class Fragment_cliente_ver_cliente extends Fragment {
     private Button Eliminar;
     private Button Editar;
     private SortableClientesHistorialTable HistorialTable;
+    private List<CuentaPendienteModel> Cuentas = new ArrayList<>();
+    private SortableCuentasPorCobrarTable tabla_cuentas;
 
     private ClienteModel cliente;
 
@@ -88,7 +99,6 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_clientes_ver, container, false);
         LoadLayoutsAndWidgets(v);
-        LoadCliente();
         return v;
     }
 
@@ -102,8 +112,12 @@ public class Fragment_cliente_ver_cliente extends Fragment {
         fr = getFragmentManager().beginTransaction();
         btn_informacion_general = v.findViewById(R.id.btn_informacion_general);
         btn_cuentas_cobrar = v.findViewById(R.id.btn_cuentas_por_cobrar);
+        btn_contactos = v.findViewById(R.id.btn_contactos);
+        btn_historial = v.findViewById(R.id.btn_historial);
         layout_informacion_general = v.findViewById(R.id.layout_informacion);
         layout_cuentas_cobrar = v.findViewById(R.id.layout_cuentas_cobrar);
+        layout_contactos = v.findViewById(R.id.layout_contactos);
+        layout_historial = v.findViewById(R.id.layout_historial);
         Regresar = v.findViewById(R.id.atras);
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
@@ -114,8 +128,12 @@ public class Fragment_cliente_ver_cliente extends Fragment {
             public void onClick(View v) {
                 btn_informacion_general.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
                 btn_cuentas_cobrar.setBackgroundResource(R.drawable.pestanas_desplegables);
+                btn_contactos.setBackgroundResource(R.drawable.pestanas_desplegables);
+                btn_historial.setBackgroundResource(R.drawable.pestanas_desplegables);
                 layout_informacion_general.setVisibility(View.VISIBLE);
                 layout_cuentas_cobrar.setVisibility(View.GONE);
+                layout_contactos.setVisibility(View.GONE);
+                layout_historial.setVisibility(View.GONE);
             }
         });
 
@@ -124,8 +142,40 @@ public class Fragment_cliente_ver_cliente extends Fragment {
             public void onClick(View v) {
                 btn_cuentas_cobrar.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
                 btn_informacion_general.setBackgroundResource(R.drawable.pestanas_desplegables);
+                btn_contactos.setBackgroundResource(R.drawable.pestanas_desplegables);
+                btn_historial.setBackgroundResource(R.drawable.pestanas_desplegables);
                 layout_cuentas_cobrar.setVisibility(View.VISIBLE);
                 layout_informacion_general.setVisibility(View.GONE);
+                layout_contactos.setVisibility(View.GONE);
+                layout_historial.setVisibility(View.GONE);
+            }
+        });
+
+        btn_historial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_historial.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+                btn_informacion_general.setBackgroundResource(R.drawable.pestanas_desplegables);
+                btn_cuentas_cobrar.setBackgroundResource(R.drawable.pestanas_desplegables);
+                btn_contactos.setBackgroundResource(R.drawable.pestanas_desplegables);
+                layout_cuentas_cobrar.setVisibility(View.GONE);
+                layout_informacion_general.setVisibility(View.GONE);
+                layout_contactos.setVisibility(View.GONE);
+                layout_historial.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btn_contactos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_contactos.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+                btn_informacion_general.setBackgroundResource(R.drawable.pestanas_desplegables);
+                btn_cuentas_cobrar.setBackgroundResource(R.drawable.pestanas_desplegables);
+                btn_historial.setBackgroundResource(R.drawable.pestanas_desplegables);
+                layout_cuentas_cobrar.setVisibility(View.GONE);
+                layout_informacion_general.setVisibility(View.GONE);
+                layout_contactos.setVisibility(View.VISIBLE);
+                layout_historial.setVisibility(View.GONE);
             }
         });
 
@@ -163,8 +213,8 @@ public class Fragment_cliente_ver_cliente extends Fragment {
         ColoniaFact = v.findViewById(R.id.coloniaFacturacion);
         EstadoFact = v.findViewById(R.id.estadoFacturacion);
         NumeroExteriorFact = v.findViewById(R.id.numero_exteriorFacturacion);
-        HistorialTable = v.findViewById(R.id.tabla_historial);
-        HistorialTable.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia2));
+        tabla_cuentas = v.findViewById(R.id.tabla_cuentas);
+        tabla_cuentas.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia3));
 
         Eliminar=v.findViewById(R.id.eliminar);
         Editar=v.findViewById(R.id.editar);
@@ -172,10 +222,13 @@ public class Fragment_cliente_ver_cliente extends Fragment {
 
         EditarCliente();
         EliminarCliente();
+        LoadCliente(v);
+        LoadCuentasPorCobrar(v);
     }
 
-    private void LoadCliente()
+    private void LoadCliente(View v)
     {
+        progressDialog.show();
         JSONObject request = new JSONObject();
         try {
             request.put("usu_id", usu_id);
@@ -247,10 +300,9 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                             JSONArray comprasNodo = elemento.getJSONArray("ventas");
                             for (int d = 0; d < comprasNodo.length(); d++) {
                                 JSONObject elementoCompra = comprasNodo.getJSONObject(d);
-                                String NoTicket = elementoCompra.getString("tic_numero");
                                 String Importe = elementoCompra.getString("tic_importe_total");
                                 String Fecha = elementoCompra.getString("fecha_hora_venta");
-                                CompraModel compra = new CompraModel(NoTicket, Importe, Fecha);
+                                CompraModel compra = new CompraModel("", Importe, Fecha);
                                 HistorialCompras.add(compra);
                                 if(d==4)
                                 {
@@ -327,8 +379,12 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                         Sucursal.setText(cliente.getSucursal());
 
 
-                        final HistorialClientesAdapter historialAdapter = new HistorialClientesAdapter(getContext(), HistorialCompras, HistorialTable);
+                        HistorialTable = v.findViewById(R.id.tabla_historial);
+                        HistorialTable.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia2));
+                        HistorialClientesAdapter historialAdapter = new HistorialClientesAdapter(getContext(), HistorialCompras, HistorialTable);
                         HistorialTable.setDataAdapter(historialAdapter);
+                        ViewCompat.setNestedScrollingEnabled(HistorialTable, true);
+                        historialAdapter.notifyDataSetChanged();
 
 
 
@@ -507,6 +563,122 @@ public class Fragment_cliente_ver_cliente extends Fragment {
             }
         });
 
+    }
+
+    private void LoadCuentasPorCobrar(View v)
+    {
+        progressDialog.show();
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("cli_id", Cli_id);
+            request.put("code",code);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/clientes/select-cliente";
+
+        //clienteAdapter.clear();
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONObject RespuestaNodoDireccion = null;
+                JSONArray ArregloCuentas = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        Respuesta = response.getJSONObject("resultado");
+
+                        ArregloCuentas = Respuesta.getJSONArray("aCxC");
+                        int abono=0;
+                        String pendiente="";
+                        for(int i = 0; i<ArregloCuentas.length();i++)
+                        {
+                            JSONObject elemento = ArregloCuentas.getJSONObject(i);
+                            String Ticket = elemento.getString("cxc_numero_ticket");
+                            JSONObject nodoIDTicket = elemento.getJSONObject("cxc_id_ticket");
+                            String Ticket_id = nodoIDTicket.getString("uuid");
+                            String fecha = elemento.getString("cxc_fecha_hora_creo");
+                            String Cargo = elemento.getString("cxc_impore_ticket");
+                            String Abono = elemento.getString("cxc_impore_pago");
+                            int AbonoEnInt = Integer.parseInt(Abono);
+                            abono= abono+AbonoEnInt;
+                            String tipo = elemento.getString("cxc_tipo");
+                            if(tipo.equals("cargo"))
+                            {
+                                pendiente = elemento.getString("cxc_impore_pendiente");
+                                Abono="";
+                            }
+                            CuentaPendienteModel cuenta = new CuentaPendienteModel(Ticket,Ticket_id,fecha,Cargo,Abono,pendiente,tipo);
+                            Cuentas.add(cuenta);
+                            if((i+1)<ArregloCuentas.length())
+                            {
+                                JSONObject elementoSiguiente = ArregloCuentas.getJSONObject(i+1);
+                                if(cuenta.getTipo().equals("abono")&&elementoSiguiente.getString("cxc_tipo").equals("cargo"))
+                                {
+                                    String abonoEnString = String.valueOf(abono);
+                                    CuentaPendienteModel cuentaTotal = new CuentaPendienteModel(" "," ","Total",Cargo,abonoEnString,pendiente,"total");
+                                    Cuentas.add(cuentaTotal);
+                                    abono=0;
+                                }
+                            }
+                            else
+                            {
+                                String abonoEnString = String.valueOf(abono);
+                                CuentaPendienteModel cuentaTotal = new CuentaPendienteModel(" "," ","Total",Cargo,abonoEnString,pendiente,"total");
+                                Cuentas.add(cuentaTotal);
+                                abono=0;
+                            }
+                        }
+
+                        tabla_cuentas = v.findViewById(R.id.tabla_cuentas);
+                        tabla_cuentas.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia3));
+                        CuentasPorCobrarAdapter cuentasAdapter = new CuentasPorCobrarAdapter(getContext(),Cuentas,tabla_cuentas);
+                        tabla_cuentas.setDataAdapter(cuentasAdapter);
+                        ViewCompat.setNestedScrollingEnabled(tabla_cuentas, true);
+                        cuentasAdapter.notifyDataSetChanged();
+
+                        progressDialog.dismiss();
+                    } else {
+                        progressDialog.dismiss();
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    progressDialog.dismiss();
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 
 }

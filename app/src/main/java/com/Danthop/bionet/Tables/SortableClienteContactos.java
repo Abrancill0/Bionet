@@ -29,7 +29,7 @@ public class SortableClienteContactos extends SortableTableView<ContactoModel> {
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Contacto", "Teléfono", "Correo Eléctronico", "Puesto", "Notas");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
-        simpleHeader.setTextSize( 14);
+        simpleHeader.setTextSize( 16);
         simpleHeader.setPaddings(5,5,5,5);
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);

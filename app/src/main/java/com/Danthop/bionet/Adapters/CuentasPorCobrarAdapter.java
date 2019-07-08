@@ -49,7 +49,7 @@ import org.json.JSONObject;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 
-public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<CuentaPendienteModel> implements Filterable {
+public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<CuentaPendienteModel>{
 
     int TEXT_SIZE = 16;
     private SortableClienteContactos tabla_clientes;
@@ -58,17 +58,11 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
     private List<CuentaPendienteModel> cuentaPendienteListFull;
 
     private Typeface s;
-    private FragmentTransaction fr;
-
-
-
 
     private String UsuarioID;
 
-    public CuentasPorCobrarAdapter(final Context context, final List<CuentaPendienteModel> data, final SortableCuentasPorCobrarTable tableView, FragmentTransaction gr) {
+    public CuentasPorCobrarAdapter(final Context context, final List<CuentaPendienteModel> data, final SortableCuentasPorCobrarTable tableView) {
         super(context, data, tableView);
-
-        fr = gr;
 
         cuentaPendienteList = data;
         cuentaPendienteListFull = new ArrayList<>(data);
@@ -95,6 +89,9 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
                 break;
             case 4:
                 renderedView = renderPendiente(cuenta);
+                break;
+            case 5:
+                renderedView = renderButtonAbono(cuenta);
                 break;
         }
 
@@ -132,26 +129,98 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
     }
 
     private View renderFecha(final CuentaPendienteModel cuenta) {
+        if(cuenta.getTipo().equals("total"))
+        {
+            final TextView textView = new TextView(getContext());
+            textView.setText(cuenta.getFecha());
+            textView.setTextSize(TEXT_SIZE);
+            textView.setPadding(5,5,5,5);
+            textView.setTextColor(getResources().getColor(R.color.green));
+            textView.setGravity(View.TEXT_ALIGNMENT_VIEW_START);
+            textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
+            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            return textView;
+        }
         return renderString(cuenta.getFecha());
     }
 
     private View renderCargo(final CuentaPendienteModel cuenta) {
+        if(cuenta.getTipo().equals("total"))
+        {
+            final TextView textView = new TextView(getContext());
+            textView.setText(cuenta.getCargo());
+            textView.setTextSize(TEXT_SIZE);
+            textView.setPadding(5,5,5,5);
+            textView.setTextColor(getResources().getColor(R.color.green));
+            textView.setGravity(View.TEXT_ALIGNMENT_VIEW_START);
+            textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
+            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            return textView;
+        }
         return renderString(cuenta.getCargo());
     }
 
     private View renderAbono(final CuentaPendienteModel cuenta) {
+        if(cuenta.getTipo().equals("total"))
+        {
+            final TextView textView = new TextView(getContext());
+            textView.setText(cuenta.getAbono());
+            textView.setTextSize(TEXT_SIZE);
+            textView.setPadding(5,5,5,5);
+            textView.setTextColor(getResources().getColor(R.color.green));
+            textView.setGravity(View.TEXT_ALIGNMENT_VIEW_START);
+            textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
+            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            return textView;
+        }
         return renderString(cuenta.getAbono());
     }
 
     private View renderPendiente(final CuentaPendienteModel cuenta) {
+        if(cuenta.getTipo().equals("total"))
+        {
+            final TextView textView = new TextView(getContext());
+            textView.setText(cuenta.getPendiente());
+            textView.setTextSize(TEXT_SIZE);
+            textView.setPadding(5,5,5,5);
+            textView.setTextColor(getResources().getColor(R.color.green));
+            textView.setGravity(View.TEXT_ALIGNMENT_VIEW_START);
+            textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
+            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            return textView;
+        }
         return renderString(cuenta.getPendiente());
+    }
+
+    private View renderButtonAbono(final CuentaPendienteModel cuenta)
+    {
+        if(cuenta.getTipo().equals("cargo"))
+        {
+            final Button abonar = new Button(getContext());
+            abonar.setText("Abonar");
+            abonar.setTextColor(getResources().getColor(R.color.white));
+            abonar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            abonar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    LoadAbonar();
+                }
+            });
+            return abonar;
+        }
+        else
+        {
+            final TextView nada = new TextView(getContext());
+            nada.setText("");
+            return nada;
+        }
     }
 
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
         textView.setText(value);
         textView.setTextSize(TEXT_SIZE);
-        textView.setPadding(5,0,0,5);
+        textView.setPadding(5,5,5,5);
         textView.setGravity(View.TEXT_ALIGNMENT_VIEW_START);
         textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -223,4 +292,36 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
             notifyDataSetChanged();
         }
     };
+
+
+    private void LoadAbonar()
+    {
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.pop_up_clientes_ver_cliente_abonar);
+        dialog.show();
+        Button btn_importe = dialog.findViewById(R.id.btn_importe);
+        Button btn_datos = dialog.findViewById(R.id.btn_datos_adicionales);
+        View layout_importe = dialog.findViewById(R.id.layout_importe);
+        View layout_datos = dialog.findViewById(R.id.layout_datos_adicionales);
+
+        btn_importe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_importe.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+                btn_datos.setBackgroundResource(R.drawable.pestanas_desplegables);
+                layout_importe.setVisibility(View.VISIBLE);
+                layout_datos.setVisibility(View.GONE);
+            }
+        });
+        btn_datos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_datos.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+                btn_importe.setBackgroundResource(R.drawable.pestanas_desplegables);
+                layout_importe.setVisibility(View.GONE);
+                layout_datos.setVisibility(View.VISIBLE);
+            }
+        });
+
+    }
 }

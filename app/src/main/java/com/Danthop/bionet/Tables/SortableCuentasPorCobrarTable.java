@@ -27,18 +27,19 @@ public class SortableCuentasPorCobrarTable extends SortableTableView<CuentaPendi
     public SortableCuentasPorCobrarTable(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
 
-        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Contacto", "Teléfono", "Correo Eléctronico", "Puesto", "Notas");
+        final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(),  "Ticket", "Fecha", "Cargo", "Abono", "Pendiente","");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
-        simpleHeader.setTextSize( 14);
+        simpleHeader.setTextSize( 16);
         simpleHeader.setPaddings(5,5,5,5);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
         tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 2);
         tableColumnWeightModel.setColumnWeight(2, 2);
         tableColumnWeightModel.setColumnWeight(3, 2);
         tableColumnWeightModel.setColumnWeight(4, 2);
+        tableColumnWeightModel.setColumnWeight(5, 2);
         setColumnModel(tableColumnWeightModel);
 
         setColumnComparator(0, ComparatorCuentasPorCobrar.getCuentasPorCobrarComparator());

@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:table="http://schemas.android.com/apk/res-auto"
+    android:layout_width="860dp"
+    android:layout_height="520dp"
+    android:orientation="vertical"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".8"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_importe"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="0dp"
+                    android:background="@color/fondo_azul"
+                    android:fontFamily="@font/muli"
+                    android:text="Importe"
+                    android:textAllCaps="false"
+                    android:textSize="17dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_datos_adicionales"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="0dp"
+                    android:background="@drawable/pestanas_desplegables"
+                    android:fontFamily="@font/muli"
+                    android:text="Datos Adicionales"
+                    android:textAllCaps="false"
+                    android:textSize="17dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_importe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".2"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".8"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/textView66"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sucursal"
+                    android:textSize="18sp" />
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/textView67"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Importe Pendiente"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/textView68"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="$0.00"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="24sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <com.Danthop.bionet.Tables.SortableMetodosPagoTable
+                    android:id="@+id/tabla_seleccionar_metodo_pago"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".7"
+                    android:visibility="visible"
+                    app:tableView_headerColor="@color/white"
+                    table:tableView_columnCount="4">
+
+                </com.Danthop.bionet.Tables.SortableMetodosPagoTable>
+
+                <LinearLayout
+                    android:id="@+id/Tabla_vacia"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".3"
+                    android:background="@color/white"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Selecciona una Sucursal"
+                        android:textColor="@color/gray" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".8"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:gravity="center_vertical|end"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView73"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="Importe Recibido"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/textView74"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="$0.00"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:gravity="center_vertical|center_horizontal|end"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView76"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="Importe Faltante"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/textView75"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="$0.00"
+                    android:textColor="@color/red"
+                    android:textSize="24sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_datos_adicionales"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".2"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".2"
+            android:background="@drawable/pestanas_desplegables"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/textView77"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Origen del Pago"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".2"
+            android:background="@drawable/pestanas_desplegables"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/textVieew78"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Banco Emisor"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/text_banco_emisor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_gray"
+                android:ems="10"
+                android:inputType="text"
+                android:padding="5dp"
+                android:textColor="@color/gray"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".2"
+            android:background="@drawable/pestanas_desplegables"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/textViewg78"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cuenta del Ordenante"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/text_cuenta_ordenante"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_gray"
+                android:ems="10"
+                android:inputType="text"
+                android:padding="5dp"
+                android:textColor="@color/gray"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".2"
+            android:background="@drawable/pestanas_desplegables"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/textVieddw78"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cuenta del Beneficiario"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/text_cuenta_beneficiario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_gray"
+                android:ems="10"
+                android:inputType="text"
+                android:padding="5dp"
+                android:textColor="@color/gray"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".2"
+            android:background="@drawable/pestanas_desplegables"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/textVieewf78"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cadena de pago (en caso de que sea SPEI)"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/text_cadena_pago"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_gray"
+                android:ems="10"
+                android:inputType="text"
+                android:padding="5dp"
+                android:textColor="@color/gray"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".8"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="Abonar"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</LinearLayout>

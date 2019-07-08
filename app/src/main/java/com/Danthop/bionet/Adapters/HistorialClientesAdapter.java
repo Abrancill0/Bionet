@@ -69,12 +69,9 @@ public class HistorialClientesAdapter extends LongPressAwareTableDataAdapter<Com
 
         switch (columnIndex) {
             case 0:
-                renderedView = renderNumeroCompra(compra);
-                break;
-            case 1:
                 renderedView = renderImporte(compra);
                 break;
-            case 2:
+            case 1:
                 renderedView = renderFecha(compra);
                 break;
         }
@@ -101,10 +98,6 @@ public class HistorialClientesAdapter extends LongPressAwareTableDataAdapter<Com
         final EditText editText = new EditText(getContext());
 
         return editText;
-    }
-
-    private View renderNumeroCompra(final CompraModel compra) {
-        return renderString(compra.getNumero());
     }
 
     private View renderImporte(final CompraModel compra) {

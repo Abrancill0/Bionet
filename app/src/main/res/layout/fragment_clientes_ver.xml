@@ -190,15 +190,52 @@
                 android:textAllCaps="false"
                 android:textSize="17dp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_contactos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:background="@drawable/pestanas_desplegables"
+                android:fontFamily="@font/muli"
+                android:text="Contactos"
+                android:textAllCaps="false"
+                android:textSize="17dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_historial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:background="@drawable/pestanas_desplegables"
+                android:fontFamily="@font/muli"
+                android:text="Historial"
+                android:textAllCaps="false"
+                android:textSize="17dp" />
+        </LinearLayout>
+
     </LinearLayout>
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:id="@+id/layout_informacion"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight=".25"
-        android:visibility="visible"
-        android:paddingHorizontal="10dp">
+        android:paddingHorizontal="10dp"
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/Principal"
@@ -219,7 +256,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -292,7 +329,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -838,128 +875,10 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/titulo_direcciosn4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="Contactos: "
-                android:textSize="18sp"
-                app:fontFamily="@font/muli_extrabold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/pestanas_desplegables"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".3"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <com.Danthop.bionet.Tables.SortableClienteContactos
-                        android:id="@+id/tabla_contactos"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".7"
-                        android:visibility="visible"
-                        app:tableView_headerColor="@color/white"
-                        table:tableView_columnCount="7">
-
-                    </com.Danthop.bionet.Tables.SortableClienteContactos>
-
-                    <LinearLayout
-                        android:id="@+id/Tabla_vacia"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".3"
-                        android:background="@color/white"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:orientation="vertical"
-                        android:visibility="visible">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="No existen datos"
-                            android:textColor="@color/gray" />
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/titulo_direcciosn5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="Historial de Compras:"
-                android:textSize="18sp"
-                app:fontFamily="@font/muli_extrabold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/pestanas_desplegables"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".3"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <com.Danthop.bionet.Tables.SortableClientesHistorialTable
-                        android:id="@+id/tabla_historial"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".7"
-                        android:visibility="visible"
-                        app:tableView_headerColor="@color/white"
-                        table:tableView_columnCount="7">
-
-                    </com.Danthop.bionet.Tables.SortableClientesHistorialTable>
-
-                    <LinearLayout
-                        android:id="@+id/Tabla_vacia2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".3"
-                        android:background="@color/white"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:orientation="vertical"
-                        android:visibility="visible">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="No existen datos"
-                            android:textColor="@color/gray" />
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-            </LinearLayout>
-
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
-    <ScrollView
+    <LinearLayout
         android:id="@+id/layout_cuentas_cobrar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -983,12 +902,12 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight=".3"
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <com.Danthop.bionet.Tables.SortableClientesTable
+                    <com.Danthop.bionet.Tables.SortableCuentasPorCobrarTable
                         android:id="@+id/tabla_cuentas"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -997,7 +916,7 @@
                         app:tableView_headerColor="@color/white"
                         table:tableView_columnCount="7">
 
-                    </com.Danthop.bionet.Tables.SortableClientesTable>
+                    </com.Danthop.bionet.Tables.SortableCuentasPorCobrarTable>
 
                     <LinearLayout
                         android:id="@+id/Tabla_vacia3"
@@ -1025,5 +944,125 @@
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_contactos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".25"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/pestanas_desplegables"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <com.Danthop.bionet.Tables.SortableClienteContactos
+                    android:id="@+id/tabla_contactos"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".7"
+                    android:visibility="visible"
+                    app:tableView_headerColor="@color/white"
+                    table:tableView_columnCount="7">
+
+                </com.Danthop.bionet.Tables.SortableClienteContactos>
+
+                <LinearLayout
+                    android:id="@+id/Tabla_vacia"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".3"
+                    android:background="@color/white"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="No existen datos"
+                        android:textColor="@color/gray" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_historial"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".25"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/pestanas_desplegables"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <com.Danthop.bionet.Tables.SortableClientesHistorialTable
+                    android:id="@+id/tabla_historial"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".7"
+                    android:visibility="visible"
+                    app:tableView_headerColor="@color/white"
+                    table:tableView_columnCount="7">
+
+                </com.Danthop.bionet.Tables.SortableClientesHistorialTable>
+
+                <LinearLayout
+                    android:id="@+id/Tabla_vacia2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".3"
+                    android:background="@color/white"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="No existen datos"
+                        android:textColor="@color/gray" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
 </LinearLayout>
