@@ -63,10 +63,18 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
     private String ValorImporte[] = new String[30];
     private String Valorcheck[] = new String[30];
 
+    private TextView Recibido;
+    private TextView Faltante;
+
     public MetodoPagoAdapter(final Context context, final List<PagoModel> data, final SortableMetodosPagoTable tableView,
-                             List<PagoModel> metodosPagoSeleccionados) {
+                             List<PagoModel> metodosPagoSeleccionados,
+                             TextView recibido,
+                             TextView faltante) {
         super(context, data, tableView);
         MetodosPagoSeleccionados=metodosPagoSeleccionados;
+
+        Recibido = recibido;
+        Faltante = faltante;
 
     }
 
@@ -171,6 +179,19 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
                                     String.valueOf(Monto.getText())
                             );
                             MetodosPagoSeleccionados.add(pago);
+                            float sumaDeImporte =0;
+                            for(int t=0; t<MetodosPagoSeleccionados.size();t++)
+                            {
+
+                                sumaDeImporte= sumaDeImporte+ Float.parseFloat(MetodosPagoSeleccionados.get(t).getCantidad());
+                            }
+
+                            String sumaDeImporteString = String.valueOf(sumaDeImporte);
+                            Recibido.setText(sumaDeImporteString);
+
+
+
+
                         Valorcheck[Indice]="true";
                     }else
                     {
@@ -184,6 +205,16 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
 
                         }
                         Valorcheck[Indice]="false";
+
+                        float sumaDeImporte =0;
+                        for(int t=0; t<MetodosPagoSeleccionados.size();t++)
+                        {
+
+                            sumaDeImporte= sumaDeImporte+ Float.parseFloat(MetodosPagoSeleccionados.get(t).getCantidad());
+                        }
+
+                        String sumaDeImporteString = String.valueOf(sumaDeImporte);
+                        Recibido.setText(sumaDeImporteString);
                     }
 
             }

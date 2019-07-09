@@ -8,15 +8,17 @@ public class CuentaPendienteModel {
     private String Abono;
     private String Pendiente;
     private String Tipo;
+    private String CxC_ID;
 
-    public CuentaPendienteModel(String ticket, String ticket_id, String fecha, String cargo, String abono, String pendiente,String tipo) {
+    public CuentaPendienteModel(String cxc_id,String ticket, String ticket_id, String fecha, String cargo, String abono, String pendiente,String tipo) {
         Ticket = ticket;
-        ticket_id=Ticket_id;
+        Ticket_id=ticket_id;
         Fecha = fecha;
         Cargo = cargo;
         Abono = abono;
         Pendiente = pendiente;
         Tipo=tipo;
+        CxC_ID = cxc_id;
     }
 
     public String getTicket() {
@@ -73,5 +75,13 @@ public class CuentaPendienteModel {
 
     public void setTicket_id(String ticket_id) {
         Ticket_id = ticket_id;
+    }
+
+    public String getCxC_ID() {
+        return CxC_ID;
+    }
+
+    public void setCxC_ID(String cxC_ID) {
+        CxC_ID = cxC_ID;
     }
 }

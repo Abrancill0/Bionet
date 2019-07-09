@@ -3,9 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:table="http://schemas.android.com/apk/res-auto"
     android:layout_width="860dp"
-    android:layout_height="520dp"
-    android:orientation="vertical"
-    android:layout_gravity="center">
+    android:layout_height="490dp"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".85"
+        android:orientation="vertical"
+        android:background="@color/colorPrimaryDark"></LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,7 +76,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".8"
+            android:layout_weight=".9"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -87,7 +94,7 @@
                     android:textSize="18sp" />
 
                 <Spinner
-                    android:id="@+id/spinner"
+                    android:id="@+id/sucursal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -108,7 +115,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/textView68"
+                    android:id="@+id/importe_pendiente"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -168,7 +175,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".8"
+            android:layout_weight=".85"
             android:orientation="vertical">
 
             <LinearLayout
@@ -187,7 +194,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/textView74"
+                    android:id="@+id/text_view_recibido"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
@@ -211,7 +218,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/textView75"
+                    android:id="@+id/text_view_faltante"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
@@ -371,12 +378,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight=".8"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/textView62"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_weight=".5"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="Cancelar"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/realizar_Pago"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight=".5"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:text="Abonar"

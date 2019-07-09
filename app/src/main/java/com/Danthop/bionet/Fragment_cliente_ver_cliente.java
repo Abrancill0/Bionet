@@ -89,6 +89,7 @@ public class Fragment_cliente_ver_cliente extends Fragment {
     private SortableClientesHistorialTable HistorialTable;
     private List<CuentaPendienteModel> Cuentas = new ArrayList<>();
     private SortableCuentasPorCobrarTable tabla_cuentas;
+    private ArrayList<String> ArregloSucursales = new ArrayList<>();
 
     private ClienteModel cliente;
 
@@ -354,7 +355,12 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                             cliente.setCiudad_fiscal(RespuestaNodoDireccion.getString("cli_ciudad"));
 
                             JSONArray Sucursales = elemento.getJSONArray("cli_sucursales");
-                            cliente.setSucursal(Sucursales.getString(0));
+                            for(int x=0; x<Sucursales.length();x++)
+                            {
+                                String sucursal = Sucursales.getString(x);
+                                ArregloSucursales.add(sucursal);
+                            }
+
 
 
                         CorreoElectronico.setText(cliente.getCliente_Correo());
@@ -376,7 +382,13 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                         ColoniaFact.setText(cliente.getColonia_fiscal());
                         EstadoFact.setText(cliente.getEstado_fiscal());
                         NumeroExteriorFact.setText(cliente.getNum_ext_fiscal());
-                        Sucursal.setText(cliente.getSucursal());
+
+                        String CadenaSucursales="";
+                        for(int g=0; g<ArregloSucursales.size();g++)
+                        {
+                            CadenaSucursales=CadenaSucursales+"\n"+ArregloSucursales.get(g);
+                        }
+                        Sucursal.setText(CadenaSucursales);
 
 
                         HistorialTable = v.findViewById(R.id.tabla_historial);
@@ -607,6 +619,8 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                         for(int i = 0; i<ArregloCuentas.length();i++)
                         {
                             JSONObject elemento = ArregloCuentas.getJSONObject(i);
+                            JSONObject cxcIDNodo = elemento.getJSONObject("cxc_id");
+                            String cxcID = cxcIDNodo.getString("uuid");
                             String Ticket = elemento.getString("cxc_numero_ticket");
                             JSONObject nodoIDTicket = elemento.getJSONObject("cxc_id_ticket");
                             String Ticket_id = nodoIDTicket.getString("uuid");
@@ -621,7 +635,7 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                                 pendiente = elemento.getString("cxc_impore_pendiente");
                                 Abono="";
                             }
-                            CuentaPendienteModel cuenta = new CuentaPendienteModel(Ticket,Ticket_id,fecha,Cargo,Abono,pendiente,tipo);
+                            CuentaPendienteModel cuenta = new CuentaPendienteModel(cxcID,Ticket,Ticket_id,fecha,Cargo,Abono,pendiente,tipo);
                             Cuentas.add(cuenta);
                             if((i+1)<ArregloCuentas.length())
                             {
@@ -629,7 +643,7 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                                 if(cuenta.getTipo().equals("abono")&&elementoSiguiente.getString("cxc_tipo").equals("cargo"))
                                 {
                                     String abonoEnString = String.valueOf(abono);
-                                    CuentaPendienteModel cuentaTotal = new CuentaPendienteModel(" "," ","Total",Cargo,abonoEnString,pendiente,"total");
+                                    CuentaPendienteModel cuentaTotal = new CuentaPendienteModel(cxcID,Ticket,Ticket_id,"Total",Cargo,abonoEnString,pendiente,"total");
                                     Cuentas.add(cuentaTotal);
                                     abono=0;
                                 }
@@ -637,7 +651,7 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                             else
                             {
                                 String abonoEnString = String.valueOf(abono);
-                                CuentaPendienteModel cuentaTotal = new CuentaPendienteModel(" "," ","Total",Cargo,abonoEnString,pendiente,"total");
+                                CuentaPendienteModel cuentaTotal = new CuentaPendienteModel(cxcID,Ticket,Ticket_id,"Total",Cargo,abonoEnString,pendiente,"total");
                                 Cuentas.add(cuentaTotal);
                                 abono=0;
                             }
@@ -645,7 +659,7 @@ public class Fragment_cliente_ver_cliente extends Fragment {
 
                         tabla_cuentas = v.findViewById(R.id.tabla_cuentas);
                         tabla_cuentas.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia3));
-                        CuentasPorCobrarAdapter cuentasAdapter = new CuentasPorCobrarAdapter(getContext(),Cuentas,tabla_cuentas);
+                        CuentasPorCobrarAdapter cuentasAdapter = new CuentasPorCobrarAdapter(getContext(),Cuentas,tabla_cuentas,ArregloSucursales);
                         tabla_cuentas.setDataAdapter(cuentasAdapter);
                         ViewCompat.setNestedScrollingEnabled(tabla_cuentas, true);
                         cuentasAdapter.notifyDataSetChanged();

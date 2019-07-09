@@ -2539,7 +2539,7 @@ public class Fragment_Ventas extends Fragment {
         }
     }
 //===========================================================================================================
-    private void CargaMetodosPago() {
+    private void CargaMetodosPago(TextView importeFaltante, TextView importeRecibido) {
 
         ListaDePagosDisponibles.clear();
         ListaDePagos_a_utilizar.clear();
@@ -2592,7 +2592,7 @@ public class Fragment_Ventas extends Fragment {
                             ListaDePagosDisponibles.add(pago);
                         }
                         MetodoPagoAdapter metodo = new MetodoPagoAdapter(getContext(), ListaDePagosDisponibles,tabla_metodos_pago,
-                                ListaDePagos_a_utilizar);
+                                ListaDePagos_a_utilizar,importeRecibido,importeFaltante);
                         tabla_metodos_pago.setDataAdapter(metodo);
                         metodo.notifyDataSetChanged();
 
@@ -4605,6 +4605,10 @@ public class Fragment_Ventas extends Fragment {
         dialog.show();
         tabla_metodos_pago = dialog.findViewById(R.id.tabla_seleccionar_metodo_pago);
         tabla_metodos_pago.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
+        TextView importe_recibido = dialog.findViewById(R.id.text_view_recibido);
+        TextView importe_faltante = dialog.findViewById(R.id.text_view_faltante);
+        CargaMetodosPago(importe_faltante,importe_recibido);
+
         Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
         cerrarPopUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -4615,7 +4619,7 @@ public class Fragment_Ventas extends Fragment {
 
         //=====================================================
 
-        CargaMetodosPago();
+
 
         TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
         double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
@@ -4811,7 +4815,9 @@ public class Fragment_Ventas extends Fragment {
                 dialog.hide();
             }
         });
-        CargaMetodosPago();
+        TextView importe_recibido = dialog.findViewById(R.id.text_view_recibido);
+        TextView importe_faltante = dialog.findViewById(R.id.text_view_faltante);
+        CargaMetodosPago(importe_faltante,importe_recibido);
 
         TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
         double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
@@ -5015,7 +5021,9 @@ public class Fragment_Ventas extends Fragment {
 
         //=====================================================
 
-        CargaMetodosPago();
+        TextView importe_recibido = dialog.findViewById(R.id.text_view_recibido);
+        TextView importe_faltante = dialog.findViewById(R.id.text_view_faltante);
+        CargaMetodosPago(importe_faltante,importe_recibido);
 
         TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
         double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
@@ -5199,7 +5207,9 @@ public class Fragment_Ventas extends Fragment {
                 dialog.hide();
             }
         });
-        CargaMetodosPago();
+        TextView importe_recibido = dialog.findViewById(R.id.text_view_recibido);
+        TextView importe_faltante = dialog.findViewById(R.id.text_view_faltante);
+        CargaMetodosPago(importe_faltante,importe_recibido);
 
         TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
         double ImporteTotalConDecimal = Double.parseDouble(ticket_de_venta.getTic_importe_total());
