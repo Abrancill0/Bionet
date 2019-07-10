@@ -33,10 +33,27 @@
             android:layout_marginTop="50dp"
             android:layout_marginBottom="10dp"
             android:background="@color/white"
-            android:onClick="PDFIMprimie"
+            android:onClick="InicioSesionOauth"
             android:paddingVertical="15dp"
             android:paddingHorizontal="100dp"
             android:text="Iniciar Sesion"
+            android:textSize="16sp"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <Button
+            android:id="@+id/btnpdf23"
+            style="@android:style/Widget.Holo.Light.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/white"
+            android:onClick="PruebasFeencia"
+            android:paddingVertical="15dp"
+            android:paddingHorizontal="100dp"
+            android:text="Feencia"
             android:textSize="16sp"
             android:textColor="@color/colorPrimaryDark" />
     </LinearLayout>

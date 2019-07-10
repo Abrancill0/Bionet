@@ -508,7 +508,12 @@ public class Login extends Activity {
         dialog.dismiss();
     }
 
-    public void PDFIMprimie(View v) {
+    public void PruebasFeencia(View v) {
+
+
+    }
+
+    public void InicioSesionOauth(View v) {
         Intent intent = new Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse(UrlSend + "?response_type=code&client_id=" + clientid + "&scope=read+write&redirect_uri=" + redirectUri));
@@ -561,6 +566,8 @@ public class Login extends Activity {
 
 
     }
+
+
 
     public void forgotPassword(View v) {
         final Dialog dialog = new Dialog(Login.this);
