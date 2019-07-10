@@ -66,15 +66,22 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
     private TextView Recibido;
     private TextView Faltante;
 
+    private String Total;
+
     public MetodoPagoAdapter(final Context context, final List<PagoModel> data, final SortableMetodosPagoTable tableView,
                              List<PagoModel> metodosPagoSeleccionados,
                              TextView recibido,
-                             TextView faltante) {
+                             TextView faltante,
+                             String total) {
         super(context, data, tableView);
         MetodosPagoSeleccionados=metodosPagoSeleccionados;
 
         Recibido = recibido;
         Faltante = faltante;
+
+        Total=total;
+
+        Faltante.setText("$"+Total);
 
     }
 
@@ -187,7 +194,14 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
                             }
 
                             String sumaDeImporteString = String.valueOf(sumaDeImporte);
-                            Recibido.setText(sumaDeImporteString);
+                            Recibido.setText("$"+sumaDeImporteString);
+
+
+                            float CantidadTotalFaltante = Float.parseFloat(Total);
+                            CantidadTotalFaltante = CantidadTotalFaltante - sumaDeImporte;
+                            String CantidadTotalFaltanteString = String.valueOf(CantidadTotalFaltante);
+                            Faltante.setText("$"+CantidadTotalFaltanteString);
+
 
 
 
@@ -214,7 +228,12 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
                         }
 
                         String sumaDeImporteString = String.valueOf(sumaDeImporte);
-                        Recibido.setText(sumaDeImporteString);
+                        Recibido.setText("$"+sumaDeImporteString);
+
+                        float CantidadTotalFaltante = Float.parseFloat(Total);
+                        CantidadTotalFaltante = CantidadTotalFaltante - sumaDeImporte;
+                        String CantidadTotalFaltanteString = String.valueOf(CantidadTotalFaltante);
+                        Faltante.setText("$"+CantidadTotalFaltanteString);
                     }
 
             }

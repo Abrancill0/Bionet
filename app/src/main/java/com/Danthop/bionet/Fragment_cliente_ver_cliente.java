@@ -485,6 +485,7 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                                         }
 
                                     } else {
+                                        progressDialog.dismiss();
                                         Toast toast1 =
                                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
@@ -494,7 +495,7 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                                     }
 
                                 } catch (JSONException e) {
-
+                                    progressDialog.dismiss();
                                     Toast toast1 =
                                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
 
@@ -509,6 +510,7 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                                 new Response.ErrorListener() {
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
+                                        progressDialog.dismiss();
                                         Toast toast1 =
                                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
 
@@ -659,7 +661,7 @@ public class Fragment_cliente_ver_cliente extends Fragment {
 
                         tabla_cuentas = v.findViewById(R.id.tabla_cuentas);
                         tabla_cuentas.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia3));
-                        CuentasPorCobrarAdapter cuentasAdapter = new CuentasPorCobrarAdapter(getContext(),Cuentas,tabla_cuentas,ArregloSucursales);
+                        CuentasPorCobrarAdapter cuentasAdapter = new CuentasPorCobrarAdapter(getContext(),Cuentas,tabla_cuentas,ArregloSucursales,Cli_id);
                         tabla_cuentas.setDataAdapter(cuentasAdapter);
                         ViewCompat.setNestedScrollingEnabled(tabla_cuentas, true);
                         cuentasAdapter.notifyDataSetChanged();

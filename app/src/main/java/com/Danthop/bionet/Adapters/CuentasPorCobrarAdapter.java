@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -71,6 +72,8 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
 
     private ArrayList<String> sucursales_cliente;
 
+    private SortableCuentasPorCobrarTable tabla_cuentas;
+
 
 
 
@@ -78,18 +81,22 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
 
     private String usu_id;
     private String code;
+    private String Cli_id;
 
     private Typeface s;
 
     private String UsuarioID;
 
     public CuentasPorCobrarAdapter(final Context context, final List<CuentaPendienteModel> data, final SortableCuentasPorCobrarTable tableView,
-                                   ArrayList<String> SucursalesCliente) {
+                                   ArrayList<String> SucursalesCliente,
+                                   String cli_id) {
         super(context, data, tableView);
 
         cuentaPendienteList = data;
         cuentaPendienteListFull = new ArrayList<>(data);
         sucursales_cliente = SucursalesCliente;
+        tabla_cuentas = tableView;
+        Cli_id = cli_id;
 
         SharedPreferences sharedPref = getContext().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id", "");
@@ -97,7 +104,6 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
 
 
 
@@ -216,7 +222,7 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
             final TextView textView = new TextView(getContext());
             textView.setText(cuenta.getPendiente());
             textView.setTextSize(TEXT_SIZE);
-            textView.setPadding(5,5,5,5);
+            textView.setPadding(20, 10, 20, 10);
             textView.setTextColor(getResources().getColor(R.color.green));
             textView.setGravity(View.TEXT_ALIGNMENT_VIEW_START);
             textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
@@ -254,7 +260,7 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
         final TextView textView = new TextView(getContext());
         textView.setText(value);
         textView.setTextSize(TEXT_SIZE);
-        textView.setPadding(5,5,5,5);
+        textView.setPadding(20, 10, 20, 10);
         textView.setGravity(View.TEXT_ALIGNMENT_VIEW_START);
         textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -345,6 +351,10 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
         SortableMetodosPagoTable tabla_metodos_pago = dialog.findViewById(R.id.tabla_seleccionar_metodo_pago);
         tabla_metodos_pago.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
 
+        EditText BancoEmisor = dialog.findViewById(R.id.text_banco_emisor);
+        EditText CuentaOrdentante = dialog.findViewById(R.id.text_cuenta_ordenante);
+        EditText CuentaBeneficiario = dialog.findViewById(R.id.text_cuenta_beneficiario);
+        EditText CadenaPago = dialog.findViewById(R.id.text_cadena_pago);
 
 
         TextView importe_recibido = dialog.findViewById(R.id.text_view_recibido);
@@ -382,7 +392,8 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                LoadMetodosPago(ListaDePagosDisponibles,ListaDePagos_a_utilizar,SucursalID,SpinnerSucursal,tabla_metodos_pago,
-                       importe_faltante,importe_recibido);
+                       importe_faltante,importe_recibido,
+                       cuenta);
 
             }
 
@@ -452,24 +463,6 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
                                     Toast.LENGTH_LONG);
                     //toast2.show();
 
-                    if (totalvalida > TotalFormat){
-                        Toast toast1 =
-                                Toast.makeText(getContext(),
-                                        "la suma de los montos de medios electronicos o tarjetas no puede sobrepasar el total de la venta",
-                                        Toast.LENGTH_LONG);
-                        toast1.show();
-
-                        return;
-                    }
-
-
-                    if (TotalFormat > totalsumaimportes) {
-                        Toast toast1 =
-                                Toast.makeText(getContext(), "El monto capturado es menor al total de la venta", Toast.LENGTH_LONG);
-                        toast1.show();
-
-                        return;
-                    }
 
                     dialog.dismiss();
 
@@ -524,7 +517,11 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
                         TextView importe_recibido = dialog.findViewById(R.id.importe_recibido);
                         TextView importe_cambio = dialog.findViewById(R.id.importe_cambio);
                         FinalizarTicket(importe_cambio, importe_recibido, importe_venta,ListaDePagos_a_utilizar,cuenta,
-                                SucursalID,SpinnerSucursal);
+                                SucursalID,SpinnerSucursal,
+                                BancoEmisor,
+                                CuentaOrdentante,
+                                CuentaBeneficiario,
+                                CadenaPago);
 
 
                         Button aceptar = dialog.findViewById(R.id.aceptar_cerrar_ventana);
@@ -642,7 +639,8 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
                                  Spinner SpinnerSucursal,
                                  SortableMetodosPagoTable tabla_metodos_pago,
                                  TextView textViewFaltante,
-                                 TextView textViewRecibo)
+                                 TextView textViewRecibo,
+                                 CuentaPendienteModel cuenta)
     {
 
         ListaDePagosDisponibles.clear();
@@ -694,7 +692,8 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
                             ListaDePagosDisponibles.add(pago);
                         }
                         MetodoPagoAdapter metodo = new MetodoPagoAdapter(getContext(), ListaDePagosDisponibles,tabla_metodos_pago,
-                                ListaDePagos_a_utilizar,textViewRecibo,textViewFaltante);
+                                ListaDePagos_a_utilizar,textViewRecibo,textViewFaltante,
+                                cuenta.getPendiente());
                         tabla_metodos_pago.setDataAdapter(metodo);
                         metodo.notifyDataSetChanged();
 
@@ -731,7 +730,11 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
                                  List<PagoModel> ListaDePagos_a_utilizar,
                                  CuentaPendienteModel cuenta,
                                  ArrayList<String> SucursalID,
-                                 Spinner SpinnerSucursal
+                                 Spinner SpinnerSucursal,
+                                 EditText BancoEmisor,
+                                 EditText CuentaOrdenante,
+                                 EditText CuentaBeneficiario,
+                                 EditText CadenaPago
                                  ) {
 
         JSONArray arreglo = new JSONArray();
@@ -748,10 +751,10 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
 
         JSONObject arreglo2 = new JSONObject();
         try {
-            arreglo2.put("do_banco_emisor", "");
-            arreglo2.put("do_cuenta_ordenado", "");
-            arreglo2.put("do_cuenta_beneficiario", "");
-            arreglo2.put("do_cadena_pago", "");
+            arreglo2.put("do_banco_emisor", BancoEmisor);
+            arreglo2.put("do_cuenta_ordenado", CuentaOrdenante);
+            arreglo2.put("do_cuenta_beneficiario", CuentaBeneficiario);
+            arreglo2.put("do_cadena_pago", CadenaPago);
         } catch (JSONException e1) {
             e1.printStackTrace();
         }
@@ -791,10 +794,14 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
                     if (status == 1) {
 
                         JSONObject Respuesta = response.getJSONObject("resultado");
-                        JSONObject RespuestaNodoTicket = Respuesta.getJSONObject("aTicket");
-                        String tic_importe_total = RespuestaNodoTicket.getString("tic_importe_total");
-                        String tic_importe_recibido = RespuestaNodoTicket.getString("tic_importe_recibido");
-                        String tic_importe_cambio = RespuestaNodoTicket.getString("tic_importe_cambio");
+                        JSONObject RespuestaNodoTicket = Respuesta.getJSONObject("aPago");
+
+                        JSONObject Nodotic_importe_total = RespuestaNodoTicket.getJSONObject("tpa_importe_ticket");
+                        JSONObject Nodotic_importe_recibido = RespuestaNodoTicket.getJSONObject("tpa_importe_recibido");
+                        JSONObject Nodotic_importe_cambio = RespuestaNodoTicket.getJSONObject("tpa_importe_cambio");
+                        String tic_importe_total = Nodotic_importe_total.getString("value");
+                        String tic_importe_recibido = Nodotic_importe_recibido.getString("value");
+                        String tic_importe_cambio = Nodotic_importe_cambio.getString("value");
 
 
                         double CambioConDecimal = Double.parseDouble(tic_importe_cambio);
@@ -805,6 +812,10 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
                         importeCambio.setText(formatter.format(CambioConDecimal));
                         importeRecibido.setText(formatter.format(RecibidoConDecimal));
                         importeVenta.setText(formatter.format(ImporteTotalConDecimal));
+
+                        LoadCuentasPorCobrar();
+
+
 
                         progressDialog.dismiss();
                     } else {
@@ -825,6 +836,123 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+
+    private void LoadCuentasPorCobrar()
+    {
+        cuentaPendienteList.clear();
+        progressDialog.show();
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("cli_id", Cli_id);
+            request.put("code",code);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getContext().getString(R.string.Url);
+
+        String ApiPath = url + "/api/clientes/select-cliente";
+
+        //clienteAdapter.clear();
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONObject RespuestaNodoDireccion = null;
+                JSONArray ArregloCuentas = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        Respuesta = response.getJSONObject("resultado");
+
+                        ArregloCuentas = Respuesta.getJSONArray("aCxC");
+                        int abono=0;
+                        String pendiente="";
+                        for(int i = 0; i<ArregloCuentas.length();i++)
+                        {
+                            JSONObject elemento = ArregloCuentas.getJSONObject(i);
+                            JSONObject cxcIDNodo = elemento.getJSONObject("cxc_id");
+                            String cxcID = cxcIDNodo.getString("uuid");
+                            String Ticket = elemento.getString("cxc_numero_ticket");
+                            JSONObject nodoIDTicket = elemento.getJSONObject("cxc_id_ticket");
+                            String Ticket_id = nodoIDTicket.getString("uuid");
+                            String fecha = elemento.getString("cxc_fecha_hora_creo");
+                            String Cargo = elemento.getString("cxc_impore_ticket");
+                            String Abono = elemento.getString("cxc_impore_pago");
+                            int AbonoEnInt = Integer.parseInt(Abono);
+                            abono= abono+AbonoEnInt;
+                            String tipo = elemento.getString("cxc_tipo");
+                            if(tipo.equals("cargo"))
+                            {
+                                pendiente = elemento.getString("cxc_impore_pendiente");
+                                Abono="";
+                            }
+                            CuentaPendienteModel cuenta = new CuentaPendienteModel(cxcID,Ticket,Ticket_id,fecha,Cargo,Abono,pendiente,tipo);
+                            cuentaPendienteList.add(cuenta);
+                            if((i+1)<ArregloCuentas.length())
+                            {
+                                JSONObject elementoSiguiente = ArregloCuentas.getJSONObject(i+1);
+                                if(cuenta.getTipo().equals("abono")&&elementoSiguiente.getString("cxc_tipo").equals("cargo"))
+                                {
+                                    String abonoEnString = String.valueOf(abono);
+                                    CuentaPendienteModel cuentaTotal = new CuentaPendienteModel(cxcID,Ticket,Ticket_id,"Total",Cargo,abonoEnString,pendiente,"total");
+                                    cuentaPendienteList.add(cuentaTotal);
+                                    abono=0;
+                                }
+                            }
+                            else
+                            {
+                                String abonoEnString = String.valueOf(abono);
+                                CuentaPendienteModel cuentaTotal = new CuentaPendienteModel(cxcID,Ticket,Ticket_id,"Total",Cargo,abonoEnString,pendiente,"total");
+                                cuentaPendienteList.add(cuentaTotal);
+                                abono=0;
+                            }
+                        }
+
+                        CuentasPorCobrarAdapter cuentasAdapter = new CuentasPorCobrarAdapter(getContext(),cuentaPendienteList,tabla_cuentas,sucursales_cliente,Cli_id);
+                        tabla_cuentas.setDataAdapter(cuentasAdapter);
+                        ViewCompat.setNestedScrollingEnabled(tabla_cuentas, true);
+                        cuentasAdapter.notifyDataSetChanged();
+
+                        progressDialog.dismiss();
+                    } else {
+                        progressDialog.dismiss();
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    progressDialog.dismiss();
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
                         Toast toast1 =
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
                         toast1.show();

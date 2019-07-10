@@ -2591,8 +2591,11 @@ public class Fragment_Ventas extends Fragment {
                             );
                             ListaDePagosDisponibles.add(pago);
                         }
+
+                        String TotalString = String.valueOf(Total);
                         MetodoPagoAdapter metodo = new MetodoPagoAdapter(getContext(), ListaDePagosDisponibles,tabla_metodos_pago,
-                                ListaDePagos_a_utilizar,importeRecibido,importeFaltante);
+                                ListaDePagos_a_utilizar,importeRecibido,importeFaltante,
+                                ticket_de_venta.getTic_importe_total());
                         tabla_metodos_pago.setDataAdapter(metodo);
                         metodo.notifyDataSetChanged();
 
