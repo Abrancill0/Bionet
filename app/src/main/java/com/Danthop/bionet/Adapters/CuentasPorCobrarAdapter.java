@@ -174,7 +174,7 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
             final TextView textView = new TextView(getContext());
             textView.setText(cuenta.getFecha());
             textView.setTextSize(TEXT_SIZE);
-            textView.setPadding(5,5,5,5);
+            textView.setPadding(20, 10, 20, 10);
             textView.setTextColor(getResources().getColor(R.color.green));
             textView.setGravity(View.TEXT_ALIGNMENT_VIEW_START);
             textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
@@ -190,7 +190,7 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
             final TextView textView = new TextView(getContext());
             textView.setText(cuenta.getCargo());
             textView.setTextSize(TEXT_SIZE);
-            textView.setPadding(5,5,5,5);
+            textView.setPadding(20, 10, 20, 10);
             textView.setTextColor(getResources().getColor(R.color.green));
             textView.setGravity(View.TEXT_ALIGNMENT_VIEW_START);
             textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
@@ -206,7 +206,7 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
             final TextView textView = new TextView(getContext());
             textView.setText(cuenta.getAbono());
             textView.setTextSize(TEXT_SIZE);
-            textView.setPadding(5,5,5,5);
+            textView.setPadding(20, 10, 20, 10);
             textView.setTextColor(getResources().getColor(R.color.green));
             textView.setGravity(View.TEXT_ALIGNMENT_VIEW_START);
             textView.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
@@ -483,6 +483,8 @@ public class CuentasPorCobrarAdapter extends LongPressAwareTableDataAdapter<Cuen
                         mBundle.putInt( "06meses",2);
                         mBundle.putInt( "09meses",2);
                         mBundle.putInt( "12meses",2);
+                        mBundle.putString("TipoVenta","Venta_Normal");
+
 
 
                         mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());

@@ -17,7 +17,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import static com.google.android.gms.common.util.Base64Utils.encode;
 import static org.bouncycastle.util.encoders.UrlBase64.decode;
 
-public class AesEncryption implements SymmetricEcryptionComponent {
+public class AesEncryption /* implements SymmetricEcryptionComponent */{
 
     Map<String,String> initParams;
     String key, iv;

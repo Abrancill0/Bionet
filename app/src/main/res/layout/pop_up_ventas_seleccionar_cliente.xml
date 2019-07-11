@@ -161,14 +161,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight=".85"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="10dp">
 
         <Button
             android:id="@+id/btn_eliminar_Cliente"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/btn"
+            android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:padding="10dp"
             android:text="Eliminar de Ticket"
@@ -181,7 +182,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/btn"
+            android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:padding="10dp"
             android:text="Crear Cliente"

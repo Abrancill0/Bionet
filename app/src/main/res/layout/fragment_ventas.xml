@@ -233,7 +233,7 @@
                     android:padding="5dp">
 
                 <Button
-                    android:id="@+id/btn_orden1"
+                    android:id="@+id/btn_Servicios"
                     style="@android:style/Widget.Holo.Light.Button"
                     android:layout_width="match_parent"
                     android:layout_height="34dp"

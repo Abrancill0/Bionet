@@ -242,6 +242,8 @@ public class Fragment_Ventas extends Fragment {
     private Double TarjetaCredito = 0.0;
     private Double TarjetaDebito = 0.0;
 
+    private Button btn_PagoServicios;
+
     private Bitmap QR;
     private String LinkEncuesta="";
     private String contenidoImprimir2;
@@ -596,6 +598,7 @@ public class Fragment_Ventas extends Fragment {
         descuento = v.findViewById(R.id.descuento_text);
         total = v.findViewById(R.id.total_text);
         subtotal = v.findViewById(R.id.subtotal_text);
+        btn_PagoServicios = v.findViewById(R.id.btn_Servicios);
 
 
         RecyclerImpuesto = v.findViewById(R.id.recyclerImpuestos);
@@ -1189,8 +1192,14 @@ public class Fragment_Ventas extends Fragment {
                 bundle.putBoolean("Conte_Caja", Conte_Caja);
                 Fragment_ventas_transacciones fragment2 = new Fragment_ventas_transacciones();
                 fragment2.setArguments(bundle);
-                fr.replace(R.id.fragment_container,fragment2).commit();
-                onDetach();
+                try{
+                    fr.replace(R.id.fragment_container,fragment2).commit();
+                    onDetach();
+                }catch (IllegalStateException s)
+                {
+
+                }
+
             }
         });
 
@@ -1559,6 +1568,17 @@ public class Fragment_Ventas extends Fragment {
                     });
                 }
 
+            }
+        });
+
+        btn_PagoServicios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
+                Bundle ServiciosBundle = new Bundle();
+                ServiciosBundle.putString("TipoVenta","Servicios");
+                myIntent.putExtras(ServiciosBundle);
+                getActivity().startActivity(myIntent);
             }
         });
 
@@ -4719,6 +4739,7 @@ public class Fragment_Ventas extends Fragment {
                         mBundle.putInt( "06meses",Respseismeses);
                         mBundle.putInt( "09meses",Respnuevemeses);
                         mBundle.putInt( "12meses",Respdocemeses);
+                        mBundle.putString("TipoVenta","Venta_Normal");
 
                         mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
@@ -4924,6 +4945,7 @@ public class Fragment_Ventas extends Fragment {
                         mBundle.putInt( "06meses",Respseismeses);
                         mBundle.putInt( "09meses",Respnuevemeses);
                         mBundle.putInt( "12meses",Respdocemeses);
+                        mBundle.putString("TipoVenta","Venta_Normal");
 
 
                         mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
@@ -5119,6 +5141,7 @@ public class Fragment_Ventas extends Fragment {
                         mBundle.putInt("06meses", Respseismeses);
                         mBundle.putInt("09meses", Respnuevemeses);
                         mBundle.putInt("12meses", Respdocemeses);
+                        mBundle.putString("TipoVenta","Venta_Normal");
 
                         mBundle.putInt("Tamano", ListaDePagos_a_utilizar.size());
 
@@ -5309,6 +5332,7 @@ public class Fragment_Ventas extends Fragment {
                         mBundle.putInt( "06meses",Respseismeses);
                         mBundle.putInt( "09meses",Respnuevemeses);
                         mBundle.putInt( "12meses",Respdocemeses);
+                        mBundle.putString("TipoVenta","Venta_Normal");
 
 
                         mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());

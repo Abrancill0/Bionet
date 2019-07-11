@@ -227,14 +227,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight=".9"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/colorPrimaryDark">
 
         <Button
             android:id="@+id/btnTerminarFeenicia"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/btn"
+            android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:padding="5dp"
             android:text="Terminar"
@@ -247,7 +248,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/btn"
+            android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:padding="5dp"
             android:text="Cerrar"

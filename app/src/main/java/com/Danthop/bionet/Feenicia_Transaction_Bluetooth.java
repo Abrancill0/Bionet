@@ -136,25 +136,13 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_procesamiento_pagos);
+
+
+
         FEENICIA_TRANSACCION = this;
 
         intent = getIntent();
-        tvMontoMostrar = (TextView) findViewById(R.id.tvMontoMostrar);
-        textViewTransaccion = (TextView) findViewById(R.id.textView_procesando_transaccion);
-        textView_resultTx = (TextView) findViewById(R.id.textView_resultTx);
 
-        /// Jar ////
-        btn_search_devices = (Button) findViewById(R.id.btn_search_devices);
-        btn_connect = (Button) findViewById(R.id.btn_conectar);
-
-        btn_terminar_feenicia = (Button) findViewById(R.id.btnTerminarFeenicia);
-        btn_cerrar = (Button) findViewById(R.id.btnCerrar);
-        btn_desconectar = (Button) findViewById(R.id.btn_desconectar);
-        textView_Devices = (TextView) findViewById(R.id.textView_Devices);
-        textView_Devices.setText("");
-        sp_sale = (Spinner) findViewById(R.id.sp_sales);
-        progressBar = (ProgressWheel) findViewById(R.id.progressBar);
 
         askForContactPermission();
 
@@ -163,6 +151,24 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
         TipoVenta = bundle.getString("TipoVenta");
 
         if (TipoVenta.equals("Venta_Normal")) {
+
+            setContentView(R.layout.activity_procesamiento_pagos);
+
+            tvMontoMostrar = (TextView) findViewById(R.id.tvMontoMostrar);
+            textViewTransaccion = (TextView) findViewById(R.id.textView_procesando_transaccion);
+            textView_resultTx = (TextView) findViewById(R.id.textView_resultTx);
+
+            /// Jar ////
+            btn_search_devices = (Button) findViewById(R.id.btn_search_devices);
+            btn_connect = (Button) findViewById(R.id.btn_conectar);
+
+            btn_terminar_feenicia = (Button) findViewById(R.id.btnTerminarFeenicia);
+            btn_cerrar = (Button) findViewById(R.id.btnCerrar);
+            btn_desconectar = (Button) findViewById(R.id.btn_desconectar);
+            textView_Devices = (TextView) findViewById(R.id.textView_Devices);
+            textView_Devices.setText("");
+            sp_sale = (Spinner) findViewById(R.id.sp_sales);
+            progressBar = (ProgressWheel) findViewById(R.id.progressBar);
             //Venta Normal
             TarjetaCredito = bundle.getDouble("TC");
             TarjetaDebio = bundle.getDouble("TD");
@@ -398,7 +404,62 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
         else if (TipoVenta.equals("Servicios"))
         {
 
-            
+            setContentView(R.layout.activity_procesamiento_pagos_servicio);
+
+            tvMontoMostrar = (TextView) findViewById(R.id.tvMontoMostrar);
+            textViewTransaccion = (TextView) findViewById(R.id.textView_procesando_transaccion);
+            textView_resultTx = (TextView) findViewById(R.id.textView_resultTx);
+
+            /// Jar ////
+            btn_search_devices = (Button) findViewById(R.id.btn_search_devices);
+            btn_connect = (Button) findViewById(R.id.btn_conectar);
+
+            btn_terminar_feenicia = (Button) findViewById(R.id.btnTerminarFeenicia);
+            btn_cerrar = (Button) findViewById(R.id.btnCerrar);
+            btn_desconectar = (Button) findViewById(R.id.btn_desconectar);
+            textView_Devices = (TextView) findViewById(R.id.textView_Devices);
+            textView_Devices.setText("");
+            sp_sale = (Spinner) findViewById(R.id.sp_sales);
+            progressBar = (ProgressWheel) findViewById(R.id.progressBar);
+
+            double precio = 0;
+
+
+            // PERMISO DE BLUETOOTH
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.BLUETOOTH_ADMIN}, 1);
+                return;
+
+            } else {
+                BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                if (!mBluetoothAdapter.isEnabled()) {
+                    mBluetoothAdapter.enable();
+                }
+            }
+
+            ///// LIBRERIA FEENICIA_BT //////////
+            user = "Black_Orange";
+            pwd = "Black*2019";
+
+            // 01.- Generar Login para obtener credenciales
+            sppHandlerConnection = new SppHandlerConnection();
+            sppHandlerConnection.generateLogin(user, pwd);   // (Username,Password)
+
+
+            handlerEVM = sppHandlerConnection.initialize(handlerEVM, settings, ui, getApplicationContext(), credentials);
+
+            // 02.- Inicializar Conexión BT
+            bTReceiverConnection = new BTReceiverConnection();
+            bTReceiverConnection.initializeBT(this, "FNZA");
+
+            _receiver = bTReceiverConnection.get_receiver();
+            adapter = bTReceiverConnection.getAdapter();
+
+            ////////////////////////////////////
+
+            sale.config(sppHandlerConnection); // Inicializar
+            //sale.
+            // sale.sale_retail_without_tip(monto); // DEFAULT Monto (SIN MSI y SIN PROPINA
 
 
 
