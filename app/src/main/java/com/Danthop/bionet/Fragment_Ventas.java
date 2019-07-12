@@ -1577,6 +1577,7 @@ public class Fragment_Ventas extends Fragment {
                 Intent myIntent = new Intent(getActivity(), Feenicia_Transaction_Bluetooth.class);
                 Bundle ServiciosBundle = new Bundle();
                 ServiciosBundle.putString("TipoVenta","Servicios");
+                ServiciosBundle.putString("Code",code);
                 myIntent.putExtras(ServiciosBundle);
                 getActivity().startActivity(myIntent);
             }
@@ -4740,6 +4741,7 @@ public class Fragment_Ventas extends Fragment {
                         mBundle.putInt( "09meses",Respnuevemeses);
                         mBundle.putInt( "12meses",Respdocemeses);
                         mBundle.putString("TipoVenta","Venta_Normal");
+                        mBundle.putString("Code",code);
 
                         mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
@@ -4946,6 +4948,7 @@ public class Fragment_Ventas extends Fragment {
                         mBundle.putInt( "09meses",Respnuevemeses);
                         mBundle.putInt( "12meses",Respdocemeses);
                         mBundle.putString("TipoVenta","Venta_Normal");
+                        mBundle.putString("Code",code);
 
 
                         mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
@@ -5142,6 +5145,7 @@ public class Fragment_Ventas extends Fragment {
                         mBundle.putInt("09meses", Respnuevemeses);
                         mBundle.putInt("12meses", Respdocemeses);
                         mBundle.putString("TipoVenta","Venta_Normal");
+                        mBundle.putString("Code",code);
 
                         mBundle.putInt("Tamano", ListaDePagos_a_utilizar.size());
 
@@ -5333,6 +5337,7 @@ public class Fragment_Ventas extends Fragment {
                         mBundle.putInt( "09meses",Respnuevemeses);
                         mBundle.putInt( "12meses",Respdocemeses);
                         mBundle.putString("TipoVenta","Venta_Normal");
+                        mBundle.putString("Code",code);
 
 
                         mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());

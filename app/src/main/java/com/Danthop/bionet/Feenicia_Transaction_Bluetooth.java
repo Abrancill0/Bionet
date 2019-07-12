@@ -32,7 +32,9 @@ import android.widget.Toast;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -52,6 +54,7 @@ import com.Danthop.bionet.model.TicketModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.imagpay.Settings;
@@ -87,6 +90,22 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
     private List<PagoModel> ListaDePagos_a_utilizar;
     private List<String> entriesList;
     private TicketModel ticket_de_venta;
+
+    private String RequestIv="";
+    private String RequestKey="";
+    private String RequestSignatureIv="";
+    private String RequestSignatureKey="";
+    private String ResponseIv="";
+    private String ResponseKey="";
+    private String ResponseSignatureIv="";
+    private String ResponseSignatureKey="";
+    private String afiliacion="";
+    private String merchantId="";
+    private String userId="";
+
+
+
+    private String code;
 
     private static SaleUtils utils;
 
@@ -145,10 +164,11 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
 
 
         askForContactPermission();
-
+        LoadKeys();
         Bundle bundle = getIntent().getExtras();
         //TarjetaCredito = getIntent().getExtras().getDouble("TC");
         TipoVenta = bundle.getString("TipoVenta");
+        code = bundle.getString("Code");
 
         if (TipoVenta.equals("Venta_Normal")) {
 
@@ -179,6 +199,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
             Seismeses = bundle.getInt("06meses");
             nuevemeses = bundle.getInt("09meses");
             docemeses = bundle.getInt("12meses");
+
 
             List<String> entriesList = new ArrayList<>();
 
@@ -403,7 +424,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
         }
         else if (TipoVenta.equals("Servicios"))
         {
-
+            LoadServicios();
             setContentView(R.layout.activity_procesamiento_pagos_servicio);
 
             tvMontoMostrar = (TextView) findViewById(R.id.tvMontoMostrar);
@@ -1066,5 +1087,156 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
         VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
     }
 
+    private void LoadKeys()
+    {
+        JSONObject request = new JSONObject();
+
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("code", code);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/select-configuracion-feenicia";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        JSONArray Resultado = response.getJSONArray("resultado");
+                        for(int x =0; x<Resultado.length();x++)
+                        {
+                            JSONObject elemento = Resultado.getJSONObject(x);
+                            String cfe_id = elemento.getString("cfe_id");
+
+                            if(cfe_id.equals("RequestIv"))
+                            {
+                                RequestIv=elemento.getString("cfe_valor");
+                            }
+                            if(cfe_id.equals("RequestKey"))
+                            {
+                                RequestKey=elemento.getString("cfe_valor");
+                            }
+                            if(cfe_id.equals("RequestSignatureIv"))
+                            {
+                                RequestSignatureIv=elemento.getString("cfe_valor");
+                            }
+                            if(cfe_id.equals("RequestSignatureKey"))
+                            {
+                                RequestSignatureKey=elemento.getString("cfe_valor");
+                            }
+                            if(cfe_id.equals("ResponseIv"))
+                            {
+                                ResponseIv=elemento.getString("cfe_valor");
+                            }
+                            if(cfe_id.equals("ResponseSignatureIv"))
+                            {
+                                ResponseSignatureIv=elemento.getString("cfe_valor");
+                            }
+                            if(cfe_id.equals("ResponseSignatureKey"))
+                            {
+                                ResponseSignatureKey=elemento.getString("cfe_valor");
+                            }
+                            if(cfe_id.equals("afiliacion"))
+                            {
+                                afiliacion=elemento.getString("cfe_valor");
+                            }
+                            if(cfe_id.equals("merchantId"))
+                            {
+                                merchantId=elemento.getString("cfe_valor");
+                            }
+                            if(cfe_id.equals("userId"))
+                            {
+                                userId=elemento.getString("cfe_valor");
+                            }
+                        }
+
+                    } else {
+
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
+    }
+
+    private void LoadServicios()
+    {
+       /* */
+        JSONObject request = new JSONObject();
+        HashMap<String, String> headers=new HashMap<>();
+
+        headers.put("Content-Type","application/json");
+        headers.put("X-Requested-With","0000000000003728_d30a1dce920aa13d1832505aaa901bdfb56f8df52286397b104d9aa15bc152c33f0af6763b01a69ea1d0ce29c95ab74a14ee4170fb3d7fc49a55764bf9049c02e882f5b6fec215d42e85bade53a886d6");
+
+
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = "https://18.216.206.86:30080/hml-servicesV2/pagoServicios/categorias";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>()
+        {
+
+            @Override
+            public void onResponse(JSONObject response) {
+
+                System.out.println(response);
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                })
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return headers != null ? headers : super.getHeaders();
+            }
+        };
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
+
+    }
 
 }

@@ -109,6 +109,14 @@ public class Fragment_crear_cliente extends DialogFragment {
     private String valor;
     private String code;
 
+    private Button btn_datos_personales;
+    private Button btn_datos_facturacion;
+    private Button btn_aniadir_contacto;
+
+    private View Layout_datos_personales;
+    private View Layout_datos_facturacion;
+    private View Layout_aniadir_contacto;
+
     private final static String[] opciones = { "N/A", "Email de Facturación", "Dirección Fiscal", "Ambas"};
     public Fragment_crear_cliente() {
         // Required empty public constructor
@@ -152,6 +160,14 @@ public class Fragment_crear_cliente extends DialogFragment {
         TextFacturacionNumInt=(EditText)v.findViewById(R.id.Text_cliente_num_int_facturacion);
         TextFacturacionMunicipio=(EditText)v.findViewById(R.id.Text_cliente_municipio_facturacion);
 
+        btn_datos_personales = v.findViewById(R.id.btn_Datos_Personales);
+        btn_datos_facturacion = v.findViewById(R.id.btn_Datos_Facturacion);
+        btn_aniadir_contacto = v.findViewById(R.id.btn_Aniadir_Contacto);
+
+        Layout_datos_personales = v.findViewById(R.id.Layout_Datos_personales);
+        Layout_datos_facturacion = v.findViewById(R.id.Layout_Datos_Facturacion);
+        Layout_aniadir_contacto = v.findViewById(R.id.Layout_aniadir_contacto);
+
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
         code = sharedPref.getString("sso_code","");
@@ -183,6 +199,7 @@ public class Fragment_crear_cliente extends DialogFragment {
         }
 
         LoadSpinnerSucursal();
+        LoadLayouts();
 
 
         Button guardar = (Button) v.findViewById(R.id.verificar_fiscal);//Boton Guardar_cliente
@@ -256,6 +273,44 @@ public class Fragment_crear_cliente extends DialogFragment {
             }
         });
         return v;
+    }
+
+
+    private void LoadLayouts()
+    {
+        btn_datos_personales.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_datos_personales.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+                btn_datos_facturacion.setBackgroundResource(R.drawable.pestanas_desplegables);
+                btn_aniadir_contacto.setBackgroundResource(R.drawable.pestanas_desplegables);
+                Layout_datos_personales.setVisibility(View.VISIBLE);
+                Layout_datos_facturacion.setVisibility(View.GONE);
+                Layout_aniadir_contacto.setVisibility(View.GONE);
+            }
+        });
+        btn_datos_facturacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_datos_facturacion.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+                btn_datos_personales.setBackgroundResource(R.drawable.pestanas_desplegables);
+                btn_aniadir_contacto.setBackgroundResource(R.drawable.pestanas_desplegables);
+                Layout_datos_facturacion.setVisibility(View.VISIBLE);
+                Layout_datos_personales.setVisibility(View.GONE);
+                Layout_aniadir_contacto.setVisibility(View.GONE);
+            }
+        });
+        btn_aniadir_contacto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_aniadir_contacto.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+                btn_datos_facturacion.setBackgroundResource(R.drawable.pestanas_desplegables);
+                btn_datos_personales.setBackgroundResource(R.drawable.pestanas_desplegables);
+                Layout_aniadir_contacto.setVisibility(View.VISIBLE);
+                Layout_datos_facturacion.setVisibility(View.GONE);
+                Layout_datos_personales.setVisibility(View.GONE);
+            }
+        });
     }
 
 
