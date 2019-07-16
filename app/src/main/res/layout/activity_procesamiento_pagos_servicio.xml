@@ -268,8 +268,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight=".9"
-        android:orientation="horizontal"
         android:background="@color/colorPrimaryDark"
+        android:orientation="horizontal"
         android:paddingBottom="10dp">
 
         <Button

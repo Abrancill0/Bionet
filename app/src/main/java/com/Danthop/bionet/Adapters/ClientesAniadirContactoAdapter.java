@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -59,6 +60,12 @@ public class ClientesAniadirContactoAdapter extends LongPressAwareTableDataAdapt
 
     private Typeface s;
     private FragmentTransaction fr;
+
+    private String CadenaContacto="";
+    private String CadenaTelefono="";
+    private String CadenaCorreo="";
+    private String CadenaPuesto="";
+    private String CadenaNotas="";
 
 
 
@@ -133,32 +140,98 @@ public class ClientesAniadirContactoAdapter extends LongPressAwareTableDataAdapt
 
     private View renderContacto(final ContactoModel contacto) {
         EditText Contacto = new EditText(getContext());
+        Contacto.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    CadenaContacto = Contacto.getText().toString();
 
+                    return true;
+                }
+                return false;
+            }
+        });
         return Contacto;
     }
 
     private View renderTelefono(final ContactoModel contacto) {
         EditText Telefono = new EditText(getContext());
+        Telefono.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    CadenaTelefono = Telefono.getText().toString();
+
+                    return true;
+                }
+                return false;
+            }
+        });
         return Telefono;
     }
 
     private View renderCorreoElectronico(final ContactoModel contacto) {
         EditText Correo = new EditText(getContext());
+        Correo.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    CadenaCorreo = Correo.getText().toString();
+
+                    return true;
+                }
+                return false;
+            }
+        });
         return Correo;
     }
 
     private View renderPuesto(final ContactoModel contacto) {
         EditText Puesto = new EditText(getContext());
+        Puesto.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    CadenaPuesto = Puesto.getText().toString();
+
+                    return true;
+                }
+                return false;
+            }
+        });
         return Puesto;
     }
 
     private View renderNotas(final ContactoModel contacto) {
         EditText Notas = new EditText(getContext());
+        Notas.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    CadenaNotas = Notas.getText().toString();
+
+                    return true;
+                }
+                return false;
+            }
+        });
         return Notas;
     }
     private View renderMas(final ContactoModel contacto) {
         Button Mas = new Button(getContext());
         Mas.setText("+");
+        Mas.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               ContactoModel contacto = new ContactoModel( "",CadenaContacto,CadenaTelefono,CadenaCorreo,CadenaPuesto ,CadenaNotas);
+               clientesContactosListFull.add( contacto );
+               CadenaContacto="";
+               CadenaTelefono="";
+               CadenaCorreo="";
+               CadenaNotas="";
+               CadenaPuesto="";
+            }
+        } );
         return Mas;
     }
 

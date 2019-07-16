@@ -103,6 +103,8 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
     private String merchantId="";
     private String userId="";
 
+    private String XRequestWith="";
+
 
 
     private String code;
@@ -424,7 +426,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
         }
         else if (TipoVenta.equals("Servicios"))
         {
-            LoadServicios();
             setContentView(R.layout.activity_procesamiento_pagos_servicio);
 
             tvMontoMostrar = (TextView) findViewById(R.id.tvMontoMostrar);
@@ -442,6 +443,10 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
             textView_Devices.setText("");
             sp_sale = (Spinner) findViewById(R.id.sp_sales);
             progressBar = (ProgressWheel) findViewById(R.id.progressBar);
+
+            SharedPreferences sharedPref = this.getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+            usu_id = sharedPref.getString("usu_id", "");
+            LoadServicios();
 
             double precio = 0;
 
@@ -1193,6 +1198,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
     private void LoadServicios()
     {
        /* */
+        XRequestWith = GetXRequestWith();
         JSONObject request = new JSONObject();
         HashMap<String, String> headers=new HashMap<>();
 
@@ -1208,15 +1214,79 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
 
         String url = getString(R.string.Url);
 
-        String ApiPath = "https://18.216.206.86:30080/hml-servicesV2/pagoServicios/categorias";
+        String ApiPath = "http://18.216.206.86:30080/hml-servicesV2/pagoServicios/categorias";
 
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>()
         {
 
             @Override
             public void onResponse(JSONObject response) {
-
                 System.out.println(response);
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("X-Requested-With", XRequestWith);
+
+                return headers;
+            }
+        };
+        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
+
+    }
+
+    private String GetXRequestWith()
+    {
+        JSONObject request = new JSONObject();
+
+        final String[] Resultado = new String[1];
+
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("code", code);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/configuracion/feenicia/generarFirmaApp";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        Resultado[0] = response.getString("resultado");
+
+                    } else {
+                        Resultado[0] = "";
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                }
             }
 
         },
@@ -1227,16 +1297,14 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG);
                         toast1.show();
                     }
-                })
-        {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                return headers != null ? headers : super.getHeaders();
-            }
-        };
+                }
+        );
         postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
 
+        return Resultado[0];
+
     }
+
 
 }
