@@ -568,7 +568,6 @@ public class Login extends Activity {
     }
 
 
-
     public void forgotPassword(View v) {
         final Dialog dialog = new Dialog(Login.this);
         dialog.setContentView(R.layout.pop_up_olvide_contrasenia);
