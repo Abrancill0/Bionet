@@ -27,6 +27,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.ClienteAdapter;
+import com.Danthop.bionet.Adapters.ClientesAniadirContactoAdapter;
+import com.Danthop.bionet.Tables.SortableAniadirContactoTable;
+import com.Danthop.bionet.model.ContactoModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -48,6 +52,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 /**
@@ -117,6 +122,13 @@ public class Fragment_crear_cliente extends DialogFragment {
     private View Layout_datos_facturacion;
     private View Layout_aniadir_contacto;
 
+
+    private ClientesAniadirContactoAdapter contactoAdapter;
+    List<ContactoModel> Contactos = new ArrayList<>();
+
+
+    private SortableAniadirContactoTable AniadirContactoTable;
+
     private final static String[] opciones = { "N/A", "Email de Facturación", "Dirección Fiscal", "Ambas"};
     public Fragment_crear_cliente() {
         // Required empty public constructor
@@ -168,6 +180,10 @@ public class Fragment_crear_cliente extends DialogFragment {
         Layout_datos_facturacion = v.findViewById(R.id.Layout_Datos_Facturacion);
         Layout_aniadir_contacto = v.findViewById(R.id.Layout_aniadir_contacto);
 
+        AniadirContactoTable = v.findViewById(R.id.tabla_aniadir_contactos);
+        AniadirContactoTable.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
+
+
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
         code = sharedPref.getString("sso_code","");
@@ -200,6 +216,7 @@ public class Fragment_crear_cliente extends DialogFragment {
 
         LoadSpinnerSucursal();
         LoadLayouts();
+        LoadTableContactos();
 
 
         Button guardar = (Button) v.findViewById(R.id.verificar_fiscal);//Boton Guardar_cliente
@@ -917,6 +934,15 @@ public class Fragment_crear_cliente extends DialogFragment {
         );
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequets);
     }
+
+    private void LoadTableContactos()
+    {
+        ContactoModel contacto = new ContactoModel("","","","","","");
+        Contactos.add(contacto);
+        contactoAdapter = new ClientesAniadirContactoAdapter(getContext(), Contactos, AniadirContactoTable);
+        AniadirContactoTable.setDataAdapter(contactoAdapter);
+    }
+
 
     @Override
     public void onDetach() {

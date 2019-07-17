@@ -110,7 +110,8 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:paddingVertical="20dp"
+                    android:paddingHorizontal="50dp">
 
                     <TextView
                         android:id="@+id/textView68"
@@ -120,28 +121,39 @@
                         android:text="Servicios" />
 
                     <Spinner
-                        android:id="@+id/spinner"
+                        android:id="@+id/SpinnerSeleccionaOpcion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp" />
+                        android:layout_margin="5dp"
+                        android:paddingHorizontal="10dp"
+                        style="@style/SpinnerTheme"/>
 
                     <Spinner
-                        android:id="@+id/sp_sales"
+                        android:id="@+id/spinner1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp" />
+                        android:layout_margin="5dp"
+                        android:visibility="invisible"
+                        android:paddingHorizontal="10dp"
+                        style="@style/SpinnerTheme"/>
 
                     <Spinner
                         android:id="@+id/spinner2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp" />
+                        android:layout_margin="5dp"
+                        android:visibility="invisible"
+                        android:paddingHorizontal="10dp"
+                        style="@style/SpinnerTheme"/>
 
                     <Spinner
                         android:id="@+id/spinner3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp" />
+                        android:layout_margin="5dp"
+                        android:visibility="invisible"
+                        android:paddingHorizontal="10dp"
+                        style="@style/SpinnerTheme"/>
                 </LinearLayout>
 
                 <LinearLayout

@@ -32,7 +32,7 @@ public class SortableAniadirContactoTable extends SortableTableView<ContactoMode
         simpleHeader.setTextSize( 16);
         simpleHeader.setPaddings(5,5,5,5);
 
-        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(5);
+        final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(6);
         tableColumnWeightModel.setColumnWeight(0, 2);
         tableColumnWeightModel.setColumnWeight(1, 2);
         tableColumnWeightModel.setColumnWeight(2, 2);

@@ -921,8 +921,8 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <com.Danthop.bionet.Tables.SortableClienteContactos
-                android:id="@+id/tabla_contactos"
+            <com.Danthop.bionet.Tables.SortableAniadirContactoTable
+                android:id="@+id/tabla_aniadir_contactos"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".7"
@@ -930,7 +930,7 @@
                 app:tableView_headerColor="@color/white"
                 table:tableView_columnCount="7">
 
-            </com.Danthop.bionet.Tables.SortableClienteContactos>
+            </com.Danthop.bionet.Tables.SortableAniadirContactoTable>
 
             <LinearLayout
                 android:id="@+id/Tabla_vacia"

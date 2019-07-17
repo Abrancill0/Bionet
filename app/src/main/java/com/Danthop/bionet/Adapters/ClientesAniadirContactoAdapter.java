@@ -45,6 +45,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
@@ -67,20 +68,23 @@ public class ClientesAniadirContactoAdapter extends LongPressAwareTableDataAdapt
     private String CadenaPuesto="";
     private String CadenaNotas="";
 
+    private SortableAniadirContactoTable table;
+
+
 
 
 
     private String UsuarioID;
 
-    public ClientesAniadirContactoAdapter(final Context context, final List<ContactoModel> data, final SortableAniadirContactoTable tableView, FragmentTransaction gr) {
+    public ClientesAniadirContactoAdapter(final Context context, final List<ContactoModel> data, final SortableAniadirContactoTable tableView) {
         super(context, data, tableView);
 
         if (tabla_contactos ==null ){
             tabla_contactos = tableView;
         }
-        fr = gr;
 
         clientesContactosList = data;
+        table =tableView;
     }
 
     @Override
@@ -139,22 +143,31 @@ public class ClientesAniadirContactoAdapter extends LongPressAwareTableDataAdapt
     }
 
     private View renderContacto(final ContactoModel contacto) {
-        EditText Contacto = new EditText(getContext());
-        Contacto.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    CadenaContacto = Contacto.getText().toString();
+        if(contacto.getContacto().equals(""))
+        {
+            EditText Contacto = new EditText(getContext());
+            Contacto.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
+                        CadenaContacto = Contacto.getText().toString();
 
-                    return true;
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
-        return Contacto;
+            });
+            return Contacto;
+        }
+        else{
+            return renderString(contacto.getContacto());
+        }
+
     }
 
     private View renderTelefono(final ContactoModel contacto) {
+        if(contacto.getTelefono().equals(""))
+        {
         EditText Telefono = new EditText(getContext());
         Telefono.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -168,9 +181,15 @@ public class ClientesAniadirContactoAdapter extends LongPressAwareTableDataAdapt
             }
         });
         return Telefono;
+        }
+        else{
+            return renderString(contacto.getTelefono());
+        }
     }
 
     private View renderCorreoElectronico(final ContactoModel contacto) {
+        if(contacto.getCorreo_electronico().equals(""))
+        {
         EditText Correo = new EditText(getContext());
         Correo.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -184,9 +203,15 @@ public class ClientesAniadirContactoAdapter extends LongPressAwareTableDataAdapt
             }
         });
         return Correo;
+        }
+        else{
+            return renderString(contacto.getCorreo_electronico());
+        }
     }
 
     private View renderPuesto(final ContactoModel contacto) {
+        if(contacto.getPuesto().equals(""))
+        {
         EditText Puesto = new EditText(getContext());
         Puesto.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -200,9 +225,15 @@ public class ClientesAniadirContactoAdapter extends LongPressAwareTableDataAdapt
             }
         });
         return Puesto;
+        }
+        else{
+            return renderString(contacto.getPuesto());
+        }
     }
 
     private View renderNotas(final ContactoModel contacto) {
+        if(contacto.getNotas().equals(""))
+        {
         EditText Notas = new EditText(getContext());
         Notas.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -216,6 +247,10 @@ public class ClientesAniadirContactoAdapter extends LongPressAwareTableDataAdapt
             }
         });
         return Notas;
+        }
+        else{
+            return renderString(contacto.getNotas());
+        }
     }
     private View renderMas(final ContactoModel contacto) {
         Button Mas = new Button(getContext());
@@ -224,12 +259,16 @@ public class ClientesAniadirContactoAdapter extends LongPressAwareTableDataAdapt
             @Override
             public void onClick(View v) {
                ContactoModel contacto = new ContactoModel( "",CadenaContacto,CadenaTelefono,CadenaCorreo,CadenaPuesto ,CadenaNotas);
-               clientesContactosListFull.add( contacto );
+               clientesContactosList.add( contacto );
                CadenaContacto="";
                CadenaTelefono="";
                CadenaCorreo="";
                CadenaNotas="";
                CadenaPuesto="";
+
+               ClientesAniadirContactoAdapter adapter = new ClientesAniadirContactoAdapter(getContext(),clientesContactosList,table);
+               table.setDataAdapter(adapter);
+
             }
         } );
         return Mas;

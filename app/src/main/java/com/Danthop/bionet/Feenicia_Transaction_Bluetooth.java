@@ -105,6 +105,11 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
 
     private String XRequestWith="";
 
+    private Spinner SpinnerOpciones;
+
+    private Spinner Spinner1;
+    private Spinner Spinner2;
+    private Spinner Spinner3;
 
 
     private String code;
@@ -152,6 +157,8 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
     private double ImporteCambio;
     private double ImporteRecibido;
     private double ImporteVenta;
+
+    private ArrayList<String> Opciones = new ArrayList<>();
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -441,12 +448,20 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
             btn_desconectar = (Button) findViewById(R.id.btn_desconectar);
             textView_Devices = (TextView) findViewById(R.id.textView_Devices);
             textView_Devices.setText("");
-            sp_sale = (Spinner) findViewById(R.id.sp_sales);
             progressBar = (ProgressWheel) findViewById(R.id.progressBar);
+            SpinnerOpciones = findViewById(R.id.SpinnerSeleccionaOpcion);
+            Spinner1=findViewById(R.id.spinner1);
+            Spinner2=findViewById(R.id.spinner2);
+            Spinner3=findViewById(R.id.spinner3);
+
+
 
             SharedPreferences sharedPref = this.getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
             usu_id = sharedPref.getString("usu_id", "");
+
+
             LoadServicios();
+            LoadOpciones();
 
             double precio = 0;
 
@@ -1305,6 +1320,45 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
         return Resultado[0];
 
     }
+
+    private void LoadOpciones()
+    {
+        Opciones.add("Pagar Servicios");
+        Opciones.add("Venta de Tiempo Aire");
+        SpinnerOpciones.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Opciones));
+
+        SpinnerOpciones.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                SpinnersTipoDeServicio();
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+
+            }
+        });
+
+    }
+
+    private void SpinnersTipoDeServicio()
+    {
+        String opcion = SpinnerOpciones.getSelectedItem().toString();
+        if(opcion.equals("Pagar Servicios"))
+        {
+            Spinner1.setVisibility(View.VISIBLE);
+            Spinner2.setVisibility(View.INVISIBLE);
+            Spinner3.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            Spinner1.setVisibility(View.VISIBLE);
+            Spinner2.setVisibility(View.VISIBLE);
+            Spinner3.setVisibility(View.INVISIBLE);
+        }
+    }
+
 
 
 }
