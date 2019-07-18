@@ -117,6 +117,7 @@ public class Fragment_crear_cliente extends DialogFragment {
     private Button btn_datos_personales;
     private Button btn_datos_facturacion;
     private Button btn_aniadir_contacto;
+    private Button btn_nuevo_contacto;
 
     private View Layout_datos_personales;
     private View Layout_datos_facturacion;
@@ -125,6 +126,8 @@ public class Fragment_crear_cliente extends DialogFragment {
 
     private ClientesAniadirContactoAdapter contactoAdapter;
     List<ContactoModel> Contactos = new ArrayList<>();
+
+    List<ContactoModel> ContactosAguardar = new ArrayList<>();
 
 
     private SortableAniadirContactoTable AniadirContactoTable;
@@ -176,13 +179,14 @@ public class Fragment_crear_cliente extends DialogFragment {
         btn_datos_facturacion = v.findViewById(R.id.btn_Datos_Facturacion);
         btn_aniadir_contacto = v.findViewById(R.id.btn_Aniadir_Contacto);
 
+
         Layout_datos_personales = v.findViewById(R.id.Layout_Datos_personales);
         Layout_datos_facturacion = v.findViewById(R.id.Layout_Datos_Facturacion);
         Layout_aniadir_contacto = v.findViewById(R.id.Layout_aniadir_contacto);
 
         AniadirContactoTable = v.findViewById(R.id.tabla_aniadir_contactos);
         AniadirContactoTable.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
-
+        btn_nuevo_contacto = v.findViewById(R.id.btn_nuevo_contacto);
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
@@ -937,9 +941,8 @@ public class Fragment_crear_cliente extends DialogFragment {
 
     private void LoadTableContactos()
     {
-        ContactoModel contacto = new ContactoModel("","","","","","");
-        Contactos.add(contacto);
-        contactoAdapter = new ClientesAniadirContactoAdapter(getContext(), Contactos, AniadirContactoTable);
+        contactoAdapter = new ClientesAniadirContactoAdapter(getContext(), Contactos, AniadirContactoTable,btn_nuevo_contacto,
+                ContactosAguardar);
         AniadirContactoTable.setDataAdapter(contactoAdapter);
     }
 

@@ -157,7 +157,7 @@
         android:layout_height="match_parent"
         android:layout_weight=".25"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -912,48 +912,76 @@
         android:layout_height="match_parent"
         android:layout_weight=".25"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".3"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_weight=".9"
+            android:gravity="right|center_vertical">
 
-            <com.Danthop.bionet.Tables.SortableAniadirContactoTable
-                android:id="@+id/tabla_aniadir_contactos"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight=".7"
-                android:visibility="visible"
-                app:tableView_headerColor="@color/white"
-                table:tableView_columnCount="7">
+            <Button
+                android:layout_marginVertical="2dp"
+                android:layout_marginHorizontal="10dp"
+                android:id="@+id/btn_nuevo_contacto"
+                style="@android:style/Widget.Holo.Light.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:padding="5dp"
+                android:text="Nuevo contacto"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+        </LinearLayout>
 
-            </com.Danthop.bionet.Tables.SortableAniadirContactoTable>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".1">
 
             <LinearLayout
-                android:id="@+id/Tabla_vacia"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".3"
-                android:background="@color/white"
-                android:gravity="center_vertical|center_horizontal"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:padding="20dp">
 
-                <TextView
+                <com.Danthop.bionet.Tables.SortableAniadirContactoTable
+                    android:id="@+id/tabla_aniadir_contactos"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="No existen datos"
-                    android:textColor="@color/gray" />
+                    android:layout_weight=".7"
+                    android:visibility="visible"
+                    app:tableView_headerColor="@color/white"
+                    table:tableView_columnCount="7">
+
+                </com.Danthop.bionet.Tables.SortableAniadirContactoTable>
+
+                <LinearLayout
+                    android:id="@+id/Tabla_vacia"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".3"
+                    android:background="@color/white"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="No existen datos"
+                        android:textColor="@color/gray" />
+                </LinearLayout>
+
+
             </LinearLayout>
-
-
         </LinearLayout>
+
+
     </LinearLayout>
 
 </LinearLayout>

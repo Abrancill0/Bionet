@@ -24,14 +24,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,11 +38,6 @@ import java.util.Map;
 
 /*  DEPENDENCIAS DE FEENICIA */
 //import com.Danthop.bionet.Android.BTReceiverConnection;
-import com.Danthop.bionet.Adapters.VentaArticuloAdapter;
-import com.Danthop.bionet.BTReceiverConnection;
-import com.Danthop.bionet.SaleConfiguration;
-import com.Danthop.bionet.SaleUtils;
-import com.Danthop.bionet.SppHandlerConnection;
 import com.Danthop.bionet.core.dto.ResponseCode;
 import com.Danthop.bionet.core.dto.SendReceiptResponse;
 
@@ -103,7 +96,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
     private String merchantId="";
     private String userId="";
 
-    private String XRequestWith="";
+    private String XRequestWithCategorias ="";
 
     private Spinner SpinnerOpciones;
 
@@ -159,6 +152,10 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
     private double ImporteVenta;
 
     private ArrayList<String> Opciones = new ArrayList<>();
+
+    private ArrayList<String> Categorias = new ArrayList<>();
+    private ArrayList<String> CategoriasID = new ArrayList<>();
+
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -460,7 +457,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
             usu_id = sharedPref.getString("usu_id", "");
 
 
-            LoadServicios();
             LoadOpciones();
 
             double precio = 0;
@@ -1213,7 +1209,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
     private void LoadServicios()
     {
        /* */
-        XRequestWith = GetXRequestWith();
+        XRequestWithCategorias = GetXRequestWith();
         JSONObject request = new JSONObject();
         HashMap<String, String> headers=new HashMap<>();
 
@@ -1236,7 +1232,25 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
 
             @Override
             public void onResponse(JSONObject response) {
-                System.out.println(response);
+
+                try {
+                    JSONArray CategoriasArray = response.getJSONArray("categorias");
+                    for(int s=0;s<CategoriasArray.length();s++)
+                    {
+                        JSONObject elemento = CategoriasArray.getJSONObject(s);
+                        String id_categoria = elemento.getString("id");
+                        String nombre_categoria = elemento.getString("nombre");
+                        Categorias.add(nombre_categoria);
+                        CategoriasID.add(id_categoria);
+                    }
+
+                    Spinner1.setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_item, Categorias));
+
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         },
                 new Response.ErrorListener() {
@@ -1250,7 +1264,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json");
-                headers.put("X-Requested-With", XRequestWith);
+                headers.put("X-Requested-With", XRequestWithCategorias);
 
                 return headers;
             }
@@ -1347,6 +1361,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
         String opcion = SpinnerOpciones.getSelectedItem().toString();
         if(opcion.equals("Pagar Servicios"))
         {
+            LoadServicios();
             Spinner1.setVisibility(View.VISIBLE);
             Spinner2.setVisibility(View.INVISIBLE);
             Spinner3.setVisibility(View.INVISIBLE);
