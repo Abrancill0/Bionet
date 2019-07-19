@@ -3,6 +3,7 @@ package com.Danthop.bionet;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -104,6 +105,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
     private Spinner Spinner2;
     private Spinner Spinner3;
 
+    private String XrequestServicios="";
 
     private String code;
 
@@ -156,11 +158,30 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
     private ArrayList<String> Categorias = new ArrayList<>();
     private ArrayList<String> CategoriasID = new ArrayList<>();
 
+    private ArrayList<String> TiposServicio = new ArrayList<>();
+    private ArrayList<String> TiposServicioID = new ArrayList<>();
+
+    private ArrayList<String> TiposServicioProducto = new ArrayList<>();
+    private ArrayList<String> TiposServicioProductoID = new ArrayList<>();
+
+    private ArrayList<String> Carriers = new ArrayList<>();
+
+    private ArrayList<String> MontosID = new ArrayList<>();
+    private ArrayList<String> Montos = new ArrayList<>();
+
+    private ProgressDialog progressDialog;
+
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
 
 
 
@@ -1206,83 +1227,24 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
         VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
     }
 
-    private void LoadServicios()
+
+
+    private void LoadServiciosCategorias()
     {
-       /* */
-        XRequestWithCategorias = GetXRequestWith();
-        JSONObject request = new JSONObject();
-        HashMap<String, String> headers=new HashMap<>();
+        progressDialog.show();
+        Categorias.clear();
+        CategoriasID.clear();
 
-        headers.put("Content-Type","application/json");
-        headers.put("X-Requested-With","0000000000003728_d30a1dce920aa13d1832505aaa901bdfb56f8df52286397b104d9aa15bc152c33f0af6763b01a69ea1d0ce29c95ab74a14ee4170fb3d7fc49a55764bf9049c02e882f5b6fec215d42e85bade53a886d6");
-
-
-        try {
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        String url = getString(R.string.Url);
-
-        String ApiPath = "http://18.216.206.86:30080/hml-servicesV2/pagoServicios/categorias";
-
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>()
-        {
-
-            @Override
-            public void onResponse(JSONObject response) {
-
-                try {
-                    JSONArray CategoriasArray = response.getJSONArray("categorias");
-                    for(int s=0;s<CategoriasArray.length();s++)
-                    {
-                        JSONObject elemento = CategoriasArray.getJSONObject(s);
-                        String id_categoria = elemento.getString("id");
-                        String nombre_categoria = elemento.getString("nombre");
-                        Categorias.add(nombre_categoria);
-                        CategoriasID.add(id_categoria);
-                    }
-
-                    Spinner1.setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_item, Categorias));
-
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println(error);
-                    }
-                }) {
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Content-Type", "application/json");
-                headers.put("X-Requested-With", XRequestWithCategorias);
-
-                return headers;
-            }
-        };
-        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
-
-    }
-
-    private String GetXRequestWith()
-    {
         JSONObject request = new JSONObject();
 
-        final String[] Resultado = new String[1];
 
         try {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
             request.put("code", code);
+            request.put("merchant_type_bn","true");
+            request.put("tipo_api","POST");
+            request.put("url_api","http://serti.mx:30080/hml-servicesV2/pagoServicios/categorias");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1302,19 +1264,117 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
                     String Mensaje = response.getString("mensaje");
 
                     if (status == 1) {
-                        Resultado[0] = response.getString("resultado");
+                        JSONObject resultado = response.getJSONObject("resultado");
+                        JSONArray CategoriasArray = resultado.getJSONArray("categorias");
+                        for(int s=0;s<CategoriasArray.length();s++)
+                        {
+                            JSONObject elemento = CategoriasArray.getJSONObject(s);
+                            String id_categoria = elemento.getString("id");
+                            String nombre_categoria = elemento.getString("nombre");
+                            Categorias.add(nombre_categoria);
+                            CategoriasID.add(id_categoria);
+                        }
+
+                        Spinner1.setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_item, Categorias));
+                        LoadTipoServicios(CategoriasID.get(Spinner1.getSelectedItemPosition()));
+                        progressDialog.dismiss();
 
                     } else {
-                        Resultado[0] = "";
                         Toast toast1 =
                                 Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
                         toast1.show();
+                        progressDialog.dismiss();
                     }
 
                 } catch (JSONException e) {
                     Toast toast1 =
                             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
                     toast1.show();
+                    progressDialog.dismiss();
+                }
+
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
+
+
+    }
+
+    private void LoadTipoServicios(String idCategoria)
+    {
+        progressDialog.show();
+        TiposServicioID.clear();
+        TiposServicio.clear();
+        JSONObject request = new JSONObject();
+
+
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("code", code);
+            request.put("merchant_type_bn","true");
+            request.put("idCategoria",idCategoria);
+            request.put("tipo_api","POST");
+            request.put("url_api","http://serti.mx:30080/hml-servicesV2/pagoServicios/servicios");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/configuracion/feenicia/generarFirmaApp";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        JSONObject resultado = response.getJSONObject("resultado");
+                        JSONArray TipoServiciosArray = resultado.getJSONArray("servicios");
+                        for(int s=0;s<TipoServiciosArray.length();s++)
+                        {
+                            JSONObject elemento = TipoServiciosArray.getJSONObject(s);
+                            String id_tipo = elemento.getString("id");
+                            String nombre_tipo = elemento.getString("nombre");
+                            TiposServicioID.add(id_tipo);
+                            TiposServicio.add(nombre_tipo);
+                        }
+
+                        Spinner2.setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_item, TiposServicio));
+                        LoadTipoServiciosProducto(TiposServicioID.get(Spinner2.getSelectedItemPosition()));
+                        progressDialog.dismiss();
+
+                    } else {
+
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                        progressDialog.dismiss();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                    progressDialog.dismiss();
                 }
             }
 
@@ -1331,8 +1391,190 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
         postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
 
-        return Resultado[0];
 
+    }
+
+    private void LoadTipoServiciosProducto(String idServicio)
+    {
+        progressDialog.show();
+        TiposServicioProductoID.clear();
+        TiposServicioProducto.clear();
+        JSONObject request = new JSONObject();
+
+
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("code", code);
+            request.put("merchant_type_bn","true");
+            request.put("idServicio",idServicio);
+            request.put("idProveedor","1");
+            request.put("tipo_api","POST");
+            request.put("url_api","http://serti.mx:30080/hml-servicesV2/pagoServicios/productos");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/configuracion/feenicia/generarFirmaApp";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        JSONObject resultado = response.getJSONObject("resultado");
+                        JSONArray TipoServiciosArray = resultado.getJSONArray("productos");
+                        for(int s=0;s<TipoServiciosArray.length();s++)
+                        {
+                            JSONObject elemento = TipoServiciosArray.getJSONObject(s);
+                            String id_tipo = elemento.getString("id");
+                            String nombre_tipo = elemento.getString("descripcion");
+                            TiposServicioProductoID.add(id_tipo);
+                            TiposServicioProducto.add(nombre_tipo);
+                        }
+
+                        Spinner3.setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_item, TiposServicioProducto));
+                        progressDialog.dismiss();
+
+                    } else {
+
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                        progressDialog.dismiss();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                    progressDialog.dismiss();
+                }
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
+
+
+    }
+
+    private void LoadTiempoAire()
+    {
+        progressDialog.show();
+        Carriers.clear();
+        Carriers.add("ALO");
+        Carriers.add("AT&T");
+        Carriers.add("CIERTO");
+        Carriers.add("MAZTIEMPO");
+        Carriers.add("MOVISTAR");
+        Carriers.add("TELCEL");
+        Carriers.add("UNEFON");
+        Carriers.add("VIRGIN");
+
+        Spinner1.setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_item, Carriers));
+        progressDialog.dismiss();
+
+
+    }
+
+    private void LoadMontosTiempoAire(String carrier)
+    {
+        progressDialog.show();
+        MontosID.clear();
+        Montos.clear();
+        JSONObject request = new JSONObject();
+
+
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("code", code);
+            request.put("merchant_type_bn","true");
+            request.put("carrier",carrier);
+            request.put("idProveedor","1");
+            request.put("tipo_api","POST");
+            request.put("url_api","http://serti.mx:30080/hml-servicesV2/vtacarriers/getAmount");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/configuracion/feenicia/generarFirmaApp";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+
+                    if (status == 1) {
+                        JSONObject resultado = response.getJSONObject("resultado");
+                        JSONArray MontoArray = resultado.getJSONArray("amount");
+                        for(int s=0;s<MontoArray.length();s++)
+                        {
+                            JSONObject elemento = MontoArray.getJSONObject(s);
+                            String id_monto = elemento.getString("id");
+                            String monto = elemento.getString("monto");
+                            MontosID.add(id_monto);
+                            Montos.add(monto);
+                        }
+
+                        Spinner2.setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_item, Montos));
+                        progressDialog.dismiss();
+
+                    } else {
+
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+                        progressDialog.dismiss();
+                    }
+
+                } catch (JSONException e) {
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast1.show();
+                    progressDialog.dismiss();
+                }
+            }
+
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
     }
 
     private void LoadOpciones()
@@ -1354,6 +1596,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
             }
         });
 
+
     }
 
     private void SpinnersTipoDeServicio()
@@ -1361,18 +1604,128 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
         String opcion = SpinnerOpciones.getSelectedItem().toString();
         if(opcion.equals("Pagar Servicios"))
         {
-            LoadServicios();
+            LoadServiciosCategorias();
             Spinner1.setVisibility(View.VISIBLE);
-            Spinner2.setVisibility(View.INVISIBLE);
-            Spinner3.setVisibility(View.INVISIBLE);
+            Spinner2.setVisibility(View.VISIBLE);
+            Spinner3.setVisibility(View.VISIBLE);
+
+            Spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+            {
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+                {
+                    LoadTipoServicios(CategoriasID.get(Spinner1.getSelectedItemPosition()));
+                }
+                public void onNothingSelected(AdapterView<?> parent)
+                {
+
+
+                }
+            });
+
+            Spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+            {
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+                {
+                    LoadTipoServiciosProducto(TiposServicioID.get(Spinner2.getSelectedItemPosition()));
+                }
+                public void onNothingSelected(AdapterView<?> parent)
+                {
+
+
+                }
+            });
+
         }
         else
         {
+            LoadTiempoAire();
             Spinner1.setVisibility(View.VISIBLE);
             Spinner2.setVisibility(View.VISIBLE);
             Spinner3.setVisibility(View.INVISIBLE);
+
+
+            Spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+            {
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+                {
+                    LoadMontosTiempoAire(Spinner1.getSelectedItem().toString());
+                }
+                public void onNothingSelected(AdapterView<?> parent)
+                {
+
+
+                }
+            });
         }
+
+
     }
+
+
+     /* private void APIServiciosCategorias(String xrequest)
+    {
+
+        JSONObject request = new JSONObject();
+
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = "http://serti.mx:30080/hml-servicesV2/pagoServicios/categorias";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath, request, new Response.Listener<JSONObject>()
+        {
+
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+                    JSONArray CategoriasArray = response.getJSONArray("categorias");
+                    for(int s=0;s<CategoriasArray.length();s++)
+                    {
+                        JSONObject elemento = CategoriasArray.getJSONObject(s);
+                        String id_categoria = elemento.getString("id");
+                        String nombre_categoria = elemento.getString("nombre");
+                        Categorias.add(nombre_categoria);
+                        CategoriasID.add(id_categoria);
+                    }
+
+                    Spinner1.setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_item, Categorias));
+                    LoadTipoServicios(CategoriasID.get(Spinner1.getSelectedItemPosition()));
+
+
+
+                } catch (JSONException e) {
+                    progressDialog.dismiss();
+                    e.printStackTrace();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                    }
+                }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("X-Requested-With", xrequest);
+
+                return headers;
+            }
+        };
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
+
+    } */
+
 
 
 
