@@ -30,7 +30,8 @@ public class SortableMetodosPagoTable extends SortableTableView<PagoModel> {
         final SimpleTableHeaderAdapter simpleHeader = new SimpleTableHeaderAdapter(getContext(), "Forma de pago", "Importe","Seleccionar");
         simpleHeader.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setHeaderAdapter(simpleHeader);
-        simpleHeader.setTextSize( 18 );
+        simpleHeader.setPaddings(2,2,2,2);
+        simpleHeader.setTextSize( 14 );
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(3);
         tableColumnWeightModel.setColumnWeight(0, 2);

@@ -16,7 +16,7 @@ import java.util.List;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class TopNotificacionAdapter extends LongPressAwareTableDataAdapter<ClienteFrecuenteModel> {
-    int TEXT_SIZE = 16;
+    int TEXT_SIZE = 14;
 
     public TopNotificacionAdapter(final Context context, final List<ClienteFrecuenteModel> data, final SortableClienteFrecuenteTable tableView) {
         super(context, data, tableView);
@@ -80,7 +80,7 @@ public class TopNotificacionAdapter extends LongPressAwareTableDataAdapter<Clien
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
         textView.setText(value);
-        textView.setPadding(20, 10, 20, 10);
+        textView.setPadding(2, 2, 2, 2);
         textView.setTextSize(TEXT_SIZE);
         return textView;
     }

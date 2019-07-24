@@ -179,7 +179,24 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         String RutaLogoEmpresa = sharedPref.getString("logo_imagen", "");
         SucursalSelect = sharedPref.getString("usu_sucursal","");
 
+        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+        tx.replace(R.id.fragment_container, new Fragment_pantalla_principal());
+        tx.commit();
+
         Bundle bundle = getIntent().getExtras();
+
+        if(bundle!=null)
+        {
+            String Venta= bundle.getString("Venta");
+
+            if(Venta!=null)
+            {
+                if(Venta.equals("si"))
+                {
+                    ventas();
+                }
+            }
+        }
 
         try {
             Roles = new JSONArray(sharedPref.getString("sso_Roles",""));
@@ -193,9 +210,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
             }
         }
 
-        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.fragment_container, new Fragment_pantalla_principal());
-        tx.commit();
+
 
         usu_id = sharedPref.getString("usu_id", "");
         img_ruta_servidor = RutaImagenPerfil;
@@ -396,8 +411,10 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                         if(rol_nombre3.equals("cbcf93d8-ed1e-11e8-8a6e-cb097f5c03df"))
                         {
-                            Aplica3 =  Elemento.getBoolean("rol_aplica_en_version");
-                            Aplica3_Permiso = Elemento.getBoolean("rol_permiso");
+                            //Aplica3 =  Elemento.getBoolean("rol_aplica_en_version");
+                            //Aplica3_Permiso = Elemento.getBoolean("rol_permiso");
+                            Aplica3=true;
+                            Aplica3_Permiso=true;
                             break;
                         }
 
@@ -535,8 +552,8 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                 break;
             case R.id.nav_lealtad:
-                boolean Aplica5_Permiso = false;
-                boolean Aplica5 = false;
+                boolean Aplica5=true;
+                boolean Aplica5_Permiso=true;
                 String rol_nombre5="";
 
                 for (int i = 0; i < Roles.length(); i++) {
@@ -547,8 +564,10 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                         if(rol_nombre5 == "cbcf941d-ed1e-11e8-8a6e-cb097f5c03df")
                         {
-                            Aplica5 =  Elemento.getBoolean("rol_aplica_en_version");
-                            Aplica5_Permiso = Elemento.getBoolean("rol_permiso");
+                            //Aplica5 =  Elemento.getBoolean("rol_aplica_en_version");
+                            //Aplica5_Permiso = Elemento.getBoolean("rol_permiso");
+                            Aplica5=true;
+                            Aplica5_Permiso=true;
                             break;
                         }
 
@@ -584,8 +603,8 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                 break;
             case R.id.nav_ecommerce:
-                boolean Aplica6_Permiso = false;
-                boolean Aplica6 = false;
+                boolean Aplica6_Permiso = true;
+                boolean Aplica6 = true;
                 String rol_nombre6="";
 
                 for (int i = 0; i < Roles.length(); i++) {
@@ -596,8 +615,10 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                         if(rol_nombre6 == "cbcf943e-ed1e-11e8-8a6e-cb097f5c03df")
                         {
-                            Aplica6 =  Elemento.getBoolean("rol_aplica_en_version");
-                            Aplica6_Permiso = Elemento.getBoolean("rol_permiso");
+                            //Aplica6 =  Elemento.getBoolean("rol_aplica_en_version");
+                            //Aplica6_Permiso = Elemento.getBoolean("rol_permiso");
+                            Aplica6=true;
+                            Aplica6_Permiso=true;
                             break;
                         }
 

@@ -298,7 +298,7 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
             }
         };
 
-        LoadPermisosFunciones();
+        //LoadPermisosFunciones();
         loadButtons();
         return v;
     }

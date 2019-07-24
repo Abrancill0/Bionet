@@ -657,7 +657,7 @@ public class Fragment_pestania_traslado extends Fragment {
         String url = getString(R.string.Url);
         Intent viewIntent =
                 new Intent("android.intent.action.VIEW",
-                        Uri.parse(url+"/facturacion/obtener_mi_factura/"+usu_cuenta_bionet+"/traslados/"+tra_factura+"?esApp=1&usu_id="+usu_id));
+                        Uri.parse(url+"/obtener-mi-factura/"+usu_cuenta_bionet+"/traslados/"+tra_factura+"?esApp=1&usu_id="+usu_id));
         startActivity(viewIntent);
     }
 
@@ -665,7 +665,7 @@ public class Fragment_pestania_traslado extends Fragment {
         String url = getString(R.string.Url);
         Intent viewIntent =
                 new Intent("android.intent.action.VIEW",
-                        Uri.parse(url+"/facturacion/obtener_mi_xml/"+usu_cuenta_bionet+"/traslados/"+tra_factura+"?esApp=1&usu_id="+usu_id));
+                        Uri.parse(url+"/obtener-mi-xml/"+usu_cuenta_bionet+"/traslados/"+tra_factura+"?esApp=1&usu_id="+usu_id));
         startActivity(viewIntent);
     }
 

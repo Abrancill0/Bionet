@@ -56,7 +56,7 @@ import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
 
 public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel> {
 
-    int TEXT_SIZE = 16;
+    int TEXT_SIZE = 14;
     private List<EditText> ListaDeCantidades = new ArrayList<>();
     List<PagoModel> MetodosPagoSeleccionados = new ArrayList<>();
 
@@ -121,6 +121,7 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
         //MontoAApartar.setInputType(TYPE_NUMBER_FLAG_DECIMAL);
         MontoAApartar.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         MontoAApartar.setGravity(View.TEXT_ALIGNMENT_CENTER);
+        MontoAApartar.setHint("0.00");
         ListaDeCantidades.add(MontoAApartar);
 
         if (ValorImporte[Indice]!=null)
@@ -180,10 +181,20 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
                     if (seleccionar.isChecked())
                     {
                             Monto.setEnabled(false);
+                            String cantidad ="";
+                            if(Monto.getText().equals(""))
+                            {
+                                Monto.setText("0.00");
+                                cantidad = "0.00";
+                            }
+                            else
+                            {
+                                cantidad = Monto.getText().toString();
+                            }
                             PagoModel pago = new PagoModel(
                                     forma.getNombre(),
                                     forma.getId(),
-                                    String.valueOf(Monto.getText())
+                                    cantidad
                             );
                             MetodosPagoSeleccionados.add(pago);
                             float sumaDeImporte =0;
@@ -245,7 +256,7 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
         textView.setText(value);
-        textView.setPadding(20, 10, 20, 10);
+        textView.setPadding(2, 2, 2, 2);
         textView.setTextSize(TEXT_SIZE);
         return textView;
     }

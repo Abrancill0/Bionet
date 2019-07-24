@@ -44,6 +44,8 @@ public class ClienteModel {
     private String UltimaCompra;
     private String ConsumoPromedio;
 
+    private String cliente_tipo;
+
     private String Sucursal;
 
 
@@ -364,5 +366,13 @@ public class ClienteModel {
 
     public void setSucursal(String sucursal) {
         Sucursal = sucursal;
+    }
+
+    public String getCliente_tipo() {
+        return cliente_tipo;
+    }
+
+    public void setCliente_tipo(String cliente_tipo) {
+        this.cliente_tipo = cliente_tipo;
     }
 }

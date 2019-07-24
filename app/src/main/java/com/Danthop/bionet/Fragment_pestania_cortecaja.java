@@ -505,7 +505,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
 
         };
 
-        LoadPermisosFunciones();
+        //LoadPermisosFunciones();
         return v;
     }
 

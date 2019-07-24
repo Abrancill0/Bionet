@@ -77,6 +77,7 @@ public class Fragment_clientes extends Fragment {
     private String Estatus;
     private String UltimaCompra;
     private String ConsumoPromedio;
+    private String Cliente_tipo;
     private Dialog ver_cliente_dialog;
     private FragmentTransaction fr;
     private TableDataClickListener<ClienteModel> tablaListener;
@@ -366,6 +367,7 @@ public class Fragment_clientes extends Fragment {
                             num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
                             UltimaCompra = elemento.getString("cli_ultima_compra");
                             ConsumoPromedio = elemento.getString("cli_promedio_compra");
+                            Cliente_tipo = elemento.getString("cli_tipo");
 
 
                             HistorialCompras = new ArrayList<>();
@@ -430,6 +432,7 @@ public class Fragment_clientes extends Fragment {
                                     UltimaCompra,
                                     ConsumoPromedio
                             );
+                            cliente.setCliente_tipo(Cliente_tipo);
                             clientes.add(cliente);
                         }
 

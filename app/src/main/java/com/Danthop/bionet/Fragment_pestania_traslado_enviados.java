@@ -284,10 +284,10 @@ public class Fragment_pestania_traslado_enviados extends Fragment {
         tabla_traslados.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
         tabla_traslados.addDataClickListener(tableListener);
 
-        if(Traslado==false)
-        {
+        //if(Traslado==false)
+        //{
             trasladar.setEnabled(false);
-        }
+       // }
 
 
         return v;

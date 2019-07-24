@@ -4,10 +4,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -104,6 +107,7 @@ public class ClientesAniadirContactoAdapter extends LongPressAwareTableDataAdapt
 
         adapter = this;
         LoadButtonMas();
+
     }
 
     @Override
@@ -111,21 +115,22 @@ public class ClientesAniadirContactoAdapter extends LongPressAwareTableDataAdapt
         ContactoModel contacto = getRowData(rowIndex);
         View renderedView = null;
 
+
         switch (columnIndex) {
             case 0:
-                renderedView = renderContacto(contacto);
+                renderedView = renderContacto(contacto,rowIndex);
                 break;
             case 1:
-                renderedView = renderTelefono(contacto);
+                renderedView = renderTelefono(contacto, rowIndex);
                 break;
             case 2:
-                renderedView = renderCorreoElectronico(contacto);
+                renderedView = renderCorreoElectronico(contacto, rowIndex);
                 break;
             case 3:
-                renderedView = renderPuesto(contacto);
+                renderedView = renderPuesto(contacto, rowIndex);
                 break;
             case 4:
-                renderedView = renderNotas(contacto);
+                renderedView = renderNotas(contacto, rowIndex);
                 break;
             case 5:
                 renderedView = renderSeleccionar(contacto,
@@ -167,41 +172,87 @@ public class ClientesAniadirContactoAdapter extends LongPressAwareTableDataAdapt
         return editText;
     }
 
-    private View renderContacto(final ContactoModel contacto) {
+    private View renderContacto(final ContactoModel contacto, int rowindex) {
 
-            EditText Contacto = new EditText(getContext());
+        EditText Contacto = new EditText(getContext());
+        if(clientesContactosList.get(rowindex).getContacto().equals(""))
+        {
+
             ListaDeNombresContactos.add(Contacto);
             return Contacto;
+        }
+        ListaDeNombresContactos.add(Contacto);
+        Contacto.setText(contacto.getContacto());
+        Contacto.setEnabled(false);
+        return Contacto;
 
 
     }
 
-    private View renderTelefono(final ContactoModel contacto) {
+    private View renderTelefono(final ContactoModel contacto, int rowindex) {
+
         EditText Telefono = new EditText(getContext());
+        Telefono.setInputType(InputType.TYPE_CLASS_PHONE);
+        Telefono.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
+        if(clientesContactosList.get(rowindex).getContacto().equals(""))
+        {
+            ListaDeTelefonosContactos.add(Telefono);
+            return Telefono;
+        }
         ListaDeTelefonosContactos.add(Telefono);
+        Telefono.setText(contacto.getTelefono());
+        Telefono.setEnabled(false);
         return Telefono;
+
     }
 
-    private View renderCorreoElectronico(final ContactoModel contacto) {
+    private View renderCorreoElectronico(final ContactoModel contacto, int rowindex) {
+
         EditText Correo = new EditText(getContext());
+        Correo.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        if(clientesContactosList.get(rowindex).getContacto().equals(""))
+        {
+
+            ListaDeCorreosContactos.add(Correo);
+            return Correo;
+        }
         ListaDeCorreosContactos.add(Correo);
+        Correo.setText(contacto.getCorreo_electronico());
+        Correo.setEnabled(false);
         return Correo;
+
     }
 
-    private View renderPuesto(final ContactoModel contacto) {
+    private View renderPuesto(final ContactoModel contacto, int rowindex) {
 
 
         EditText Puesto = new EditText(getContext());
-        ListaDePuestosContactos.add(Puesto);
-        return Puesto;
+        if(clientesContactosList.get(rowindex).getContacto().equals(""))
+        {
+            ListaDePuestosContactos.add(Puesto);
+            return Puesto;
+        }
 
+        ListaDePuestosContactos.add(Puesto);
+        Puesto.setText(contacto.getPuesto());
+        Puesto.setEnabled(false);
+        return Puesto;
     }
 
-    private View renderNotas(final ContactoModel contacto) {
+    private View renderNotas(final ContactoModel contacto, int rowindex) {
 
         EditText Notas = new EditText(getContext());
+        if(clientesContactosList.get(rowindex).getContacto().equals(""))
+        {
+            ListaDeNotasContactos.add(Notas);
+            return Notas;
+        }
+
         ListaDeNotasContactos.add(Notas);
+        Notas.setText(contacto.getNotas());
+        Notas.setEnabled(false);
         return Notas;
+
     }
 
     private View renderString(final String value) {
@@ -247,22 +298,15 @@ public class ClientesAniadirContactoAdapter extends LongPressAwareTableDataAdapt
             @Override
             public void onClick(View v) {
 
-                if(clientesContactosList.isEmpty())
-                {
-                    ContactoModel contacto = new ContactoModel( "","","","","" ,"");
-                    clientesContactosList.add( contacto );
+                ListaDeNombresContactos.clear();
+                ListaDeTelefonosContactos.clear();
+                ListaDeCorreosContactos.clear();
+                ListaDePuestosContactos.clear();
+                ListaDeNotasContactos.clear();
 
-                    table.setDataAdapter(adapter);
-                }
-                else
-                {
-                    ContactoModel contacto = new ContactoModel( "","","","","" ,"");
-                    clientesContactosList.add( contacto );
-
-                    table.setDataAdapter(adapter);
-
-                }
-
+                ContactoModel contacto = new ContactoModel( "","","","","" ,"");
+                clientesContactosList.add( contacto );
+                table.setDataAdapter(adapter);
 
             }
         });
@@ -294,22 +338,33 @@ public class ClientesAniadirContactoAdapter extends LongPressAwareTableDataAdapt
 
                 if (seleccionar.isChecked())
                 {
-                    NombreContacto.setEnabled(false);
-                    Telefono.setEnabled(false);
-                    Correo.setEnabled(false);
-                    Puesto.setEnabled(false);
-                    Notas.setEnabled(false);
+                    if(NombreContacto.getText().toString().length()==0||Telefono.getText().toString().length()==0||Correo.getText().toString().length()==0
+                            ||Puesto.getText().toString().length()==0)
+                    {
+                        seleccionar.setChecked(false);
+                        Toast toast = Toast.makeText(getContext(), "Los campos contacto, teléfono, correo eléctronico y puesto son obligatorios", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                    else
+                    {
+                        NombreContacto.setEnabled(false);
+                        Telefono.setEnabled(false);
+                        Correo.setEnabled(false);
+                        Puesto.setEnabled(false);
+                        Notas.setEnabled(false);
 
-                    ContactoModel contacto = new ContactoModel(
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            ""
-                    );
-                    ContactosAguardar.add(contacto);
-                    Valorcheck[Indice]="true";
+                        ContactoModel contacto = new ContactoModel(
+                                "",
+                                NombreContacto.getText().toString(),
+                                Telefono.getText().toString(),
+                                Correo.getText().toString(),
+                                Puesto.getText().toString(),
+                                Notas.getText().toString()
+                        );
+                        ContactosAguardar.add(contacto);
+                        clientesContactosList.set(Indice,contacto);
+                        Valorcheck[Indice]="true";
+                    }
                 }else
                 {
                     NombreContacto.setEnabled(true);

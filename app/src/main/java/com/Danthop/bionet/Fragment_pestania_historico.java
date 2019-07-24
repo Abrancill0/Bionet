@@ -204,18 +204,20 @@ public class Fragment_pestania_historico extends Fragment {
         tabla_historico.setHeaderAdapter(simpleHeader);
         tabla_historico.setColumnModel(tableColumnWeightModel);
 
-        if(Historicos==false)
+        /*if(Historicos==false)
         {
             Buscar.setEnabled(false);
             progressDialog.dismiss();
         }
-        else {
+        else {*/
             Muestra_historico();
-        }
+        //}
         return v;
     }
 
     public void Muestra_historico() {
+
+        progressDialog.show();
 
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1&code="+code;
@@ -298,6 +300,7 @@ public class Fragment_pestania_historico extends Fragment {
                         }
                         HistoricoAdapter = new HistoricoAdapter(getContext(), historico, tabla_historico);
                          tabla_historico.setDataAdapter(HistoricoAdapter);
+                         progressDialog.dismiss();
                      }
                 } catch (JSONException e) {
                     Toast toast1 =

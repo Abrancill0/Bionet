@@ -467,6 +467,14 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                             ImpuestosDeArticuloApartado,
                                             ArticuloApartadoPorcentajeDescuento,
                                             ArticuloApartadoPrecio);
+
+                                    String ArticuloApartadoSat = nodo.getString("tar_categoria_sat");
+                                    String ArticuloApartadoUm_codigo = nodo.getString("tar_um_codigo");
+                                    String ArticuloApartadoUm_simbologia = nodo.getString("tar_um_simbologia");
+
+                                    ArticuloApartado.setCodigo_sat(ArticuloApartadoSat);
+                                    ArticuloApartado.setUm_codigo(ArticuloApartadoUm_codigo);
+                                    ArticuloApartado.setUm_simbologia(ArticuloApartadoUm_simbologia);
                                     ListaDeArticulosApartados.add(ArticuloApartado);
                                 }
 
@@ -515,6 +523,14 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                             ImpuestosDeArticuloOrdenado,
                                             ArticuloApartadoPorcentajeDescuento,
                                             ArticuloApartadoPrecio);
+
+                                    String ArticuloApartadoSat = nodo.getString("tar_categoria_sat");
+                                    String ArticuloApartadoUm_codigo = nodo.getString("tar_um_codigo");
+                                    String ArticuloApartadoUm_simbologia = nodo.getString("tar_um_simbologia");
+
+                                    ArticuloOrdenado.setCodigo_sat(ArticuloApartadoSat);
+                                    ArticuloOrdenado.setUm_codigo(ArticuloApartadoUm_codigo);
+                                    ArticuloOrdenado.setUm_simbologia(ArticuloApartadoUm_simbologia);
                                     ListaDeArticulosOrdenados.add(ArticuloOrdenado);
                                 } else {
 
@@ -756,6 +772,15 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                         ImpuestosDeArticuloApartado,
                                         ArticuloApartadoPorcentajeDescuento,
                                         ArticuloApartadoPrecio);
+
+                                String ArticuloApartadoSat = nodo.getString("tar_categoria_sat");
+                                String ArticuloApartadoUm_codigo = nodo.getString("tar_um_codigo");
+                                String ArticuloApartadoUm_simbologia = nodo.getString("tar_um_simbologia");
+
+                                ArticuloApartado.setCodigo_sat(ArticuloApartadoSat);
+                                ArticuloApartado.setUm_codigo(ArticuloApartadoUm_codigo);
+                                ArticuloApartado.setUm_simbologia(ArticuloApartadoUm_simbologia);
+
                                 ListaDeArticulosApartados.add(ArticuloApartado);
                             }
 
@@ -804,6 +829,14 @@ public class VentaArticuloAdapter extends LongPressAwareTableDataAdapter<Articul
                                         ImpuestosDeArticuloOrdenado,
                                         ArticuloApartadoPorcentajeDescuento,
                                         ArticuloApartadoPrecio);
+
+                                String ArticuloApartadoSat = nodo.getString("tar_categoria_sat");
+                                String ArticuloApartadoUm_codigo = nodo.getString("tar_um_codigo");
+                                String ArticuloApartadoUm_simbologia = nodo.getString("tar_um_simbologia");
+
+                                ArticuloOrdenado.setCodigo_sat(ArticuloApartadoSat);
+                                ArticuloOrdenado.setUm_codigo(ArticuloApartadoUm_codigo);
+                                ArticuloOrdenado.setUm_simbologia(ArticuloApartadoUm_simbologia);
                                 ListaDeArticulosOrdenados.add(ArticuloOrdenado);
                             }
                             else {

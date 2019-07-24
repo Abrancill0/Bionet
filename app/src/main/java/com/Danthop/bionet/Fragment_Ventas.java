@@ -1613,6 +1613,9 @@ public class Fragment_Ventas extends Fragment {
                 list1.put("oea_importe_descuento", ArticulosOrdenados.get(i).getImporte_descuento());
                 list1.put("oea_porcentaje_descuento", ArticulosOrdenados.get(i).getPorcentaje_descuento());
                 list1.put("oea_precio_articulo", ArticulosOrdenados.get(i).getPrecio_articulo());
+                list1.put("oea_codigo_categoria_sat", ArticulosOrdenados.get(i).getCodigo_sat());
+                list1.put("oea_um_codigo", ArticulosOrdenados.get(i).getUm_codigo());
+                list1.put("oea_um_simbologia", ArticulosOrdenados.get(i).getUm_simbologia());
                 JSONObject impuestos = new JSONObject();
                 try{
                     for (int j=0; j<ArticulosOrdenados.get(i).getImpuestos().size();j++)
@@ -1632,7 +1635,7 @@ public class Fragment_Ventas extends Fragment {
         if(arreglo.length()==0)
         {
             Toast toast1 =
-                    Toast.makeText(getContext(), "No haz seleccionado ningún artículo", Toast.LENGTH_LONG);
+                    Toast.makeText(getContext(), "No has seleccionado ningún artículo", Toast.LENGTH_LONG);
             toast1.show();
         }else {
 
@@ -1723,6 +1726,7 @@ public class Fragment_Ventas extends Fragment {
 
     private void ApartarArticulosSeleccionados() {
 
+        progressDialog.show();
         float PagoTotal=0;
         float ImporteTotal=0;
         JSONArray arreglo = new JSONArray();
@@ -1750,6 +1754,9 @@ public class Fragment_Ventas extends Fragment {
                 list1.put("aar_importe_descuento", ArticulosApartados.get(i).getImporte_descuento());
                 list1.put("aar_porcentaje_descuento", ArticulosApartados.get(i).getPorcentaje_descuento());
                 list1.put("aar_precio_articulo", ArticulosApartados.get(i).getPrecio_articulo());
+                list1.put("aar_codigo_categoria_sat", ArticulosApartados.get(i).getCodigo_sat());
+                list1.put("aar_um_codigo", ArticulosApartados.get(i).getUm_codigo());
+                list1.put("aar_um_simbologia", ArticulosApartados.get(i).getUm_simbologia());
                 JSONObject impuestos = new JSONObject();
                     try{
                         for (int j=0; j<ArticulosApartados.get(i).getImpuestos().size();j++)
@@ -1769,7 +1776,7 @@ public class Fragment_Ventas extends Fragment {
         if(arreglo.length()==0)
         {
             Toast toast1 =
-                    Toast.makeText(getContext(), "No haz seleccionado ningún artículo", Toast.LENGTH_LONG);
+                    Toast.makeText(getContext(), "No has seleccionado ningún artículo", Toast.LENGTH_LONG);
             toast1.show();
         }else{
 
@@ -1831,17 +1838,21 @@ public class Fragment_Ventas extends Fragment {
                                 }
                             });
 
-
+                            progressDialog.dismiss();
                         } else {
                             Toast toast1 =
                                     Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
                             toast1.show();
+                            progressDialog.dismiss();
+
                         }
 
                     } catch (JSONException e) {
                         Toast toast1 =
                                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                         toast1.show();
+                        progressDialog.dismiss();
+
                     }
                 }
 
@@ -1852,6 +1863,8 @@ public class Fragment_Ventas extends Fragment {
                             Toast toast1 =
                                     Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
                             toast1.show();
+                            progressDialog.dismiss();
+
                         }
                     }
             );
@@ -2117,6 +2130,15 @@ public class Fragment_Ventas extends Fragment {
                                         ImpuestosDeArticuloApartado,
                                         ArticuloApartadoPorcentajeDescuento,
                                         ArticuloApartadoPrecio);
+                                String ArticuloApartadoSat = nodo.getString("tar_categoria_sat");
+                                String ArticuloApartadoUm_codigo = nodo.getString("tar_um_codigo");
+                                String ArticuloApartadoUm_simbologia = nodo.getString("tar_um_simbologia");
+
+                                ArticuloApartado.setCodigo_sat(ArticuloApartadoSat);
+                                ArticuloApartado.setUm_codigo(ArticuloApartadoUm_codigo);
+                                ArticuloApartado.setUm_simbologia(ArticuloApartadoUm_simbologia);
+
+
                                 ListaDeArticulosApartados.add(ArticuloApartado);
                             }
 
@@ -2165,6 +2187,14 @@ public class Fragment_Ventas extends Fragment {
                                         ImpuestosDeArticuloOrdenado,
                                         ArticuloApartadoPorcentajeDescuento,
                                         ArticuloApartadoPrecio);
+                                String ArticuloApartadoSat = nodo.getString("tar_categoria_sat");
+                                String ArticuloApartadoUm_codigo = nodo.getString("tar_um_codigo");
+                                String ArticuloApartadoUm_simbologia = nodo.getString("tar_um_simbologia");
+
+                                ArticuloOrdenado.setCodigo_sat(ArticuloApartadoSat);
+                                ArticuloOrdenado.setUm_codigo(ArticuloApartadoUm_codigo);
+                                ArticuloOrdenado.setUm_simbologia(ArticuloApartadoUm_simbologia);
+
                                 ListaDeArticulosOrdenados.add(ArticuloOrdenado);
                             }
                             else {
@@ -4301,6 +4331,15 @@ public class Fragment_Ventas extends Fragment {
                                             ImpuestosDeArticuloApartado,
                                             ArticuloApartadoPorcentajeDescuento,
                                             ArticuloApartadoPrecio);
+
+                                    String ArticuloApartadoSat = nodo.getString("tar_categoria_sat");
+                                    String ArticuloApartadoUm_codigo = nodo.getString("tar_um_codigo");
+                                    String ArticuloApartadoUm_simbologia = nodo.getString("tar_um_simbologia");
+
+                                    ArticuloApartado.setCodigo_sat(ArticuloApartadoSat);
+                                    ArticuloApartado.setUm_codigo(ArticuloApartadoUm_codigo);
+                                    ArticuloApartado.setUm_simbologia(ArticuloApartadoUm_simbologia);
+
                                     ListaDeArticulosApartados.add(ArticuloApartado);
                                 }
 
@@ -4349,6 +4388,15 @@ public class Fragment_Ventas extends Fragment {
                                             ImpuestosDeArticuloOrdenado,
                                             ArticuloApartadoPorcentajeDescuento,
                                             ArticuloApartadoPrecio);
+
+                                    String ArticuloApartadoSat = nodo.getString("tar_categoria_sat");
+                                    String ArticuloApartadoUm_codigo = nodo.getString("tar_um_codigo");
+                                    String ArticuloApartadoUm_simbologia = nodo.getString("tar_um_simbologia");
+
+                                    ArticuloOrdenado.setCodigo_sat(ArticuloApartadoSat);
+                                    ArticuloOrdenado.setUm_codigo(ArticuloApartadoUm_codigo);
+                                    ArticuloOrdenado.setUm_simbologia(ArticuloApartadoUm_simbologia);
+
                                     ListaDeArticulosOrdenados.add(ArticuloOrdenado);
                                 }
                                 else {

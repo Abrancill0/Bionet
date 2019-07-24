@@ -216,18 +216,22 @@ public class FragmentLealtadInscribir extends Fragment {
         });
 
         bundle = getArguments();
-        Agregar_Articulo=bundle.getBoolean("Agregar_Articulo");
-        Agregar_Cliente=bundle.getBoolean("Agregar_Cliente");
-        Lista_Articulos=bundle.getBoolean("Lista_Articulos");
-        Asignar_Articulo=bundle.getBoolean("Asignar_Articulo");
-        Asignar_Cliente=bundle.getBoolean("Asignar_Cliente");
-        Configuracion_Programa=bundle.getBoolean("Configuracion_Programa");
-        Caducidad_Puntos=bundle.getBoolean("Caducidad_Puntos");
-        Inscribir_Programa=bundle.getBoolean("Inscribir_Programa");
-        Puntos_Acumulados=bundle.getBoolean("Puntos_Acumulados");
-        Listado_Puntos=bundle.getBoolean("Listado_Puntos");
+        if(bundle!=null)
+        {
+            Agregar_Articulo=bundle.getBoolean("Agregar_Articulo");
+            Agregar_Cliente=bundle.getBoolean("Agregar_Cliente");
+            Lista_Articulos=bundle.getBoolean("Lista_Articulos");
+            Asignar_Articulo=bundle.getBoolean("Asignar_Articulo");
+            Asignar_Cliente=bundle.getBoolean("Asignar_Cliente");
+            Configuracion_Programa=bundle.getBoolean("Configuracion_Programa");
+            Caducidad_Puntos=bundle.getBoolean("Caducidad_Puntos");
+            Inscribir_Programa=bundle.getBoolean("Inscribir_Programa");
+            Puntos_Acumulados=bundle.getBoolean("Puntos_Acumulados");
+            Listado_Puntos=bundle.getBoolean("Listado_Puntos");
+        }
 
-        LoadPermisosFunciones();
+
+
 
         return v;
 

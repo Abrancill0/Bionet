@@ -17,6 +17,9 @@ public class OrdenEspecialArticuloModel {
     List<com.Danthop.bionet.model.Impuestos> Impuestos;
     String Porcentaje_descuento;
     String Precio_articulo;
+    String codigo_sat;
+    String um_codigo;
+    String um_simbologia;
 
     public OrdenEspecialArticuloModel(String cantidad, String articulo_id, String articulo_id_variante,
                                  String articulo_id_modificador, String importe_pagado, String importe_restante,
@@ -141,5 +144,29 @@ public class OrdenEspecialArticuloModel {
 
     public void setCantidad(String cantidad) {
         Cantidad = cantidad;
+    }
+
+    public String getCodigo_sat() {
+        return codigo_sat;
+    }
+
+    public void setCodigo_sat(String codigo_sat) {
+        this.codigo_sat = codigo_sat;
+    }
+
+    public String getUm_codigo() {
+        return um_codigo;
+    }
+
+    public void setUm_codigo(String um_codigo) {
+        this.um_codigo = um_codigo;
+    }
+
+    public String getUm_simbologia() {
+        return um_simbologia;
+    }
+
+    public void setUm_simbologia(String um_simbologia) {
+        this.um_simbologia = um_simbologia;
     }
 }

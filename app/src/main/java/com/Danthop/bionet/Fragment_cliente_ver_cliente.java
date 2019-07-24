@@ -295,6 +295,7 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                             String num_int_fiscal = RespuestaNodoDireccion.getString("cli_numero_interior");
                             String UltimaCompra = elemento.getString("cli_ultima_compra");
                             String ConsumoPromedio = elemento.getString("cli_promedio_compra");
+                            String Cliente_tipo =elemento.getString("cli_tipo");
 
 
                             ArrayList<CompraModel> HistorialCompras = new ArrayList<>();
@@ -353,6 +354,7 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                                     ConsumoPromedio
                             );
                             cliente.setCiudad_fiscal(RespuestaNodoDireccion.getString("cli_ciudad"));
+                            cliente.setCliente_tipo(Cliente_tipo);
 
                             JSONArray Sucursales = elemento.getJSONArray("cli_sucursales");
                             for(int x=0; x<Sucursales.length();x++)
@@ -570,6 +572,7 @@ public class Fragment_cliente_ver_cliente extends Fragment {
                 bundle.putString( "correo_igual" , cliente.getCorreo_igual());
                 bundle.putString( "direccion_igual" , cliente.getDireccion_igual());
                 bundle.putString("UUID", cliente.getCliente_UUID());
+                bundle.putString("cliente_tipo",cliente.getCliente_tipo());
 
                 Fragment_editarCliente fragment_editarCliente = new Fragment_editarCliente();
                 fragment_editarCliente.setArguments(bundle);

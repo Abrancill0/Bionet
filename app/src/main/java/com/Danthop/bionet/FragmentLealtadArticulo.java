@@ -131,15 +131,15 @@ public class FragmentLealtadArticulo extends Fragment {
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                if(Lista_Articulos==false)
-                {
-                    articulos.clear();
-                    SpinnerSucursal.setEnabled(false);
-                }else
-                {
+                //if(Lista_Articulos==false)
+                //{
+                    //articulos.clear();
+                   // SpinnerSucursal.setEnabled(false);
+                //}else
+                //{
                     articulos.clear();
                     Muestra_articulos();
-                };
+                //};
             }
             public void onNothingSelected(AdapterView<?> parent)
             {

@@ -136,7 +136,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".3"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/btn_Aniadir_Contacto"
@@ -157,7 +158,7 @@
         android:layout_height="match_parent"
         android:layout_weight=".25"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -465,6 +466,30 @@
                             android:layout_marginHorizontal="5dp"></Spinner>
 
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView74"
+                            android:layout_width="119dp"
+                            android:layout_height="wrap_content"
+                            android:text="Tipo"
+                            android:textSize="22sp" />
+
+                        <Spinner
+                            android:id="@+id/text_cliente_tipo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:padding="1dp"
+                            android:textSize="20sp" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -912,7 +937,7 @@
         android:layout_height="match_parent"
         android:layout_weight=".25"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -921,12 +946,12 @@
             android:gravity="right|center_vertical">
 
             <Button
-                android:layout_marginVertical="2dp"
-                android:layout_marginHorizontal="10dp"
                 android:id="@+id/btn_nuevo_contacto"
                 style="@android:style/Widget.Holo.Light.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="2dp"
                 android:background="@color/colorPrimaryDark"
                 android:padding="5dp"
                 android:text="Nuevo contacto"

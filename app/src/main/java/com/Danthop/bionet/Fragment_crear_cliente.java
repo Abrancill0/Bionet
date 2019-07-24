@@ -104,6 +104,7 @@ public class Fragment_crear_cliente extends DialogFragment {
     private ArrayList<Integer> EstadoIDFiscal;
     private ArrayList<String> ColoniaNameFiscal;
 
+
     private LinearLayout LayoutDireccionFiscal;
     private LinearLayout LayoutEmail;
 
@@ -129,6 +130,9 @@ public class Fragment_crear_cliente extends DialogFragment {
 
     List<ContactoModel> ContactosAguardar = new ArrayList<>();
 
+    private ArrayList<String> ClienteTipo;
+    private Spinner SpinnerClienteTipo;
+
 
     private SortableAniadirContactoTable AniadirContactoTable;
 
@@ -151,6 +155,10 @@ public class Fragment_crear_cliente extends DialogFragment {
         EstadoNameFiscal=new ArrayList<>();
         EstadoIDFiscal = new ArrayList<>();
         ColoniaNameFiscal=new ArrayList<>();
+        ClienteTipo = new ArrayList<>();
+
+        ClienteTipo.add("Empresa");
+        ClienteTipo.add("Persona");
 
         TextNombre=(EditText)v.findViewById(R.id.Text_cliente_Nombre);
         SpinnerColonia=(Spinner)v.findViewById(R.id.Text_cliente_colonia);
@@ -188,6 +196,8 @@ public class Fragment_crear_cliente extends DialogFragment {
         AniadirContactoTable.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
         btn_nuevo_contacto = v.findViewById(R.id.btn_nuevo_contacto);
 
+        SpinnerClienteTipo = v.findViewById(R.id.text_cliente_tipo);
+
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
         usu_id = sharedPref.getString("usu_id","");
         code = sharedPref.getString("sso_code","");
@@ -201,6 +211,8 @@ public class Fragment_crear_cliente extends DialogFragment {
         ArrayAdapter adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, opciones);
         SpinnerOpcion.setAdapter(adapter);
 
+        SpinnerClienteTipo.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, ClienteTipo));
+
         SpinnerOpcion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 VerificarOpcion();
@@ -212,10 +224,10 @@ public class Fragment_crear_cliente extends DialogFragment {
 
         VerificarOpcion();
         try{
-
+            LoadSpinnerEstado();
         }catch (NullPointerException x)
         {
-            LoadSpinnerEstado();
+
         }
 
         LoadSpinnerSucursal();
@@ -228,7 +240,25 @@ public class Fragment_crear_cliente extends DialogFragment {
             @Override
             public void onClick(View v) {
 
-                ValidacionRfc();
+                if(TextRfc.getText().toString().length()==0||
+                        TextNombre.getText().toString().length()==0||
+                        TextEmail.getText().toString().length()==0||
+                        TextTelefono.getText().toString().length()==0||
+                        TextCp.getText().toString().length()==0||
+                        TextCalle.getText().toString().length()==0||
+                        TextNumInterior.getText().toString().length()==0||
+                        TextNumExt.getText().toString().length()==0||
+                        TextRazonSocial.getText().toString().length()==0)
+                {
+                    Toast toast = Toast.makeText(getContext(),
+                            "Todos los campos de datos personales y facturación son obligatorios",Toast.LENGTH_LONG);
+                    toast.show();
+                }
+                else
+                {
+                    ValidacionRfc();
+                }
+
             }
         });
 
@@ -447,6 +477,25 @@ public class Fragment_crear_cliente extends DialogFragment {
             DireccionIgual = "false";
         }
 
+        System.out.println(ContactosAguardar);
+        JSONArray arreglo = new JSONArray();
+        try {
+            for (int i = 0; i < ContactosAguardar.size(); i++) {
+                JSONObject list1 = new JSONObject();
+                ContactoModel contacto = ContactosAguardar.get(i);
+                list1.put("id",i+1);
+                list1.put("datos",contacto.getContacto()+"|"+
+                                contacto.getTelefono()+"|"+
+                                contacto.getCorreo_electronico()+"|"+
+                                contacto.getPuesto()+"|"+
+                                contacto.getNotas());
+                arreglo.put(list1);
+            }
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+
+
         JSONObject request = new JSONObject();
         try {
             request.put("usu_id", usu_id);
@@ -480,6 +529,7 @@ public class Fragment_crear_cliente extends DialogFragment {
             request.put("cli_id_estado_facturacion",Suc_DatosFisc);
             request.put("cli_estado_facturacion",FacturacionEstado);
             request.put("cli_pais_facturacion","Mexico");
+            request.put("cli_tipo",SpinnerClienteTipo.getSelectedItem().toString());
             request.put("code",code);
 
         }
@@ -528,6 +578,7 @@ public class Fragment_crear_cliente extends DialogFragment {
                     }
                 }
         );
+        postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
     }
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -620,6 +671,7 @@ public class Fragment_crear_cliente extends DialogFragment {
                 }
         );
 
+        postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
 
@@ -717,6 +769,7 @@ public class Fragment_crear_cliente extends DialogFragment {
                 }
         );
 
+        postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
 
@@ -786,6 +839,7 @@ public class Fragment_crear_cliente extends DialogFragment {
             );
 
                     // add it to the RequestQueue
+            getRequest.setShouldCache(false);
             VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
 
         }
@@ -862,6 +916,7 @@ public class Fragment_crear_cliente extends DialogFragment {
             );
 
             // add it to the RequestQueue
+            getRequest.setShouldCache(false);
             VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
 
         }
@@ -883,7 +938,10 @@ public class Fragment_crear_cliente extends DialogFragment {
 
         try {
 
-            request.put("rfc",TextRfc.getText());
+            request.put("usu_id",usu_id);
+            request.put("esApp",1);
+            request.put("code",code);
+            request.put("rfc",TextRfc.getText().toString());
 
         } catch (Exception e) {
 
@@ -936,6 +994,7 @@ public class Fragment_crear_cliente extends DialogFragment {
                     }
                 }
         );
+        postRequets.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequets);
     }
 

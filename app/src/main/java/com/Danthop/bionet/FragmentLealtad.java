@@ -410,7 +410,7 @@ public class FragmentLealtad extends Fragment {
         SpinnerSucursal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                if(Listado_Puntos==false){
+                /*if(Listado_Puntos==false){
                     SpinnerSucursal.setEnabled(false);
                     Buscar.setEnabled(false);
                     Buscar.setOnClickListener(new View.OnClickListener() {
@@ -421,13 +421,13 @@ public class FragmentLealtad extends Fragment {
 
                             toast1.show();
                         }
-                    });
-                }else
-                {
+                    });*/
+                //}else
+                //{
 
                     progressDialog.show();
                     Muestra_clientes();
-                }
+                //}
 
             }
             public void onNothingSelected(AdapterView<?> parent)
