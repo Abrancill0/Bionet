@@ -811,8 +811,8 @@ public class Login extends Activity {
         try {
             JSONObject request = new JSONObject();
             try {
-                request.put("usu_correo_electronico", "jackson1@gmail.com");
-                request.put("usu_contrasenia", "12");
+                request.put("usu_correo_electronico", "gmartinez@marstom.com");
+                request.put("usu_contrasenia", "001824");
                 request.put("dis_mac", ID_dispositivo + "IMEI");
                 request.put("dis_token", Token);
                 request.put("esApp", 1);
