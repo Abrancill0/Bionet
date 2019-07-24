@@ -56,7 +56,7 @@ import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
 
 public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel> {
 
-    int TEXT_SIZE = 16;
+    int TEXT_SIZE = 14;
     private List<EditText> ListaDeCantidades = new ArrayList<>();
     List<PagoModel> MetodosPagoSeleccionados = new ArrayList<>();
 
@@ -245,7 +245,7 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
     private View renderString(final String value) {
         final TextView textView = new TextView(getContext());
         textView.setText(value);
-        textView.setPadding(20, 10, 20, 10);
+        textView.setPadding(2, 2, 2, 2);
         textView.setTextSize(TEXT_SIZE);
         return textView;
     }

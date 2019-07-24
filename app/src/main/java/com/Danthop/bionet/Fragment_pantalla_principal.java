@@ -88,7 +88,6 @@ public class Fragment_pantalla_principal extends Fragment{
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences( "DatosPersistentes", getContext().MODE_PRIVATE );
         String ImagenPerfil = sharedPref.getString( "usu_imagen_perfil", "" );
@@ -220,6 +219,7 @@ public class Fragment_pantalla_principal extends Fragment{
 
 //--------------------------------------------------------------------------------------------------
 private void LoadPocasExistencias(){
+        progressDialog.show();
     try {
     } catch (Exception e) {
         e.printStackTrace();
@@ -294,11 +294,14 @@ private void LoadPocasExistencias(){
                     }
                 }      final HomeExistenciasAdapter ExistenciasAdapter = new HomeExistenciasAdapter(getContext(), inventarios,tabla_inventario);
                 tabla_inventario.setDataAdapter(ExistenciasAdapter);
+                progressDialog.dismiss();
 
             } catch (JSONException e) {
                 Toast toast1 =
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                 toast1.show();
+                progressDialog.dismiss();
+
             }
         }
     },
@@ -308,6 +311,8 @@ private void LoadPocasExistencias(){
                     Toast toast1 =
                             Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
                     toast1.show();
+                    progressDialog.dismiss();
+
                 }
             }
     );
@@ -316,6 +321,7 @@ private void LoadPocasExistencias(){
 }
 //--------------------------------------------------------------------------------------------------
 private void LoadClientesFrecuentes(){
+        progressDialog.show();
     try {
     } catch (Exception e) {
         e.printStackTrace();
@@ -350,11 +356,14 @@ private void LoadClientesFrecuentes(){
 
                     final ClienteFrecuenteAdapter FrecuenteAdapter = new ClienteFrecuenteAdapter(getContext(), Clientes,tabla_clientes);
                     tabla_clientes.setDataAdapter(FrecuenteAdapter);
+                    progressDialog.dismiss();
                 }
             } catch (JSONException e) {
                 Toast toast1 =
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                 toast1.show();
+                progressDialog.dismiss();
+
             }
         }
     },
@@ -364,6 +373,8 @@ private void LoadClientesFrecuentes(){
                     Toast toast1 =
                             Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
                     toast1.show();
+                    progressDialog.dismiss();
+
                 }
             }
     );
@@ -372,6 +383,7 @@ private void LoadClientesFrecuentes(){
 }
 //--------------------------------------------------------------------------------------------------
 private void LoadMasVendidos(){
+        progressDialog.show();
 
     try {
     } catch (Exception e) {
@@ -406,6 +418,7 @@ private void LoadMasVendidos(){
 
                     final TopvendidosAdapter TopVendidoseAdapter = new TopvendidosAdapter(getContext(), Productos ,tabla_productos);
                     tabla_productos.setDataAdapter(TopVendidoseAdapter);
+                    progressDialog.dismiss();
                 }
                 else
                 {
@@ -427,6 +440,8 @@ private void LoadMasVendidos(){
                     Toast toast1 =
                             Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
                     toast1.show();
+                    progressDialog.dismiss();
+
                 }
             }
     );
@@ -436,6 +451,7 @@ private void LoadMasVendidos(){
 
 //--------------------------------------------------------------------------------------------------
 public void LoadNotificaciones() {
+        progressDialog.show();
     try {
         String ApiPath = getString(R.string.Url)+"/api/notificaciones/index?usu_id=" + usu_id + "&esApp=1&code="+code;
 
@@ -474,12 +490,15 @@ public void LoadNotificaciones() {
 
                                 final TopNotificacionAdapter NotificacionAdapter = new TopNotificacionAdapter(getContext(), Notificaciones ,tabla_notificacion);
                                 tabla_notificacion.setDataAdapter(NotificacionAdapter);
+                                progressDialog.dismiss();
 
                             }
                         } catch (JSONException e) {
                             Toast toast1 =
                                     Toast.makeText(getContext(),
                                             String.valueOf(e), Toast.LENGTH_LONG);
+                            progressDialog.dismiss();
+
                         }
                     }
                 },
@@ -489,6 +508,8 @@ public void LoadNotificaciones() {
                         Toast toast1 =
                                 Toast.makeText(getContext(),
                                         String.valueOf(error), Toast.LENGTH_LONG);
+                        progressDialog.dismiss();
+
                     }
                 }
         );

@@ -149,6 +149,9 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
                             apartado.getImporte_descuento(),apartado.getImporte_total(),apartado.getImpuestos(),
                             apartado.getPorcentaje_descuento(),apartado.getPrecio_articulo()
                             );
+                    apartadoNuevo.setCodigo_sat(apartado.getCodigo_sat());
+                    apartadoNuevo.setUm_codigo(apartado.getUm_codigo());
+                    apartadoNuevo.setUm_simbologia(apartado.getUm_simbologia());
                     ArticulosApartados.add(apartadoNuevo);
 
                 }else
@@ -173,7 +176,7 @@ public class SeleccionaApartadoAdapter extends LongPressAwareTableDataAdapter<Ar
     private View renderString ( final String value){
         final TextView textView = new TextView(getContext());
         textView.setText(value);
-        textView.setPadding(20, 10, 20, 10);
+        textView.setPadding(10, 5, 10, 5);
         textView.setTextSize(TEXT_SIZE);
         return textView;
     }

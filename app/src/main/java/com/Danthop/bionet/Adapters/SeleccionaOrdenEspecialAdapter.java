@@ -150,6 +150,9 @@ public class SeleccionaOrdenEspecialAdapter extends LongPressAwareTableDataAdapt
                             orden.getImporte_descuento(),orden.getImporte_total(),orden.getImpuestos(),
                             orden.getPorcentaje_descuento(),orden.getPrecio_articulo()
                     );
+                    apartadoNuevo.setCodigo_sat(orden.getCodigo_sat());
+                    apartadoNuevo.setUm_codigo(orden.getUm_codigo());
+                    apartadoNuevo.setUm_simbologia(orden.getUm_simbologia());
                     ArticulosOrdenados.add(apartadoNuevo);
 
                 }else

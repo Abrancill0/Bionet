@@ -185,9 +185,12 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         {
             String Venta= bundle.getString("Venta");
 
-            if(Venta.equals("si"))
+            if(Venta!=null)
             {
-                ventas();
+                if(Venta.equals("si"))
+                {
+                    ventas();
+                }
             }
         }
 
