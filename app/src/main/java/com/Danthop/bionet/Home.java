@@ -409,8 +409,10 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                         if(rol_nombre3.equals("cbcf93d8-ed1e-11e8-8a6e-cb097f5c03df"))
                         {
-                            Aplica3 =  Elemento.getBoolean("rol_aplica_en_version");
-                            Aplica3_Permiso = Elemento.getBoolean("rol_permiso");
+                            //Aplica3 =  Elemento.getBoolean("rol_aplica_en_version");
+                            //Aplica3_Permiso = Elemento.getBoolean("rol_permiso");
+                            Aplica3=true;
+                            Aplica3_Permiso=true;
                             break;
                         }
 
@@ -560,8 +562,10 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                         if(rol_nombre5 == "cbcf941d-ed1e-11e8-8a6e-cb097f5c03df")
                         {
-                            Aplica5 =  Elemento.getBoolean("rol_aplica_en_version");
-                            Aplica5_Permiso = Elemento.getBoolean("rol_permiso");
+                            //Aplica5 =  Elemento.getBoolean("rol_aplica_en_version");
+                            //Aplica5_Permiso = Elemento.getBoolean("rol_permiso");
+                            Aplica5=true;
+                            Aplica5_Permiso=true;
                             break;
                         }
 
@@ -609,8 +613,10 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                         if(rol_nombre6 == "cbcf943e-ed1e-11e8-8a6e-cb097f5c03df")
                         {
-                            Aplica6 =  Elemento.getBoolean("rol_aplica_en_version");
-                            Aplica6_Permiso = Elemento.getBoolean("rol_permiso");
+                            //Aplica6 =  Elemento.getBoolean("rol_aplica_en_version");
+                            //Aplica6_Permiso = Elemento.getBoolean("rol_permiso");
+                            Aplica6=true;
+                            Aplica6_Permiso=true;
                             break;
                         }
 

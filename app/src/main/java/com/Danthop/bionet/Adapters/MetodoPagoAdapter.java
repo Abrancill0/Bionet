@@ -121,6 +121,7 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
         //MontoAApartar.setInputType(TYPE_NUMBER_FLAG_DECIMAL);
         MontoAApartar.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         MontoAApartar.setGravity(View.TEXT_ALIGNMENT_CENTER);
+        MontoAApartar.setHint("0.00");
         ListaDeCantidades.add(MontoAApartar);
 
         if (ValorImporte[Indice]!=null)
@@ -180,10 +181,16 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
                     if (seleccionar.isChecked())
                     {
                             Monto.setEnabled(false);
+                            String cantidad ="";
+                            if(Monto.getText().equals(""))
+                            {
+                                Monto.setText("0.00");
+                                cantidad = "0.00";
+                            }
                             PagoModel pago = new PagoModel(
                                     forma.getNombre(),
                                     forma.getId(),
-                                    String.valueOf(Monto.getText())
+                                    cantidad
                             );
                             MetodosPagoSeleccionados.add(pago);
                             float sumaDeImporte =0;
