@@ -217,6 +217,8 @@ public class Fragment_pestania_historico extends Fragment {
 
     public void Muestra_historico() {
 
+        progressDialog.show();
+
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/inventario/index?usu_id=" + usu_id + "&esApp=1&code="+code;
 
@@ -298,6 +300,7 @@ public class Fragment_pestania_historico extends Fragment {
                         }
                         HistoricoAdapter = new HistoricoAdapter(getContext(), historico, tabla_historico);
                          tabla_historico.setDataAdapter(HistoricoAdapter);
+                         progressDialog.dismiss();
                      }
                 } catch (JSONException e) {
                     Toast toast1 =

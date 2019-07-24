@@ -1,11 +1,13 @@
 package com.Danthop.bionet;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Environment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,7 +35,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Confirmacion_venta extends AppCompatActivity {
+public class Confirmacion_venta extends Activity {
     private String content;
     private WebView webView;
 
@@ -54,6 +56,7 @@ public class Confirmacion_venta extends AppCompatActivity {
     private String Sucursal="";
     private float ImpuestosTotal=0;
     private String Ticket="";
+    private FragmentTransaction fr;
 
     private List<ArticuloModel> ListaArticulosTicket = new ArrayList<>();
 
@@ -95,7 +98,10 @@ public class Confirmacion_venta extends AppCompatActivity {
             public void onClick(View v) {
 
                 finish();
-                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_Ventas()).addToBackStack(null).commit();
+                Intent myIntent = new Intent(getApplicationContext(), Home.class);
+                myIntent.putExtra("Venta","si");
+                getApplicationContext().startActivity(myIntent);
+
             }
 
 
@@ -107,8 +113,13 @@ public class Confirmacion_venta extends AppCompatActivity {
             public void onClick(View v) {
 
                 finish();
+                Intent myIntent = new Intent(getApplicationContext(), Home.class);
+                myIntent.putExtra("Venta","si");
+                getApplicationContext().startActivity(myIntent);
 
-               // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_Ventas()).addToBackStack(null).commit();
+
+
+
             }
         });
 

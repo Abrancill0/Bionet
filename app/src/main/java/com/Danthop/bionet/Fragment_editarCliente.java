@@ -26,6 +26,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.ClientesAniadirContactoAdapter;
+import com.Danthop.bionet.Tables.SortableAniadirContactoTable;
+import com.Danthop.bionet.model.ContactoModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -37,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -94,6 +98,8 @@ public class Fragment_editarCliente extends Fragment {
 
     private String correo_igual;
     private String direccion_igual;
+    private String cliente_id;
+    private String cliente_tipo;
 
     private String usu_id;
 
@@ -133,6 +139,26 @@ public class Fragment_editarCliente extends Fragment {
 
     private String code;
 
+    private Button btn_datos_personales;
+    private Button btn_datos_facturacion;
+    private Button btn_aniadir_contacto;
+    private Button btn_nuevo_contacto;
+
+    private View Layout_datos_personales;
+    private View Layout_datos_facturacion;
+    private View Layout_aniadir_contacto;
+
+
+    private ClientesAniadirContactoAdapter contactoAdapter;
+    List<ContactoModel> Contactos = new ArrayList<>();
+
+    List<ContactoModel> ContactosAguardar = new ArrayList<>();
+
+    private SortableAniadirContactoTable AniadirContactoTable;
+
+    private ArrayList<String> ClienteTipo;
+    private Spinner SpinnerClienteTipo;
+
 
 
     public Fragment_editarCliente() {
@@ -148,7 +174,6 @@ public class Fragment_editarCliente extends Fragment {
         progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("Espere un momento por favor");
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
 
         EstadoName=new ArrayList<>();
         EstadoID = new ArrayList<>();
@@ -159,10 +184,16 @@ public class Fragment_editarCliente extends Fragment {
         EstadoNameFiscal=new ArrayList<>();
         EstadoIDFiscal = new ArrayList<>();
         ColoniaNameFiscal=new ArrayList<>();
+        ClienteTipo = new ArrayList<>();
+
+        ClienteTipo.add("Empresa");
+        ClienteTipo.add("Persona");
 
 
         Bundle bundle = getArguments();
 
+
+        cliente_id = bundle.getString("UUID");
         nombre=bundle.getString( "nombre");
         ultima_visita=bundle.getString( "ultima_visita");
         correo=bundle.getString( "email");
@@ -188,6 +219,7 @@ public class Fragment_editarCliente extends Fragment {
         correo_igual=bundle.getString( "correo_igual");
         direccion_igual=bundle.getString( "direccion_igual");
         UUID = bundle.getString("UUID");
+        cliente_tipo = bundle.getString("cliente_tipo");
 
         TextNombre=v.findViewById(R.id.Text_cliente_Nombre);
         SpinnerColonia=v.findViewById(R.id.Text_cliente_colonia);
@@ -228,7 +260,21 @@ public class Fragment_editarCliente extends Fragment {
         TextFacturacionNumInt.setText(num_int_fiscal);
         TextFacturacionCalle.setText(calle_fiscal);
         TextFacturacionMunicipio.setText(municipio_fiscal);
-        TextCp = v.findViewById(R.id.Text_cliente_cp);
+
+        btn_datos_personales = v.findViewById(R.id.btn_Datos_Personales);
+        btn_datos_facturacion = v.findViewById(R.id.btn_Datos_Facturacion);
+        btn_aniadir_contacto = v.findViewById(R.id.btn_Aniadir_Contacto);
+
+
+        Layout_datos_personales = v.findViewById(R.id.Layout_Datos_personales);
+        Layout_datos_facturacion = v.findViewById(R.id.Layout_Datos_Facturacion);
+        Layout_aniadir_contacto = v.findViewById(R.id.Layout_aniadir_contacto);
+
+        AniadirContactoTable = v.findViewById(R.id.tabla_aniadir_contactos);
+        AniadirContactoTable.setEmptyDataIndicatorView(v.findViewById(R.id.Tabla_vacia));
+        btn_nuevo_contacto = v.findViewById(R.id.btn_nuevo_contacto);
+
+        SpinnerClienteTipo = v.findViewById(R.id.text_cliente_tipo);
 
 
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
@@ -244,36 +290,59 @@ public class Fragment_editarCliente extends Fragment {
         ArrayAdapter adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, opciones);
         SpinnerOpcion.setAdapter(adapter);
 
+        SpinnerClienteTipo.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, ClienteTipo));
+
 
         SpinnerOpcion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
-                cambiarOpcion();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                VerificarOpcion();
             }
-            public void onNothingSelected(AdapterView<?> parent)
-            {
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
 
         VerificarOpcion();
+        try{
+            LoadSpinnerEstado();
+        }catch (NullPointerException x)
+        {
 
+        }
 
-        LoadSpinnerEstado();
         LoadSpinnerSucursal();
+        LoadLayouts();
+        LoadTableContactos();
 
-        final Handler handler = new Handler();
-        progreso = new ProgressDialog(getContext());
-        progreso.setMessage("Procesando...");
-        progreso.show();
-        handler.postDelayed(new Runnable() {
+
+        Button guardar = (Button) v.findViewById(R.id.verificar_fiscal);//Boton Guardar_cliente
+        guardar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                LoadSpinnerColonias();
-            }
-        }, 3000);
-        progreso.hide();
+            public void onClick(View v) {
 
+                if(TextRfc.getText().toString().length()==0||
+                        TextNombre.getText().toString().length()==0||
+                        TextEmail.getText().toString().length()==0||
+                        TextTelefono.getText().toString().length()==0||
+                        TextCp.getText().toString().length()==0||
+                        TextCalle.getText().toString().length()==0||
+                        TextNumInterior.getText().toString().length()==0||
+                        TextNumExt.getText().toString().length()==0||
+                        TextRazonSocial.getText().toString().length()==0)
+                {
+                    Toast toast = Toast.makeText(getContext(),
+                            "Todos los campos de datos personales y facturación son obligatorios",Toast.LENGTH_LONG);
+                    toast.show();
+                }
+                else
+                {
+                    ValidacionRfc();
+                }
+
+            }
+        });
+
+        LoadSpinnerColonias();
         TextCp.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
@@ -287,7 +356,6 @@ public class Fragment_editarCliente extends Fragment {
         });
 
         TextFacturacionCp=(EditText)v.findViewById(R.id.Text_cliente_cp_facturacion);
-
         TextFacturacionCp.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
@@ -299,17 +367,6 @@ public class Fragment_editarCliente extends Fragment {
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
-
-        Button guardar = (Button) v.findViewById(R.id.verificar_fiscal);
-        guardar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                ValidacionRfc();
-
-            }
-        });
-
 
         Back = v.findViewById(R.id.atras);
         Back.setOnClickListener(new View.OnClickListener() {
@@ -327,80 +384,288 @@ public class Fragment_editarCliente extends Fragment {
                 if((event.getAction()==KeyEvent.ACTION_DOWN)&&(keyCode==KeyEvent.KEYCODE_ENTER))
                 {
                     TextMunicipio.clearFocus();
-                    TextCalle.requestFocus();
+                    SpinnerColonia.requestFocus();
                     return true;
                 }
                 return false;
             }
         });
 
+        TextNumExt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if((event.getAction()==KeyEvent.ACTION_DOWN)&&(keyCode==KeyEvent.KEYCODE_ENTER))
+                {
+                    TextNumExt.clearFocus();
+                    TextRfc.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
         return v;
     }
 
-    private void VerificarOpcion(){
 
-        if(correo_igual.equals("true") && direccion_igual.equals("true") )
-        {
-            LayoutDireccionFiscal.setVisibility(View.GONE);
-            LayoutEmail.setVisibility(View.GONE);
-            SpinnerOpcion.setSelection(0);
-        }
-        else if(correo_igual.equals("false") && direccion_igual.equals("true") )
-        {
-            LayoutEmail.setVisibility(View.VISIBLE);
-            LayoutDireccionFiscal.setVisibility(View.GONE);
-            SpinnerOpcion.setSelection(1);
-
-        }
-        else if(direccion_igual.equals("false") && correo_igual.equals("true"))
-        {
-            LayoutDireccionFiscal.setVisibility(View.VISIBLE);
-            LayoutEmail.setVisibility(View.GONE);
-            SpinnerOpcion.setSelection(2);
-
-        }
-        else if(direccion_igual.equals("false") && correo_igual.equals("false"))
-        {
-            LayoutDireccionFiscal.setVisibility(View.VISIBLE);
-            LayoutEmail.setVisibility(View.VISIBLE);
-            SpinnerOpcion.setSelection(3);
-        }
-
+    private void LoadLayouts()
+    {
+        btn_datos_personales.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_datos_personales.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+                btn_datos_facturacion.setBackgroundResource(R.drawable.pestanas_desplegables);
+                btn_aniadir_contacto.setBackgroundResource(R.drawable.pestanas_desplegables);
+                Layout_datos_personales.setVisibility(View.VISIBLE);
+                Layout_datos_facturacion.setVisibility(View.GONE);
+                Layout_aniadir_contacto.setVisibility(View.GONE);
+            }
+        });
+        btn_datos_facturacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_datos_facturacion.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+                btn_datos_personales.setBackgroundResource(R.drawable.pestanas_desplegables);
+                btn_aniadir_contacto.setBackgroundResource(R.drawable.pestanas_desplegables);
+                Layout_datos_facturacion.setVisibility(View.VISIBLE);
+                Layout_datos_personales.setVisibility(View.GONE);
+                Layout_aniadir_contacto.setVisibility(View.GONE);
+            }
+        });
+        btn_aniadir_contacto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_aniadir_contacto.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
+                btn_datos_facturacion.setBackgroundResource(R.drawable.pestanas_desplegables);
+                btn_datos_personales.setBackgroundResource(R.drawable.pestanas_desplegables);
+                Layout_aniadir_contacto.setVisibility(View.VISIBLE);
+                Layout_datos_facturacion.setVisibility(View.GONE);
+                Layout_datos_personales.setVisibility(View.GONE);
+            }
+        });
     }
 
-    public void cambiarOpcion()
-    {
-        String Seleccion;
-        Seleccion = String.valueOf(SpinnerOpcion.getSelectedItem());
 
+    private void VerificarOpcion(){
+
+        String Seleccion;
+        Seleccion = SpinnerOpcion.getSelectedItem().toString();
         if(Seleccion.equals("N/A"))
         {
             LayoutDireccionFiscal.setVisibility(View.GONE);
             LayoutEmail.setVisibility(View.GONE);
-            SpinnerOpcion.setSelection(0);
+
         }
         else if(Seleccion.equals("Email de Facturación"))
         {
             LayoutEmail.setVisibility(View.VISIBLE);
             LayoutDireccionFiscal.setVisibility(View.GONE);
-            SpinnerOpcion.setSelection(1);
-
         }
-        else if( Seleccion.equals("Dirección Fiscal"))
+        else if(Seleccion.equals("Dirección Fiscal"))
         {
             LayoutDireccionFiscal.setVisibility(View.VISIBLE);
             LayoutEmail.setVisibility(View.GONE);
-            SpinnerOpcion.setSelection(2);
-
         }
         else if(Seleccion.equals("Ambas"))
         {
             LayoutDireccionFiscal.setVisibility(View.VISIBLE);
             LayoutEmail.setVisibility(View.VISIBLE);
-            SpinnerOpcion.setSelection(3);
         }
+
     }
 
+    //-----------------------------------------------------------------------------------------------------------
+    private void GuardarCliente(){
+
+        progreso = new ProgressDialog(getContext());
+        progreso.setMessage("Procesando...");
+        progreso.show();
+        Estado_id_fiscal=EstadoIDFiscal.get(TextFacturacionEstado.getSelectedItemPosition());
+        Estado_id = EstadoID.get(SpinnerEstado.getSelectedItemPosition());
+        Sucursal_id = SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
+        int Suc_DatosFisc =0;
+
+
+        String FactuacionEmail ="";
+        String FacturacionCalle ="";
+        String FacturacionNumInt ="";
+        String FacturacionNumExt ="";
+        String FacturacionColonia ="";
+        String FacturacionMunicipio ="";
+        String FacturacionEstado = "";
+        String FacturacionCp ="";
+
+
+
+        String Seleccion;
+        Seleccion = SpinnerOpcion.getSelectedItem().toString();
+        if(Seleccion.equals("N/A")) {
+            FactuacionEmail = String.valueOf(TextEmail.getText());
+            FacturacionCalle = String.valueOf(TextCalle.getText());
+            FacturacionNumInt = String.valueOf(TextNumInterior.getText());
+            FacturacionNumExt = String.valueOf(TextNumExt.getText());
+            FacturacionColonia = String.valueOf(SpinnerColonia.getSelectedItem());
+            FacturacionMunicipio = String.valueOf(TextMunicipio.getText());
+            FacturacionEstado = String.valueOf(SpinnerEstado.getSelectedItem());
+            FacturacionCp = String.valueOf(TextCp.getText());
+            CorreoIgual= "true";
+            DireccionIgual = "true";
+        }
+        else if(Seleccion.equals("Email de Facturación")) {
+
+            FactuacionEmail = String.valueOf( TextFacturacionEmail.getText() );
+
+            FacturacionCalle = String.valueOf(TextCalle.getText());
+            FacturacionNumInt = String.valueOf(TextNumInterior.getText());
+            FacturacionNumExt = String.valueOf(TextNumExt.getText());
+            FacturacionColonia = String.valueOf(SpinnerColonia.getSelectedItem());
+            FacturacionMunicipio = String.valueOf(TextMunicipio.getText());
+            FacturacionCp = String.valueOf(TextCp.getText());
+            FacturacionEstado = String.valueOf(SpinnerEstado.getSelectedItem());
+
+            CorreoIgual= "false";
+            DireccionIgual = "true";
+
+        }
+        else if(Seleccion.equals("Dirección Fiscal")) {
+            FactuacionEmail = String.valueOf(TextEmail.getText());
+
+            FacturacionCalle = String.valueOf(TextFacturacionCalle.getText());
+            FacturacionNumInt = String.valueOf(TextFacturacionNumInt.getText());
+            FacturacionNumExt = String.valueOf(TextFacturacionNumExt.getText());
+            FacturacionColonia = String.valueOf(TextFacturacionColonia.getSelectedItem());
+            FacturacionCp = String.valueOf(TextFacturacionCp.getText());
+            FacturacionMunicipio = String.valueOf( (TextFacturacionMunicipio.getText()) );
+            Suc_DatosFisc = EstadoIDFiscal.get(SpinnerSucursal.getSelectedItemPosition());
+            FacturacionEstado = String.valueOf(TextFacturacionEstado.getSelectedItem());
+
+            CorreoIgual= "true";
+            DireccionIgual = "false";
+
+        }
+        else if(Seleccion.equals("Ambas")) {
+            FactuacionEmail = String.valueOf( TextFacturacionEmail.getText() );
+            FacturacionCalle = String.valueOf(TextFacturacionCalle.getText());
+            FacturacionNumInt = String.valueOf(TextFacturacionNumInt.getText());
+            FacturacionNumExt = String.valueOf(TextFacturacionNumExt.getText());
+            FacturacionColonia = String.valueOf(TextFacturacionColonia.getSelectedItem());
+            FacturacionCp = String.valueOf(TextFacturacionCp.getText());
+            FacturacionMunicipio = String.valueOf( (TextFacturacionMunicipio.getText()) );
+            Suc_DatosFisc = EstadoIDFiscal.get(SpinnerSucursal.getSelectedItemPosition());
+            FacturacionEstado = String.valueOf(TextFacturacionEstado.getSelectedItem());
+
+            CorreoIgual= "false";
+            DireccionIgual = "false";
+        }
+
+        System.out.println(ContactosAguardar);
+        JSONArray arreglo = new JSONArray();
+        try {
+            for (int i = 0; i < ContactosAguardar.size(); i++) {
+                JSONObject list1 = new JSONObject();
+                ContactoModel contacto = ContactosAguardar.get(i);
+                list1.put("id",i+1);
+                list1.put("datos",contacto.getContacto()+"|"+
+                        contacto.getTelefono()+"|"+
+                        contacto.getCorreo_electronico()+"|"+
+                        contacto.getPuesto()+"|"+
+                        contacto.getNotas());
+                arreglo.put(list1);
+            }
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+
+
+        String TextoDeSpinnerColonia = SpinnerColonia.getSelectedItem().toString();
+        JSONObject request = new JSONObject();
+        try {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("cli_sucursales",Sucursal_id);
+            request.put("cli_nombre",TextNombre.getText().toString());
+            request.put("cli_correo_electronico",TextEmail.getText().toString());
+            request.put("cli_telefono",TextTelefono.getText().toString());
+            request.put("cli_razon_social",TextRazonSocial.getText().toString());
+            request.put("cli_rfc",TextRfc.getText().toString());
+            request.put("cli_correos_iguales",CorreoIgual);
+            request.put("cli_direcciones_iguales",DireccionIgual);
+            request.put("cli_calle",TextCalle.getText().toString());
+            request.put("cli_numero_interior",TextNumInterior.getText().toString());
+            request.put("cli_numero_exterior",TextNumExt.getText().toString());
+            request.put("cli_colonia",TextoDeSpinnerColonia);
+            request.put("cli_ciudad",TextMunicipio.getText().toString());
+            request.put("cli_codigo_postal",TextCp.getText().toString());
+            request.put("cli_id_pais",117);
+            request.put("cli_id_estado",Estado_id);
+            request.put("cli_estado",SpinnerEstado.getSelectedItem().toString());
+            request.put("cli_pais","México");
+            request.put("cli_correo_electronico_facturacion",FactuacionEmail);
+            request.put("cli_calle_facturacion",FacturacionCalle);
+            request.put("cli_numero_interior_facturacion",FacturacionNumInt);
+            request.put("cli_numero_exterior_facturacion",FacturacionNumExt);
+            request.put("cli_colonia_facturacion",FacturacionColonia);
+            request.put("cli_ciudad_facturacion",FacturacionMunicipio);
+            request.put("cli_codigo_postal_facturacion",FacturacionCp);
+            request.put("cli_id_pais_facturacion",117);
+            request.put("cli_id_estado_facturacion",Suc_DatosFisc);
+            request.put("cli_estado_facturacion",FacturacionEstado);
+            request.put("cli_pais_facturacion","Mexico");
+            request.put("cli_contactos",arreglo);
+            request.put("cli_id", cliente_id);
+            request.put("cli_tipo", cliente_tipo);
+
+            request.put("code",code);
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+        String ApiPath = url + "/api/clientes/update";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.fragment_container,new Fragment_clientes()).commit();
+                onDetach();
+                progreso.hide();
+
+                String estatus = "0";
+                String mensaje = "";
+                try {
+                    estatus = response.getString("estatus");
+                    mensaje = response.getString("mensaje");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                int status = Integer.parseInt(estatus);
+
+                if (status == 1)
+                {
+                    Toast toast1 = Toast.makeText(getContext(), mensaje, Toast.LENGTH_SHORT);
+                    toast1.show();
+                }
+                //  Respuesta = response.getJSONObject("resultado");
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progreso.hide();
+                        Toast toast1 = Toast.makeText(getContext(), "Error de conexion", Toast.LENGTH_SHORT);
+                        toast1.show();
+                    }
+                }
+        );
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+    }
+//---------------------------------------------------------------------------------------------------------------------------------------
 
     private void LoadSpinnerEstado(){
 
@@ -409,109 +674,7 @@ public class Fragment_editarCliente extends Fragment {
         {
             request.put("usu_id", usu_id);
             request.put("esApp", "1");
-            request.put("code", code);
-
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        try{
-            String url = getString(R.string.Url);
-
-            String ApiPath = url + "/api/configuracion/sucursales/select_estados";
-
-            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-            {
-                @Override
-                public void onResponse(JSONObject response) {
-
-                    JSONObject Respuesta = null;
-                    JSONObject RespuestaNodoEstados = null;
-
-                    try {
-
-                        int status = Integer.parseInt(response.getString("estatus"));
-                        String Mensaje = response.getString("mensaje");
-
-                        if (status == 1)
-                        {
-
-                            Respuesta = response.getJSONObject("resultado");
-
-                            RespuestaNodoEstados = Respuesta.getJSONObject("aEstados");
-
-                            for(int x = 0; x < RespuestaNodoEstados.length(); x++){
-                                JSONObject jsonObject1=RespuestaNodoEstados.getJSONObject(String.valueOf(x));
-                                String estado=jsonObject1.getString("edo_nombre");
-                                int id=jsonObject1.getInt("edo_id");
-                                EstadoName.add(estado);
-                                EstadoID.add(id);
-                                EstadoNameFiscal.add(estado);
-                                EstadoIDFiscal.add(id);
-                            }
-                            SpinnerEstado.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,EstadoName));
-                            TextFacturacionEstado.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,EstadoNameFiscal));
-
-                        }
-                        else
-                        {
-                            Toast toast1 =
-                                    Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
-
-                            toast1.show();
-
-
-                        }
-
-                    } catch (JSONException e) {
-
-                        Toast toast1 =
-                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
-
-                        toast1.show();
-
-
-                    }
-
-                }
-
-            },
-                    new Response.ErrorListener()
-                    {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast toast1 =
-                                    Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
-
-                            toast1.show();
-
-
-                        }
-                    }
-            );
-
-            VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
-
-
-        }catch (Error e)
-        {
-            e.printStackTrace();
-        }
-
-
-
-    }
-
-    private void LoadSpinnerSucursal(){
-
-        JSONObject request = new JSONObject();
-        try
-        {
-            request.put("usu_id", usu_id);
-            request.put("esApp", "1");
-            request.put("code", code);
+            request.put("code",code);
 
         }
         catch(Exception e)
@@ -521,38 +684,39 @@ public class Fragment_editarCliente extends Fragment {
 
         String url = getString(R.string.Url);
 
-        String ApiPath = url + "/api/configuracion/sucursales/index_app";
+        String ApiPath = url + "/api/configuracion/sucursales/select_estados";
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-        {
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
                 JSONObject Respuesta = null;
-                JSONArray RespuestaNodoSucursales= null;
-                JSONObject RespuestaNodoID = null;
+                JSONObject RespuestaNodoEstados = null;
 
                 try {
 
                     int status = Integer.parseInt(response.getString("estatus"));
                     String Mensaje = response.getString("mensaje");
+
                     if (status == 1)
                     {
 
                         Respuesta = response.getJSONObject("resultado");
 
-                        RespuestaNodoSucursales = Respuesta.getJSONArray("aSucursales");
+                        RespuestaNodoEstados = Respuesta.getJSONObject("aEstados");
 
-                        for(int x = 0; x < RespuestaNodoSucursales.length(); x++){
-                            JSONObject jsonObject1=RespuestaNodoSucursales.getJSONObject(x);
-                            String sucursal=jsonObject1.getString("suc_nombre");
-                            SucursalName.add(sucursal);
-                            RespuestaNodoID = jsonObject1.getJSONObject("suc_id");
-                            String id=RespuestaNodoID.getString("uuid");
-                            SucursalID.add(id);
+                        for(int x = 0; x < RespuestaNodoEstados.length(); x++){
+                            JSONObject jsonObject1=RespuestaNodoEstados.getJSONObject(String.valueOf(x));
+                            String estado=jsonObject1.getString("edo_nombre");
+                            int id=jsonObject1.getInt("edo_id");
+                            EstadoName.add(estado);
+                            EstadoID.add(id);
+                            EstadoNameFiscal.add(estado);
+                            EstadoIDFiscal.add(id);
                         }
-                        SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,SucursalName));
-                        progressDialog.dismiss();
+                        SpinnerEstado.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,EstadoName));
+                        TextFacturacionEstado.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,EstadoNameFiscal));
+
                     }
                     else
                     {
@@ -591,6 +755,105 @@ public class Fragment_editarCliente extends Fragment {
                 }
         );
 
+        postRequest.setShouldCache(false);
+        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
+
+
+    }
+
+    private void LoadSpinnerSucursal(){
+
+        JSONObject request = new JSONObject();
+        try
+        {
+            request.put("usu_id", usu_id);
+            request.put("esApp", "1");
+            request.put("code",code);
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String url = getString(R.string.Url);
+
+        String ApiPath = url + "/api/configuracion/sucursales/index_app";
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject Respuesta = null;
+                JSONArray  RespuestaNodoSucursales= null;
+                JSONObject RespuestaNodoID = null;
+
+                try {
+
+                    int status = Integer.parseInt(response.getString("estatus"));
+                    String Mensaje = response.getString("mensaje");
+                    if (status == 1)
+                    {
+
+                        Respuesta = response.getJSONObject("resultado");
+
+                        RespuestaNodoSucursales = Respuesta.getJSONArray("aSucursales");
+
+                        for(int x = 0; x < RespuestaNodoSucursales.length(); x++){
+                            JSONObject jsonObject1=RespuestaNodoSucursales.getJSONObject(x);
+                            String sucursal=jsonObject1.getString("suc_nombre");
+                            SucursalName.add(sucursal);
+                            RespuestaNodoID = jsonObject1.getJSONObject("suc_id");
+                            String id=RespuestaNodoID.getString("uuid");
+                            SucursalID.add(id);
+                        }
+                        SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,SucursalName));
+
+                    }
+                    else
+                    {
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+
+                        toast1.show();
+
+
+                    }
+
+                } catch (JSONException e) {
+
+                    Toast toast1 =
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+
+                    toast1.show();
+
+
+                }
+
+            }
+
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        try{
+
+                            Toast toast1 =
+                                    Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
+                            toast1.show();
+
+                        }catch (NullPointerException s)
+                        {
+
+                        }
+
+                    }
+                }
+        );
+
+        postRequest.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
 
@@ -605,58 +868,51 @@ public class Fragment_editarCliente extends Fragment {
             final String url = "https://api-codigos-postales.herokuapp.com/v2/codigo_postal/"+TextCp.getText().toString();
 
             // prepare the Request
-            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                    new Response.Listener<JSONObject>()
-                    {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            // display response
-                            JSONArray RespuestaNodoColonias = null;
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    // display response
+                    JSONArray RespuestaNodoColonias = null;
 
-                            try {
-                                RespuestaNodoColonias = response.getJSONArray("colonias");
+                    try {
+                        RespuestaNodoColonias = response.getJSONArray("colonias");
 
-                                //Aqui llenar el spiner con el respuesta nodo
-                                for(int x = 0; x < RespuestaNodoColonias.length(); x++){
-                                    //Aqui llenas un arreglo para el adapter del spiner
-                                    String colonia=RespuestaNodoColonias.getString(x);
-                                    ColoniaName.add(colonia);
-                                }
-                                try {
-                                    SpinnerColonia.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,ColoniaName));
-                                }catch (NullPointerException e)
+                        //Aqui llenar el spiner con el respuesta nodo
+                        for(int x = 0; x < RespuestaNodoColonias.length(); x++){
+                            //Aqui llenas un arreglo para el adapter del spiner
+                            String colonia=RespuestaNodoColonias.getString(x);
+                            ColoniaName.add(colonia);
+                        }
+                        SpinnerColonia.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,ColoniaName));
+                        estado = response.getString("estado");
+
+                        if(estado.equals("")){
+                            toast2 =
+                                    Toast.makeText(getContext(), "Introduce un código postal válido", Toast.LENGTH_LONG);
+                            toast2.show();
+                            return;
+                        }
+                        else{
+                            for (int x=0;x<=EstadoName.size();x++)
+                            {
+                                if(estado!=null && estado.equals(EstadoName.get(x)))
                                 {
-
-                                }
-                                estado = response.getString("estado");
-
-                                if(estado.equals("")){
-                                    toast2 =
-                                            Toast.makeText(getContext(), "Introduce un código postal válido", Toast.LENGTH_LONG);
-                                    toast2.show();
+                                    SpinnerEstado.setSelection(x);
+                                    SpinnerEstado.setEnabled(false);
+                                    TextMunicipio.setText(response.getString("municipio"));
+                                    TextMunicipio.setEnabled(false);
                                     return;
                                 }
-                                else{
-                                    for (int x=0;x<=EstadoName.size();x++)
-                                    {
-                                        if(estado!=null && estado.equals(EstadoName.get(x)))
-                                        {
-                                            SpinnerEstado.setSelection(x);
-                                            SpinnerEstado.setEnabled(false);
-                                            TextMunicipio.setText(response.getString("municipio"));
-                                            TextMunicipio.setEnabled(false);
-                                            return;
-                                        }
-                                    }
-                                }
-
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
-
                         }
-                    },
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            },
                     new Response.ErrorListener()
                     {
                         @Override
@@ -667,6 +923,7 @@ public class Fragment_editarCliente extends Fragment {
             );
 
             // add it to the RequestQueue
+            getRequest.setShouldCache(false);
             VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
 
         }
@@ -743,6 +1000,7 @@ public class Fragment_editarCliente extends Fragment {
             );
 
             // add it to the RequestQueue
+            getRequest.setShouldCache(false);
             VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(getRequest);
 
         }
@@ -751,220 +1009,23 @@ public class Fragment_editarCliente extends Fragment {
             TextFacturacionEstado.setEnabled(true);
             return;
         }
-    }
 
-
-    private void GuardarCliente(){
-
-
-        progreso = new ProgressDialog(getContext());
-        progreso.setMessage("Procesando...");
-        progreso.show();
-        Estado_id_fiscal=EstadoIDFiscal.get(TextFacturacionEstado.getSelectedItemPosition());
-        Estado_id = EstadoID.get(SpinnerEstado.getSelectedItemPosition());
-        Sucursal_id = SucursalID.get(SpinnerSucursal.getSelectedItemPosition());
-        int Suc_DatosFisc =0;
-
-
-        String FactuacionEmail ="";
-        String FacturacionCalle ="";
-        String FacturacionNumInt ="";
-        String FacturacionNumExt ="";
-        String FacturacionColonia ="";
-        String FacturacionMunicipio ="";
-        String FacturacionEstado = "";
-        String FacturacionCp ="";
-
-
-
-        String Seleccion;
-        Seleccion = SpinnerOpcion.getSelectedItem().toString();
-        if(Seleccion.equals("N/A"))
-        {
-            FactuacionEmail = String.valueOf(TextEmail.getText());
-            FacturacionCalle = String.valueOf(TextCalle.getText());
-            FacturacionNumInt = String.valueOf(TextNumInterior.getText());
-            FacturacionNumExt = String.valueOf(TextNumExt.getText());
-            FacturacionColonia = String.valueOf(SpinnerColonia.getSelectedItem());
-            FacturacionMunicipio = String.valueOf(TextMunicipio.getText());
-            FacturacionEstado = String.valueOf(SpinnerEstado.getSelectedItem());
-            FacturacionCp = String.valueOf(TextCp.getText());
-            CorreoIgual= "true";
-            DireccionIgual = "true";
-        }
-        else if(Seleccion.equals("Email de Facturación"))
-        {
-
-            FactuacionEmail = String.valueOf( TextFacturacionEmail.getText() );
-
-
-            FacturacionCalle = String.valueOf(TextCalle.getText());
-            FacturacionNumInt = String.valueOf(TextNumInterior.getText());
-            FacturacionNumExt = String.valueOf(TextNumExt.getText());
-            FacturacionColonia = String.valueOf(SpinnerColonia.getSelectedItem());
-            FacturacionMunicipio = String.valueOf(TextMunicipio.getText());
-            FacturacionCp = String.valueOf(TextCp.getText());
-            FacturacionEstado = String.valueOf(SpinnerEstado.getSelectedItem());
-
-
-            CorreoIgual= "false";
-            DireccionIgual = "true";
-
-        }
-        else if(Seleccion.equals("Dirección Fiscal"))
-        {
-            FactuacionEmail = String.valueOf(TextEmail.getText());
-
-            FacturacionCalle = String.valueOf(TextFacturacionCalle.getText());
-            FacturacionNumInt = String.valueOf(TextFacturacionNumInt.getText());
-            FacturacionNumExt = String.valueOf(TextFacturacionNumExt.getText());
-            FacturacionColonia = String.valueOf(TextFacturacionColonia.getSelectedItem());
-            FacturacionCp = String.valueOf(TextFacturacionCp.getText());
-            FacturacionMunicipio = String.valueOf( (TextFacturacionMunicipio.getText()) );
-            Suc_DatosFisc = EstadoIDFiscal.get(SpinnerSucursal.getSelectedItemPosition());
-            FacturacionEstado = String.valueOf(TextFacturacionEstado.getSelectedItem());
-
-
-            CorreoIgual= "true";
-            DireccionIgual = "false";
-
-        }
-        else if(Seleccion.equals("Ambas"))
-        {
-            FactuacionEmail = String.valueOf( TextFacturacionEmail.getText() );
-            FacturacionCalle = String.valueOf(TextFacturacionCalle.getText());
-            FacturacionNumInt = String.valueOf(TextFacturacionNumInt.getText());
-            FacturacionNumExt = String.valueOf(TextFacturacionNumExt.getText());
-            FacturacionColonia = String.valueOf(TextFacturacionColonia.getSelectedItem());
-            FacturacionCp = String.valueOf(TextFacturacionCp.getText());
-            FacturacionMunicipio = String.valueOf( (TextFacturacionMunicipio.getText()) );
-            Suc_DatosFisc = EstadoIDFiscal.get(SpinnerSucursal.getSelectedItemPosition());
-            FacturacionEstado = String.valueOf(TextFacturacionEstado.getSelectedItem());
-
-
-            CorreoIgual= "false";
-            DireccionIgual = "false";
-
-        }
-
-
-        JSONObject request = new JSONObject();
-        try
-        {
-            request.put("usu_id", usu_id);
-            request.put("esApp", "1");
-            request.put("cli_id", UUID);
-            request.put("cli_sucursales",Sucursal_id);
-            request.put("cli_nombre",TextNombre.getText());
-            request.put("cli_correo_electronico",TextEmail.getText());
-            request.put("cli_telefono",TextTelefono.getText());
-            request.put("cli_razon_social",TextRazonSocial.getText());
-            request.put("cli_rfc",TextRfc.getText());
-            request.put("cli_correos_iguales",CorreoIgual);
-            request.put("cli_direcciones_iguales",DireccionIgual);
-            request.put("cli_calle",TextCalle.getText());
-            request.put("cli_numero_interior",TextNumInterior.getText());
-            request.put("cli_numero_exterior",TextNumExt.getText());
-            request.put("cli_colonia",SpinnerColonia.getSelectedItem());
-            request.put("cli_ciudad",TextMunicipio.getText());
-            request.put("cli_codigo_postal",TextCp.getText());
-            request.put("cli_id_pais",117);
-            request.put("cli_id_estado",Estado_id);
-            request.put("cli_estado",SpinnerEstado.getSelectedItem().toString());
-            request.put("cli_pais","México");
-            request.put("cli_correo_electronico_facturacion",FactuacionEmail);
-            request.put("cli_calle_facturacion",FacturacionCalle);
-            request.put("cli_numero_interior_facturacion",FacturacionNumInt);
-            request.put("cli_numero_exterior_facturacion",FacturacionNumExt);
-            request.put("cli_colonia_facturacion",FacturacionColonia);
-            request.put("cli_ciudad_facturacion",FacturacionMunicipio);
-            request.put("cli_codigo_postal_facturacion",FacturacionCp);
-            request.put("cli_id_pais_facturacion",117);
-            request.put("cli_id_estado_facturacion",Suc_DatosFisc);
-            request.put("cli_estado_facturacion",FacturacionEstado);
-            request.put("cli_pais_facturacion","Mexico");
-            request.put("code", code);
-
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        String url = getString(R.string.Url);
-
-        String ApiPath = url + "/api/clientes/update";
-
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-        {
-            @Override
-            public void onResponse(JSONObject response) {
-
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.fragment_container,new Fragment_clientes()).commit();
-                onDetach();
-
-                progreso.hide();
-
-
-                String estatus = "0";
-                String mensaje = "";
-                try {
-                    estatus = response.getString("estatus");
-                    mensaje = response.getString("mensaje");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                int status = Integer.parseInt(estatus);
-
-                if (status == 1)
-                {
-                    Toast toast1 =
-                            Toast.makeText(getContext(),
-                                    mensaje, Toast.LENGTH_SHORT);
-
-                    toast1.show();
-
-                }
-
-                //  Respuesta = response.getJSONObject("resultado");
-
-            }
-
-        },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-
-                        progreso.hide();
-
-                        Toast toast1 =
-                                Toast.makeText(getContext(),
-                                        "Error de conexion", Toast.LENGTH_SHORT);
-
-                        toast1.show();
-
-                    }
-                }
-        );
-
-        VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequest);
 
     }
 
-    //---------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
 
     private void ValidacionRfc() {
-
+        progressDialog.show();
         JSONObject request = new JSONObject();
 
 
         try {
 
-            request.put("rfc",TextRfc.getText());
+            request.put("usu_id",usu_id);
+            request.put("esApp",1);
+            request.put("code",code);
+            request.put("rfc",TextRfc.getText().toString());
 
         } catch (Exception e) {
 
@@ -994,17 +1055,21 @@ public class Fragment_editarCliente extends Fragment {
                         valido = Resultado.getString("valido");
                         valor = Resultado.getString("valor");
                         GuardarCliente();
+                        progressDialog.dismiss();
 
                     }else {
                         Toast toast1 =
                                 Toast.makeText( getContext(), "El RFC ingresado es inválido, no se encuentra en la lista de RFCs inscritos y no cancelados del SAT", Toast.LENGTH_LONG );
                         toast1.show();
+                        progressDialog.dismiss();
                         return ;
+
                     }
 
                 }catch (JSONException e) {
                     Toast toast1 = Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
                     toast1.show();
+                    progressDialog.dismiss();
                 }
             }
         },
@@ -1014,16 +1079,25 @@ public class Fragment_editarCliente extends Fragment {
                         Toast toast1 =
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
                         toast1.show();
+                        progressDialog.dismiss();
                     }
                 }
         );
+        postRequets.setShouldCache(false);
         VolleySingleton.getInstanciaVolley(getContext()).addToRequestQueue(postRequets);
     }
+
+    private void LoadTableContactos()
+    {
+        contactoAdapter = new ClientesAniadirContactoAdapter(getContext(), Contactos, AniadirContactoTable,btn_nuevo_contacto,
+                ContactosAguardar);
+        AniadirContactoTable.setDataAdapter(contactoAdapter);
+    }
+
+
     @Override
     public void onDetach() {
         super.onDetach();
     }
     //----------------------------------------------------------------------------------
-
-
 }

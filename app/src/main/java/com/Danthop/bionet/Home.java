@@ -181,6 +181,16 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
         Bundle bundle = getIntent().getExtras();
 
+        if(bundle!=null)
+        {
+            String Venta= bundle.getString("Venta");
+
+            if(Venta.equals("si"))
+            {
+                ventas();
+            }
+        }
+
         try {
             Roles = new JSONArray(sharedPref.getString("sso_Roles",""));
         } catch (JSONException e) {

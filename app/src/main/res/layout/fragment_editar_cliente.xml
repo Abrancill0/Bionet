@@ -7,12 +7,14 @@
     android:orientation="vertical"
     android:focusable="true"
     android:background="@color/white"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    xmlns:table="http://schemas.android.com/apk/res-auto"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".95"
+        android:layout_weight=".92"
         android:background="@drawable/pestanas_desplegables"
         android:orientation="horizontal">
 
@@ -90,10 +92,419 @@
 
     </LinearLayout>
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".15">
+        android:layout_weight=".95"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_Datos_Personales"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:background="@color/fondo_azul"
+                android:fontFamily="@font/muli"
+                android:text="Datos Personales"
+                android:textAllCaps="false"
+                android:textSize="17dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_Datos_Facturacion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:background="@drawable/pestanas_desplegables"
+                android:fontFamily="@font/muli"
+                android:text="Datos de Facturacion"
+                android:textAllCaps="false"
+                android:textSize="17dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/btn_Aniadir_Contacto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:background="@drawable/pestanas_desplegables"
+                android:fontFamily="@font/muli"
+                android:text="Añadir Contacto"
+                android:textAllCaps="false"
+                android:textSize="17dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/Layout_Datos_personales"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".25"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".6"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/datos_personales"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:text="Datos Personales"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp"
+                app:fontFamily="@font/muli" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView15"
+                            android:layout_width="119dp"
+                            android:layout_height="wrap_content"
+                            android:text="Nombre"
+                            android:textSize="22sp" />
+
+                        <EditText
+                            android:id="@+id/Text_cliente_Nombre"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/shape_gray"
+                            android:ems="10"
+                            android:inputType="text"
+                            android:padding="1dp"
+                            android:textSize="18sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textVie123"
+                            android:layout_width="119dp"
+                            android:layout_height="wrap_content"
+                            android:text="E-mail"
+                            android:textSize="22sp" />
+
+                        <EditText
+                            android:id="@+id/Text_cliente_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/shape_gray"
+                            android:ems="10"
+                            android:inputType="textEmailAddress"
+                            android:padding="1dp"
+                            android:textSize="18sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView25s"
+                            android:layout_width="119dp"
+                            android:layout_height="wrap_content"
+                            android:text="Telefono"
+                            android:textSize="22sp" />
+
+                        <EditText
+                            android:id="@+id/Text_cliente_telefono"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/shape_gray"
+                            android:ems="10"
+                            android:inputType="text"
+                            android:padding="1dp"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView242"
+                            android:layout_width="119dp"
+                            android:layout_height="wrap_content"
+                            android:text="C.P."
+                            android:textSize="22sp" />
+
+                        <EditText
+                            android:id="@+id/Text_cliente_cp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/shape_gray"
+                            android:ems="10"
+                            android:inputType="number"
+                            android:padding="1dp"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView22"
+                            android:layout_width="119dp"
+                            android:layout_height="wrap_content"
+                            android:text="Estado"
+                            android:textSize="22sp" />
+
+                        <Spinner
+                            android:id="@+id/Text_cliente_estado"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="5dp"></Spinner>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView252"
+                            android:layout_width="119dp"
+                            android:layout_height="wrap_content"
+                            android:text="Municipio"
+                            android:textSize="22sp" />
+
+                        <EditText
+                            android:id="@+id/Text_cliente_municipio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/shape_gray"
+                            android:ems="10"
+                            android:inputType="text"
+                            android:padding="1dp"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView23"
+                            android:layout_width="119dp"
+                            android:layout_height="wrap_content"
+                            android:text="Colonia"
+                            android:textSize="22sp" />
+
+                        <Spinner
+                            android:id="@+id/Text_cliente_colonia"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:padding="1dp"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textViewss"
+                            android:layout_width="119dp"
+                            android:layout_height="wrap_content"
+                            android:text="Calle"
+                            android:textSize="22sp" />
+
+                        <EditText
+                            android:id="@+id/Text_cliente_calle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/shape_gray"
+                            android:ems="10"
+                            android:inputType="text"
+                            android:padding="1dp"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView2527"
+                            android:layout_width="119dp"
+                            android:layout_height="wrap_content"
+                            android:text="Sucursal"
+                            android:textSize="22sp" />
+
+                        <Spinner
+                            android:id="@+id/Text_cliente_sucursal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="5dp"></Spinner>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView24"
+                            android:layout_width="119dp"
+                            android:layout_height="wrap_content"
+                            android:text="Núm. int."
+                            android:textSize="22sp" />
+
+                        <EditText
+                            android:id="@+id/Text_cliente_num_int"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/shape_gray"
+                            android:ems="10"
+                            android:inputType="number"
+                            android:padding="1dp"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView124"
+                            android:layout_width="119dp"
+                            android:layout_height="wrap_content"
+                            android:text="Núm. Ext."
+                            android:textSize="22sp" />
+
+                        <EditText
+                            android:id="@+id/Text_cliente_num_ext"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/shape_gray"
+                            android:ems="10"
+                            android:inputType="number"
+                            android:padding="1dp"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView74"
+                            android:layout_width="119dp"
+                            android:layout_height="wrap_content"
+                            android:text="Tipo"
+                            android:textSize="22sp" />
+
+                        <Spinner
+                            android:id="@+id/text_cliente_tipo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:padding="1dp"
+                            android:textSize="20sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/Layout_Datos_Facturacion"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".25"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/Principal"
@@ -103,317 +514,6 @@
             android:background="@color/white"
             android:orientation="vertical">
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight=".6"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/datos_personales"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_horizontal"
-                    android:text="Datos Personales"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="24sp"
-                    app:fontFamily="@font/muli" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".5"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".5"
-                        android:orientation="vertical"
-                        android:padding="10dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textView15"
-                                android:layout_width="119dp"
-                                android:layout_height="wrap_content"
-                                android:text="Nombre"
-                                android:textSize="22sp" />
-
-                            <EditText
-                                android:id="@+id/Text_cliente_Nombre"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/shape_gray"
-                                android:ems="10"
-                                android:inputType="text"
-                                android:padding="1dp"
-                                android:textSize="18sp" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textVie123"
-                                android:layout_width="119dp"
-                                android:layout_height="wrap_content"
-                                android:text="E-mail"
-                                android:textSize="22sp" />
-
-                            <EditText
-                                android:id="@+id/Text_cliente_email"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/shape_gray"
-                                android:ems="10"
-                                android:inputType="textEmailAddress"
-                                android:padding="1dp"
-                                android:textSize="18sp" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textView25s"
-                                android:layout_width="119dp"
-                                android:layout_height="wrap_content"
-                                android:text="Telefono"
-                                android:textSize="22sp" />
-
-                            <EditText
-                                android:id="@+id/Text_cliente_telefono"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/shape_gray"
-                                android:ems="10"
-                                android:inputType="text"
-                                android:padding="1dp"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textView242"
-                                android:layout_width="119dp"
-                                android:layout_height="wrap_content"
-                                android:text="C.P."
-                                android:textSize="22sp" />
-
-                            <EditText
-                                android:id="@+id/Text_cliente_cp"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/shape_gray"
-                                android:ems="10"
-                                android:inputType="number"
-                                android:padding="1dp"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textView22"
-                                android:layout_width="119dp"
-                                android:layout_height="wrap_content"
-                                android:text="Estado"
-                                android:textSize="22sp" />
-
-                            <Spinner
-                                android:id="@+id/Text_cliente_estado"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="5dp"></Spinner>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textView252"
-                                android:layout_width="119dp"
-                                android:layout_height="wrap_content"
-                                android:text="Municipio"
-                                android:textSize="22sp" />
-
-                            <EditText
-                                android:id="@+id/Text_cliente_municipio"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/shape_gray"
-                                android:ems="10"
-                                android:inputType="text"
-                                android:padding="1dp"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".5"
-                        android:orientation="vertical"
-                        android:padding="10dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textView23"
-                                android:layout_width="119dp"
-                                android:layout_height="wrap_content"
-                                android:text="Colonia"
-                                android:textSize="22sp" />
-
-                            <Spinner
-                                android:id="@+id/Text_cliente_colonia"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:padding="1dp"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textViewss"
-                                android:layout_width="119dp"
-                                android:layout_height="wrap_content"
-                                android:text="Calle"
-                                android:textSize="22sp" />
-
-                            <EditText
-                                android:id="@+id/Text_cliente_calle"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/shape_gray"
-                                android:ems="10"
-                                android:inputType="text"
-                                android:padding="1dp"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textView24"
-                                android:layout_width="119dp"
-                                android:layout_height="wrap_content"
-                                android:text="Núm. int."
-                                android:textSize="22sp" />
-
-                            <EditText
-                                android:id="@+id/Text_cliente_num_int"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/shape_gray"
-                                android:ems="10"
-                                android:inputType="number"
-                                android:padding="1dp"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textView124"
-                                android:layout_width="119dp"
-                                android:layout_height="wrap_content"
-                                android:text="Núm. Ext."
-                                android:textSize="22sp" />
-
-                            <EditText
-                                android:id="@+id/Text_cliente_num_ext"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/shape_gray"
-                                android:ems="10"
-                                android:inputType="number"
-                                android:padding="1dp"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textView2527"
-                                android:layout_width="119dp"
-                                android:layout_height="wrap_content"
-                                android:text="Sucursal"
-                                android:textSize="22sp" />
-
-                            <Spinner
-                                android:id="@+id/Text_cliente_sucursal"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="5dp"></Spinner>
-
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -462,6 +562,7 @@
                             android:background="@drawable/shape_gray"
                             android:ems="10"
                             android:inputType="text"
+                            android:singleLine="true"
                             android:textSize="18sp" />
                     </LinearLayout>
 
@@ -684,7 +785,7 @@
                                 android:layout_margin="5dp"
                                 android:layout_weight="1"
                                 android:padding="1dp"
-                                android:textSize="18sp" />
+                                android:textSize="20sp" />
 
                         </LinearLayout>
 
@@ -695,7 +796,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight=".5"
                         android:orientation="vertical"
-                        android:padding="18dp">
+                        android:padding="20dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -798,7 +899,6 @@
                         android:orientation="horizontal"
                         android:padding="10dp">
 
-
                         <ImageView
                             android:id="@+id/imageView10"
                             android:layout_width="45dp"
@@ -833,4 +933,83 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/Layout_aniadir_contacto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".25"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".9"
+            android:gravity="right|center_vertical">
+
+            <Button
+                android:id="@+id/btn_nuevo_contacto"
+                style="@android:style/Widget.Holo.Light.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="2dp"
+                android:background="@color/colorPrimaryDark"
+                android:padding="5dp"
+                android:text="Nuevo contacto"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <com.Danthop.bionet.Tables.SortableAniadirContactoTable
+                    android:id="@+id/tabla_aniadir_contactos"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".7"
+                    android:visibility="visible"
+                    app:tableView_headerColor="@color/white"
+                    table:tableView_columnCount="7">
+
+                </com.Danthop.bionet.Tables.SortableAniadirContactoTable>
+
+                <LinearLayout
+                    android:id="@+id/Tabla_vacia"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".3"
+                    android:background="@color/white"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="No existen datos"
+                        android:textColor="@color/gray" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
 </LinearLayout>

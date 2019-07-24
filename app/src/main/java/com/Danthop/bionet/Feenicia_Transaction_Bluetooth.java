@@ -180,7 +180,6 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Espere un momento por favor");
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
 
 
 
