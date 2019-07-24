@@ -338,7 +338,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
             }
         };
 
-        LoadPermisosFunciones();
+        //LoadPermisosFunciones();
         loadButtons();
         return v;
     }

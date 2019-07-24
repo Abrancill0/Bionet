@@ -179,6 +179,10 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
         String RutaLogoEmpresa = sharedPref.getString("logo_imagen", "");
         SucursalSelect = sharedPref.getString("usu_sucursal","");
 
+        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+        tx.replace(R.id.fragment_container, new Fragment_pantalla_principal());
+        tx.commit();
+
         Bundle bundle = getIntent().getExtras();
 
         if(bundle!=null)
@@ -206,9 +210,7 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
             }
         }
 
-        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.fragment_container, new Fragment_pantalla_principal());
-        tx.commit();
+
 
         usu_id = sharedPref.getString("usu_id", "");
         img_ruta_servidor = RutaImagenPerfil;
@@ -550,8 +552,8 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                 break;
             case R.id.nav_lealtad:
-                boolean Aplica5_Permiso = false;
-                boolean Aplica5 = false;
+                boolean Aplica5=true;
+                boolean Aplica5_Permiso=true;
                 String rol_nombre5="";
 
                 for (int i = 0; i < Roles.length(); i++) {
@@ -601,8 +603,8 @@ public class Home extends AppCompatActivity implements  NavigationView.OnNavigat
 
                 break;
             case R.id.nav_ecommerce:
-                boolean Aplica6_Permiso = false;
-                boolean Aplica6 = false;
+                boolean Aplica6_Permiso = true;
+                boolean Aplica6 = true;
                 String rol_nombre6="";
 
                 for (int i = 0; i < Roles.length(); i++) {

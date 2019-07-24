@@ -204,14 +204,14 @@ public class Fragment_pestania_historico extends Fragment {
         tabla_historico.setHeaderAdapter(simpleHeader);
         tabla_historico.setColumnModel(tableColumnWeightModel);
 
-        if(Historicos==false)
+        /*if(Historicos==false)
         {
             Buscar.setEnabled(false);
             progressDialog.dismiss();
         }
-        else {
+        else {*/
             Muestra_historico();
-        }
+        //}
         return v;
     }
 

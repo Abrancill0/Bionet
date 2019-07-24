@@ -187,6 +187,10 @@ public class MetodoPagoAdapter extends LongPressAwareTableDataAdapter<PagoModel>
                                 Monto.setText("0.00");
                                 cantidad = "0.00";
                             }
+                            else
+                            {
+                                cantidad = Monto.getText().toString();
+                            }
                             PagoModel pago = new PagoModel(
                                     forma.getNombre(),
                                     forma.getId(),
