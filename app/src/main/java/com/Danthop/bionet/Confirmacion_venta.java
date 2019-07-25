@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Danthop.bionet.Adapters.VentaArticuloAdapter;
 import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.MovimientoModel;
 import com.Danthop.bionet.model.VolleySingleton;
@@ -57,6 +58,8 @@ public class Confirmacion_venta extends Activity {
     private float ImpuestosTotal=0;
     private String Ticket="";
     private FragmentTransaction fr;
+    private String code="";
+    private ProgressDialog progressDialog;
 
     private List<ArticuloModel> ListaArticulosTicket = new ArrayList<>();
 
@@ -65,8 +68,12 @@ public class Confirmacion_venta extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pop_up_ventas_confirmacion_venta);
+
+
 
         TextView Importe_Cambio = findViewById(R.id.importe_cambio);
         TextView Importe_Recibido = findViewById(R.id.importe_recibido);
@@ -82,6 +89,7 @@ public class Confirmacion_venta extends Activity {
         double IV =  bundle.getDouble("IV");
         Sucursal = bundle.getString("Sucursal");
         Ticket = bundle.getString("Ticket");
+        code = bundle.getString("Code");
 
         double CambioConDecimal = IC;
         double RecibidoConDecimal = IR;
@@ -124,6 +132,9 @@ public class Confirmacion_venta extends Activity {
         });
 
     }
+
+
+
     private void loadTicket()
     {
         try {

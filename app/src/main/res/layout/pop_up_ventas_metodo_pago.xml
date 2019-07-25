@@ -98,7 +98,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="end"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingHorizontal="22dp">
 
                         <TextView
                             android:id="@+id/textView11"
@@ -126,7 +127,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
                     android:gravity="center_vertical|end"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingHorizontal="22dp">
 
                     <TextView
                         android:id="@+id/textView73"
@@ -150,7 +152,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
                     android:gravity="center_vertical|center_horizontal|end"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingHorizontal="22dp">
 
                     <TextView
                         android:id="@+id/textView76"

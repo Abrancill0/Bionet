@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -168,6 +169,8 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
 
     private ArrayList<String> MontosID = new ArrayList<>();
     private ArrayList<String> Montos = new ArrayList<>();
+
+
 
     private ProgressDialog progressDialog;
 
@@ -565,9 +568,22 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
 
                         // MENSAJE CONECTANDO
                         show_Toast(getResources().getString(R.string.textView_conectando_bluetooth));
+                        new Handler(Looper.getMainLooper()).post(new Runnable(){
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.VISIBLE);
+                            }
+                        });
+
                         Boolean resultConnection = sppHandlerConnection.connectDevice(dev);
 
                         if (resultConnection == true) { // SUCESS
+                            new Handler(Looper.getMainLooper()).post(new Runnable(){
+                                @Override
+                                public void run() {
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                }
+                            });
                             setText(getResources().getString(R.string.textView_ejecutarDispositivo_bluetooth));
                             setTextTx("");
                             show_Toast(getResources().getString(R.string.text_conexion_sucess));
@@ -586,7 +602,12 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
 
                         } else if (resultConnection == false) // ERROR
                         {
-                            show_Toast(getResources().getString(R.string.text_conexion_error));
+                            new Handler(Looper.getMainLooper()).post(new Runnable(){
+                                @Override
+                                public void run() {
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                }
+                            });                            show_Toast(getResources().getString(R.string.text_conexion_error));
 
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -676,6 +697,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 public void run() {
+                                    progressBar.setVisibility(View.INVISIBLE);
                                     show_Toast(getResources().getString(R.string.text_busquedaFinalizada));
                                     Log.i("Devices_Found", adapter.toString());
 
@@ -712,6 +734,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
                         textView_resultTx.setVisibility(View.GONE);
                         // MENSAJE BUSCANDO
                         show_Toast(getResources().getString(R.string.textView_buscando_bluetooth));
+                        progressBar.setVisibility(View.VISIBLE);
                     }
                 });
 

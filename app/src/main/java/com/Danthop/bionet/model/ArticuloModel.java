@@ -1,6 +1,8 @@
 package com.Danthop.bionet.model;
 
-public class ArticuloModel {
+import java.io.Serializable;
+
+public class ArticuloModel  {
     private String articulo_UUID;
     private String articulo_Nombre;
     private String articulo_Descripcion;

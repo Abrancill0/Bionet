@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -1370,7 +1371,7 @@ public class Fragment_Ventas extends Fragment {
                             Agregar_cfdi.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    //aqui
+                                    //aqui"tic_id" -> "a0afff87-8693-5887-8adb-5f65a840362b"
                                     AniadirCFDI();
                                     if(ParcialidadesBoleano==true)
                                     {
@@ -4671,7 +4672,6 @@ public class Fragment_Ventas extends Fragment {
         VerificarPromocionCreditoMenor();
         ticket_de_venta.setTic_facturar("false");
         dialog.dismiss();
-        facturar(ticket_de_venta.getTic_facturar());
         dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
@@ -4790,6 +4790,7 @@ public class Fragment_Ventas extends Fragment {
                         mBundle.putInt( "12meses",Respdocemeses);
                         mBundle.putString("TipoVenta","Venta_Normal");
                         mBundle.putString("Code",code);
+                        mBundle.putParcelable("Lista_pagos", (Parcelable) ListaDePagos_a_utilizar);
 
                         mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
@@ -4880,6 +4881,8 @@ public class Fragment_Ventas extends Fragment {
         dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
+        ticket_de_venta.setTic_facturar("true");
+        facturar(ticket_de_venta.getTic_facturar());
         tabla_metodos_pago = dialog.findViewById(R.id.tabla_seleccionar_metodo_pago);
         tabla_metodos_pago.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
         Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
@@ -5033,9 +5036,15 @@ public class Fragment_Ventas extends Fragment {
                                 bundle.putString("tic_id", "");
                                 bundle.putString("suc_id", "");
                                 bundle.putString("apa_id", "");
-                                Fragment_Ventas fragment2 = new Fragment_Ventas();
-                                fragment2.setArguments(bundle);
-                                fr.replace(R.id.fragment_container,fragment2).commit();
+                                try
+                                {
+                                    Fragment_Ventas fragment2 = new Fragment_Ventas();
+                                    fragment2.setArguments(bundle);
+                                    fr.replace(R.id.fragment_container,fragment2).commit();
+                                }catch (IllegalStateException a)
+                                {
+
+                                }
 
                             }
                         });
@@ -5061,9 +5070,17 @@ public class Fragment_Ventas extends Fragment {
                                 bundle.putString("tic_id", "");
                                 bundle.putString("suc_id", "");
                                 bundle.putString("apa_id", "");
-                                Fragment_Ventas fragment2 = new Fragment_Ventas();
-                                fragment2.setArguments(bundle);
-                                fr.replace(R.id.fragment_container,fragment2).commit();
+                                try
+                                {
+                                    Fragment_Ventas fragment2 = new Fragment_Ventas();
+                                    fragment2.setArguments(bundle);
+                                    fr.replace(R.id.fragment_container,fragment2).commit();
+
+                                }catch (IllegalStateException a)
+                                {
+
+                                }
+
                             }
                         });
                     }
@@ -5079,7 +5096,6 @@ public class Fragment_Ventas extends Fragment {
         VerificarPromocionCreditoMenor();
         ticket_de_venta.setTic_facturar("false");
         dialog.dismiss();
-        facturar(ticket_de_venta.getTic_facturar());
         dialog.setContentView(R.layout.pop_up_ventas_metodo_pago_parcialidades);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
@@ -5087,6 +5103,8 @@ public class Fragment_Ventas extends Fragment {
         SpinnerClientes(Spinner_Nombre_clientes);
         tabla_metodos_pago = dialog.findViewById(R.id.tabla_seleccionar_metodo_pago);
         tabla_metodos_pago.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
+        TextView importe_recibido = dialog.findViewById(R.id.text_view_recibido);
+        TextView importe_faltante = dialog.findViewById(R.id.text_view_faltante);
         Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
         cerrarPopUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -5097,8 +5115,7 @@ public class Fragment_Ventas extends Fragment {
 
         //=====================================================
 
-        TextView importe_recibido = dialog.findViewById(R.id.text_view_recibido);
-        TextView importe_faltante = dialog.findViewById(R.id.text_view_faltante);
+
         CargaMetodosPago(importe_faltante,importe_recibido);
 
         TextView TotalAPagar = dialog.findViewById(R.id.total_a_pagar);
@@ -5276,6 +5293,8 @@ public class Fragment_Ventas extends Fragment {
         dialog.setContentView(R.layout.pop_up_ventas_metodo_pago);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
+        ticket_de_venta.setTic_facturar("true");
+        facturar(ticket_de_venta.getTic_facturar());
         tabla_metodos_pago = dialog.findViewById(R.id.tabla_seleccionar_metodo_pago);
         tabla_metodos_pago.setEmptyDataIndicatorView(dialog.findViewById(R.id.Tabla_vacia));
         Button cerrarPopUp = dialog.findViewById(R.id.btnSalir3);
