@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,19 +16,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.Danthop.bionet.Adapters.ClienteAdapter;
-import com.Danthop.bionet.Adapters.LealtadConfiguracionesAdapter;
 import com.Danthop.bionet.Adapters.LealtadInscribirAdapter;
 import com.Danthop.bionet.Tables.SortableLealtadInscribirTable;
-import com.Danthop.bionet.model.ArticuloModel;
 import com.Danthop.bionet.model.ClienteModel;
 import com.Danthop.bionet.model.CompraModel;
-import com.Danthop.bionet.model.ConfiguracionLealtadModel;
 import com.Danthop.bionet.model.VolleySingleton;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -92,7 +86,6 @@ public class FragmentLealtadInscribir extends Fragment {
     private Button eliminar;
     private TableDataClickListener<ClienteModel> tablaListener;
     private Button cancelarEliminar;
-    private ProgressDialog progressDialog;
     private String[][] clienteModel;
     private List<ClienteModel> clientes;
 
@@ -108,7 +101,7 @@ public class FragmentLealtadInscribir extends Fragment {
     private ArrayList<String> SucursalName;
     private ArrayList<String> SucursalID;
     Handler handler;
-    private ProgressDialog progreso;
+    private ProgressDialog progressDialog;
     private SearchView Buscar;
 
     private LealtadInscribirAdapter clienteAdapter;
@@ -152,9 +145,9 @@ public class FragmentLealtadInscribir extends Fragment {
         tabla_todos_aplican = v.findViewById(R.id.todos_aplican);
         Buscar = v.findViewById(R.id.buscarCliente);
         handler= new Handler();
-        progreso = new ProgressDialog( getContext() );
-        progreso.setMessage("Espere un momento por favor");
-        progreso.setCanceledOnTouchOutside(false);
+        progressDialog = new ProgressDialog( getContext() );
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
 
         LoadButtons();
         LoadSpinnerSucursal();
@@ -181,8 +174,8 @@ public class FragmentLealtadInscribir extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 clientes.clear();
-                progreso.setMessage("Espere un momento por favor");
-                progreso.show();
+                progressDialog.setMessage("Espere un momento por favor");
+                progressDialog.show();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -251,6 +244,8 @@ public class FragmentLealtadInscribir extends Fragment {
     }
 
     private void Muestra_clientes() {
+        progressDialog.show();
+
         tabla_clientes.setEmptyDataIndicatorView(tabla_vacia);
         JSONObject request = new JSONObject();
         try
@@ -333,6 +328,7 @@ public class FragmentLealtadInscribir extends Fragment {
                         }
                         clienteAdapter = new LealtadInscribirAdapter(getContext(), clientes, tabla_clientes,fr);
                         tabla_clientes.setDataAdapter(clienteAdapter);
+                        progressDialog.dismiss();
 
                     }
                     else
@@ -341,6 +337,8 @@ public class FragmentLealtadInscribir extends Fragment {
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
+
 
 
                     }
@@ -351,6 +349,8 @@ public class FragmentLealtadInscribir extends Fragment {
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
 
                     toast1.show();
+                    progressDialog.dismiss();
+
 
 
                 }
@@ -366,6 +366,8 @@ public class FragmentLealtadInscribir extends Fragment {
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
+
 
 
                     }
@@ -380,6 +382,7 @@ public class FragmentLealtadInscribir extends Fragment {
 
     private void LoadSpinnerSucursal(){
 
+        progressDialog.show();
         JSONObject request = new JSONObject();
         try
         {
@@ -426,6 +429,8 @@ public class FragmentLealtadInscribir extends Fragment {
                         }
                         SpinnerSucursal.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,SucursalName));
                         LoadConfiguraciones();
+                        progressDialog.dismiss();
+
                     }
                     else
                     {
@@ -433,6 +438,8 @@ public class FragmentLealtadInscribir extends Fragment {
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
+
 
 
                     }
@@ -443,6 +450,8 @@ public class FragmentLealtadInscribir extends Fragment {
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
 
                     toast1.show();
+                    progressDialog.dismiss();
+
 
 
                 }
@@ -458,6 +467,8 @@ public class FragmentLealtadInscribir extends Fragment {
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
+
 
 
                     }
@@ -525,6 +536,8 @@ public class FragmentLealtadInscribir extends Fragment {
                                 EliminarAniadirDialog.dismiss();
                                 clientes.clear();
                                 Muestra_clientes();
+                                progressDialog.dismiss();
+
 
                             }
                             else
@@ -533,6 +546,8 @@ public class FragmentLealtadInscribir extends Fragment {
                                         Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
                                 toast1.show();
+                                progressDialog.dismiss();
+
 
 
                             }
@@ -543,6 +558,8 @@ public class FragmentLealtadInscribir extends Fragment {
                                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
 
                             toast1.show();
+                            progressDialog.dismiss();
+
 
 
                         }
@@ -558,6 +575,8 @@ public class FragmentLealtadInscribir extends Fragment {
                                         Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
 
                                 toast1.show();
+                                progressDialog.dismiss();
+
 
 
                             }
@@ -661,7 +680,7 @@ public class FragmentLealtadInscribir extends Fragment {
                             final LealtadInscribirAdapter clienteAdapter = new LealtadInscribirAdapter(getContext(), clientes, tabla_clientes,fr);
                             tabla_clientes.setDataAdapter(clienteAdapter);
                             AniadirTodos.setChecked(true);
-                            progreso.hide();
+                            progressDialog.hide();
 
         }
         else if(AniadirAll.equals("false"))
@@ -671,17 +690,17 @@ public class FragmentLealtadInscribir extends Fragment {
                             clientes.clear();
                             Muestra_clientes();
                             AniadirTodos.setChecked(false);
-                            progreso.hide();
+                            progressDialog.hide();
         }
         AniadirTodos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                progreso.setMessage( "Cargando..." );
-                progreso.show();
+                progressDialog.setMessage( "Cargando..." );
+                progressDialog.show();
                 if(AniadirTodos.isChecked())
                 {
-                    progreso.show();
+                    progressDialog.show();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -696,7 +715,7 @@ public class FragmentLealtadInscribir extends Fragment {
                                     final LealtadInscribirAdapter clienteAdapter = new LealtadInscribirAdapter(getContext(), clientes, tabla_clientes,fr);
                                     tabla_clientes.setDataAdapter(clienteAdapter);
                                     AniadirTodos.setChecked(true);
-                                    progreso.hide();
+                                    progressDialog.hide();
                                 }
                             }, 2000);
                         }
@@ -704,7 +723,7 @@ public class FragmentLealtadInscribir extends Fragment {
                 }
                 else
                 {
-                    progreso.show();
+                    progressDialog.show();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -717,7 +736,7 @@ public class FragmentLealtadInscribir extends Fragment {
                                     clientes.clear();
                                     Muestra_clientes();
                                     AniadirTodos.setChecked(false);
-                                    progreso.hide();
+                                    progressDialog.hide();
                                 }
                             }, 2000);
                         }
@@ -766,6 +785,8 @@ public class FragmentLealtadInscribir extends Fragment {
                         TodosAplican = NodoConfiguraciones2.getString("con_todos_clientes_programa_lealtad");
                         JSONObject elemento_con_id = NodoConfiguraciones2.getJSONObject("con_id");
                         Lealtad_con_id = elemento_con_id.getString("uuid");
+                        progressDialog.dismiss();
+
                     }
                     else
                     {
@@ -773,6 +794,8 @@ public class FragmentLealtadInscribir extends Fragment {
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
+
 
 
                     }
@@ -783,6 +806,7 @@ public class FragmentLealtadInscribir extends Fragment {
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
 
                     toast1.show();
+                    progressDialog.dismiss();
 
 
                 }
@@ -798,6 +822,8 @@ public class FragmentLealtadInscribir extends Fragment {
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
+
 
 
                     }
@@ -842,6 +868,7 @@ public class FragmentLealtadInscribir extends Fragment {
 
                         Toast toast1 =
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        progressDialog.dismiss();
 
 
 
@@ -852,6 +879,7 @@ public class FragmentLealtadInscribir extends Fragment {
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
 
 
                     }
@@ -862,6 +890,7 @@ public class FragmentLealtadInscribir extends Fragment {
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
 
                     toast1.show();
+                    progressDialog.dismiss();
 
 
                 }
@@ -877,6 +906,7 @@ public class FragmentLealtadInscribir extends Fragment {
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
 
 
                     }
@@ -927,6 +957,7 @@ public class FragmentLealtadInscribir extends Fragment {
                         {
 
                         }
+                        progressDialog.dismiss();
 
 
                     }
@@ -936,6 +967,7 @@ public class FragmentLealtadInscribir extends Fragment {
                                 Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
 
 
                     }
@@ -946,6 +978,7 @@ public class FragmentLealtadInscribir extends Fragment {
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
 
                     toast1.show();
+                    progressDialog.dismiss();
 
 
                 }
@@ -961,6 +994,7 @@ public class FragmentLealtadInscribir extends Fragment {
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
 
 
                     }

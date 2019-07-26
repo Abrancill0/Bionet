@@ -1958,6 +1958,9 @@ public class Fragment_Ventas extends Fragment {
                         InstanciarTicket();
 
                         progressDialog.dismiss();
+                        Toast toast1 =
+                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
                     } else {
                         progressDialog.dismiss();
                         Toast toast1 =
@@ -4790,7 +4793,6 @@ public class Fragment_Ventas extends Fragment {
                         mBundle.putInt( "12meses",Respdocemeses);
                         mBundle.putString("TipoVenta","Venta_Normal");
                         mBundle.putString("Code",code);
-                        mBundle.putParcelable("Lista_pagos", (Parcelable) ListaDePagos_a_utilizar);
 
                         mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
@@ -5005,7 +5007,7 @@ public class Fragment_Ventas extends Fragment {
                         mBundle.putInt("Tamano",ListaDePagos_a_utilizar.size());
 
                         for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
-                            mBundle.putInt("fpa_id"+i, Integer.parseInt( ListaDePagos_a_utilizar.get(i).getId()));
+                            mBundle.putString("fpa_id"+i, ListaDePagos_a_utilizar.get(i).getId());
                             mBundle.putString("valor"+i,ListaDePagos_a_utilizar.get(i).getCantidad());
                         }
 

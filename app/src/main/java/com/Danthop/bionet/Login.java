@@ -86,6 +86,8 @@ public class Login extends Activity {
     private String nombre_perfil="";
     private String version ="";
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -448,18 +450,42 @@ public class Login extends Activity {
 
             SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
+            JSONArray SUCURSALES = new JSONArray();
+            try {
+                SUCURSALES.put("19cbc9b8-39de-5cd2-b12e-06932a6b9e48");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            String elemento = null;
+            try {
+                elemento = String.valueOf(SUCURSALES.get(0));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JSONObject request2 = new JSONObject();
+                try {
+                    request2.put("usu_sucursales", elemento);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                jsonArray.put(request2);
+
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("usu_nombre", Resultado.getUsuNombre());
-            editor.putString("usu_id", Resultado.getUsuId());
-            editor.putString("usu_apellidos", Resultado.getUsuApellidos());
-            editor.putString("usu_correo_electronico", Resultado.getUsuEmail());
-            editor.putString("usu_sucursal", Sucursal);
-            editor.putString("usu_cuenta_bionet", Resultado.getCuenta_bionet());
+            editor.putString("usu_nombre", "Gabriel");
+            editor.putString("usu_id", "bb120222-7a5f-5a03-bef2-82902a75fb48");
+            editor.putString("usu_apellidos", "Martinez Martinez");
+            editor.putString("usu_correo_electronico"," gmartinez@marstom.com");
+            editor.putString("usu_sucursal", "19cbc9b8-39de-5cd2-b12e-06932a6b9e48");
+            editor.putString("usu_cuenta_bionet", "429e23d2-7fae-408f-a57d-0657cc5c1b2d");
 
             //
-            editor.putString("usu_imagen_perfil", getString(R.string.Url) + Resultado.getUsuImagen());
-            editor.putString("usu_activo", Resultado.getUsu_activo());
-            editor.putString("usu_administrador", Resultado.getUsu_administrador());
+            editor.putString("usu_imagen_perfil", getString(R.string.Url) + "/assets/images/user_default.jpg");
+            editor.putString("usu_activo", "true");
+            editor.putString("usu_administrador", "false");
             editor.putString("cca_id_sucursal", String.valueOf(jsonArray));
 
             editor.putString("sso_usu_correo_electronico", ResultadoUser.getSso_usu_correo_electronico());

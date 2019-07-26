@@ -315,10 +315,16 @@ public class FragmentLealtad extends Fragment {
                 bundle.putBoolean("Inscribir_Programa", Inscribir_Programa);
                 bundle.putBoolean("Puntos_Acumulados", Puntos_Acumulados);
                 bundle.putBoolean("Listado_Puntos", Listado_Puntos);
-                FragmentLealtadConfiguraciones fragment2 = new FragmentLealtadConfiguraciones();
-                fragment2.setArguments(bundle);
-                fr.replace(R.id.fragment_container,fragment2).commit();
-                onDetach();
+                try{
+                    FragmentLealtadConfiguraciones fragment2 = new FragmentLealtadConfiguraciones();
+                    fragment2.setArguments(bundle);
+                    fr.replace(R.id.fragment_container,fragment2).commit();
+                    onDetach();
+                }catch (IllegalStateException a)
+                {
+
+                }
+
 
             }
         });
@@ -480,78 +486,79 @@ public class FragmentLealtad extends Fragment {
                         Respuesta = response.getJSONObject("resultado");
                         RespuestaNodoClientes = Respuesta.getJSONArray("aClientes");
 
-                        for(int x = 0; x < RespuestaNodoClientes.length(); x++){
-                            JSONObject elemento = RespuestaNodoClientes.getJSONObject(x);
+                        if(RespuestaNodoClientes!=null)
+                        {
+                            for(int x = 0; x < RespuestaNodoClientes.length(); x++){
+                                JSONObject elemento = RespuestaNodoClientes.getJSONObject(x);
 
-                            ElementoUsuario =  elemento.getJSONObject("cli_id");
+                                ElementoUsuario =  elemento.getJSONObject("cli_id");
 
-                            cli_numero = elemento.getString( "cli_numero");
-                            nombre = elemento.getString("cli_nombre");
-                            correo_electronico = elemento.getString("cli_correo_electronico");
-                            telefono = elemento.getString( "cli_telefono" );
+                                cli_numero = elemento.getString( "cli_numero");
+                                nombre = elemento.getString("cli_nombre");
+                                correo_electronico = elemento.getString("cli_correo_electronico");
+                                telefono = elemento.getString( "cli_telefono" );
 
-                            RespuestaDireccion = elemento.getJSONObject( "cli_direccion" );
-                            String Num_Int = RespuestaDireccion.getString( "cli_numero_interior" );
-                            String Num_Ext = RespuestaDireccion.getString( "cli_numero_exterior" );
-                            String Colonia = RespuestaDireccion.getString( "cli_colonia" );
-                            String Calle = RespuestaDireccion.getString( "cli_calle" );
-                            String Ciudad = RespuestaDireccion.getString( "cli_ciudad" );
-                            String Estado = RespuestaDireccion.getString( "cli_estado" );
-                            String Pais = RespuestaDireccion.getString( "cli_pais" );
-                            direccion = "No. Int.:" + Num_Int + "," +" "+ "No. Ext.:" + Num_Ext + "," + " " + "Col.:" + Colonia
+                                RespuestaDireccion = elemento.getJSONObject( "cli_direccion" );
+                                String Num_Int = RespuestaDireccion.getString( "cli_numero_interior" );
+                                String Num_Ext = RespuestaDireccion.getString( "cli_numero_exterior" );
+                                String Colonia = RespuestaDireccion.getString( "cli_colonia" );
+                                String Calle = RespuestaDireccion.getString( "cli_calle" );
+                                String Ciudad = RespuestaDireccion.getString( "cli_ciudad" );
+                                String Estado = RespuestaDireccion.getString( "cli_estado" );
+                                String Pais = RespuestaDireccion.getString( "cli_pais" );
+                                direccion = "No. Int.:" + Num_Int + "," +" "+ "No. Ext.:" + Num_Ext + "," + " " + "Col.:" + Colonia
                                         + "," + " " + "Calle:" + Calle + "," + " " + "Ciudad:" + Ciudad + "," + " " + Estado + "," + " " + Pais;
 
-                            rfc = elemento.getString( "cli_rfc" );
-                            razon_social = elemento.getString( "cli_razon_social" );
+                                rfc = elemento.getString( "cli_rfc" );
+                                razon_social = elemento.getString( "cli_razon_social" );
 
-                            RespuestaDireccionFiscal = elemento.getJSONObject( "cli_direccion_fiscal" );
-                            String NumInt = RespuestaDireccionFiscal.getString( "cli_numero_interior" );
-                            String NumExt = RespuestaDireccionFiscal.getString( "cli_numero_exterior" );
-                            String Col = RespuestaDireccionFiscal.getString( "cli_colonia" );
-                            String Calles = RespuestaDireccionFiscal.getString( "cli_calle" );
-                            String Cd = RespuestaDireccionFiscal.getString( "cli_ciudad" );
-                            String Estad = RespuestaDireccionFiscal.getString( "cli_estado" );
-                            String NomPais = RespuestaDireccionFiscal.getString( "cli_pais" );
-                            direccion_fiscal = "No. Int.:" + NumInt + "," + " " + "No. Ext.:" + NumExt + "," + " " + "Col.:" + Col
-                                    + "," + " " + "Calle:" + Calles + "," + " " + "Ciudad:" + Cd + "," + " " + Estad + "," + " " + NomPais;
-
-
-                            puntos = elemento.getString("cli_puntos_disponibles");
+                                RespuestaDireccionFiscal = elemento.getJSONObject( "cli_direccion_fiscal" );
+                                String NumInt = RespuestaDireccionFiscal.getString( "cli_numero_interior" );
+                                String NumExt = RespuestaDireccionFiscal.getString( "cli_numero_exterior" );
+                                String Col = RespuestaDireccionFiscal.getString( "cli_colonia" );
+                                String Calles = RespuestaDireccionFiscal.getString( "cli_calle" );
+                                String Cd = RespuestaDireccionFiscal.getString( "cli_ciudad" );
+                                String Estad = RespuestaDireccionFiscal.getString( "cli_estado" );
+                                String NomPais = RespuestaDireccionFiscal.getString( "cli_pais" );
+                                direccion_fiscal = "No. Int.:" + NumInt + "," + " " + "No. Ext.:" + NumExt + "," + " " + "Col.:" + Col
+                                        + "," + " " + "Calle:" + Calles + "," + " " + "Ciudad:" + Cd + "," + " " + Estad + "," + " " + NomPais;
 
 
-                            final Puntos_acumulados_model cliente = new Puntos_acumulados_model(
-                                    cli_numero,
-                                    nombre,
-                                    correo_electronico,
-                                    telefono,
-                                    direccion,
-                                    rfc,
-                                    razon_social,
-                                    direccion_fiscal,
-                                    puntos );
-                            clientes.add(cliente);
+                                puntos = elemento.getString("cli_puntos_disponibles");
+
+
+                                final Puntos_acumulados_model cliente = new Puntos_acumulados_model(
+                                        cli_numero,
+                                        nombre,
+                                        correo_electronico,
+                                        telefono,
+                                        direccion,
+                                        rfc,
+                                        razon_social,
+                                        direccion_fiscal,
+                                        puntos );
+                                clientes.add(cliente);
+                            }
+                            clienteAdapter = new LealtadPuntosAdapter(getContext(), clientes, tabla_puntos);
+                            tabla_puntos.setDataAdapter(clienteAdapter);
+                            progressDialog.dismiss();
                         }
-                        clienteAdapter = new LealtadPuntosAdapter(getContext(), clientes, tabla_puntos);
-                        tabla_puntos.setDataAdapter(clienteAdapter);
-                        progressDialog.dismiss();
+
 
                     }
                     else
                     {
-                        Toast toast1 =
-                                Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
-                        toast1.show();
+                        progressDialog.dismiss();
+
 
 
                     }
 
                 } catch (JSONException e) {
 
-                    Toast toast1 =
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    progressDialog.dismiss();
 
-                    toast1.show();
 
 
                 }
@@ -567,6 +574,8 @@ public class FragmentLealtad extends Fragment {
                                 Toast.makeText(getContext(), error.toString(), Toast.LENGTH_LONG);
 
                         toast1.show();
+
+                        progressDialog.dismiss();
 
 
                     }

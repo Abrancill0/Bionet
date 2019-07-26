@@ -397,6 +397,8 @@ public class FragmentLealtadArticulo extends Fragment {
                         Toast toast1 = Toast.makeText(getContext(), Mensaje, Toast.LENGTH_LONG);
 
                         toast1.show();
+                        progressDialog.dismiss();
+
 
 
                     }
@@ -407,6 +409,8 @@ public class FragmentLealtadArticulo extends Fragment {
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
 
                     toast1.show();
+                    progressDialog.dismiss();
+
 
 
                 }

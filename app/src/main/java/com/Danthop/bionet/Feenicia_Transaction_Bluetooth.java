@@ -250,54 +250,54 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
 
             //entriesList = new ArrayList<String>(Arrays.asList(entries));
 
-            for (int i = 0; i < entries.length; i++) {
+            for (int i = 0; i < entries.length-1; i++) {
 
                 switch (entries[i].toString()) {
 
                     case "Venta Retail - Sin propina":
-                        entriesList.add(i, entries[i].toString());
+                        entriesList.add(entries[i].toString());
                         break;
                     case "Venta Retail - Con propina":
-                        entriesList.add(i, entries[i].toString());
+                        entriesList.add(entries[i].toString());
                         break;
                     case "Venta MSI_03 - Sin propina":
                         if (Tresmeses == 1) {
-                            entriesList.add(i, entries[i].toString());
+                            entriesList.add(entries[i].toString());
                         }
                         break;
                     case "Venta MSI_03 - Con propina":
                         if (Tresmeses == 1) {
-                            entriesList.add(i, entries[i].toString());
+                            entriesList.add(entries[i].toString());
                         }
                         break;
                     case "Venta MSI_06 - Sin propina":
                         if (Seismeses == 1) {
-                            entriesList.add(i, entries[i].toString());
+                            entriesList.add(entries[i].toString());
                         }
                         break;
                     case "Venta MSI_06 - Con propina":
                         if (Seismeses == 1) {
-                            entriesList.add(i, entries[i].toString());
+                            entriesList.add(entries[i].toString());
                         }
                         break;
                     case "Venta MSI_09 - Sin propina":
                         if (nuevemeses == 1) {
-                            entriesList.add(i, entries[i].toString());
+                            entriesList.add(entries[i].toString());
                         }
                         break;
                     case "Venta MSI_09 - Con propina":
                         if (nuevemeses == 1) {
-                            entriesList.add(i, entries[i].toString());
+                            entriesList.add(entries[i].toString());
                         }
                         break;
                     case "Venta MSI_12 - Sin propina":
                         if (docemeses == 1) {
-                            entriesList.add(i, entries[i].toString());
+                            entriesList.add(entries[i].toString());
                         }
                         break;
                     case "Venta MSI_12 - Con propina":
                         if (docemeses == 1) {
-                            entriesList.add(i, entries[i].toString());
+                            entriesList.add(entries[i].toString());
                         }
                         break;
                     default:
@@ -575,7 +575,13 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
                             }
                         });
 
-                        Boolean resultConnection = sppHandlerConnection.connectDevice(dev);
+                        Boolean resultConnection=false;
+                        try{
+                            resultConnection = sppHandlerConnection.connectDevice(dev);
+                        }catch (IllegalStateException f)
+                        {
+                            resultConnection=false;
+                        }
 
                         if (resultConnection == true) { // SUCESS
                             new Handler(Looper.getMainLooper()).post(new Runnable(){
@@ -662,6 +668,9 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
 
                 } catch (Exception e) {
                     Log.e("Error_desconectar", e.toString());
+                } catch (NoSuchMethodError a)
+                {
+                    Log.e("Error_desconectar", a.toString());
                 }
 
 
@@ -1047,6 +1056,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
 
     private void FinalizarTicket() {
 
+        progressDialog.show();
         JSONArray arreglo = new JSONArray();
         try {
             for (int i = 0; i < ListaDePagos_a_utilizar.size(); i++) {
@@ -1067,6 +1077,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
             request.put("esApp", "1");
             request.put("tic_id", Ticket);
             request.put("tic_importe_metodo_pago", arreglo);
+            request.put("code",code);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1112,10 +1123,15 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
                         mBundle.putString("Sucursal", Sucursal);
                         mBundle.putString("Ticket", Ticket);
 
+                        Toast toast1 =
+                                Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
+                        toast1.show();
+
                         myIntent.putExtras(mBundle);
 
                         getApplicationContext().startActivity(myIntent);
 
+                        progressDialog.dismiss();
                         finish();
 
 
@@ -1123,12 +1139,16 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
                         Toast toast1 =
                                 Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG);
                         toast1.show();
+                        progressDialog.dismiss();
+
                     }
 
                 } catch (JSONException e) {
                     Toast toast1 =
                             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
                     toast1.show();
+                    progressDialog.dismiss();
+
                 }
             }
 
@@ -1139,6 +1159,8 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
                         Toast toast1 =
                                 Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG);
                         toast1.show();
+                        progressDialog.dismiss();
+
                     }
                 }
         );

@@ -73,6 +73,10 @@ public class Confirmacion_venta extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pop_up_ventas_confirmacion_venta);
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Espere un momento por favor");
+        progressDialog.setCanceledOnTouchOutside(false);
+
 
 
         TextView Importe_Cambio = findViewById(R.id.importe_cambio);
@@ -105,6 +109,7 @@ public class Confirmacion_venta extends Activity {
             @Override
             public void onClick(View v) {
 
+                progressDialog.show();
                 finish();
                 Intent myIntent = new Intent(getApplicationContext(), Home.class);
                 myIntent.putExtra("Venta","si");
@@ -120,6 +125,7 @@ public class Confirmacion_venta extends Activity {
             @Override
             public void onClick(View v) {
 
+                progressDialog.show();
                 finish();
                 Intent myIntent = new Intent(getApplicationContext(), Home.class);
                 myIntent.putExtra("Venta","si");
