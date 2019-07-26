@@ -672,8 +672,6 @@ public class Fragment_Ventas extends Fragment {
       // usbCtrl = new UsbController(this,mHandler);
         //promociones_credito();
 
-        LoadPermisosFunciones();
-
         return v;
     }
 
@@ -1212,7 +1210,7 @@ public class Fragment_Ventas extends Fragment {
                 bundle.putBoolean("Transacciones", Transacciones);
                 bundle.putBoolean("Comision", Comision);
                 bundle.putBoolean("Conte_Caja", Conte_Caja);
-                Fragment_ventas_corte_caja_listado fragment2 = new Fragment_ventas_corte_caja_listado();
+                Fragment_pestania_cortecaja fragment2 = new Fragment_pestania_cortecaja();
                 fragment2.setArguments(bundle);
                 fr.replace(R.id.fragment_container,fragment2).commit();
                 onStop();

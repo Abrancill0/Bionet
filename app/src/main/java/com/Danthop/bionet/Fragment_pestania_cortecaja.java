@@ -83,8 +83,8 @@ public class Fragment_pestania_cortecaja extends Fragment {
     private String importe;
     private String id_pago;
     private String formapago;
-    private EditText Fechainicio;
-    private EditText Fechafin;
+    private Button Fechainicio;
+    private Button Fechafin;
     private String FechaInicio;
     private String DateInicio;
     private String DateFin;
@@ -147,8 +147,8 @@ public class Fragment_pestania_cortecaja extends Fragment {
         btn_listado_corte = (TextView) v.findViewById(R.id.btn_listado_corte);
         btn_factura_ventas = (TextView) v.findViewById(R.id.btn_factura_ventas);
 
-        Fechainicio=(EditText) v.findViewById(R.id.btnfechainicio);
-        Fechafin=(EditText) v.findViewById(R.id.btnfechafin);
+        Fechainicio=v.findViewById(R.id.btnfechainicio);
+        Fechafin=v.findViewById(R.id.btnfechafin);
 
 
         btn_generarcorte=(Button)v.findViewById(R.id.btn_generarcorte);
@@ -517,6 +517,7 @@ public class Fragment_pestania_cortecaja extends Fragment {
 
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/ventas/cortes/generar-corte";
+
 
         JSONObject request = new JSONObject();
         try {

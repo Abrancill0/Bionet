@@ -54,8 +54,8 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
     TextView btn_listado_corte;
     TextView btn_factura_ventas;
     Button btn_buscartickets;
-    private EditText Fechainicio;
-    private EditText Fechafin;
+    private Button Fechainicio;
+    private Button Fechafin;
     private Button btn_facturar;
     private String FechaInicio;
     private String FechaFin;
@@ -106,7 +106,7 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ventas_facturarcortecajas,container, false);
         pestania_ventas = v.findViewById(R.id.btn_ventas);
-        pestania_reporte = v.findViewById(R.id.btn_traslados);
+        pestania_reporte = v.findViewById(R.id.btn_reportes);
 
         btn_corte = v.findViewById(R.id.btn_corte); //opcion 1
         btn_listado_corte = v.findViewById(R.id.btn_listado_corte);
@@ -120,8 +120,8 @@ public class Fragment_ventas_corte_lista_sinfactura extends Fragment {
         Comision=bundle.getBoolean("Comision");
 
 
-        Fechainicio=(EditText) v.findViewById(R.id.btnfechainicio);
-        Fechafin=(EditText) v.findViewById(R.id.btnfechafin);
+        Fechainicio=v.findViewById(R.id.btnfechainicio);
+        Fechafin=v.findViewById(R.id.btnfechafin);
 
         btn_facturar=(Button)v.findViewById(R.id.btn_facturar);
         btn_buscartickets=(Button)v.findViewById( R.id.btn_buscartickets );

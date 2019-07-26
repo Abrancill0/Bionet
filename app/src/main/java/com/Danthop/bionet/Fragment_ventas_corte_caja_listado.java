@@ -55,8 +55,8 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
     TextView btn_corte;
     TextView btn_listado_corte;
     TextView btn_factura_ventas;
-    private EditText Fechainicio;
-    private EditText Fechafin;
+    private Button Fechainicio;
+    private Button Fechafin;
     private Button btn_buscar;
     private String FechaInicio;
     private String FechaFin;
@@ -106,15 +106,15 @@ public class Fragment_ventas_corte_caja_listado extends Fragment {
 
 
         pestania_ventas = v.findViewById(R.id.btn_ventas);
-        pestania_reporte = v.findViewById(R.id.btn_traslados);
+        pestania_reporte = v.findViewById(R.id.btn_reportes);
         btn_corte = (TextView) v.findViewById(R.id.btn_corte);
         Comisiones = v.findViewById( R.id.Comisiones);
         btn_listado_corte = (TextView) v.findViewById(R.id.btn_listado_corte);
         btn_listado_corte.setBackgroundColor(getResources().getColor(R.color.fondo_azul));
         btn_factura_ventas = (TextView) v.findViewById(R.id.btn_factura_ventas);
 
-        Fechainicio=(EditText) v.findViewById(R.id.btnfechainicio);
-        Fechafin=(EditText) v.findViewById(R.id.btnfechafin);
+        Fechainicio=v.findViewById(R.id.btnfechainicio);
+        Fechafin=v.findViewById(R.id.btnfechafin);
 
         btn_buscar=(Button)v.findViewById(R.id.btn_buscar);
 
