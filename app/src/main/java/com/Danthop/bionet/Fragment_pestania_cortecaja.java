@@ -518,6 +518,11 @@ public class Fragment_pestania_cortecaja extends Fragment {
         String url = getString(R.string.Url);
         String ApiPath = url + "/api/ventas/cortes/generar-corte";
 
+        if(FechaInicio==null)
+        {
+            FechaInicio="";
+            FechaFin="";
+        }
 
         JSONObject request = new JSONObject();
         try {

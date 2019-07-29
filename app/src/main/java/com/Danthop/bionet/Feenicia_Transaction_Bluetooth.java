@@ -106,6 +106,9 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
     private Spinner Spinner2;
     private Spinner Spinner3;
 
+    private View LayoutPagarServicio;
+    private View LayoutPagarPropina;
+
     private String XrequestServicios="";
 
     private String code;
@@ -229,6 +232,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
             nuevemeses = bundle.getInt("09meses");
             docemeses = bundle.getInt("12meses");
 
+            LayoutPagarPropina = findViewById(R.id.layout_pagar_propina);
 
             List<String> entriesList = new ArrayList<>();
 
@@ -408,31 +412,41 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
                     if (position == 0) { // RETAIL - SIN PROPINA
+                        LayoutPagarPropina.setVisibility(View.INVISIBLE);
                         sale.sale_retail_without_tip(monto);
                     } else if (position == 1) { // RETAIL - CON PROPINA
+                        LayoutPagarPropina.setVisibility(View.VISIBLE);
                         sale.sale_retail_with_tip(monto, tip);
                     } else if (position == 2) { // MSI_03 - SIN PROPINA
+                        LayoutPagarPropina.setVisibility(View.INVISIBLE);
                         msi = 3;
                         sale.sale_msi_without_tip(monto, msi);
                     } else if (position == 3) { // MSI_03 - CON PROPINA
+                        LayoutPagarPropina.setVisibility(View.VISIBLE);
                         msi = 3;
                         sale.sale_msi_with_tip(monto, tip, msi);
                     } else if (position == 4) { // MSI_06 - SIN PROPINA
+                        LayoutPagarPropina.setVisibility(View.INVISIBLE);
                         msi = 6;
                         sale.sale_msi_without_tip(monto, msi);
                     } else if (position == 5) { // MSI_06 - CON PROPINA
+                        LayoutPagarPropina.setVisibility(View.VISIBLE);
                         msi = 6;
                         sale.sale_msi_with_tip(monto, tip, msi);
                     } else if (position == 6) { // MSI_09 - SIN PROPINA
+                        LayoutPagarPropina.setVisibility(View.INVISIBLE);
                         msi = 9;
                         sale.sale_msi_without_tip(monto, msi);
                     } else if (position == 7) { // MSI_09 - CON PROPINA
+                        LayoutPagarPropina.setVisibility(View.VISIBLE);
                         msi = 9;
                         sale.sale_msi_with_tip(monto, tip, msi);
                     } else if (position == 8) { // MSI_12 - SIN PROPINA
+                        LayoutPagarPropina.setVisibility(View.INVISIBLE);
                         msi = 12;
                         sale.sale_msi_without_tip(monto, msi);
                     } else if (position == 9) { // MSI_12 - CON PROPINA
+                        LayoutPagarPropina.setVisibility(View.VISIBLE);
                         msi = 12;
                         sale.sale_msi_with_tip(monto, tip, msi);
                     }
@@ -473,6 +487,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
             Spinner1=findViewById(R.id.spinner1);
             Spinner2=findViewById(R.id.spinner2);
             Spinner3=findViewById(R.id.spinner3);
+            LayoutPagarServicio=findViewById(R.id.layout_pagar_servicio);
 
 
 
@@ -1652,6 +1667,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
             Spinner1.setVisibility(View.VISIBLE);
             Spinner2.setVisibility(View.VISIBLE);
             Spinner3.setVisibility(View.VISIBLE);
+            LayoutPagarServicio.setVisibility(View.VISIBLE);
 
             Spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
             {
@@ -1686,6 +1702,7 @@ public class Feenicia_Transaction_Bluetooth extends AppCompatActivity {
             Spinner1.setVisibility(View.VISIBLE);
             Spinner2.setVisibility(View.VISIBLE);
             Spinner3.setVisibility(View.INVISIBLE);
+            LayoutPagarServicio.setVisibility(View.INVISIBLE);
 
 
             Spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
