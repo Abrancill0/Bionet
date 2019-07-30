@@ -677,9 +677,16 @@ public class Fragment_Ventas extends Fragment {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        usbCtrl.close();
-        cancelAll();
+        try
+        {
+            super.onDestroy();
+            usbCtrl.close();
+            cancelAll();
+        }catch(NullPointerException a)
+        {
+
+        }
+
     }
 
     private void closeKeyboard() {

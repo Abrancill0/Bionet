@@ -115,109 +115,6 @@ public class SplashScreen extends AppCompatActivity {
 
     }
 
-    private void VerificarIMEI()
-    {
-        if (Valor != "0")
-        {
-            Intent intent2 = new Intent(SplashScreen.this, Home.class);
-            startActivity(intent2);
-            finish();
-        }
-        else
-        {
-            try{
-                JSONObject request = new JSONObject();
-                try
-                {
-                    request.put("esApp", "1");
-                    request.put("dis_mac",ID_dispositivo+"IMEI");
-                }
-                catch(Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-                String url = getString(R.string.Url); //"https://citycenter-rosario.com.ar/usuarios/loginApp";
-
-                String ApiPath = url + "/api/obtener-dominio-mac";
-
-                JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, ApiPath,request, new Response.Listener<JSONObject>()
-                {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        Resultado = new LoginModel();
-
-                        JSONArray Respuesta = null;
-                        JSONObject RespuestaObjeto = null;
-                        JSONObject RespuestaNodoUsuID = null;
-                        JSONObject RespuestaIdSucursales = null;
-                        JSONArray ValorIdSucursales = null;
-                        try {
-
-                            Resultado.setEstatus( response.getString( "estatus" ) );
-                            Resultado.setMensaje( response.getString( "mensaje" ) );
-
-                            int status = Integer.parseInt( Resultado.getEstatus() );
-
-                            if (status == 1)
-                            {
-                                SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPref.edit();
-                                editor.putString("id_dispositivo", String.valueOf( ID_dispositivo ) );
-                                editor.commit();
-                                Intent intent2 = new Intent(SplashScreen.this, Login.class);
-                                startActivity(intent2);
-                                finish();
-
-                            }
-                            else{
-                                progreso.hide();
-
-                                SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPref.edit();
-                                editor.putString("id_dispositivo", String.valueOf( ID_dispositivo ) );
-                                editor.commit();
-                                Intent intent2 = new Intent(SplashScreen.this, Login.class);
-                                startActivity(intent2);
-                                finish();
-
-                            }
-
-                        } catch (JSONException e) {
-                            progreso.hide();
-
-                            Toast toast1 = Toast.makeText(getApplicationContext(),
-                                    "Error al conectarse al servidor", Toast.LENGTH_LONG);
-
-                            toast1.show();
-                        }
-                    }
-
-                },
-                        new Response.ErrorListener()
-                        {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // error
-                                progreso.hide();
-
-                                Toast toast1 =
-                                        Toast.makeText(getApplicationContext(),
-                                                "Error de conexion", Toast.LENGTH_SHORT);
-                                toast1.show();
-                            }
-                        }
-                );
-                VolleySingleton.getInstanciaVolley(this).addToRequestQueue(postRequest);
-            }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-
-    }
 
     private void permissioncheck() {
         List<String> permissionsNeeded = new ArrayList<String>();
@@ -358,28 +255,13 @@ public class SplashScreen extends AppCompatActivity {
 
     public void LaunchApp()
     {
-        ProgressDialog progreso2 = new ProgressDialog(this);
-        progreso2.setMessage("Verificando Dispositivo...");
-        progreso2.show();
-        Thread background = new Thread() {
-            public void run() {
-
-                try {
-                    progreso2.dismiss();
-                    TelephonyManager telephonyManager;
-                    telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                    ID_dispositivo = Settings.Secure.getString(getContentResolver(),
-                            Settings.Secure.ANDROID_ID);
-                    System.out.println(ID_dispositivo);
-                    VerificarIMEI();
-
-                } catch (Exception e) {
-
-                }
-            }
-        };
-
-        background.start();
+        SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("id_dispositivo", String.valueOf( ID_dispositivo ) );
+        editor.commit();
+        Intent intent2 = new Intent(SplashScreen.this, Login.class);
+        startActivity(intent2);
+        finish();
 
 
     }

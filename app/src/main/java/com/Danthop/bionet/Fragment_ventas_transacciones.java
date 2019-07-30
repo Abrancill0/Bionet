@@ -1892,9 +1892,15 @@ public class Fragment_ventas_transacciones extends Fragment {
     //Este metodo se debe de llevar al fracgment de ventas
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        usbCtrl.close();
-        cancelAll();
+        try
+        {
+            super.onDestroy();
+            usbCtrl.close();
+            cancelAll();
+        }catch(NullPointerException a)
+        {
+
+        }
     }
 
     public static byte[] POS_PrintBMP(Bitmap mBitmap, int nWidth, int nMode) {

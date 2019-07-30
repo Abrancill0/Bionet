@@ -349,11 +349,6 @@ public class Login extends Activity {
 
                                     Intent intent = new Intent(Login.this, Home.class);
                                     startActivity(intent);
-
-                                    Toast toast1 =
-                                            Toast.makeText(getApplicationContext(),
-                                                    "Bienvenido " + Resultado.getUsuNombre(), Toast.LENGTH_LONG);
-                                    toast1.show();
                                     progreso.hide();
                                 }
                             }
@@ -451,28 +446,15 @@ public class Login extends Activity {
             SharedPreferences sharedPref = getSharedPreferences("DatosPersistentes", Context.MODE_PRIVATE);
 
             JSONArray SUCURSALES = new JSONArray();
-            try {
-                SUCURSALES.put("19cbc9b8-39de-5cd2-b12e-06932a6b9e48");
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-            String elemento = null;
-            try {
-                elemento = String.valueOf(SUCURSALES.get(0));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
+            String elemento = "19cbc9b8-39de-5cd2-b1";
             JSONObject request2 = new JSONObject();
                 try {
                     request2.put("usu_sucursales", elemento);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                jsonArray.put(request2);
+                SUCURSALES.put(request2);
 
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("usu_nombre", "Gabriel");
@@ -486,7 +468,7 @@ public class Login extends Activity {
             editor.putString("usu_imagen_perfil", getString(R.string.Url) + "/assets/images/user_default.jpg");
             editor.putString("usu_activo", "true");
             editor.putString("usu_administrador", "false");
-            editor.putString("cca_id_sucursal", String.valueOf(jsonArray));
+            editor.putString("cca_id_sucursal", String.valueOf(SUCURSALES));
 
             editor.putString("sso_usu_correo_electronico", ResultadoUser.getSso_usu_correo_electronico());
             editor.putString("sso_usurname", ResultadoUser.getSso_usurname());
@@ -1041,11 +1023,6 @@ public class Login extends Activity {
                             Intent intent = new Intent(Login.this, Home.class);
                             intent.putExtra("sso_Roles", String.valueOf(Roles));
                             startActivity(intent);
-
-                            Toast toast1 =
-                                    Toast.makeText(getApplicationContext(),
-                                            "Bienvenido " + NombreCompleto, Toast.LENGTH_LONG);
-                            toast1.show();
 
                             progreso.hide();
 
